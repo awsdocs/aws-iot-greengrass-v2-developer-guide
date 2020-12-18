@@ -1,11 +1,6 @@
-## My Project
+## AWS IoT Greengrass Version 2 - Developer Guide
 
-TODO: Fill this README out!
-
-Be sure to:
-
-* Change the title in this README
-* Edit your repository description on GitHub
+The open source version of the [AWS IoT Greengrass V2 Developer Guide](https://docs.aws.amazon.com/greengrass/v2/developerguide/what-is-iot-greengrass.html). You can submit feedback and requests for changes by submitting issues in this repository.
 
 ## Security
 
