@@ -1,0 +1,68 @@
+# Troubleshooting machine learning inference<a name="ml-troubleshooting"></a>
+
+Use the troubleshooting information and solutions in this section to help resolve issues with your machine learning components\. For the public machine learning inference components, you can see error messages in the following component logs:
++ `/greengrass/v2/logs/aws.greengrass.DLRImageClassification.log`
++ `/greengrass/v2/logs/aws.greengrass.DLRObjectDetection.log`
+
+If a component is installed correctly, then the component log contains the location of the library that it uses for inference\.
+
+**Topics**
++ [Failed to fetch library](#rpi-update-error)
++ [Cannot open shared object file](#rpi-import-cv-error)
++ [Library not found](#troubleshooting-venv-errors)
++ [Memory errors](#troubleshooting-memory-errors)
++ [Disk space errors](#troubleshooting-disk-space-errors)
++ [Timeout errors](#troubleshooting-timeout-errors)
+
+## Failed to fetch library<a name="rpi-update-error"></a>
+
+Te following error occurs when the installer script fails to download a required library during deployment on a Raspberry Pi device\.
+
+```
+Err:2 http://raspbian.raspberrypi.org/raspbian buster/main armhf python3.7-dev armhf 3.7.3-2+deb10u1
+404 Not Found [IP: 93.93.128.193 80] 
+E: Failed to fetch http://raspbian.raspberrypi.org/raspbian/pool/main/p/python3.7/libpython3.7-dev_3.7.3-2+deb10u1_armhf.deb 404 Not Found [IP: 93.93.128.193 80]
+```
+
+Run `sudo apt-get update` and deploy your component again\.
+
+## Cannot open shared object file<a name="rpi-import-cv-error"></a>
+
+You might see errors similar to the following when the installer script fails to download a required dependency for `opencv-python` during deployment on a Raspberry Pi device\.
+
+```
+ImportError: libopenjp2.so.7: cannot open shared object file: No such file or directory
+```
+
+Run the following command to manually install the dependencies for `opencv-python`:
+
+```
+sudo apt-get install libopenjp2-7 libilmbase23 libopenexr-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libgtk-3-0
+```
+
+## Library not found<a name="troubleshooting-venv-errors"></a>
+
+The following errors are an indication that the DLR Installer component was unable to set up the virtual environment correctly:
++ `*${*ml_root_path*}*/greengrass_ml_dlr_conda/bin/conda: No such file or directory ` \(on x86\_64 devices\)
++ `*${*ml_root_path*}*/greengrass_ml_dlr_venv/bin/activate: No such file or directory ` \(on Raspberry Pi devices\)
++ `cv2 not found `
++ `dlr not found `
++ `numpy not found `
+
+Check the logs to make sure that all dependencies were installed correctly\. For more information about the libraries installed by the installer script, see [DLR Installer](variant-dlr-component.md)\.
+
+## Memory errors<a name="troubleshooting-memory-errors"></a>
+
+The following errors typically occur when the device does not have enough memory and the component process is interrupted\.
++ `stderr. Killed.`
++ `exitCode=137`
+
+We recommend a minimum of 500 MB of memory to deploy a public machine learning inference component\.
+
+## Disk space errors<a name="troubleshooting-disk-space-errors"></a>
+
+The `no space left on device` error typically occurs when a device does not have enough storage\. Check the disk space that is available on your device and make sure you have enough space before you deploy the component again\. We recommend a minimum of 500 MB of free disk space to deploy a public machine learning inference component\.
+
+## Timeout errors<a name="troubleshooting-timeout-errors"></a>
+
+The public machine learning components download large machine learning model files that are larger than 200 MB\. If the download times out during deployment, check your internet connection speed and retry the deployment\.
