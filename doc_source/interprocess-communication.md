@@ -18,7 +18,7 @@ To develop custom component that you IPC, you must use the AWS IoT Device SDK v2
 ------
 #### [ Java ]
 
-Download the [AWS IoT Device SDK for Java](https://github.com/aws/aws-iot-device-sdk-java-v2)\.
+Download the [AWS IoT Device SDK for Java](https://github.com/aws/aws-iot-device-sdk-java-v2) \(v1\.2\.10 or later\)\.
 
 Then, do one of the following to run your custom code in your component:
 + Build your component as a JAR file that includes the AWS IoT Device SDK, and run this JAR file in your component recipe\.
@@ -134,7 +134,7 @@ try (EventStreamRPCConnection eventStreamRPCConnection = IPCUtils.getEventStream
 ------
 #### [ Python ]
 
-Download the [AWS IoT Device SDK for Python](https://github.com/aws/aws-iot-device-sdk-python-v2)\.
+Download the [AWS IoT Device SDK for Python](https://github.com/aws/aws-iot-device-sdk-python-v2) \(v1\.5\.3 or later\)\.
 
 Then, add the SDK's [installation steps](https://github.com/aws/aws-iot-device-sdk-python-v2#installation) to the install lifecycle in your component's recipe\.
 
@@ -319,6 +319,51 @@ The binary message as a blob\.
 
 This operation doesn't provide any information in its response\.
 
+##### Examples<a name="ipc-operation-publishtotopic-examples"></a>
+
+The following examples demonstrate how to call this operation in custom component code\.
+
+------
+#### [ Java ]
+
+**Example: Publish a binary message**  
+
+```
+String topic = "my/topic";
+String message = "Hello, World!";
+
+PublishToTopicRequest publishToTopicRequest = new PublishToTopicRequest();
+PublishMessage publishMessage = new PublishMessage();
+BinaryMessage binaryMessage = new BinaryMessage();
+binaryMessage.setMessage(message.getBytes(StandardCharsets.UTF_8));
+publishMessage.setBinaryMessage(binaryMessage);
+publishToTopicRequest.setPublishMessage(publishMessage);
+publishToTopicRequest.setTopic(topic);
+greengrassCoreIPCClient.publishToTopic(publishToTopicRequest, Optional.empty()).getResponse().get();
+```
+
+------
+#### [ Python ]
+
+**Example: Publish a binary message**  
+
+```
+topic = "my/topic"
+message = "Hello, World!"
+
+request = PublishToTopicRequest()
+publish_message = PublishMessage()
+publish_message.binary_message = BinaryMessage()
+publish_message.binary_message.message = bytes(message, "utf-8")
+request.publish_message = publish_message
+operation = ipc_client.new_publish_to_topic()
+operation.activate(request)
+future = operation.get_response()
+future.result(TIMEOUT)
+```
+
+------
+
 #### SubscribeToTopic<a name="ipc-operation-subscribetotopic"></a>
 
 Subscribe to messages at a topic\.
@@ -347,6 +392,86 @@ The JSON message as an object\.
 \(Optional\) A binary message\. This object, `BinaryMessage`, contains the following information:    
 `message`  
 The binary message as a blob\.
+
+##### Examples<a name="ipc-operation-subscribetotopic-examples"></a>
+
+The following examples demonstrate how to call this operation in custom component code\.
+
+------
+#### [ Java ]
+
+**Example: Subscribe to messages**  
+
+```
+String topic = "my/topic";
+
+SubscribeToTopicRequest subscribeToTopicRequest = new SubscribeToTopicRequest();
+subscribeToTopicRequest.setTopic(topic);
+
+StreamResponseHandler<SubscriptionResponseMessage> streamResponseHandler =
+        new StreamResponseHandler<SubscriptionResponseMessage>() {
+            @Override
+            public void onStreamEvent(SubscriptionResponseMessage subscriptionResponseMessage) {
+                String message = new String(subscriptionResponseMessage.getBinaryMessage()
+                        .getMessage(), StandardCharsets.UTF_8);
+                // Handle message.
+            }
+
+            @Override
+            public boolean onStreamError(Throwable error) {
+                // Handle error.
+                return false;
+            }
+
+            @Override
+            public void onStreamClosed() {
+                // Handle close.
+            }
+        };
+
+SubscribeToTopicResponseHandler operationResponseHandler = greengrassCoreIPCClient
+        .subscribeToTopic(subscribeToTopicRequest, Optional.of(streamResponseHandler));
+operationResponseHandler.getResponse().get();
+
+// To stop subscribing, close the stream.
+operationResponseHandler.closeStream();
+```
+
+------
+#### [ Python ]
+
+**Example: Subscribe to messages**  
+
+```
+class StreamHandler(client.SubscribeToTopicStreamHandler):
+    def __init__(self):
+        super().__init__()
+
+    def on_stream_event(self, event: SubscriptionResponseMessage) -> None:
+        message_string = str(event.binary_message.message, "utf-8")
+        # Handle message.
+
+    def on_stream_error(self, error: Exception) -> bool:
+        # Handle error.
+        return True
+
+    def on_stream_closed(self) -> None:
+        pass
+
+topic = "my/topic"
+
+request = SubscribeToTopicRequest()
+request.topic = topic
+handler = StreamHandler()
+operation = ipc_client.new_subscribe_to_topic(handler)
+future = operation.activate(request)
+future.result(TIMEOUT)
+
+# To stop subscribing, close the operation stream.
+operation.close()
+```
+
+------
 
 ### Examples<a name="ipc-publish-subscribe-examples"></a>
 
@@ -599,6 +724,49 @@ The MQTT QoS to use\. This enum, `QOS`, has the following values:
 
 This operation doesn't provide any information in its response\.
 
+##### Examples<a name="ipc-operation-publishtoiotcore-examples"></a>
+
+The following examples demonstrate how to call this operation in custom component code\.
+
+------
+#### [ Java ]
+
+**Example: Publish a message**  
+
+```
+String topic = "my/topic";
+String message = "Hello, World!";
+QOS qos = QOS.AT_LEAST_ONCE;
+
+PublishToIoTCoreRequest publishToIoTCoreRequest = new PublishToIoTCoreRequest();
+publishToIoTCoreRequest.setTopicName(topic);
+publishToIoTCoreRequest.setPayload(message.getBytes(StandardCharsets.UTF_8));
+publishToIoTCoreRequest.setQos(qos);
+greengrassCoreIPCClient.publishToIoTCore(publishToIoTCoreRequest, Optional.empty()).getResponse().get();
+```
+
+------
+#### [ Python ]
+
+**Example: Publish a message**  
+
+```
+topic = "my/topic"
+message = "Hello, World"
+qos = QOS.AT_LEAST_ONCE
+
+request = PublishToIoTCoreRequest()
+request.topic_name = topic
+request.payload = bytes(message, "utf-8")
+request.qos = qos
+operation = ipc_client.new_publish_to_iot_core()
+operation.activate(request)
+future = operation.get_response()
+future.result(TIMEOUT)
+```
+
+------
+
 #### SubscribeToIoTCore<a name="ipc-operation-subscribetoiotcore"></a>
 
 Subscribe to MQTT messages from AWS IoT Core on a topic or topic filter\. The AWS IoT Greengrass Core software removes subscriptions when the component reaches the end of its lifecycle\.
@@ -628,12 +796,95 @@ The topic to which the message was published\.
 `payload`  
 \(Optional\) The message payload as a blob\.
 
+##### Examples<a name="ipc-operation-subscribetoiotcore-examples"></a>
+
+The following examples demonstrate how to call this operation in custom component code\.
+
+------
+#### [ Java ]
+
+**Example: Subscribe to messages**  
+
+```
+String topic = "my/topic";
+QOS qos = QOS.AT_MOST_ONCE;
+
+SubscribeToIoTCoreRequest subscribeToIoTCoreRequest = new SubscribeToIoTCoreRequest();
+subscribeToIoTCoreRequest.setTopicName(topic);
+subscribeToIoTCoreRequest.setQos(qos);
+
+StreamResponseHandler<IoTCoreMessage> streamResponseHandler = new StreamResponseHandler<IoTCoreMessage>() {
+    @Override
+    public void onStreamEvent(IoTCoreMessage ioTCoreMessage) {
+        String message = new String(ioTCoreMessage.getMessage().getPayload(), StandardCharsets.UTF_8);
+        // Handle message.
+    }
+
+    @Override
+    public boolean onStreamError(Throwable throwable) {
+        // Handle error.
+        return false;
+    }
+
+    @Override
+    public void onStreamClosed() {
+
+    }
+};
+
+SubscribeToIoTCoreResponseHandler operationResponseHandler = greengrassCoreIPCClient
+        .subscribeToIoTCore(subscribeToIoTCoreRequest, Optional.of(streamResponseHandler));
+operationResponseHandler.getResponse().get();
+
+// To stop subscribing, close the stream.
+operationResponseHandler.closeStream();
+```
+
+------
+#### [ Python ]
+
+**Example: Subscribe to messages**  
+
+```
+class StreamHandler(client.SubscribeToIoTCoreStreamHandler):
+    def __init__(self):
+        super().__init__()
+
+    def on_stream_event(self, event: IoTCoreMessage) -> None:
+        message = str(event.message.payload, "utf-8")
+        # Handle message.
+
+    def on_stream_error(self, error: Exception) -> bool:
+        # Handle error.
+        return True
+
+    def on_stream_closed(self) -> None:
+        pass
+
+
+topic = "my/topic"
+qos = QOS.AT_MOST_ONCE
+
+request = SubscribeToIoTCoreRequest()
+request.topic_name = topic
+request.qos = qos
+handler = StreamHandler()
+operation = ipc_client.new_subscribe_to_iot_core(handler)
+future = operation.activate(request)
+future.result(TIMEOUT)
+                  
+# To stop subscribing, close the operation stream.
+operation.close()
+```
+
+------
+
 ## Component lifecycle<a name="ipc-component-lifecycle"></a>
 
 The component lifecycle IPC service lets you do the following:
 + Update component state on the core device
 + Subscribe to component state updates
-+ Prevent the kernel from stopping the component to apply an update
++ Prevent the nucleus from stopping the component to apply an update
 
 ### Operations<a name="ipc-component-lifecycle-operations"></a>
 
@@ -658,9 +909,9 @@ This operation doesn't provide any information in its response\.
 
 #### SubscribeToComponentUpdates<a name="ipc-operation-subscribetocomponentupdates"></a>
 
-Subscribe to receive notifications before the AWS IoT Greengrass Core software updates a component\. The notification specifies whether or not the kernel will restart as part of the update\.
+Subscribe to receive notifications before the AWS IoT Greengrass Core software updates a component\. The notification specifies whether or not the nucleus will restart as part of the update\.
 
-The kernel sends update notifications only if the deployment's component update policy specifies to notify components\. The default behavior is to notify components\. For more information, see [Create deployments](create-deployments.md) and the [ComponentUpdatePolicy](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_ComponentUpdatePolicy.html) object that you can provide when you call the [CreateDeployment](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_CreateDeployment.html) operation\.
+The nucleus sends update notifications only if the deployment's component update policy specifies to notify components\. The default behavior is to notify components\. For more information, see [Create deployments](create-deployments.md) and the [ComponentUpdatePolicy](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_ComponentUpdatePolicy.html) object that you can provide when you call the [CreateDeployment](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_CreateDeployment.html) operation\.
 
 **Important**  
 Local deployments don't notify components before updates\.
@@ -676,21 +927,21 @@ This operation's response has the following information:
 `messages`  
 The stream of notification messages\. This object, `ComponentUpdatePolicyEvents`, contains the following information:    
 `preUpdateEvent`  
-\(Optional\) An event that indicates that the kernel wants to update a component\. You can respond with the [DeferComponentUpdate](#ipc-operation-defercomponentupdate) operation to acknowledge or defer the update until your component is ready to restart\. This object, `PreComponentUpdateEvent`, contains the following information:    
+\(Optional\) An event that indicates that the nucleus wants to update a component\. You can respond with the [DeferComponentUpdate](#ipc-operation-defercomponentupdate) operation to acknowledge or defer the update until your component is ready to restart\. This object, `PreComponentUpdateEvent`, contains the following information:    
 `deploymentId`  
 The ID of the AWS IoT Greengrass deployment that updates the component\.  
 `isGgcRestarting`  
-Whether or not the kernel needs to restart to apply the update\.  
+Whether or not the nucleus needs to restart to apply the update\.  
 `postUpdateEvent`  
-\(Optional\) An event that indicates that the kernel updated a component\. This object, `PostComponentUpdateEvent`, contains the following information:    
+\(Optional\) An event that indicates that the nucleus updated a component\. This object, `PostComponentUpdateEvent`, contains the following information:    
 `deploymentId`  
 The ID of the AWS IoT Greengrass deployment that updated the component\.
 
 #### DeferComponentUpdate<a name="ipc-operation-defercomponentupdate"></a>
 
-Acknowledge or defer a component update that you discover with [SubscribeToComponentUpdates](#ipc-operation-subscribetocomponentupdates)\. You specify the amount of time to wait before the kernel checks again if your component is ready to let the component update proceed\. You can also use this operation to tell the kernel that your component is ready for the update\.
+Acknowledge or defer a component update that you discover with [SubscribeToComponentUpdates](#ipc-operation-subscribetocomponentupdates)\. You specify the amount of time to wait before the nucleus checks again if your component is ready to let the component update proceed\. You can also use this operation to tell the nucleus that your component is ready for the update\.
 
-If a component doesn't respond to the component update notification, the kernel waits the amount of time that you specify in the deployment's component update policy\. After that timeout, the kernel proceeds with the deployment\. The default component update timeout is 60 seconds\. For more information, see [Create deployments](create-deployments.md) and the [ComponentUpdatePolicy](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_ComponentUpdatePolicy.html) object that you can provide when you call the [CreateDeployment](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_CreateDeployment.html) operation\.
+If a component doesn't respond to the component update notification, the nucleus waits the amount of time that you specify in the deployment's component update policy\. After that timeout, the nucleus proceeds with the deployment\. The default component update timeout is 60 seconds\. For more information, see [Create deployments](create-deployments.md) and the [ComponentUpdatePolicy](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_ComponentUpdatePolicy.html) object that you can provide when you call the [CreateDeployment](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_CreateDeployment.html) operation\.
 
 ##### Request<a name="ipc-operation-defercomponentupdate-request"></a>
 
@@ -704,8 +955,8 @@ The ID of the AWS IoT Greengrass deployment to defer\.
 Defaults to the name of the component that makes the request\.
 
 `recheckAfterMs`  
-The amount of time in milliseconds for which to defer the update\. The kernel waits for this amount of time and then sends another `PreComponentUpdateEvent` that you can discover with [SubscribeToComponentUpdates](#ipc-operation-subscribetocomponentupdates)\.  
-Specify `0` to acknowledge the update\. This tells the kernel that your component is ready for the update\.  
+The amount of time in milliseconds for which to defer the update\. The nucleus waits for this amount of time and then sends another `PreComponentUpdateEvent` that you can discover with [SubscribeToComponentUpdates](#ipc-operation-subscribetocomponentupdates)\.  
+Specify `0` to acknowledge the update\. This tells the nucleus that your component is ready for the update\.  
 Defaults to zero milliseconds, which means to acknowledge the update\.
 
 ##### Response<a name="ipc-operation-defercomponentupdate-response"></a>
@@ -717,7 +968,7 @@ This operation doesn't provide any information in its response\.
 The component configuration IPC service lets you do the following:
 + Get and set component configuration parameters
 + Subscribe to component configuration updates
-+ Validate component configuration updates before the kernel applies them
++ Validate component configuration updates before the nucleus applies them
 
 ### Operations<a name="ipc-component-configuration-operations"></a>
 
@@ -825,7 +1076,7 @@ The key path to the configuration value that updated\.
 
 #### SubscribeToValidateConfigurationUpdates<a name="ipc-operation-subscribetovalidateconfigurationupdates"></a>
 
-Subscribe to receive notifications before this component's configuration updates\. This lets components validate updates to their own configuration\. Use the [SendConfigurationValidityReport](#ipc-operation-sendconfigurationvalidityreport) operation to tell the kernel whether or not the configuration is valid\.
+Subscribe to receive notifications before this component's configuration updates\. This lets components validate updates to their own configuration\. Use the [SendConfigurationValidityReport](#ipc-operation-sendconfigurationvalidityreport) operation to tell the nucleus whether or not the configuration is valid\.
 
 **Important**  
 Local deployments don't notify components of updates\.
@@ -849,19 +1100,19 @@ The object that contains the new configuration\.
 
 #### SendConfigurationValidityReport<a name="ipc-operation-sendconfigurationvalidityreport"></a>
 
-Tell the kernel whether or not a configuration update to this component is valid\. The deployment fails if you tell the kernel that the new configuration isn't valid\. Use the [SubscribeToValidateConfigurationUpdates](#ipc-operation-subscribetovalidateconfigurationupdates) operation to subscribe to validate configuration updates\.
+Tell the nucleus whether or not a configuration update to this component is valid\. The deployment fails if you tell the nucleus that the new configuration isn't valid\. Use the [SubscribeToValidateConfigurationUpdates](#ipc-operation-subscribetovalidateconfigurationupdates) operation to subscribe to validate configuration updates\.
 
-If a component doesn't respond to a validate configuration update notification, the kernel waits the amount of time that you specify in the deployment's configuration validation policy\. After that timeout, the kernel proceeds with the deployment\. The default component validation timeout is 20 seconds\. For more information, see [Create deployments](create-deployments.md) and the [ConfigurationValidationPolicy](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_ConfigurationValidationPolicy.html) object that you can provide when you call the [CreateDeployment](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_CreateDeployment.html) operation\.
+If a component doesn't respond to a validate configuration update notification, the nucleus waits the amount of time that you specify in the deployment's configuration validation policy\. After that timeout, the nucleus proceeds with the deployment\. The default component validation timeout is 20 seconds\. For more information, see [Create deployments](create-deployments.md) and the [ConfigurationValidationPolicy](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_ConfigurationValidationPolicy.html) object that you can provide when you call the [CreateDeployment](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_CreateDeployment.html) operation\.
 
 ##### Request<a name="ipc-operation-sendconfigurationvalidityreport-request"></a>
 
 This operation's request has the following parameters:
 
 `configurationValidityReport`  
-The report that tells the kernel whether or not the configuration update is valid\. This object, `ConfigurationValidityReport`, contains the following information:    
+The report that tells the nucleus whether or not the configuration update is valid\. This object, `ConfigurationValidityReport`, contains the following information:    
 `status`  
 The validity status\. This enum, `ConfigurationValidityStatus`, has the following values:  
-+ `SUCCEEDED` – The configuration is valid and the kernel can apply it to this component\.
++ `SUCCEEDED` – The configuration is valid and the nucleus can apply it to this component\.
 + `FAILED` – The configuration isn't valid and the deployment fails\.  
 `deploymentId`  
 The ID of the AWS IoT Greengrass deployment that requested the configuration update\.  

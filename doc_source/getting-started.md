@@ -14,6 +14,8 @@ To complete this getting started tutorial, you need the following:
 + A Windows, Mac, or Unix\-like development computer with an internet connection\.
 + A device with a Linux operating system and an internet connection to the same network as your development computer\. We recommend that you use a Raspberry Pi with [Raspberry Pi OS](https://www.raspberrypi.org/downloads/) \(previously called Raspbian\)\.
 + AWS CLI installed and configured with credentials on your development computer and on your device\. For more information, see [Configuring the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)\.
+  + Minimum AWS CLI V1 version: v1\.18\.197
+  + Minimum AWS CLI V2 version: v2\.1\.11
 + [Python](https://www.python.org/downloads/) 3\.5 or later installed on the device\.
 
 ## Set up your environment<a name="set-up-environment"></a>
@@ -177,7 +179,7 @@ You can add the Greengrass CLI to your `PATH` environment variable to run `green
 1. If you installed the software as a system service, the installer runs the software for you\. Otherwise, you must run the software\. To see if the installer set up the software as a system service, look for the following line in the installer output\.
 
    ```
-   Successfully set up Kernel as a system service
+   Successfully set up Nucleus as a system service
    ```
 
    If you don't see this message, do the following to run the software:
@@ -191,7 +193,7 @@ You can add the Greengrass CLI to your `PATH` environment variable to run `green
       The software prints the following message if it launches successfully\.
 
       ```
-      Launched kernel successfully.
+      Launched Nucleus successfully.
       ```
 
    1. You must leave the current terminal session open to keep the AWS IoT Greengrass Core software running\. On your development computer, run the following command to open a second SSH session that you can use to run additional commands on the core device\. Replace *username* with the name of the user to sign in, and replace *pi\-ip\-address* with the IP address of the device\.

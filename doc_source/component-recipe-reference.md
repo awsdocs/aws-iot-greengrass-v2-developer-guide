@@ -300,7 +300,7 @@ Lifecycle:
 
 ## Recipe variables<a name="recipe-variables"></a>
 
-Recipe variables expose information from the component and kernel for you to use in your recipes\. For example, you can use recipe variables to pass component configuration parameters to a lifecycle script that exists as an artifact\.
+Recipe variables expose information from the current component and nucleus for you to use in your recipes\. For example, you can use recipe variables to pass component configuration parameters to a lifecycle script that exists as an artifact\.
 
 Recipe variables use `{recipe_variable}` syntax\. The double curly braces indicate a recipe variable\.
 

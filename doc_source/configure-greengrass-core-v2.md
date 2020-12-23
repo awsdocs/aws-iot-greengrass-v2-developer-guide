@@ -220,7 +220,7 @@ You can configure the AWS IoT Greengrass Core software as a system service in yo
 + Apply over\-the\-air \(OTA\) updates to the core device's AWS IoT Greengrass Core software\. For more information, see [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)\.
 + Enable components to restart the AWS IoT Greengrass Core software or the core device when a deployment updates the component to a new version or updates certain configuration parameters\. For more information, see the [bootstrap lifecycle step](component-recipe-reference.md#bootstrap-lifecycle-definition)\.
 
-There are different init systems, such as initd, systemd, and SystemV\. To configure the AWS IoT Greengrass Core software as a system service on a device with systemd, run the kernel with the `--setup-system-service true` argument\. This argument starts the kernel as a system service and configures it to launch when the device boots\.
+There are different init systems, such as initd, systemd, and SystemV\. To configure the AWS IoT Greengrass Core software as a system service on a device with systemd, run the nucleus with the `--setup-system-service true` argument\. This argument starts the nucleus as a system service and configures it to launch when the device boots\.
 
 Then, you can use the following commands to configure starting the device on boot and to start or stop the AWS IoT Greengrass Core software\.
 
@@ -232,27 +232,27 @@ Then, you can use the following commands to configure starting the device on boo
   ```
 
 **To enable service start on device boot \(systemd\)**
-+ Run the following command to enable the kernel to start when the device boots\.
++ Run the following command to enable the nucleus to start when the device boots\.
 
   ```
   sudo systemctl enable greengrass.service
   ```
 
 **To disable service start on device boot \(systemd\)**
-+ Run the following command to stop the kernel from starting when the device boots\.
++ Run the following command to stop the nucleus from starting when the device boots\.
 
   ```
   sudo systemctl disable greengrass.service
   ```
 
-**To start the kernel as a system service \(systemd\)**
+**To start the nucleus as a system service \(systemd\)**
 + Run the following command to start the AWS IoT Greengrass Core software\.
 
   ```
   sudo systemctl start greengrass.service
   ```
 
-**To stop the kernel as a system service \(systemd\)**
+**To stop the nucleus as a system service \(systemd\)**
 + Run the following command to stop the AWS IoT Greengrass Core software\.
 
   ```

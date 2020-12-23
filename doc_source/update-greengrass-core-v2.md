@@ -19,7 +19,7 @@ For more information, see the [Greengrass core nucleus component](greengrass-nuc
 The following requirements apply to deploy the nucleus component for OTA updates of the AWS IoT Greengrass Core software:
 + The Greengrass core device must have a connection to the AWS Cloud to receive the deployment\.
 + The Greengrass core device must be correctly configured and provisioned with certificates and keys for authentication with AWS IoT Core and AWS IoT Greengrass\.
-+ The AWS IoT Greengrass Core software must be set up and running as a system service\. OTA updates don't work if you run the kernel from the JAR file, `Greengrass.jar`\. For more information, see [Configure AWS IoT Greengrass as a system service](configure-greengrass-core-v2.md#configure-system-service)\.
++ The AWS IoT Greengrass Core software must be set up and running as a system service\. OTA updates don't work if you run the nucleus from the JAR file, `Greengrass.jar`\. For more information, see [Configure AWS IoT Greengrass as a system service](configure-greengrass-core-v2.md#configure-system-service)\.
 
 ## Considerations<a name="ota-update-considerations"></a>
 
