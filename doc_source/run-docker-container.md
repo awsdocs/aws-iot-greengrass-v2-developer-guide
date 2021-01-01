@@ -14,7 +14,7 @@ You can store Docker images in Amazon S3 to provide them as component artifacts\
 To run a Docker container in a component, you need the following:
 + A Greengrass core device\. If you don't have one, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
 + [Docker Engine](https://docs.docker.com/engine/) installed on your Greengrass core device\.
-+ [Docker configured for you to run it as a non\-root user](https://docs.docker.com/engine/install/linux-postinstall/)\. This lets you call `docker` commands without `sudo`\.
++ [Docker configured for you to run it as a non\-root user](https://docs.docker.com/engine/install/linux-postinstall/)\. This lets you call `docker` commands without `sudo`\.  To add the `ggc_user` to the `docker` group, run: `usermod -aG docker ggc_user`.
 + To use interprocess communication \(IPC\) in a Docker container component, you must set AWS IoT Greengrass Core environment variables in the Docker container\. For more information, see [Use interprocess communication in Docker container components](#docker-container-ipc)\.
 
 ## Run a Docker container from an image in Amazon S3<a name="s3-docker-image"></a>
