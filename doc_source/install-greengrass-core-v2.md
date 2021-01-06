@@ -181,6 +181,7 @@ The `greengrass:CreateDeployment` permission is required only if you specify the
       "Effect": "Allow",
       "Action": [
         "greengrass:CreateDeployment",
+         "iot:CreateJob",
         "iot:AddThingToThingGroup",
         "iot:AttachPolicy",
         "iot:AttachThingPrincipal",
