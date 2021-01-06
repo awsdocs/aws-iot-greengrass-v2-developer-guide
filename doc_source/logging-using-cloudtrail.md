@@ -28,3 +28,57 @@ For more information, see the [CloudTrail userIdentity element](https://docs.aws
 ## Understanding AWS IoT Greengrass V2 log file entries<a name="understanding-service-name-entries"></a>
 
 A trail is a configuration that enables delivery of events as log files to an S3 bucket that you specify\. CloudTrail log files contain one or more log entries\. An event represents a single request from any source\. It includes information about the requested action, the date and time of the action, request parameters, and so on\. CloudTrail log files aren't an ordered stack trace of the public API calls, so they don't appear in any specific order\. 
+
+The following example shows a CloudTrail log entry that demonstrates the `CreateDeployment` action\.
+
+```
+{
+    "eventVersion": "1.08",
+    "userIdentity": {
+        "type": "IAMUser",
+        "principalId": "AIDACKCEVSQ6C2EXAMPLE",
+        "arn": "arn:aws:iam::123456789012:user/Administrator",
+        "accountId": "123456789012",
+        "accessKeyId": "AKIAIOSFODNN7EXAMPLE",
+        "userName": "Administrator"
+    },
+    "eventTime": "2021-01-06T02:38:05Z",
+    "eventSource": "greengrass.amazonaws.com",
+    "eventName": "CreateDeployment",
+    "awsRegion": "us-west-2",
+    "sourceIPAddress": "203.0.113.0",
+    "userAgent": "aws-cli/2.1.9 Python/3.7.9 Windows/10 exe/AMD64 prompt/off command/greengrassv2.create-deployment",
+    "requestParameters": {
+        "deploymentPolicies": {
+            "failureHandlingPolicy": "DO_NOTHING",
+            "componentUpdatePolicy": {
+                "timeoutInSeconds": 60,
+                "action": "NOTIFY_COMPONENTS"
+            },
+            "configurationValidationPolicy": {
+                "timeoutInSeconds": 60
+            }
+        },
+        "deploymentName": "Deployment for MyGreengrassCoreGroup",
+        "components": {
+            "aws.greengrass.Cli": {
+                "componentVersion": "2.0.3"
+            }
+        },
+        "iotJobConfiguration": {},
+        "targetArn": "arn:aws:iot:us-west-2:123456789012:thinggroup/MyGreengrassCoreGroup"
+    },
+    "responseElements": {
+        "iotJobArn": "arn:aws:iot:us-west-2:123456789012:job/fdfeba1d-ac6d-44ef-ab28-54f684ea578d",
+        "iotJobId": "fdfeba1d-ac6d-44ef-ab28-54f684ea578d",
+        "deploymentId": "4196dddc-0a21-4c54-a985-66a525f6946e"
+    },
+    "requestID": "311b9529-4aad-42ac-8408-c06c6fec79a9",
+    "eventID": "c0f3aa2c-af22-48c1-8161-bad4a2ab1841",
+    "readOnly": false,
+    "eventType": "AwsApiCall",
+    "managementEvent": true,
+    "eventCategory": "Management",
+    "recipientAccountId": "123456789012"
+}
+```

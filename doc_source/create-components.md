@@ -147,7 +147,7 @@ When you are ready to test your component, you can install it to your Greengrass
    sudo tail -f /greengrass/v2/logs/com.example.HelloWorld.log
    ```
 
-1. In your original terminal session, run the following command to update the core device with your component\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
+1. In your original terminal session, run the following command to update the core device with your component\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder, and replace *\~/greengrassv2* with the path to your local development folder\.
 
    ```
    sudo /greengrass/v2/bin/greengrass-cli deployment create \

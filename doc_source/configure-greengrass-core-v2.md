@@ -4,7 +4,8 @@ The AWS IoT Greengrass Core software provides options that you can use to config
 
 **Topics**
 + [Deploy the Greengrass core nucleus component](#configure-nucleus-component)
-+ [Service endpoints must match the root CA certificate type](#certificate-endpoints)
++ [Use service endpoints that match the root CA certificate type](#certificate-endpoints)
++ [Control memory allocation with JVM options](#jvm-tuning)
 + [Configure the user and group that run components](#configure-component-user)
 + [Connect on port 443 or through a network proxy](#configure-alpn-network-proxy)
 + [Configure MQTT timeouts and cache settings](#configure-mqtt)
@@ -13,9 +14,9 @@ The AWS IoT Greengrass Core software provides options that you can use to config
 
 ## Deploy the Greengrass core nucleus component<a name="configure-nucleus-component"></a>
 
-AWS IoT Greengrass provides the AWS IoT Greengrass Core software as a component that you can deploy to your Greengrass core devices\. You can create a deployment to apply the same configuration to multiple Greengrass core devices\. For more information, see the [Greengrass core nucleus component](greengrass-nucleus-component.md) and [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)\.
+AWS IoT Greengrass provides the AWS IoT Greengrass Core software as a component that you can deploy to your Greengrass core devices\. You can create a deployment to apply the same configuration to multiple Greengrass core devices\. For more information, see [Greengrass nucleus](greengrass-nucleus-component.md) and [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)\.
 
-## Service endpoints must match the root CA certificate type<a name="certificate-endpoints"></a>
+## Use service endpoints that match the root CA certificate type<a name="certificate-endpoints"></a>
 
 Your AWS IoT Core and AWS IoT Greengrass endpoints must correspond to the certificate type of the root CA certificate on your device\. If the endpoints and certificate type do not match, authentication attempts fail between the device and AWS IoT Core or AWS IoT Greengrass\. For more information, see [Server authentication](https://docs.aws.amazon.com/iot/latest/developerguide/server-authentication.html) in the *AWS IoT Developer Guide*\.
 
@@ -27,6 +28,14 @@ prefix-ats.iot.region.amazonaws.com
 
 **Note**  
 For backward compatibility, AWS IoT Greengrass currently supports legacy VeriSign root CA certificates and endpoints in some AWS Regions\. If you're using a legacy VeriSign root CA certificate, we recommend that you create an ATS endpoint and use an ATS root CA certificate instead\. Otherwise, make sure to use the corresponding legacy endpoints\. For more information, see [Supported legacy endpoints](https://docs.aws.amazon.com/general/latest/gr/greengrass.html#greengrass-legacy-endpoints) in the *Amazon Web Services General Reference*\.
+
+## Control memory allocation with JVM options<a name="jvm-tuning"></a>
+
+If you are running AWS IoT Greengrass on a device with limited memory, you can use Java virtual machine \(JVM\) heap size options to control the amount of memory that AWS IoT Greengrass Core software uses\. 
+
+To control memory allocation, create a new deployment or revise an existing deployment that includes the nucleus component, and specify the heap size options in the `jvmOptions` configuration parameter in the [nucleus component configuration](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration)\. The heap size in the JVM determines how many objects an application can create in memory before [garbage collection](https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/introduction.html) occurs\. You can specify the *initial JVM heap size* \(the `-Xms` argument\) and a *maximum JVM heap size* \(the `-Xmx` argument\)\. A larger initial heap size allows more objects to be created before garbage collection occurs, but it also means that the garbage collector will take longer to compact the heap\. The maximum heap size specifies the maximum amount of memory the JVM can allocate when expanding the heap during heavy activity\. We recommend that you set the `jvmOptions` value to at least `-Xmx64m`\. 
+
+For information about deploying components, see [Create deployments](create-deployments.md)\.
 
 ## Configure the user and group that run components<a name="configure-component-user"></a>
 

@@ -63,7 +63,7 @@ $ greengrass-cli logs get
 + `--max-log-queue-size`, `-m`\. The maximum number of log entries to allocate to memory\. Use this option to optimize memory usage\. Default is 100\.
 
 **Output**  
-The following is an example of the output produced when you run this command\.  
+The following example shows the output produced when you run this command\.  
 
 ```
 $ greengrass-cli logs get --verbose \
@@ -90,7 +90,7 @@ $ greengrass-cli logs list-keywords [arguments]
 None
 
 **Output**  
-The following are examples of the output produced when you run this command\.  
+The following examples show the output produced when you run this command\.  
 
 ```
 $ greengrass-cli logs list-keywords
@@ -128,7 +128,7 @@ $ greengrass-cli logs list-log-files [arguments]
 `--log-dir`, `-ld`\. The path to the directory to check for log files\. 
 
 **Output**  
-The following are examples of the output produced when you run this command\.  
+The following examples show the output produced when you run this command\.  
 
 ```
 $ greengrass-cli logs list-log-files -ld /greengrass/v2/logs/

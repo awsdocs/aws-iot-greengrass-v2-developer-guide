@@ -62,7 +62,7 @@ Default: `2621440` \(2\.5 MB\)
 Default: `false`
 
 `jvmOptions`  
-\(Optional\) The JVM options to use to run the AWS IoT Greengrass Core software\.  
+\(Optional\) The JVM options to use to run the AWS IoT Greengrass Core software\. For example, to specify a maximum heap size, you can set this option to `-Xmx64m`\.  
 When you deploy a change to this configuration parameter, the AWS IoT Greengrass Core software restarts for the change to take effect\.
 
 `iotDataEndpoint`  

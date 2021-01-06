@@ -51,7 +51,7 @@ Core device roles don't allow access to S3 buckets by default\. If this is your 
    ...
    Manifests:
      - Artifacts:
-     - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.HelloWorld/1.0.0/artifact.py
+       - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.HelloWorld/1.0.0/artifact.py
    ```
 **Note**  
 You can add the `Unarchive: ZIP` option for a ZIP artifact to configure AWS IoT Greengrass Core devices to unzip the artifact when the component deploys\.

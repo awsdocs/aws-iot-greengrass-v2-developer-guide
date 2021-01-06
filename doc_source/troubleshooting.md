@@ -36,11 +36,51 @@ Use the following information to troubleshoot AWS IoT Greengrass Core software i
 
 **Topics**
 + [Unable to set up core device](#unable-to-set-up-core-device)
++ [Unable to install AWS IoT Greengrass Core software on NVIDIA Jetson device](#unable-to-install-on-jetson-device)
 + [Error: Unable to connect to AWS IoT Core](#core-error-unable-to-connect-to-aws-iot)
++ [Out of memory error](#java-out-of-memory)
 
 ### Unable to set up core device<a name="unable-to-set-up-core-device"></a>
 
 If the AWS IoT Greengrass Core software installer fails and you aren't able to set up a core device, you might need to uninstall the software and try again\. For more information, see [Uninstall the AWS IoT Greengrass Core software](configure-greengrass-core-v2.md#uninstall-greengrass-core-v2)\.
+
+### Unable to install AWS IoT Greengrass Core software on NVIDIA Jetson device<a name="unable-to-install-on-jetson-device"></a>
+
+You might see the following error and stack trace when you install the AWS IoT Greengrass Core software on an NVIDIA Jetson device, such as the Jetson Nano\.
+
+```
+Error while trying to setup Greengrass Nucleus
+java.lang.RuntimeException: Error setting up component default user / group
+at com.aws.greengrass.easysetup.GreengrassSetup.setComponentDefaultUserAndGroup(GreengrassSetup.java:492)
+at com.aws.greengrass.easysetup.GreengrassSetup.performSetup(GreengrassSetup.java:283)
+at com.aws.greengrass.easysetup.GreengrassSetup.main(GreengrassSetup.java:242)
+Caused by: java.io.IOException: Failed to add user to group , command : sudo dscl . -append /Groups/ggc_group GroupMembership ggc_user
+at com.aws.greengrass.util.platforms.unix.UnixPlatform.runCmd(UnixPlatform.java:433)
+at com.aws.greengrass.util.platforms.unix.DarwinPlatform.addUserToGroup(DarwinPlatform.java:48)
+at com.aws.greengrass.easysetup.GreengrassSetup.setComponentDefaultUserAndGroup(GreengrassSetup.java:484)
+... 2 more
+Caused by: java.io.IOException: Failed to add user to group - command: sudo dscl . -append /Groups/g
+```
+
+To resolve this issue, create and use a custom system user and group other than `ggc_user` and `ggc_group`\. The AWS IoT Greengrass Core software runs components as this user and group by default\. 
+
+**To create and use a custom system user and group**
+
+1. Run the following commands to create a user, create a group, and add the user to the group\. Replace *my\_ggc\_user* with a user name, and replace *my\_ggc\_group* with a group name\.
+
+   ```
+   sudo useradd -r -m my_ggc_user
+   sudo groupadd -r my_ggc_group
+   sudo usermod -a -G my_ggc_group my_ggc_user
+   ```
+
+1. Run the AWS IoT Greengrass Core software installer by using the following argument, so that you can use the custom user and group\.
+
+   ```
+   --component-default-user my_ggc_user:my_ggc_group
+   ```
+
+   For more information, see [Install the AWS IoT Greengrass Core software](install-greengrass-core-v2.md)\.
 
 ### Error: Unable to connect to AWS IoT Core<a name="core-error-unable-to-connect-to-aws-iot"></a>
 
@@ -48,6 +88,10 @@ You might see this error when the AWS IoT Greengrass Core software can't connect
 + Check that your core device can connect to the internet and AWS IoT Core\. For more information about the AWS IoT Core endpoint to which your device connects, see [Configure the AWS IoT Greengrass Core software](configure-greengrass-core-v2.md)\.
 + Check that your core device's AWS IoT thing uses a certificate that allows the `iot:Connect`, `iot:Publish`, `iot:Receive`, and `iot:Subscribe` permissions\.
 + If your core device uses a [network proxy](configure-greengrass-core-v2.md#configure-network-proxy), check that your core device has a [device role](device-service-role.md) and that its role allows the `iot:Connect`, `iot:Publish`, `iot:Receive`, and `iot:Subscribe` permissions\.
+
+### Out of memory error<a name="java-out-of-memory"></a>
+
+This error typically occurs if your device doesn't have sufficient memory to allocate an object in the Java heap\. On devices with limited memory, you might need to specify a maximum heap size to control memory allocation\. For more information, see [Control memory allocation with JVM options](configure-greengrass-core-v2.md#jvm-tuning)\.
 
 ## Core device deployment issues<a name="greengrass-core-deployment-issues"></a>
 

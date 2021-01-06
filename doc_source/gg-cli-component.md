@@ -22,7 +22,7 @@ $ greengrass-cli component details --name <component-name>
 `--name`, `-n`\. The component name\.
 
 **Output**  
-The following is an example of the output produced when you run this command\.  
+The following example shows the output produced when you run this command\.  
 
 ```
 $ greengrass-cli component details --name MyComponent 
@@ -47,7 +47,7 @@ $ greengrass-cli component list
 None
 
 **Output**  
-The following is an example of the output produced when you run this command\.  
+The following example shows the output produced when you run this command\.  
 
 ```
 $ greengrass-cli component list

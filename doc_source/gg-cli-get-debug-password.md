@@ -12,7 +12,7 @@ $ greengrass-cli get-debug-password
 None
 
 **Output**  
-The following is an example of the output produced when you run this command\.  
+The following example shows the output produced when you run this command\.  
 
 ```
 Username: debug

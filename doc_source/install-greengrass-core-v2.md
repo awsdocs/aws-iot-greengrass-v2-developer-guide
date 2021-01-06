@@ -60,25 +60,26 @@ You can download the AWS IoT Greengrass Core software from the following locatio
    + Specifies to use the `ggc_user` system user and `ggc_group` system group to run software components on the core device\. The installer creates this default user and group for you\.
    + Specifies to install the software as a system service that runs on boot, if your device has the [systemd](https://en.wikipedia.org/wiki/Systemd) init system\.
 **Note**  
-To set up a development device with local development tools, specify the `--deploy-dev-tools true` argument\. The local development tools can take up to a minute to deploy after the installation completes\.
+To set up a development device with local development tools, specify the `--deploy-dev-tools true` argument\. The local development tools can take up to a minute to deploy after the installation completes\.   
+<a name="jvm-tuning-note"></a>If you are running AWS IoT Greengrass on a device with limited memory, you might want to control the amount of memory that AWS IoT Greengrass Core software uses\. To control memory allocation, you can set JVM heap size options in the `jvmOptions` configuration parameter in your nucleus component\. For more information, see [Control memory allocation with JVM options](configure-greengrass-core-v2.md#jvm-tuning)\.
 
    For more information about the arguments that you can specify, see [Configure the installer](#configure-installer)\.
 
-   Do the following:<a name="installer-replace-arguments"></a>
+   Replace argument values in your command as follows\.<a name="installer-replace-arguments"></a>
 
-   1. Replace *region* with the AWS Region in which to find or create resources\.
+   1. *GreengrassCore*: If you unpacked the installer to a different folder, replace this value with the folder that you want to use\.
 
-   1. Replace *MyGreengrassCore* with the name of the AWS IoT thing for your Greengrass core device\. If the thing doesn't exist, the installer creates it\. The installer downloads the certificates to authenticate as the AWS IoT thing\. 
+   1. *region*: Replace with the AWS Region in which to find or create resources\.
 
-   1. Replace *MyGreengrassCoreGroup* with the name of AWS IoT thing group for your Greengrass core device\. If the thing group doesn't exist, the installer creates it and adds the thing to it\. If the thing group exists and has an active deployment, the core device downloads and runs the software which that deployment specifies\.
+   1. */greengrass/v2*: Replace with the path to the root folder to use to install the AWS IoT Greengrass Core software\.
 
-   1. Replace *MyGreengrassV2TokenExchangeRole* with the name of the IAM role that allows the Greengrass core device to get temporary AWS credentials\. If the role doesn't exist, the installer creates it and creates and attaches a policy named `MyGreengrassV2TokenExchangeRoleAccess`\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
+   1. *MyGreengrassCore*: Replace with the name of the AWS IoT thing for your Greengrass core device\. If the thing doesn't exist, the installer creates it\. The installer downloads the certificates to authenticate as the AWS IoT thing\. 
 
-   1. Replace *MyGreengrassCoreTokenExchangeRoleAlias* with the alias to the IAM role that allows the Greengrass core device to get temporary credentials later\. If the role alias doesn't exist, the installer creates it and points it to the IAM role that you specify\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
+   1. *MyGreengrassCoreGroup*: Replace with the name of AWS IoT thing group for your Greengrass core device\. If the thing group doesn't exist, the installer creates it and adds the thing to it\. If the thing group exists and has an active deployment, the core device downloads and runs the software which that deployment specifies\.
 
-   1. Replace */greengrass/v2* with the path to the root folder to use to install the AWS IoT Greengrass Core software\.
+   1. *MyGreengrassV2TokenExchangeRole*: Replace with the name of the IAM role that allows the Greengrass core device to get temporary AWS credentials\. If the role doesn't exist, the installer creates it and creates and attaches a policy named `MyGreengrassV2TokenExchangeRoleAccess`\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
 
-   1. If you unpacked the installer to a different folder, replace *GreengrassCore* with the folder that you use\.
+   1. *MyGreengrassCoreTokenExchangeRoleAlias*: Replace with the alias to the IAM role that allows the Greengrass core device to get temporary credentials later\. If the role alias doesn't exist, the installer creates it and points it to the IAM role that you specify\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
 
    ```
    sudo -E java -Dlog.store=FILE \
@@ -99,6 +100,12 @@ To set up a development device with local development tools, specify the `--depl
    + If you specify `--deploy-dev-tools`, the installer prints `Configured Nucleus to deploy aws.greengrass.Cli component` if it created the deployment successfully\.
    + If you specify `--setup-system-service true`, the installer prints `Successfully set up Nucleus as a system service` if it set up and ran the software as a service\.
    + If you don't specify `--setup-system-service true`, the installer prints `Launched Nucleus successfully` if it succeeded and ran the software\.
+
+1. <a name="root-file-permissions"></a>Run the following command to set the required file permissions for your AWS IoT Greengrass Core software root folder\. Replace */greengrass/v2* with the root folder that you specified in your installation command and replace */greengrass* with the parent folder for your root folder\.
+
+   ```
+   sudo chmod 755 /greengrass/v2 && sudo chmod 755 /greengrass
+   ```
 
 For more information about how to configure and use the software and AWS IoT Greengrass, see the following:
 + [Configure the AWS IoT Greengrass Core software](configure-greengrass-core-v2.md)
@@ -171,7 +178,7 @@ When you install the AWS IoT Greengrass Core software, you can provision require
 The following example policy includes the minimum set of actions that the installer requires to provision these resources\. These permissions are required if you specify the `--provision` argument for the installer\.
 
 **Note**  
-The `greengrass:CreateDeployment` permission is required only if you specify the `--deploy-dev-tools` argument for the installer\.
+The `DeployDevTools` policy statement is required only if you specify the `--deploy-dev-tools` argument for the installer\.
 
 ```
 {
@@ -180,7 +187,6 @@ The `greengrass:CreateDeployment` permission is required only if you specify the
     {
       "Effect": "Allow",
       "Action": [
-        "greengrass:CreateDeployment",
         "iot:AddThingToThingGroup",
         "iot:AttachPolicy",
         "iot:AttachThingPrincipal",
@@ -198,6 +204,23 @@ The `greengrass:CreateDeployment` permission is required only if you specify the
         "iam:PassRole",
         "iam:CreatePolicy",
         "iam:AttachRolePolicy"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "DeployDevTools",
+      "Effect": "Allow",
+      "Action": [
+        "greengrass:CreateDeployment",
+        "iot:CancelJob",
+        "iot:CreateJob",
+        "iot:DeleteThingShadow",
+        "iot:DescribeJob",
+        "iot:DescribeThing",
+        "iot:DescribeThingGroup",
+        "iot:GetThingShadow",
+        "iot:UpdateJob",
+        "iot:UpdateThingShadow"
       ],
       "Resource": "*"
     }

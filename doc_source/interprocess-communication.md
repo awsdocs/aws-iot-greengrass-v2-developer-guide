@@ -13,7 +13,7 @@ AWS IoT Greengrass Core provides an interprocess communication \(IPC\) SDK that 
 
 ## Requirements<a name="ipc-requirements"></a>
 
-To develop custom component that you IPC, you must use the AWS IoT Device SDK v2\. Use the following information to download and use the SDK in the language of your choice\.
+To develop custom components that use IPC, you must use the AWS IoT Device SDK v2\. Use the following information to download and use the SDK in the language of your choice\.
 
 ------
 #### [ Java ]
@@ -225,7 +225,7 @@ IPC service identifier:
 
 ```
 {
-  "IPC service identifier": [
+  "IPC service identifier": {
     "policyId": {
       "policyDescription": "description",
       "operations": [
@@ -237,7 +237,7 @@ IPC service identifier:
         "resource2"
       ]
     }
-  ]
+  }
 }
 ```
 
@@ -348,6 +348,19 @@ greengrassCoreIPCClient.publishToTopic(publishToTopicRequest, Optional.empty()).
 **Example: Publish a binary message**  
 
 ```
+import awsiot.greengrasscoreipc.client as client
+from awsiot.greengrasscoreipc.model import (
+    PublishToTopicRequest,
+    PublishMessage,
+    BinaryMessage
+)
+
+TIMEOUT = 10
+
+ipc_utils = IPCUtils()
+connection = ipc_utils.connect()
+ipc_client = client.GreengrassCoreIPCClient(connection)
+                    
 topic = "my/topic"
 message = "Hello, World!"
 
@@ -443,6 +456,18 @@ operationResponseHandler.closeStream();
 **Example: Subscribe to messages**  
 
 ```
+import awsiot.greengrasscoreipc.client as client
+from awsiot.greengrasscoreipc.model import (
+    SubscribeToTopicRequest,
+    SubscriptionResponseMessage
+)
+
+TIMEOUT = 10
+
+ipc_utils = IPCUtils()
+connection = ipc_utils.connect()
+ipc_client = client.GreengrassCoreIPCClient(connection)
+                    
 class StreamHandler(client.SubscribeToTopicStreamHandler):
     def __init__(self):
         super().__init__()
@@ -457,6 +482,7 @@ class StreamHandler(client.SubscribeToTopicStreamHandler):
 
     def on_stream_closed(self) -> None:
         pass
+
 
 topic = "my/topic"
 
@@ -751,6 +777,18 @@ greengrassCoreIPCClient.publishToIoTCore(publishToIoTCoreRequest, Optional.empty
 **Example: Publish a message**  
 
 ```
+import awsiot.greengrasscoreipc.client as client
+from awsiot.greengrasscoreipc.model import (
+    QOS,
+    PublishToIoTCoreRequest
+)
+
+TIMEOUT = 10
+
+ipc_utils = IPCUtils()
+connection = ipc_utils.connect()
+ipc_client = client.GreengrassCoreIPCClient(connection)
+                    
 topic = "my/topic"
 message = "Hello, World"
 qos = QOS.AT_LEAST_ONCE
@@ -846,6 +884,19 @@ operationResponseHandler.closeStream();
 **Example: Subscribe to messages**  
 
 ```
+import awsiot.greengrasscoreipc.client as client
+from awsiot.greengrasscoreipc.model import (
+    IoTCoreMessage,
+    QOS,
+    SubscribeToIoTCoreRequest
+)
+
+TIMEOUT = 10
+
+ipc_utils = IPCUtils()
+connection = ipc_utils.connect()
+ipc_client = client.GreengrassCoreIPCClient(connection)
+
 class StreamHandler(client.SubscribeToIoTCoreStreamHandler):
     def __init__(self):
         super().__init__()

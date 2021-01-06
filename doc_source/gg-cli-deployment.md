@@ -30,12 +30,13 @@ $ greengrass-cli deployment create
   ```
   /path/to/artifact/folder/<artifact-name>/<version>/<artifacts>
   ```
-+ `--update-config`, `-c`\. The configuration arguments for the deployment, provided as a JSON string or a JSON file\. The configuration should be in the following format: 
++ `--update-config`, `-c`\. The configuration arguments for the deployment, provided as a JSON string or a JSON file\. The JSON string should be in the following format: 
 
   ```
-  {"componentName": \
+  {"componentName": { \ 
     "MERGE": {"config-key": "config-value"}, \
-    "RESET": ["path/to/reset/"]
+    "RESET": ["path/to/reset/"] \
+    } \
   }
   ```
 + `--groupId`, `-g`\. The target thing group for the deployment\.
@@ -49,7 +50,7 @@ $ greengrass-cli deployment create
   ```
 
 **Output**  
-The following example shows an example of the output produced when you run this command\.  
+The following example shows the output produced when you run this command\.  
 
 ```
 $ greengrass-cli deployment create \
@@ -76,7 +77,7 @@ $ greengrass-cli deployment list
 None
 
 **Output**  
-The following is an example of the output produced when you run this command\. Depending on the status of your deployment, the output shows one of the following status values: `IN_PROGRESS`, `SUCCEEDED`, or `FAILED`\.  
+The following example shows the output produced when you run this command\. Depending on the status of your deployment, the output shows one of the following status values: `IN_PROGRESS`, `SUCCEEDED`, or `FAILED`\.  
 
 ```
 $ greengrass-cli deployment list
@@ -98,7 +99,7 @@ $ greengrass-cli deployment status -i <deployment-id>
 `-i`\. The ID of the deployment\.
 
 **Output**  
-The following is an example of the output produced when you run this command\. Depending on the status of your deployment, the output shows one of the following status values: `IN_PROGRESS`, `SUCCEEDED`, or `FAILED`\.  
+The following example shows the output produced when you run this command\. Depending on the status of your deployment, the output shows one of the following status values: `IN_PROGRESS`, `SUCCEEDED`, or `FAILED`\.  
 
 ```
 $ greengrass-cli deployment status -i 44d89f46-1a29-4044-ad89-5151213dfcbc
