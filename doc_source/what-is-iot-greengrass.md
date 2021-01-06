@@ -22,7 +22,7 @@ For current users of AWS IoT Greengrass, we recommend the following topics to he
 
 ## How AWS IoT Greengrass works<a name="how-it-works"></a>
 
-The AWS IoT Greengrass client software, also called AWS IoT Greengrass Core software, runs on Linux\-based distributions, such as Ubuntu or Raspberry Pi OS, for devices with ARM or x86 architectures\. With AWS IoT Greengrass, you can program devices to act locally on the data they generate, run predictions based on machine learning models, and filter and aggregate device data\. AWS IoT Greengrass enables local execution of AWS Lambda functions, Docker contains, native OS processes, or custom runtimes of your choice\. 
+The AWS IoT Greengrass client software, also called AWS IoT Greengrass Core software, runs on Linux\-based distributions, such as Ubuntu or Raspberry Pi OS, for devices with ARM or x86 architectures\. With AWS IoT Greengrass, you can program devices to act locally on the data they generate, run predictions based on machine learning models, and filter and aggregate device data\. AWS IoT Greengrass enables local execution of AWS Lambda functions, Docker containers, native OS processes, or custom runtimes of your choice\. 
 
 AWS IoT Greengrass provides pre\-built software modules called components that let you easily extend edge device functionality\. AWS IoT Greengrass components enable you to connect to AWS services and third\-party applications at the edge\. After you develop your IoT applications, AWS IoT Greengrass enables you to remotely deploy, configure, and manage those applications on your fleet of devices in the field\.
 
