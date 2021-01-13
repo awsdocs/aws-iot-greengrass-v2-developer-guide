@@ -34,7 +34,7 @@ AWS IoT Greengrass V2 currently doesn't support connected devices, also called G
 
   In AWS IoT Greengrass V1, subscriptions specify where Lambda functions receive event messages to consume as function payloads\. Functions subscribe to local publish/subscribe messages and AWS IoT Core MQTT messages\.
 
-  In AWS IoT Greengrass V2, components manage their own subscriptions to local publish/subscribe and AWS IoT Core MQTT messages\. In the component recipe, you define *authorization policies* to specify which topics the component can use to communicate\. In component code, you can use interprocess communication \(IPC\) for local publish/subscribe messaging and AWS IoT Core MQTT messaging\. For more information, see [Interprocess communication](interprocess-communication.md)\.
+  In AWS IoT Greengrass V2, components manage their own subscriptions to local publish/subscribe and AWS IoT Core MQTT messages\. In the component recipe, you define *authorization policies* to specify which topics the component can use to communicate\. In component code, you can use interprocess communication \(IPC\) for local publish/subscribe messaging and AWS IoT Core MQTT messaging\. For more information, see [Use the AWS IoT Device SDK for interprocess communication \(IPC\)Use interprocess communication \(IPC\)](interprocess-communication.md)\.
 + **Local resources**
 
   In AWS IoT Greengrass V1, Lambda functions run in containers that you configure to access volumes and devices on the core device's file system\.
@@ -83,8 +83,8 @@ If your Lambda function uses features such as stream manager or local secrets, y
   If your Lambda function publishes messages to the local publish/subscribe broker or to AWS IoT Core, specify `aws.greengrass.LegacySubscriptionRouter` as a component dependency when you import the function\. When you deploy the legacy subscription router component, specify the subscriptions that the Lambda function uses\. For more information, see [Legacy subscription router](legacy-subscription-router-component.md)\.
 **Note**  <a name="legacy-subscription-router-requirement-note"></a>
 This component is required only if your Lambda function uses the `publish()` function in the AWS IoT Greengrass Core SDK\. If you update your Lambda function code to use the V2 SDK, you don't need to deploy the legacy subscription router component\. For more information, see the following [interprocess communication](interprocess-communication.md) services:  
-[Publish/subscribe messaging](interprocess-communication.md#ipc-publish-subscribe)
-[AWS IoT Core MQTT messaging](interprocess-communication.md#ipc-iot-core-mqtt)
+[Publish/subscribe local messages](ipc-publish-subscribe.md)
+[Publish/subscribe AWS IoT Core MQTT messages](ipc-iot-core-mqtt.md)
 + **Local volumes and devices**
 
   If your containerized Lambda function accesses local volumes or devices, specify those volumes and devices when you import the Lambda function\. This feature doesn't require a component dependency\.

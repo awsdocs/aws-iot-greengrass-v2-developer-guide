@@ -15,8 +15,8 @@ AWS IoT Greengrass Version 2 consists of the following elements:
 You can use the AWS IoT Greengrass Core software that runs on your edge devices to do the following:
 + Deploy and invoke components and Lambda functions\. For more information, see [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)\.
 + Process data streams on the local device with automatic exports to the AWS Cloud\. For more information, see [Manage data streams on the AWS IoT Greengrass Core](manage-data-streams.md)\.
-+ Support local publish/subscribe messaging between components\. For more information, see [Publish/subscribe messaging](interprocess-communication.md#ipc-publish-subscribe)\.
-+ Support MQTT messaging between AWS IoT and components\. For more information, see [AWS IoT Core MQTT messaging](interprocess-communication.md#ipc-iot-core-mqtt)\.
++ Support local publish/subscribe messaging between components\. For more information, see [Publish/subscribe local messages](ipc-publish-subscribe.md)\.
++ Support MQTT messaging between AWS IoT and components\. For more information, see [Publish/subscribe AWS IoT Core MQTT messages](ipc-iot-core-mqtt.md)\.
 + Perform secure, over\-the\-air \(OTA\) software updates of the AWS IoT Greengrass Core software and custom components\. For more information, see [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md) and [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)\.
 + Manage component lifecycles, such as with support for install and run scripts\. For more information, see [AWS IoT Greengrass component recipe reference](component-recipe-reference.md)\.
 + Provide secure, encrypted storage of local secrets and controlled access by components\. For more information, see [Secret manager](secret-manager-component.md)\.

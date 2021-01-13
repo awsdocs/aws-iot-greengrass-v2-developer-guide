@@ -2,7 +2,7 @@
 
 The Kinesis Data Firehose component \(`aws.greengrass.KinesisFirehose`\) publishes data through Amazon Kinesis Data Firehose delivery streams to destinations, such as Amazon S3, Amazon Redshift, and Amazon Elasticsearch Service\. For more information, see [What is Amazon Kinesis Data Firehose?](https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html) in the *Amazon Kinesis Data Firehose Developer Guide*\.
 
-To publish to a Kinesis delivery stream with this component, publish a message to a topic where this component subscribes\. By default, this component subscribes to the `kinesisfirehose/message` and `kinesisfirehose/message/binary/#` [local publish/subscribe](interprocess-communication.md#ipc-publish-subscribe) topics\. You can specify other topics, including AWS IoT Core MQTT topics, when you deploy this component\.
+To publish to a Kinesis delivery stream with this component, publish a message to a topic where this component subscribes\. By default, this component subscribes to the `kinesisfirehose/message` and `kinesisfirehose/message/binary/#` [local publish/subscribe](ipc-publish-subscribe.md) topics\. You can specify other topics, including AWS IoT Core MQTT topics, when you deploy this component\.
 
 **Note**  
 This component provides similar functionality to the Kinesis Data Firehose connector in AWS IoT Greengrass V1\. For more information, see [Kinesis Data Firehose connector](https://docs.aws.amazon.com/greengrass/latest/developerguide/kinesis-firehose-connector.html) in the *AWS IoT Greengrass V1 Developer Guide*\.
@@ -108,8 +108,8 @@ This object contains the following information:
 An object that contains the following information:    
 `type`  
 \(Optional\) The type of publish/subscribe messaging that this component uses to subscribe to messages\. Choose from the following options:  
-+ `Pubsub` – Subscribe to local publish/subscribe messages\. If you choose this option, the topic can't contain MQTT wildcards\. For more information about how to send messages from custom component when you specify this option, see [Publish/subscribe messaging](interprocess-communication.md#ipc-publish-subscribe)\.
-+ `IotCore` – Subscribe to AWS IoT Core MQTT messages\. If you choose this option, the topic can contain MQTT wildcards\. For more information about how to send messages from custom components when you specify this option, see [AWS IoT Core MQTT messaging](interprocess-communication.md#ipc-iot-core-mqtt)\.
++ `Pubsub` – Subscribe to local publish/subscribe messages\. If you choose this option, the topic can't contain MQTT wildcards\. For more information about how to send messages from custom component when you specify this option, see [Publish/subscribe local messages](ipc-publish-subscribe.md)\.
++ `IotCore` – Subscribe to AWS IoT Core MQTT messages\. If you choose this option, the topic can contain MQTT wildcards\. For more information about how to send messages from custom components when you specify this option, see [Publish/subscribe AWS IoT Core MQTT messages](ipc-iot-core-mqtt.md)\.
 Default: `Pubsub`  
 `topic`  
 \(Optional\) The topic to which the component subscribes to receive messages\. If you specify `IotCore` for `type`, you can use MQTT wildcards \(`+` and `#`\) in this topic\.
@@ -180,7 +180,7 @@ If you don't want to map a request to a response, you can publish your messages 
 
 ## Output data<a name="kinesis-firehose-component-output-data"></a>
 
-<a name="connector-component-output-data"></a>This component publishes responses as output data on the following MQTT topic by default\. You must specify this topic as the `subject` in the configuration for the [legacy subscription router component](legacy-subscription-router-component.md)\. For more information about how to subscribe to messages on this topic in your custom components, see [AWS IoT Core MQTT messaging](interprocess-communication.md#ipc-iot-core-mqtt)\.
+<a name="connector-component-output-data"></a>This component publishes responses as output data on the following MQTT topic by default\. You must specify this topic as the `subject` in the configuration for the [legacy subscription router component](legacy-subscription-router-component.md)\. For more information about how to subscribe to messages on this topic in your custom components, see [Publish/subscribe AWS IoT Core MQTT messages](ipc-iot-core-mqtt.md)\.
 
 **Default topic \(AWS IoT Core MQTT\):** `kinesisfirehose/message/status`
 

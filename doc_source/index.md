@@ -1,7 +1,7 @@
 # AWS IoT Greengrass Developer Guide, Version 2
 
 -----
-*****Copyright &copy; 2020 Amazon Web Services, Inc. and/or its affiliates. All rights reserved.*****
+*****Copyright &copy; 2021 Amazon Web Services, Inc. and/or its affiliates. All rights reserved.*****
 
 -----
 Amazon's trademarks and trade dress may not be used in 
@@ -43,7 +43,6 @@ Amazon's trademarks and trade dress may not be used in
       + [Token exchange service](token-exchange-service-component.md)
    + [Create custom AWS IoT Greengrass components](create-components.md)
       + [Interact with AWS services](interact-with-aws-services.md)
-      + [Interprocess communication](interprocess-communication.md)
       + [Run AWS Lambda functions](run-lambda-functions.md)
       + [Run a Docker container](run-docker-container.md)
       + [AWS IoT Greengrass component recipe reference](component-recipe-reference.md)
@@ -54,6 +53,12 @@ Amazon's trademarks and trade dress may not be used in
    + [Revise deployments](revise-deployments.md)
    + [Cancel deployments](cancel-deployments.md)
    + [Check deployment status](check-deployment-status.md)
++ [Use the AWS IoT Device SDK for interprocess communication (IPC)](interprocess-communication.md)
+   + [Publish/subscribe local messages](ipc-publish-subscribe.md)
+   + [Publish/subscribe AWS IoT Core MQTT messages](ipc-iot-core-mqtt.md)
+   + [Interact with component lifecycle](ipc-component-lifecycle.md)
+   + [Interact with component configuration](ipc-component-configuration.md)
+   + [Retrieve secret values](ipc-secret-manager.md)
 + [Manage data streams on the AWS IoT Greengrass Core](manage-data-streams.md)
    + [Configure AWS IoT Greengrass stream manager](configure-stream-manager.md)
    + [Use StreamManagerClient to work with streams](work-with-streams.md)

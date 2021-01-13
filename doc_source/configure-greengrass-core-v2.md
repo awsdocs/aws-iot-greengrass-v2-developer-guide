@@ -97,6 +97,9 @@ The following example defines a deployment that configures `ggc_user` as the def
 
 AWS IoT Greengrass core devices communicate with AWS IoT Core using the MQTT messaging protocol with TLS client authentication\. By convention, MQTT over TLS uses port 8883\. However, as a security measure, restrictive environments might limit inbound and outbound traffic to a small range of TCP ports\. For example, a corporate firewall might open port 443 for HTTPS traffic, but close other ports that are used for less common protocols, such as port 8883 for MQTT traffic\. Other restrictive environments might require all traffic to go through an HTTP proxy before connecting to the internet\.
 
+**Note**  
+Greengrass core devices use port 8883 to connect to the AWS IoT Greengrass data plane endpoint\. Your devices must be able to connect to this endpoint on port 8883\. For more information, see [Allowing endpoints](#allow-endpoints-proxy)\.
+
 To enable communication in these scenarios, AWS IoT Greengrass provides the following configuration options:
 + **MQTT with TLS client authentication over port 443**\. If your network allows connections to port 443, you can configure the Greengrass core device to use port 443 for MQTT traffic instead of the default port 8883\. This can be a direct connection to port 443 or a connection through a network proxy server\.
 
@@ -214,7 +217,7 @@ Communication between Greengrass core devices and AWS IoT Core or AWS IoT Greeng
 | --- | --- | --- | 
 |  `greengrass.region.amazonaws.com`  | 443 |  Used for control plane operations\.  | 
 |  `prefix-ats.iot.region.amazonaws.com` or `prefix.iot.region.amazonaws.com`  |  MQTT: 8883 or 443 HTTPS: 8443 or 443  |  Used for data plane operations for device management, such as shadow sync\. Allow the use of one or both endpoints, depending on whether your core and connected devices use Amazon Trust Services \(preferred\) root CA certificates, legacy root CA certificates, or both\.  | 
-|  `greengrass-ats.iot.region.amazonaws.com` or `greengrass.iot.region.amazonaws.com`  | 8443 or 443 |   Used to resolve component candidates for deployments\. Allow the use of one or both endpoints, depending on whether your core and connected devices use Amazon Trust Services \(preferred\) root CA certificates, legacy root CA certificates, or both\.\.  Clients that connect on port 443 must implement the [Application Layer Protocol Negotiation \(ALPN\)](https://tools.ietf.org/html/rfc7301) TLS extension and pass `x-amzn-http-ca` as the `ProtocolName` in the `ProtocolNameList`\. For more information, see [Protocols](https://docs.aws.amazon.com/iot/latest/developerguide/protocols.html) in the *AWS IoT Developer Guide*\.   | 
+|  `greengrass-ats.iot.region.amazonaws.com` or `greengrass.iot.region.amazonaws.com`  | 8443 |   Used to resolve component candidates for deployments\. Allow the use of one or both endpoints, depending on whether your core and connected devices use Amazon Trust Services \(preferred\) root CA certificates, legacy root CA certificates, or both\.\.   | 
 |  `*.s3.amazonaws.com`  | 443 |  Used for deployments\. This format includes the `*` character, because endpoint prefixes are controlled internally and might change at any time\.  | 
 |  `logs.region.amazonaws.com`  | 443 |  Required if the Greengrass core device is configured to write logs to CloudWatch\.  | 
 

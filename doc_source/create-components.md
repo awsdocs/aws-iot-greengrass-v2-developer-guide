@@ -6,7 +6,6 @@ With AWS IoT Greengrass, you can develop and test components on your Greengrass 
 + [Develop a custom component](#develop-component)
 + [Test a custom component](#test-component)
 + [Interact with AWS services](interact-with-aws-services.md)
-+ [Interprocess communication](interprocess-communication.md)
 + [Run AWS Lambda functions](run-lambda-functions.md)
 + [Run a Docker container](run-docker-container.md)
 + [AWS IoT Greengrass component recipe reference](component-recipe-reference.md)

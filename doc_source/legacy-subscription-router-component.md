@@ -6,8 +6,8 @@ You can use this component to enable subscriptions for connector components and 
 
 **Note**  <a name="legacy-subscription-router-requirement-note"></a>
 This component is required only if your Lambda function uses the `publish()` function in the AWS IoT Greengrass Core SDK\. If you update your Lambda function code to use the V2 SDK, you don't need to deploy the legacy subscription router component\. For more information, see the following [interprocess communication](interprocess-communication.md) services:  
-[Publish/subscribe messaging](interprocess-communication.md#ipc-publish-subscribe)
-[AWS IoT Core MQTT messaging](interprocess-communication.md#ipc-iot-core-mqtt)
+[Publish/subscribe local messages](ipc-publish-subscribe.md)
+[Publish/subscribe AWS IoT Core MQTT messages](ipc-iot-core-mqtt.md)
 
 This component has the following versions:
 + 2\.0\.x

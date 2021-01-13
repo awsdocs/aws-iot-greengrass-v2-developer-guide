@@ -34,7 +34,7 @@ If you use a customer\-managed AWS Key Management Service key to encrypt secrets
   For more information about IAM policies for Secrets Manager, see the following in the *AWS Secrets Manager User Guide*:
   + [Authentication and access control for AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/auth-and-access.html)
   + [Actions, resources, and context keys you can use in an IAM policy or secret policy for AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/reference_iam-permissions.html)
-+ Custom components must define an authorization policy that allows `aws.greengrass#GetSecretValue` to get secrets that you store with this component\. In this authorization policy, you can restrict components' access to specific secrets\. For more information, see [secret manager IPC authorization](interprocess-communication.md#ipc-secret-manager-authorization)\.
++ Custom components must define an authorization policy that allows `aws.greengrass#GetSecretValue` to get secrets that you store with this component\. In this authorization policy, you can restrict components' access to specific secrets\. For more information, see [secret manager IPC authorization](ipc-secret-manager.md#ipc-secret-manager-authorization)\.
 
 ## Configuration<a name="secret-mananger-component-configuration"></a>
 

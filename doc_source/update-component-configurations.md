@@ -6,7 +6,7 @@ When you create a deployment, you can specify the *configuration update* to appl
 
 The configuration update defines *reset* updates and *merge* updates\. Reset updates define which configuration values to reset to their defaults or remove\. Merge updates define the new configuration values to set for the component\. When you deploy a configuration update, the AWS IoT Greengrass Core software runs the reset update before the merge update\.
 
-Components can validate the configuration updates that you deploy\. The component subscribes to receive a notification when a deployment changes its configuration, and it can reject a configuration that it doesn't support\. For more information, see [Component configuration](interprocess-communication.md#ipc-component-configuration)\.
+Components can validate the configuration updates that you deploy\. The component subscribes to receive a notification when a deployment changes its configuration, and it can reject a configuration that it doesn't support\. For more information, see [Interact with component configuration](ipc-component-configuration.md)\.
 
 **Topics**
 + [Reset updates](#reset-configuration-update)

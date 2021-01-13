@@ -5,7 +5,7 @@ This topic lists supported versions of IDT for AWS IoT Greengrass\. As a best pr
 **Note**  
 You receive a notification when you start a test run if IDT for AWS IoT Greengrass is not compatible with the version of AWS IoT Greengrass you are using\.
 
-By downloading the software, you agree to the [AWS IoT Device Tester License Agreement](https://d232ctwt5kahio.cloudfront.net/greengrass/AWS%20IoT%20Device%20Tester%20License%20Agreement.pdf)\.
+By downloading the software, you agree to the [AWS IoT Device Tester License Agreement](https://docs.aws.amazon.com/greengrass/v2/developerguide/idt-license.html)\.
 
 ## Latest IDT version for AWS IoT Greengrass<a name="idt-latest-version"></a>
 
@@ -16,9 +16,9 @@ Supported AWS IoT Greengrass component versions:
 + [Greengrass nucleus v2\.0\.3](greengrass-nucleus-component.md)
 + [Greengrass CLI v2\.0\.3](greengrass-cli-component.md)  
 IDT software downloads:  
-+ IDT v4\.0\.1 with test suite GGV2Q\_1\.0\.0 for [Linux](https://d232ctwt5kahio.cloudfront.net/greengrassv2/devicetester_greengrass_v2_linux_4.0.1.zip)
-+ IDT v4\.0\.1 with test suite GGV2Q\_1\.0\.0 for [macOS](https://d232ctwt5kahio.cloudfront.net/greengrassv2/devicetester_greengrass_v2_mac_4.0.1.zip)
-+ IDT v4\.0\.1 with test suite GGV2Q\_1\.0\.0 for [Windows](https://d232ctwt5kahio.cloudfront.net/greengrassv2/devicetester_greengrass_v2_win_4.0.1.zip)
++ IDT v4\.0\.1 with test suite GGV2Q\_1\.0\.0 for [Linux](https://docs.aws.amazon.com/greengrass/v2/developerguide/download-idt-gg2-linux-4.0.1.html)
++ IDT v4\.0\.1 with test suite GGV2Q\_1\.0\.0 for [macOS](https://docs.aws.amazon.com/greengrass/v2/developerguide/download-idt-gg2-mac-4.0.1.html)
++ IDT v4\.0\.1 with test suite GGV2Q\_1\.0\.0 for [Windows](https://docs.aws.amazon.com/greengrass/v2/developerguide/download-idt-gg2-win-4.0.1.html)
 <a name="unzip-package-to-local-drive"></a>IDT does not support being run by multiple users from a shared location, such as an NFS directory or a Windows network shared folder\. We recommend that you extract the IDT package to a local drive and run the IDT binary on your local workstation\.  
 Release notes:  
 + Enables you to validate and qualify devices running AWS IoT Greengrass Version 2 software\.

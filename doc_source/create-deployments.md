@@ -115,15 +115,15 @@ Follow the steps in this section to create a deployment to a target for the firs
 
       This policy is an object with the following parameters:
       + `action` – \(Optional\) Whether or not to notify components and wait for them to report when they're ready to update\. Choose from the following options:
-        + `NOTIFY_COMPONENTS` – The deployment notifies each component before it stops and updates that component\. Components can use the [SubscribeToComponentUpdates](interprocess-communication.md#ipc-operation-subscribetocomponentupdates) IPC operation to receive these notifications\.
+        + `NOTIFY_COMPONENTS` – The deployment notifies each component before it stops and updates that component\. Components can use the [SubscribeToComponentUpdates](ipc-component-lifecycle.md#ipc-operation-subscribetocomponentupdates) IPC operation to receive these notifications\.
         + `SKIP_NOTIFY_COMPONENTS` – The deployment doesn't notify components or wait for them to be safe to update\.
 
         Defaults to `NOTIFY_COMPONENTS`\.
-      + `timeout` The amount of time in seconds that each component has to respond to an update notification with the [DeferComponentUpdate](interprocess-communication.md#ipc-operation-defercomponentupdate) IPC operation\. If the component doesn't respond within this amount of time, then the deployment proceeds on the core device\.
+      + `timeout` The amount of time in seconds that each component has to respond to an update notification with the [DeferComponentUpdate](ipc-component-lifecycle.md#ipc-operation-defercomponentupdate) IPC operation\. If the component doesn't respond within this amount of time, then the deployment proceeds on the core device\.
 
         Defaults to 60 seconds\.
 
-   1. \(Optional\) Specify the configuration validation policy \(`configurationValidationPolicy`\)\. This policy defines how long each component has to validate a configuration update from a deployment\. Components can use the [SubscribeToValidateConfigurationUpdates](interprocess-communication.md#ipc-operation-subscribetovalidateconfigurationupdates) IPC operation to subscribe to notifications for their own configuration updates\. Then, components can use the [SendConfigurationValidityReport](interprocess-communication.md#ipc-operation-sendconfigurationvalidityreport) IPC operation to tell the AWS IoT Greengrass Core software if the configuration update is valid\. If the configuration update isn't valid, the deployment fails\.
+   1. \(Optional\) Specify the configuration validation policy \(`configurationValidationPolicy`\)\. This policy defines how long each component has to validate a configuration update from a deployment\. Components can use the [SubscribeToValidateConfigurationUpdates](ipc-component-configuration.md#ipc-operation-subscribetovalidateconfigurationupdates) IPC operation to subscribe to notifications for their own configuration updates\. Then, components can use the [SendConfigurationValidityReport](ipc-component-configuration.md#ipc-operation-sendconfigurationvalidityreport) IPC operation to tell the AWS IoT Greengrass Core software if the configuration update is valid\. If the configuration update isn't valid, the deployment fails\.
 
       This policy is an object with the following parameter:
       + `timeout` \(Optional\) The amount of time in seconds that each component has to validate a configuration update\. If the component doesn't respond within this amount of time, then the deployment proceeds on the core device\.

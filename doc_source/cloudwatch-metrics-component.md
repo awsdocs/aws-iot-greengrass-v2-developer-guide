@@ -2,7 +2,7 @@
 
 The Amazon CloudWatch metrics component \(`aws.greengrass.CloudWatch`\) publishes custom metrics from Greengrass core devices to Amazon CloudWatch\. The component enables components to publish CloudWatch metrics, which you can use to monitor and analyze the Greengrass core device's environment\. For more information, see [Using Amazon CloudWatch metrics](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/working_with_metrics.html) in the *Amazon CloudWatch User Guide*\.
 
-To publish a CloudWatch metric with this component, publish a message to a topic where this component subscribes\. By default, this component subscribes to the `cloudwatch/metric/put` [local publish/subscribe](interprocess-communication.md#ipc-publish-subscribe) topic\. You can specify other topics, including AWS IoT Core MQTT topics, when you deploy this component\.
+To publish a CloudWatch metric with this component, publish a message to a topic where this component subscribes\. By default, this component subscribes to the `cloudwatch/metric/put` [local publish/subscribe](ipc-publish-subscribe.md) topic\. You can specify other topics, including AWS IoT Core MQTT topics, when you deploy this component\.
 
 This component batches metrics that are in the same namespace and publishes them to CloudWatch at regular intervals\.
 
@@ -110,8 +110,8 @@ This object contains the following information:
 An object that contains the following information:    
 `type`  
 \(Optional\) The type of publish/subscribe messaging that this component uses to subscribe to messages\. Choose from the following options:  
-+ `Pubsub` – Subscribe to local publish/subscribe messages\. If you choose this option, the topic can't contain MQTT wildcards\. For more information about how to send messages from custom component when you specify this option, see [Publish/subscribe messaging](interprocess-communication.md#ipc-publish-subscribe)\.
-+ `IotCore` – Subscribe to AWS IoT Core MQTT messages\. If you choose this option, the topic can contain MQTT wildcards\. For more information about how to send messages from custom components when you specify this option, see [AWS IoT Core MQTT messaging](interprocess-communication.md#ipc-iot-core-mqtt)\.
++ `Pubsub` – Subscribe to local publish/subscribe messages\. If you choose this option, the topic can't contain MQTT wildcards\. For more information about how to send messages from custom component when you specify this option, see [Publish/subscribe local messages](ipc-publish-subscribe.md)\.
++ `IotCore` – Subscribe to AWS IoT Core MQTT messages\. If you choose this option, the topic can contain MQTT wildcards\. For more information about how to send messages from custom components when you specify this option, see [Publish/subscribe AWS IoT Core MQTT messages](ipc-iot-core-mqtt.md)\.
 Default: `Pubsub`  
 `topic`  
 \(Optional\) The topic to which the component subscribes to receive messages\. If you specify `IotCore` for `type`, you can use MQTT wildcards \(`+` and `#`\) in this topic\.
@@ -134,7 +134,7 @@ Default: `Pubsub`
 
 ## Input data<a name="cloudwatch-metrics-component-input-data"></a>
 
-This component accepts metrics on the following topic and publishes the metrics to CloudWatch\. <a name="connector-component-local-publish"></a>By default, this component subscribes to local publish/subscribe messages\. For more information about how to publish messages to this component from your custom components, see [Publish/subscribe messaging](interprocess-communication.md#ipc-publish-subscribe)\.
+This component accepts metrics on the following topic and publishes the metrics to CloudWatch\. <a name="connector-component-local-publish"></a>By default, this component subscribes to local publish/subscribe messages\. For more information about how to publish messages to this component from your custom components, see [Publish/subscribe local messages](ipc-publish-subscribe.md)\.
 
 **Default topic \(local publish/subscribe\):** `cloudwatch/metric/put`
 
@@ -209,7 +209,7 @@ For more information, see [CloudWatch service quotas](https://docs.aws.amazon.co
 
 ## Output data<a name="cloudwatch-metrics-component-output-data"></a>
 
-<a name="connector-component-output-data"></a>This component publishes responses as output data on the following MQTT topic by default\. You must specify this topic as the `subject` in the configuration for the [legacy subscription router component](legacy-subscription-router-component.md)\. For more information about how to subscribe to messages on this topic in your custom components, see [AWS IoT Core MQTT messaging](interprocess-communication.md#ipc-iot-core-mqtt)\.
+<a name="connector-component-output-data"></a>This component publishes responses as output data on the following MQTT topic by default\. You must specify this topic as the `subject` in the configuration for the [legacy subscription router component](legacy-subscription-router-component.md)\. For more information about how to subscribe to messages on this topic in your custom components, see [Publish/subscribe AWS IoT Core MQTT messages](ipc-iot-core-mqtt.md)\.
 
 **Default topic \(AWS IoT Core MQTT\):** `cloudwatch/metric/put/status`
 

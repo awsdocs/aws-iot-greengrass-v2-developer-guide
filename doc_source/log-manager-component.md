@@ -61,10 +61,10 @@ The name of the component for this logs configuration\.
 + `ERROR`
 Default: `INFO`  
 `logFileDirectoryPath`  
-\(Optional\) The path to the directory to use for this component's log files\.  
+The path to the directory to use for this component's log files\.  
 Defaults to the system logs folder\.  
 `logFileRegex`  
-\(Optional\) A regular expression that specifies the log file name format to use\. Specify a regex that matches the rotated log file names\. For example, you might specify `radio_unit\w*.log`\. The log manager creates the following log files, for example:  
+A regular expression that specifies the log file name format to use\. Specify a regex that matches the rotated log file names\. For example, you might specify `radio_unit\w*.log`\. The log manager creates the following log files, for example:  
 + `radio_unit.log` – The most recent log file for this component\.
 + `radio_unit_2020_12_15_17_0.log` – An older log file for this component\. The log component adds a timestamp to the log files that it rotates\.
 Default: `componentName\w*.log`, where *componentName* is the name of the component for this log configuration\.  

@@ -97,8 +97,8 @@ This object contains the following information:
 An object that contains the following information:    
 `type`  
 \(Optional\) The type of publish/subscribe messaging that this component uses to subscribe to messages\. Choose from the following options:  
-+ `Pubsub` – Subscribe to local publish/subscribe messages\. If you choose this option, the topic can't contain MQTT wildcards\. For more information about how to send messages from custom component when you specify this option, see [Publish/subscribe messaging](interprocess-communication.md#ipc-publish-subscribe)\.
-+ `IotCore` – Subscribe to AWS IoT Core MQTT messages\. If you choose this option, the topic can contain MQTT wildcards\. For more information about how to send messages from custom components when you specify this option, see [AWS IoT Core MQTT messaging](interprocess-communication.md#ipc-iot-core-mqtt)\.
++ `Pubsub` – Subscribe to local publish/subscribe messages\. If you choose this option, the topic can't contain MQTT wildcards\. For more information about how to send messages from custom component when you specify this option, see [Publish/subscribe local messages](ipc-publish-subscribe.md)\.
++ `IotCore` – Subscribe to AWS IoT Core MQTT messages\. If you choose this option, the topic can contain MQTT wildcards\. For more information about how to send messages from custom components when you specify this option, see [Publish/subscribe AWS IoT Core MQTT messages](ipc-iot-core-mqtt.md)\.
 Default: `Pubsub`  
 `topic`  
 \(Optional\) The topic to which the component subscribes to receive messages\. If you specify `IotCore` for `type`, you can use MQTT wildcards \(`+` and `#`\) in this topic\.
@@ -140,7 +140,7 @@ Default: `Pubsub`
 
 ## Input data<a name="modbus-rtu-protocol-adapter-component-input-data"></a>
 
-This component accepts Modbus RTU request parameters on the following topic and sends the Modbus RTU request to the device\. <a name="connector-component-local-publish"></a>By default, this component subscribes to local publish/subscribe messages\. For more information about how to publish messages to this component from your custom components, see [Publish/subscribe messaging](interprocess-communication.md#ipc-publish-subscribe)\.
+This component accepts Modbus RTU request parameters on the following topic and sends the Modbus RTU request to the device\. <a name="connector-component-local-publish"></a>By default, this component subscribes to local publish/subscribe messages\. For more information about how to publish messages to this component from your custom components, see [Publish/subscribe local messages](ipc-publish-subscribe.md)\.
 
 **Default topic \(local publish/subscribe\):** `modbus/adapter/request`
 
@@ -180,7 +180,7 @@ Type: `string`
 
 ## Output data<a name="modbus-rtu-protocol-adapter-component-output-data"></a>
 
-<a name="connector-component-output-data"></a>This component publishes responses as output data on the following MQTT topic by default\. You must specify this topic as the `subject` in the configuration for the [legacy subscription router component](legacy-subscription-router-component.md)\. For more information about how to subscribe to messages on this topic in your custom components, see [AWS IoT Core MQTT messaging](interprocess-communication.md#ipc-iot-core-mqtt)\.
+<a name="connector-component-output-data"></a>This component publishes responses as output data on the following MQTT topic by default\. You must specify this topic as the `subject` in the configuration for the [legacy subscription router component](legacy-subscription-router-component.md)\. For more information about how to subscribe to messages on this topic in your custom components, see [Publish/subscribe AWS IoT Core MQTT messages](ipc-iot-core-mqtt.md)\.
 
 **Default topic \(AWS IoT Core MQTT\):** `modbus/adapter/response`
 

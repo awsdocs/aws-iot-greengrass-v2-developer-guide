@@ -17,11 +17,17 @@ This section describes advanced configuration of the AWS IoT Greengrass Core sof
 Devices must meet the following requirements to install and run the AWS IoT Greengrass Core software v2\.0:
 + One of the following supported platforms:
   + Architecture: Armv7l
-    + OS: Linux; Distribution: [Raspberry Pi OS, 2020\-08\-24](https://downloads.raspberrypi.org/raspios_armhf/images/raspios_armhf-2020-08-24/)\. The AWS IoT Greengrass Core software might work with other distributions for a Raspberry Pi, but we recommend Raspberry Pi OS because it's the officially supported distribution\.
+    + OS: Linux
+
+      AWS tests the AWS IoT Greengrass Core software on the following distribution: [Raspberry Pi OS, 2020\-08\-24](https://downloads.raspberrypi.org/raspios_armhf/images/raspios_armhf-2020-08-24/)\. The AWS IoT Greengrass Core software might work with other distributions for a Raspberry Pi, but we recommend Raspberry Pi OS because it's the officially supported distribution\.
   + Architecture: Armv8 \(AArch64\)
-    + OS: Linux; Distribution: Amazon Linux 2, Ubuntu 18\.04
+    + OS: Linux
+
+      AWS tests the AWS IoT Greengrass Core software on the following distributions: Amazon Linux 2, Ubuntu 18\.04\.
   + Architecture: x86\_64
-    + OS: Linux; Distribution: Amazon Linux 2, Ubuntu 18\.04
+    + OS: Linux
+
+      AWS tests the AWS IoT Greengrass Core software on the following distributions: Amazon Linux 2, Ubuntu 18\.04\.
 + Minimum 256 MB disk space available for the AWS IoT Greengrass Core software\. This requirement doesn't include components deployed to the core device\.
 + Minimum 128 MB RAM allocated to the AWS IoT Greengrass Core software\. This requirement doesn't include components that run on the core device\.
 + Java version 8 or greater\. We recommend [OpenJDK](https://openjdk.java.net/) or [Amazon Corretto](http://aws.amazon.com/corretto/)\.
