@@ -11,7 +11,9 @@ This MQTT messaging IPC service lets you exchange messages with AWS IoT Core\. F
 
 ## Authorization<a name="ipc-iot-core-mqtt-authorization"></a>
 
-To use AWS IoT Core MQTT messaging in a custom component, you must define authorization policies that allows your component to send and receive messages on topics\. Authorization policies for AWS IoT Core MQTT messaging have the following properties\.
+To use AWS IoT Core MQTT messaging in a custom component, you must define authorization policies that allows your component to send and receive messages on topics\. For information about defining authorization policies, see [Authorize components to use interprocess communication](interprocess-communication.md#ipc-authorization-policies)\.
+
+Authorization policies for AWS IoT Core MQTT messaging have the following properties\.
 
 **IPC service identifier:** `aws.greengrass.ipc.mqttproxy`
 

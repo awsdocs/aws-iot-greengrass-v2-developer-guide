@@ -187,11 +187,8 @@ This export destination has the following requirements:
         "Effect": "Allow",
         "Action": [
           "s3:PutObject",
-          "s3:UploadPart",
-          "s3:InitiateMultipartUpload",
-          "s3:CompleteMultipartUpload",
           "s3:AbortMultipartUpload",
-          "s3:ListMultipartUploads"
+          "s3:ListMultipartUploadParts"
         ],
         "Resource": [
           "arn:aws:s3:::bucket-1-name/*",

@@ -121,11 +121,11 @@ Follow the steps in this section to install and configure the AWS IoT Greengrass
 
 1. Run the following command to launch the AWS IoT Greengrass Core software installer\. If your core device has [systemd](https://en.wikipedia.org/wiki/Systemd), this command installs the software as a system service that runs on boot\. This command also specifies to use the `ggc_user` system user and `ggc_group` system group to run software components on the core device\. The installer creates this default user and group for you\. Replace argument values in your command as follows\.<a name="installer-replace-arguments"></a>
 
+   1. */greengrass/v2*: Replace with the path to the root folder to use to install the AWS IoT Greengrass Core software\.
+
    1. *GreengrassCore*: If you unpacked the installer to a different folder, replace this value with the folder that you want to use\.
 
    1. *region*: Replace with the AWS Region in which to find or create resources\.
-
-   1. */greengrass/v2*: Replace with the path to the root folder to use to install the AWS IoT Greengrass Core software\.
 
    1. *MyGreengrassCore*: Replace with the name of the AWS IoT thing for your Greengrass core device\. If the thing doesn't exist, the installer creates it\. The installer downloads the certificates to authenticate as the AWS IoT thing\. 
 
@@ -136,10 +136,9 @@ Follow the steps in this section to install and configure the AWS IoT Greengrass
    1. *MyGreengrassCoreTokenExchangeRoleAlias*: Replace with the alias to the IAM role that allows the Greengrass core device to get temporary credentials later\. If the role alias doesn't exist, the installer creates it and points it to the IAM role that you specify\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
 
    ```
-   sudo -E java -Dlog.store=FILE \
+   sudo -E java -Droot="/greengrass/v2" -Dlog.store=FILE \
      -jar ./GreengrassCore/lib/Greengrass.jar \
      --aws-region region \
-     --root /greengrass/v2 \ 
      --thing-name MyGreengrassCore \
      --thing-group-name MyGreengrassCoreGroup \
      --tes-role-name MyGreengrassV2TokenExchangeRole \

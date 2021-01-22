@@ -18,6 +18,7 @@ AWS IoT Greengrass provides and maintains public components that you can deploy 
 | [Log manager](log-manager-component.md) | Collects and uploads logs on the Greengrass core device\. | aws\.greengrass\.LogManager | 
 | [Modbus\-RTU protocol adapter](modbus-rtu-protocol-adapter-component.md) | Polls information from local Modbus RTU devices\. | aws\.greengrass\.Modbus | 
 | [Secret manager](secret-manager-component.md) | Deploys secrets from AWS Secrets Manager secrets so that you can securely use credentials, such as passwords, in custom components on the Greengrass core device\. | aws\.greengrass\.SecretManager | 
+| [Secure tunneling](secure-tunneling-component.md) | Enables AWS IoT secure tunneling connections that you can use to establish bidrectional communications with Greengrass core devices that are behind restricted firewalls\. | aws\.greengrass\.SecureTunneling | 
 | [Amazon SNS](sns-component.md) | Publishes messages to Amazon SNS topics\. | aws\.greengrass\.SNS | 
 | [Stream manager](stream-manager-component.md) | Streams high\-volume data from local sources to the AWS Cloud\. | aws\.greengrass\.StreamManager | 
 | [Token exchange service](token-exchange-service-component.md) | Provides AWS credentials that you can use to interact with AWS services\. | aws\.greengrass\.TokenExchangeService | 

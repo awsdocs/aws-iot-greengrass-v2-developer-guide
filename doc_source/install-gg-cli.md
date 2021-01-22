@@ -2,7 +2,7 @@
 
 You can install the Greengrass CLI in one of the following ways: 
 + Use the `--deploy-dev-tools` argument when you first set up AWS IoT Greengrass Core software on your device\. 
-+ Deploy the AWS IoT Greengrass component \(`aws.greengrass.Cli`\) on your device\.
++ Deploy the Greengrass CLI component \(`aws.greengrass.Cli`\) on your device\.
 
 This section describes the steps to deploy the Greengrass CLI component\. For information about installing the Greengrass CLI during initial setup, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
 
@@ -49,7 +49,7 @@ Complete the following steps to deploy the Greengrass CLI component to your core
 
    ```
    {
-     "target":"targetArn",
+     "targetArn:"targetArn",
      "components": {
        "aws.greengrass.Cli": {
          "version": "2.0.0",

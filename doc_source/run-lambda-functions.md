@@ -145,9 +145,9 @@ To import a Lambda function that runs on AWS IoT Greengrass V1, you must define 
               }
             }
           ],
-          "componentDependencies": [
+          "componentDependencies": {
             
-          ]
+          }
         }
       }
       ```
@@ -188,14 +188,14 @@ To import a Lambda function that runs on AWS IoT Greengrass V1, you must define 
               }
             }
           ],
-          "componentDependencies": [
+          "componentDependencies": {
             {
               "aws.greengrass.StreamManager": {
                 "versionRequirement": "^1.0.0",
                 "dependencyType": "HARD"
               }
             }
-          ]
+          }
         }
       }
       ```
@@ -219,14 +219,14 @@ To import a Lambda function that runs on AWS IoT Greengrass V1, you must define 
               }
             }
           ],
-          "componentDependencies": [
+          "componentDependencies": {
             {
               "aws.greengrass.StreamManager": {
                 "versionRequirement": "^1.0.0",
                 "dependencyType": "HARD"
               }
             }
-          ],
+          },
           "componentLambdaParameters": {
           
           }
@@ -253,14 +253,14 @@ To import a Lambda function that runs on AWS IoT Greengrass V1, you must define 
                  }
                }
              ],
-             "componentDependencies": [
+             "componentDependencies": {
                {
                  "aws.greengrass.StreamManager": {
                    "versionRequirement": "^1.0.0",
                    "dependencyType": "HARD"
                  }
                }
-             ],
+             },
              "componentLambdaParameters": {
                "eventSources": [
                
@@ -302,14 +302,14 @@ To import a Lambda function that runs on AWS IoT Greengrass V1, you must define 
                    }
                  }
                ],
-               "componentDependencies": [
+               "componentDependencies": {
                  {
                    "aws.greengrass.StreamManager": {
                      "versionRequirement": "^1.0.0",
                      "dependencyType": "HARD"
                    }
                  }
-               ],
+               },
                "componentLambdaParameters": {
                  "eventSources": [
                    {
@@ -356,14 +356,14 @@ To import a Lambda function that runs on AWS IoT Greengrass V1, you must define 
               }
             }
           ],
-          "componentDependencies": [
+          "componentDependencies": {
             {
               "aws.greengrass.StreamManager": {
                 "versionRequirement": "^1.0.0",
                 "dependencyType": "HARD"
               }
             }
-          ],
+          },
           "componentLambdaParameters": {
             "eventSources": [
               {
@@ -408,14 +408,14 @@ To import a Lambda function that runs on AWS IoT Greengrass V1, you must define 
                  }
                }
              ],
-             "componentDependencies": [
+             "componentDependencies": {
                {
                  "aws.greengrass.StreamManager": {
                    "versionRequirement": "^1.0.0",
                    "dependencyType": "HARD"
                  }
                }
-             ],
+             },
              "componentLambdaParameters": {
                "eventSources": [
                  {
@@ -469,14 +469,14 @@ To import a Lambda function that runs on AWS IoT Greengrass V1, you must define 
                     }
                   }
                 ],
-                "componentDependencies": [
+                "componentDependencies": {
                   {
                     "aws.greengrass.StreamManager": {
                       "versionRequirement": "^1.0.0",
                       "dependencyType": "HARD"
                     }
                   }
-                ],
+                },
                 "componentLambdaParameters": {
                   "eventSources": [
                     {
@@ -530,14 +530,14 @@ To import a Lambda function that runs on AWS IoT Greengrass V1, you must define 
                        }
                      }
                    ],
-                   "componentDependencies": [
+                   "componentDependencies": {
                      {
                        "aws.greengrass.StreamManager": {
                          "versionRequirement": "^1.0.0",
                          "dependencyType": "HARD"
                        }
                      }
-                   ],
+                   },
                    "componentLambdaParameters": {
                      "eventSources": [
                        {
@@ -599,14 +599,14 @@ To import a Lambda function that runs on AWS IoT Greengrass V1, you must define 
                        }
                      }
                    ],
-                   "componentDependencies": [
+                   "componentDependencies": {
                      {
                        "aws.greengrass.StreamManager": {
                          "versionRequirement": "^1.0.0",
                          "dependencyType": "HARD"
                        }
                      }
-                   ],
+                   },
                    "componentLambdaParameters": {
                      "eventSources": [
                        {
@@ -665,14 +665,14 @@ To import a Lambda function that runs on AWS IoT Greengrass V1, you must define 
                        }
                      }
                    ],
-                   "componentDependencies": [
+                   "componentDependencies": {
                      {
                        "aws.greengrass.StreamManager": {
                          "versionRequirement": "^1.0.0",
                          "dependencyType": "HARD"
                        }
                      }
-                   ],
+                   },
                    "componentLambdaParameters": {
                      "eventSources": [
                        {
@@ -741,14 +741,14 @@ To import a Lambda function that runs on AWS IoT Greengrass V1, you must define 
                     }
                   }
                 ],
-                "componentDependencies": [
+                "componentDependencies": {
                   {
                     "aws.greengrass.StreamManager": {
                       "versionRequirement": "^1.0.0",
                       "dependencyType": "HARD"
                     }
                   }
-                ],
+                },
                 "componentLambdaParameters": {
                   "eventSources": [
                     {

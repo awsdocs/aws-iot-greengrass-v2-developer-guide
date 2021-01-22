@@ -1,6 +1,6 @@
 # Gather system health telemetry data from AWS IoT Greengrass core devices<a name="telemetry"></a>
 
-System health telemetry data is diagnostic data that can help you monitor the performance of critical operations on your Greengrass core devices\. The telemetry agent on Greengrass core devices collects local telemetry data and publishes it to Amazon EventBridge without any customer interaction\.
+System health telemetry data is diagnostic data that can help you monitor the performance of critical operations on your Greengrass core devices\. The telemetry agent on Greengrass core devices collects local telemetry data and publishes it to Amazon EventBridge without requiring any customer interaction\. Core devices publish telemetry data to EventBridge on a best effort basis\. For example, core devices might fail to deliver telemetry data while offline\.
 
 **Note**  
 Amazon EventBridge is an event bus service that you can use to connect your applications with data from a variety of sources, such as Greengrass core devices\. For more information, see [What is Amazon EventBridge?](https://docs.aws.amazon.com/eventbridge/latest/userguide/what-is-amazon-eventbridge.html) in the *Amazon EventBridge User Guide*\.

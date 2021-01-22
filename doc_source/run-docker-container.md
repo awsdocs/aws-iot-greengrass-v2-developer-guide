@@ -15,7 +15,9 @@ To run a Docker container in a component, you need the following:
 + A Greengrass core device\. If you don't have one, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
 + [Docker Engine](https://docs.docker.com/engine/) installed on your Greengrass core device\.
 + [Docker configured for you to run it as a non\-root user](https://docs.docker.com/engine/install/linux-postinstall/)\. This lets you call `docker` commands without `sudo`\. To add `ggc_user` to the `docker` group that you configure, you must run `sudo usermod -aG docker ggc_user`\.
-+ To use interprocess communication \(IPC\) in a Docker container component, you must set AWS IoT Greengrass Core environment variables in the Docker container\. For more information, see [Use interprocess communication in Docker container components](#docker-container-ipc)\.
++ Any files that the Docker container component will need to access [mounted as a volume](https://docs.docker.com/storage/volumes/) in the Docker container\.
+
+To use interprocess communication \(IPC\) in a Docker container component, you must also set AWS IoT Greengrass Core environment variables in the Docker container and mount the AWS IoT Greengrass Core root folder as a volume in the Docker container\. For more information, see [Use interprocess communication in Docker container components](#docker-container-ipc)\.
 
 ## Run a Docker container from an image in Amazon S3<a name="s3-docker-image"></a>
 
@@ -163,14 +165,18 @@ You can also configure AWS IoT Greengrass to install Docker Engine when the comp
 
 ## Use interprocess communication in Docker container components<a name="docker-container-ipc"></a>
 
-[Interprocess communication](interprocess-communication.md) enables you to develop components that can communicate with AWS IoT Greengrass Core and other components\. This feature requires the following environment variables that AWS IoT Greengrass Core provides to components\. You must set these environment variables in the Docker container that you run\.
+[Interprocess communication](interprocess-communication.md) enables you to develop components that can communicate with AWS IoT Greengrass Core and other components\. To use interprocess communication in your Docker container components, you must set the following environment variables that AWS IoT Greengrass Core provides to components\. 
 + `AWS_REGION`
 + `SVCUID`
 + `AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT`
 + `AWS_CONTAINER_AUTHORIZATION_TOKEN`
 + `AWS_CONTAINER_CREDENTIALS_FULL_URI`
 
-Use the `-e`, `--env`, or `--env-file` parameter to [set environment variables in a Docker container](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file)\. The following example component recipe uses the `-e` parameter to set the required environment variables from AWS IoT Greengrass Core in the Docker container\.
+You can use the `-e`, `--env`, or `--env-file` parameter to [set environment variables in the Docker container](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file) that you run\. 
+
+When you start the Docker container, you must also mount as a volume any files that the Docker container component will need to access\. To use interprocess communication, mount the root folder for your AWS IoT Greengrass Core software\. You can use the `-v` parameter to [mount a volume in the Docker container](https://docs.docker.com/engine/reference/commandline/run/#mount-volume--v---read-only) that you run\.
+
+The following example component recipe uses the `-e` parameter to set the required environment variables from AWS IoT Greengrass Core in the Docker container, and mounts the */greengrass/v2* folder as a volume\. Replace */greengrass/v2* with the path to the root folder that you used to install the AWS IoT Greengrass Core software\. 
 
 ------
 #### [ YAML ]
@@ -199,7 +205,7 @@ Manifests:
       Install:
         Script: docker load -i {artifacts:path}/hello-world.tar
       Run:
-        Script: docker run -e AWS_REGION -e SVCUID -e AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT -e AWS_CONTAINER_AUTHORIZATION_TOKEN -e AWS_CONTAINER_CREDENTIALS_FULL_URI --rm hello-world
+        Script: docker run -v /greengrass/v2:/greengrass/v2 -e AWS_REGION -e SVCUID -e AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT -e AWS_CONTAINER_AUTHORIZATION_TOKEN -e AWS_CONTAINER_CREDENTIALS_FULL_URI --rm hello-world
     Artifacts:
       - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.MyDockerComponent/1.0.0/hello-world.tar
 ```

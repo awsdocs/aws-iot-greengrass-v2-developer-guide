@@ -67,11 +67,11 @@ To set up a development device with local development tools, specify the `--depl
 
    Replace argument values in your command as follows\.<a name="installer-replace-arguments"></a>
 
+   1. */greengrass/v2*: Replace with the path to the root folder to use to install the AWS IoT Greengrass Core software\.
+
    1. *GreengrassCore*: If you unpacked the installer to a different folder, replace this value with the folder that you want to use\.
 
    1. *region*: Replace with the AWS Region in which to find or create resources\.
-
-   1. */greengrass/v2*: Replace with the path to the root folder to use to install the AWS IoT Greengrass Core software\.
 
    1. *MyGreengrassCore*: Replace with the name of the AWS IoT thing for your Greengrass core device\. If the thing doesn't exist, the installer creates it\. The installer downloads the certificates to authenticate as the AWS IoT thing\. 
 
@@ -82,10 +82,9 @@ To set up a development device with local development tools, specify the `--depl
    1. *MyGreengrassCoreTokenExchangeRoleAlias*: Replace with the alias to the IAM role that allows the Greengrass core device to get temporary credentials later\. If the role alias doesn't exist, the installer creates it and points it to the IAM role that you specify\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
 
    ```
-   sudo -E java -Dlog.store=FILE \
+   sudo -E java -Droot="/greengrass/v2" -Dlog.store=FILE \
      -jar ./GreengrassCore/lib/Greengrass.jar \
      --aws-region region \
-     --root /greengrass/v2 \
      --thing-name MyGreengrassCore \
      --thing-group-name MyGreengrassCoreGroup \
      --tes-role-name MyGreengrassV2TokenExchangeRole \
@@ -122,12 +121,13 @@ The AWS IoT Greengrass Core software includes an installer that sets up the soft
 `--version`  
 \(Optional\) Show the version of the AWS IoT Greengrass Core software\.
 
+`-Droot`  
+\(Optional\) The path to the folder to use as the root for the AWS IoT Greengrass Core software\.  
+This argument sets a JVM property, so you must specify it before `-jar` when you run the installer\. For example, specify `java -Droot="/greengrass/v2" -jar /path/to/Greengrass.jar`\.
+Default: `~/.greengrass`
+
 `-ar`, `--aws-region`  
 The AWS Region that the AWS IoT Greengrass Core software uses to retrieve or create its required AWS resources\.
-
-`-r`, `--root`  
-\(Optional\) The path to the folder to use as the root for the AWS IoT Greengrass Core software\.  
-Default: `~/.greengrass`
 
 `-p`, `--provision`  
 \(Optional\) You can register this device as an AWS IoT thing and provision the AWS resources that the core device requires\. If you specify `true`, the AWS IoT Greengrass Core software provisions an AWS IoT thing, \(optional\) an AWS IoT thing group, an IAM role, and an AWS IoT role alias\.  

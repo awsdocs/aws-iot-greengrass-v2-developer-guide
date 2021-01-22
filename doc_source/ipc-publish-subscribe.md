@@ -12,7 +12,9 @@ You can't use this publish/subscribe IPC service to publish or subscribe to AWS 
 
 ## Authorization<a name="ipc-publish-subscribe-authorization"></a>
 
-To use publish/subscribe messaging IPC service in a custom component, you must define authorization policies that allows your component to send and receive messages to topics\. Authorization policies for publish/subscribe messaging have the following properties\.
+To use publish/subscribe messaging IPC service in a custom component, you must define authorization policies that allows your component to send and receive messages to topics\. For information about defining authorization policies, see [Authorize components to use interprocess communication](interprocess-communication.md#ipc-authorization-policies)\.
+
+Authorization policies for publish/subscribe messaging have the following properties\.
 
 **IPC service identifier:** `aws.greengrass.ipc.pubsub`
 

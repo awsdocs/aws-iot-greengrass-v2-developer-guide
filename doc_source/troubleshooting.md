@@ -32,13 +32,14 @@ Component log files provide real\-time information about a component that runs o
 
 ## AWS IoT Greengrass Core software issues<a name="greengrass-core-issues"></a>
 
-Use the following information to troubleshoot AWS IoT Greengrass Core software issues\. Each entry corresponds to a log message that you might see on your core device\.
+Use the following information to troubleshoot AWS IoT Greengrass Core software issues\. 
 
 **Topics**
 + [Unable to set up core device](#unable-to-set-up-core-device)
 + [Unable to install AWS IoT Greengrass Core software on NVIDIA Jetson device](#unable-to-install-on-jetson-device)
 + [Error: Unable to connect to AWS IoT Core](#core-error-unable-to-connect-to-aws-iot)
 + [Out of memory error](#java-out-of-memory)
++ [Unable to install Greengrass CLI](#unable-to-install-greengrass-cli)
 
 ### Unable to set up core device<a name="unable-to-set-up-core-device"></a>
 
@@ -93,6 +94,16 @@ You might see this error when the AWS IoT Greengrass Core software can't connect
 
 This error typically occurs if your device doesn't have sufficient memory to allocate an object in the Java heap\. On devices with limited memory, you might need to specify a maximum heap size to control memory allocation\. For more information, see [Control memory allocation with JVM options](configure-greengrass-core-v2.md#jvm-tuning)\.
 
+### Unable to install Greengrass CLI<a name="unable-to-install-greengrass-cli"></a>
+
+You might see the following console message when you use the `--deploy-dev-tools` argument in your installation command for AWS IoT Greengrass Core\.
+
+```
+Thing group exists, it could have existing deployment and devices, hence NOT creating deployment for Greengrass first party dev tools, please manually create a deployment if you wish to
+```
+
+This occurs when the Greengrass CLI component is not installed because your core device is a member of a thing group that has an existing deployment\. If you see this message, you can manually deploy the Greengrass CLI component \(`aws.greengrass.Cli`\) to the device to install the Greengrass CLI\. For more information, see [Install the Greengrass CLI](install-gg-cli.md)\.
+
 ## Core device deployment issues<a name="greengrass-core-deployment-issues"></a>
 
 Use the following information to troubleshoot deployment issues on Greengrass core devices\. Each entry corresponds to a log message that you might see on your core device\.
@@ -100,6 +111,7 @@ Use the following information to troubleshoot deployment issues on Greengrass co
 **Topics**
 + [Error: com\.aws\.greengrass\.componentmanager\.exceptions\.PackageDownloadException: Failed to download artifact](#core-error-failed-to-download-artifact-package-download-exception)
 + [Error: com\.aws\.greengrass\.componentmanager\.exceptions\.ArtifactChecksumMismatchException: Failed to download artifact](#core-error-failed-to-download-artifact-checksum-mismatch-exception)
++ [Error: com\.aws\.greengrass\.componentmanager\.exceptions\.NoAvailableComponentVersionException: Failed to negotiate component <name> version with cloud and no local applicable version satisfying requirement <requirements>](#core-error-no-available-component-version)
 
 ### Error: com\.aws\.greengrass\.componentmanager\.exceptions\.PackageDownloadException: Failed to download artifact<a name="core-error-failed-to-download-artifact-package-download-exception"></a>
 
@@ -117,6 +129,17 @@ The [PackageDownloadException error](#core-error-failed-to-download-artifact-pac
 
 You might see this error when the AWS IoT Greengrass Core software fails to download a component artifact when the core device applies a deployment\. The deployment fails as a result of this error\.
 
-This error indicates that the downloaded artifact file's checksum doesn't match the checksum that AWS IoT Greengrass calculated when you created the component\. You might see this error in the following cases:
+This error indicates that the downloaded artifact file's checksum doesn't match the checksum that AWS IoT Greengrass calculated when you created the component\. Do the following:
 + Check if the artifact file changed in the S3 bucket where you host it\. If the file changed since you created the component, restore it to the previous version that the core device expects\. If you can't restore the file to its previous version, create a new version of the component with the artifact file to deploy\.
 + Check your core device's internet connection\. This error can occur if the artifact file becomes corrupted while it downloads\. Create a new deployment to try again\.
+
+### Error: com\.aws\.greengrass\.componentmanager\.exceptions\.NoAvailableComponentVersionException: Failed to negotiate component <name> version with cloud and no local applicable version satisfying requirement <requirements><a name="core-error-no-available-component-version"></a>
+
+You might see this error when a core device can't find a component version that meets the requirements of the deployments for that core device\. The core device checks for the component in the AWS IoT Greengrass service and on the local device\. The error message includes each deployment's target and that deployment's version requirements for the component\. The deployment target can be a thing, a thing group, or `LOCAL_DEPLOYMENT`, which represents the local deployment on the core device\.
+
+This issue can occur in the following cases:
++ The core device is the target of multiple deployments that have conflicting component version requirements\. For example, the core device might be the target of multiple deployments that include a `com.example.HelloWorld` component, where one deployment requires version 1\.0\.0 and the other requires version 1\.0\.1\. It's impossible to have a component that meets both requirements, so the deployment fails\.
++ The component version doesn't exist in the AWS IoT Greengrass service or on the local device\. The component might have been deleted, for example\.
++ There exists component versions that meet the version requirements, but none are compatible with the core device's platform\.
+
+To resolve this issue, revise the deployments to include compatible component versions or remove incompatible ones\. For more information about how to revise cloud deployments, see [Revise deployments](revise-deployments.md)\. For more information about how to revise local deployments, see the [AWS IoT Greengrass CLI deployment create](gg-cli-deployment.md#deployment-create) command\.

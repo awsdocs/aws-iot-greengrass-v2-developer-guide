@@ -62,12 +62,10 @@ The name of the component for this logs configuration\.
 Default: `INFO`  
 `logFileDirectoryPath`  
 The path to the directory to use for this component's log files\.  
-Defaults to the system logs folder\.  
 `logFileRegex`  
 A regular expression that specifies the log file name format to use\. Specify a regex that matches the rotated log file names\. For example, you might specify `radio_unit\w*.log`\. The log manager creates the following log files, for example:  
 + `radio_unit.log` – The most recent log file for this component\.
-+ `radio_unit_2020_12_15_17_0.log` – An older log file for this component\. The log component adds a timestamp to the log files that it rotates\.
-Default: `componentName\w*.log`, where *componentName* is the name of the component for this log configuration\.  
++ `radio_unit_2020_12_15_17_0.log` – An older log file for this component\. The log component adds a timestamp to the log files that it rotates\.  
 `diskSpaceLimit`  
 \(Optional\) The maximum total size of all log files for this component, in the unit you specify in `diskSpaceLimitUnit`\. After the total size of this component's log files exceeds this maximum total size, the AWS IoT Greengrass Core software deletes the oldest log files\.  
 `diskSpaceLimitUnit`  <a name="log-manager-component-configuration-disk-space-limit-unit"></a>

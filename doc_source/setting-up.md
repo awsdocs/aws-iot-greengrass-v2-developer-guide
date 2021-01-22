@@ -15,7 +15,7 @@ This section describes advanced configuration of the AWS IoT Greengrass Core sof
 ## Requirements<a name="greengrass-v2-requirements"></a>
 
 Devices must meet the following requirements to install and run the AWS IoT Greengrass Core software v2\.0:
-+ One of the following supported platforms:
++ One of the following supported platforms:<a name="greengrass-supported-platforms"></a>
   + Architecture: Armv7l
     + OS: Linux
 

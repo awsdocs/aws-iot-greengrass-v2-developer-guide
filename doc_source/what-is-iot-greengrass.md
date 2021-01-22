@@ -28,7 +28,7 @@ AWS IoT Greengrass provides pre\-built software modules called components that l
 
 The following example shows how an AWS IoT Greengrass device interacts with the AWS IoT Greengrass cloud service and other AWS services in the AWS Cloud\.
 
-![\[An overview of how an AWS IoT Greengrass device interacts with the AWS IoT Greengrass cloud service and other AWS services in the AWS Cloud.\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/images/greengrass-interaction.png)
+![\[An overview of how an AWS IoT Greengrass device interacts with the AWS IoT Greengrass cloud service and other AWS services in the AWS Cloud.\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/images/how-it-works.png)
 
 ## Key concepts for AWS IoT Greengrass<a name="concept-overview"></a>
 

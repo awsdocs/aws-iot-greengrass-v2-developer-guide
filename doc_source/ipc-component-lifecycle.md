@@ -38,7 +38,7 @@ This operation doesn't provide any information in its response\.
 
 Subscribe to receive notifications before the AWS IoT Greengrass Core software updates a component\. The notification specifies whether or not the nucleus will restart as part of the update\.
 
-The nucleus sends update notifications only if the deployment's component update policy specifies to notify components\. The default behavior is to notify components\. For more information, see [Create deployments](create-deployments.md) and the [ComponentUpdatePolicy](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_ComponentUpdatePolicy.html) object that you can provide when you call the [CreateDeployment](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_CreateDeployment.html) operation\.
+The nucleus sends update notifications only if the deployment's component update policy specifies to notify components\. The default behavior is to notify components\. For more information, see [Create deployments](create-deployments.md) and the [DeploymentComponentUpdatePolicy](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_DeploymentComponentUpdatePolicy.html) object that you can provide when you call the [CreateDeployment](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_CreateDeployment.html) operation\.
 
 **Important**  
 Local deployments don't notify components before updates\.
@@ -68,7 +68,7 @@ The ID of the AWS IoT Greengrass deployment that updated the component\.
 
 Acknowledge or defer a component update that you discover with [SubscribeToComponentUpdates](#ipc-operation-subscribetocomponentupdates)\. You specify the amount of time to wait before the nucleus checks again if your component is ready to let the component update proceed\. You can also use this operation to tell the nucleus that your component is ready for the update\.
 
-If a component doesn't respond to the component update notification, the nucleus waits the amount of time that you specify in the deployment's component update policy\. After that timeout, the nucleus proceeds with the deployment\. The default component update timeout is 60 seconds\. For more information, see [Create deployments](create-deployments.md) and the [ComponentUpdatePolicy](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_ComponentUpdatePolicy.html) object that you can provide when you call the [CreateDeployment](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_CreateDeployment.html) operation\.
+If a component doesn't respond to the component update notification, the nucleus waits the amount of time that you specify in the deployment's component update policy\. After that timeout, the nucleus proceeds with the deployment\. The default component update timeout is 60 seconds\. For more information, see [Create deployments](create-deployments.md) and the [DeploymentComponentUpdatePolicy](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_DeploymentComponentUpdatePolicy.html) object that you can provide when you call the [CreateDeployment](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_CreateDeployment.html) operation\.
 
 #### Request<a name="ipc-operation-defercomponentupdate-request"></a>
 

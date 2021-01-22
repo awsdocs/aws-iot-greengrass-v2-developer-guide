@@ -1,6 +1,6 @@
 # AWS IoT Greengrass component recipe reference<a name="component-recipe-reference"></a>
 
-The component recipe is a file that defines a component's details, dependencies, artifacts, and lifecycles\. The component *lifecycle* specifies the commands to run to install, run, and shutdown the component, for example\. The AWS IoT Greengrass core uses the lifecycles that you define in the recipe to install and run components\. The AWS IoT Greengrass service uses the recipe to identify the dependencies and artifacts to deploy to your core devices when you deploy the component\.
+The component recipe is a file that defines a component's details, dependencies, artifacts, and lifecycles\. The component *lifecycle* specifies the commands to run to install, run, and shut down the component, for example\. The AWS IoT Greengrass core uses the lifecycles that you define in the recipe to install and run components\. The AWS IoT Greengrass service uses the recipe to identify the dependencies and artifacts to deploy to your core devices when you deploy the component\.
 
 In the recipe, you can define unique dependencies and lifecycles for each platform that a component supports\. You can use this capability to deploy a component to devices with multiple platforms that have different requirements\. You can also use this to prevent AWS IoT Greengrass from installing a component on devices that don't support it\.
 
@@ -216,13 +216,19 @@ Default: 60 seconds\.
 The core device uses the selections from the global lifecycle only if this manifest doesn't define a lifecycle\.
 You can specify the `all` selection key to run sections of the global lifecycle that don't have selection keys\.  
 `Artifacts`  
-\(Optional\) A list of objects that each define a binary artifact for the component on the platform that this manifest defines\. For example, you can define code or images as artifacts\. Each object contains the following information:    
+\(Optional\) A list of objects that each define a binary artifact for the component on the platform that this manifest defines\. For example, you can define code or images as artifacts\.  
+When the component deploys, the AWS IoT Greengrass Core software downloads the artifact to a folder on the core device\. You can also define artifacts as archive files that the software extracts after it downloads them\.  
+You can use [recipe variables](#recipe-variables) to get the paths to the folders where the artifacts install on the core device\.  
++ Normal files – Use the [artifacts:path recipe variable](#component-recipe-artifacts-path) to get the path to the folder that contains the artifacts\. For example, specify `{artifacts:path}/my_script.py` in a recipe to get the path to an artifact that has the URI `s3://DOC-EXAMPLE-BUCKET/path/to/my_script.py`\.
++ Extracted archives – Use the [artifacts:decompressedPath recipe variable](#component-recipe-artifacts-decompressed-path) to get the path to the folder that contains the extracted archive artifacts\. The AWS IoT Greengrass Core software extracts each archive to a folder with the same name as the archive\. For example, specify `{artifacts:decompressedPath}/my_archive/my_script.py` in a recipe to get the path to `my_script.py` in the archive artifact that has the URI `s3://DOC-EXAMPLE-BUCKET/path/to/my_artifact.zip`\.
+When you develop a component with an archive artifact on a local core device, you might not have a URI for that artifact\. To test your component with an `Unarchive` option that extracts the artifact, specify a URI where the file name matches the name of your archive artifact file\. You can specify the URI where you expect to upload the archive artifact, or you can specify a new placeholder URI\. For example, to extract the `my_archive.zip` artifact during a local deployment, you can specify `s3://DOC-EXAMPLE-BUCKET/my_archive.zip`\.
+Each object contains the following information:    
 `URI`  
-The URI of an artifact in an Amazon S3 bucket\. AWS IoT Greengrass fetches the artifact from this URI when the component installs\. Each artifact must have a unique file name within each manifest\.  
+The URI of an artifact in an S3 bucket\. The AWS IoT Greengrass Core software fetches the artifact from this URI when the component installs, unless the artifact already exists on the device\. Each artifact must have a unique file name within each manifest\.  
 `Unarchive`  
 \(Optional\) The type of archive to unpack\. Choose from the following options:  
-+ `NONE` – The file isn't an archive to unpack\.
-+ `ZIP` – The file is a ZIP archive\. The AWS IoT Greengrass Core software extracts the archive to a folder with the same name as the archive\.
++ `NONE` – The file isn't an archive to unpack\. The AWS IoT Greengrass Core software installs the artifact to a folder on the core device\. You can use the [artifacts:path recipe variable](#component-recipe-artifacts-path) to get the path to this folder\.
++ `ZIP` – The file is a ZIP archive\. The AWS IoT Greengrass Core software extracts the archive to a folder with the same name as the archive\. You can use the [artifacts:decompressedPath recipe variable](#component-recipe-artifacts-decompressed-path) to get the path to the folder that contains this folder\.
 Defaults to `NONE`\.  
   `Permission`   
 \(Optional\) An object that defines the access permissions to set for this artifact file\. You can set the read permission and the execute permission\.  
@@ -310,7 +316,7 @@ AWS IoT Greengrass supports the following recipe variables:
 The value of a configuration parameter for the component that this recipe defines or for a component on which this component depends\.  
 You can use this variable to provide a parameter to a script that you run in the component lifecycle\.  
 This recipe variable has the following inputs:  
-+ <a name="recipe-variable-component-dependency-name"></a>`component_dependency_name` – Optional\. The name of the component dependency to query\. Omit this segment to query the component that this recipe defines\. You can specify only direct dependencies\.
++ <a name="recipe-variable-component-dependency-name"></a>`component_dependency_name` – \(Optional\) The name of the component dependency to query\. Omit this segment to query the component that this recipe defines\. You can specify only direct dependencies\.
 + `json_pointer` – The JSON pointer to the configuration value to evaluate\. JSON pointers start with a forward slash `/`\. To identify a value in a nested component configuration, use forward slashes \(`/`\) to separate the keys for each level in the configuration\. You can use a number as a key to specify an index in a list\. For more information, see the [JSON pointer specification](https://tools.ietf.org/html/rfc6901)\.
 
   AWS IoT Greengrass Core uses JSON pointers for recipes in YAML format\.
@@ -320,22 +326,22 @@ The JSON pointer can reference the following node types:
 + No node\. AWS IoT Greengrass Core doesn't replace the recipe variable\.
 For example, the `{configuration:/Message}` recipe variable retrieves the value of the `Message` key in the component configuration\. The `{com.example.MyComponentDependency:configuration:/server/port}` recipe variable retrieves the value of `port` in the `server` configuration object of a component dependency\.
 
-`component_dependency_name:artifacts:path`  
+  `component_dependency_name:artifacts:path`   
 The root path of the artifacts for the component that this recipe defines or for a component on which this component depends\.  
 When a component installs, AWS IoT Greengrass copies the component's artifacts to the folder that this variable exposes\. You can use this variable to identify the location of a script to run in the component lifecycle, for example\.  
 <a name="recipe-variable-artifact-folder-permissions"></a>The folder at this path is read\-only\. To modify artifact files, copy the files to another location, such as the current working directory \(`$PWD` or `.`\)\. Then, modify the files there\.  
 <a name="recipe-variable-component-dependency-artifact-file-permissions"></a>To read or run an artifact from a component dependency, that artifact's `Read` or `Execute` permission must be `ALL`\. For more information, see the [artifact permissions](#component-artifact-permission) that you define in the component recipe\.  
 This recipe variable has the following inputs:  
-+ <a name="recipe-variable-component-dependency-name"></a>`component_dependency_name` – Optional\. The name of the component dependency to query\. Omit this segment to query the component that this recipe defines\. You can specify only direct dependencies\.
++ <a name="recipe-variable-component-dependency-name"></a>`component_dependency_name` – \(Optional\) The name of the component dependency to query\. Omit this segment to query the component that this recipe defines\. You can specify only direct dependencies\.
 
-`component_dependency_name:artifacts:decompressedPath`  
+  `component_dependency_name:artifacts:decompressedPath`   
 The root path of the decompressed archive artifacts for the component that this recipe defines or for a component on which this component depends\.  
 When a component installs, AWS IoT Greengrass unpacks the component's archive artifacts to the folder that this variable exposes\. You can use this variable to identify the location of a script to run in the component lifecycle, for example\.  
 Each artifact unzips to a folder within the decompressed path, where the folder has the same name as the artifact minus its extension\. For example, a ZIP artifact named `models.zip` unpacks to the `{artifacts:decompressedPath}/models` folder\.  
 <a name="recipe-variable-artifact-folder-permissions"></a>The folder at this path is read\-only\. To modify artifact files, copy the files to another location, such as the current working directory \(`$PWD` or `.`\)\. Then, modify the files there\.  
 <a name="recipe-variable-component-dependency-artifact-file-permissions"></a>To read or run an artifact from a component dependency, that artifact's `Read` or `Execute` permission must be `ALL`\. For more information, see the [artifact permissions](#component-artifact-permission) that you define in the component recipe\.  
 This recipe variable has the following inputs:  
-+ <a name="recipe-variable-component-dependency-name"></a>`component_dependency_name` – Optional\. The name of the component dependency to query\. Omit this segment to query the component that this recipe defines\. You can specify only direct dependencies\.
++ <a name="recipe-variable-component-dependency-name"></a>`component_dependency_name` – \(Optional\) The name of the component dependency to query\. Omit this segment to query the component that this recipe defines\. You can specify only direct dependencies\.
 
 `kernel:rootPath`  
 The AWS IoT Greengrass Core root path\.

@@ -157,8 +157,8 @@ This operation's request has the following parameters:
 The report that tells the nucleus whether or not the configuration update is valid\. This object, `ConfigurationValidityReport`, contains the following information:    
 `status`  
 The validity status\. This enum, `ConfigurationValidityStatus`, has the following values:  
-+ `SUCCEEDED` – The configuration is valid and the nucleus can apply it to this component\.
-+ `FAILED` – The configuration isn't valid and the deployment fails\.  
++ `ACCEPTED` – The configuration is valid and the nucleus can apply it to this component\.
++ `REJECTED` – The configuration isn't valid and the deployment fails\.  
 `deploymentId`  
 The ID of the AWS IoT Greengrass deployment that requested the configuration update\.  
 `message`  

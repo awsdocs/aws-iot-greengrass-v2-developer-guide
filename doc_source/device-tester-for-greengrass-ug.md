@@ -1,4 +1,4 @@
-# Using AWS IoT Device Tester for AWS IoT Greengrass<a name="device-tester-for-greengrass-ug"></a>
+# Using AWS IoT Device Tester for AWS IoT Greengrass V2<a name="device-tester-for-greengrass-ug"></a>
 
 AWS IoT Device Tester \(IDT\) is a downloadable testing framework that lets you validate IoT devices\. You can use IDT for AWS IoT Greengrass to run the AWS IoT Greengrass qualification suite, and create and run custom test suites for your devices\.
 

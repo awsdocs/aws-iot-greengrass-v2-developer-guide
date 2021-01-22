@@ -29,10 +29,10 @@ Use the following procedure to upload a component with the AWS CLI\. You can fol
 **Tip**  <a name="artifact-path-tip"></a>
 We recommend that you include the component name and version in the path to the artifact in the S3 bucket\. This naming scheme can help you maintain the artifacts that previous versions of the component use, so you can continue to support previous component versions\.
 
-      Run the following command to upload an artifact file to an S3 bucket\. Replace *artifacts/com\.example\.HelloWorld/1\.0\.0/artifact\.py* with the path to the artifact file\.
+      Run the following command to upload an artifact file to an S3 bucket\. Replace *DOC\-EXAMPLE\-BUCKET* with the name of the bucket, and replace *artifacts/com\.example\.HelloWorld/1\.0\.0/artifact\.py* with the path to the artifact file\.
 
       ```
-      aws s3api put-object --bucket DOC-EXAMPLE-BUCKET --key artifacts/com.example.HelloWorld/1.0.0/artifact.py --body artifacts/com.example.HelloWorld/1.0.0/artifact.py
+      aws s3 cp artifacts/com.example.HelloWorld/1.0.0/artifact.py s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.HelloWorld/1.0.0/artifact.py
       ```
 **Important**  
 Core device roles don't allow access to S3 buckets by default\. If this is your first time using this S3 bucket, you must add permissions to the role to allow core devices to retrieve component artifacts from this S3 bucket\. For more information, see [Access to S3 buckets for component artifacts](device-service-role.md#device-service-role-access-s3-bucket)\.
@@ -54,7 +54,7 @@ Core device roles don't allow access to S3 buckets by default\. If this is your 
        - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.HelloWorld/1.0.0/artifact.py
    ```
 **Note**  
-You can add the `Unarchive: ZIP` option for a ZIP artifact to configure AWS IoT Greengrass Core devices to unzip the artifact when the component deploys\.
+You can add the `Unarchive: ZIP` option for a ZIP artifact to configure core devices to unzip the artifact when the component deploys\.
 
    For more information about recipes, see [AWS IoT Greengrass component recipe reference](component-recipe-reference.md)\.
 
@@ -68,6 +68,8 @@ You can add the `Unarchive: ZIP` option for a ZIP artifact to configure AWS IoT 
    ```
 
    Copy the `arn` from the response to check the state of the component in the next step\.
+**Note**  
+AWS IoT Greengrass computes the digest of each artifact when you create the component\. This means that you can't modify the artifact files in your S3 bucket after you create a component\. If you do, deployments that include this component will fail, because the file digest doesn't match\. If you modify an artifact file, you must create a new version of the component\.
 
 1. Each component in the AWS IoT Greengrass service has a state\. Run the following command to confirm the state of the component version that you upload in this procedure\. Replace *com\.example\.HelloWorld* and *1\.0\.0* with the component version to query\. Replace the `arn` with the ARN from the previous step\.
 
