@@ -38,26 +38,6 @@ This section describes how you can store a Docker image in Amazon S3 to run a Do
    + A lifecycle run script that uses [docker run](https://docs.docker.com/engine/reference/commandline/run/) to create and start a container from the image\. The `--rm` option cleans up the container when it exits\.
 
 ------
-#### [ YAML ]
-
-   ```
-   ---
-   RecipeFormatVersion: '2020-01-25'
-   ComponentName: com.example.MyDockerComponent
-   ComponentVersion: '1.0.0'
-   ComponentDescription: A component that runs a Docker container.
-   ComponentPublisher: Amazon
-   Manifests:
-     - Platform:
-         os: linux
-       Lifecycle:
-         Install:
-           Script: docker load -i {artifacts:path}/hello-world.tar
-         Run:
-           Script: docker run --rm hello-world
-   ```
-
-------
 #### [ JSON ]
 
    ```
@@ -86,6 +66,26 @@ This section describes how you can store a Docker image in Amazon S3 to run a Do
    ```
 
 ------
+#### [ YAML ]
+
+   ```
+   ---
+   RecipeFormatVersion: '2020-01-25'
+   ComponentName: com.example.MyDockerComponent
+   ComponentVersion: '1.0.0'
+   ComponentDescription: A component that runs a Docker container.
+   ComponentPublisher: Amazon
+   Manifests:
+     - Platform:
+         os: linux
+       Lifecycle:
+         Install:
+           Script: docker load -i {artifacts:path}/hello-world.tar
+         Run:
+           Script: docker run --rm hello-world
+   ```
+
+------
 **Note**  
 To use interprocess communication \(IPC\) in a Docker container component, you must set AWS IoT Greengrass Core environment variables in the Docker container\. For more information, see [Use interprocess communication in Docker container components](#docker-container-ipc)\.  
 You can also configure AWS IoT Greengrass to install Docker Engine when the component installs\. For example, the following install script installs Docker Engine before it loads the Docker image\. This install script works on Debian\-based Linux distributions, such as Ubuntu\. If you configure the component to install Docker Engine with this command, you may need to add `sudo` to the `docker` commands to run them\.  
@@ -105,28 +105,6 @@ You can also configure AWS IoT Greengrass to install Docker Engine when the comp
 1. When the component is ready, upload the Docker image archive to an S3 bucket, and add its URI to the component recipe\. Then, you can upload the component to AWS IoT Greengrass to deploy to other core devices\. For more information, see [Upload components to deploy to your core devicesUpload components to deploy](upload-components.md)\.
 
    When you're done, the component recipe should look like the following example\.
-
-------
-#### [ YAML ]
-
-   ```
-   ---
-   RecipeFormatVersion: '2020-01-25'
-   ComponentName: com.example.MyDockerComponent
-   ComponentVersion: '1.0.0'
-   ComponentDescription: A component that runs a Docker container.
-   ComponentPublisher: Amazon
-   Manifests:
-     - Platform:
-         os: linux
-       Lifecycle:
-         Install:
-           Script: docker load -i {artifacts:path}/hello-world.tar
-         Run:
-           Script: docker run --rm hello-world
-       Artifacts:
-         - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.MyDockerComponent/1.0.0/hello-world.tar
-   ```
 
 ------
 #### [ JSON ]
@@ -162,6 +140,28 @@ You can also configure AWS IoT Greengrass to install Docker Engine when the comp
    ```
 
 ------
+#### [ YAML ]
+
+   ```
+   ---
+   RecipeFormatVersion: '2020-01-25'
+   ComponentName: com.example.MyDockerComponent
+   ComponentVersion: '1.0.0'
+   ComponentDescription: A component that runs a Docker container.
+   ComponentPublisher: Amazon
+   Manifests:
+     - Platform:
+         os: linux
+       Lifecycle:
+         Install:
+           Script: docker load -i {artifacts:path}/hello-world.tar
+         Run:
+           Script: docker run --rm hello-world
+       Artifacts:
+         - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.MyDockerComponent/1.0.0/hello-world.tar
+   ```
+
+------
 
 ## Use interprocess communication in Docker container components<a name="docker-container-ipc"></a>
 
@@ -177,38 +177,6 @@ You can use the `-e`, `--env`, or `--env-file` parameter to [set environment var
 When you start the Docker container, you must also mount as a volume any files that the Docker container component will need to access\. To use interprocess communication, mount the root folder for your AWS IoT Greengrass Core software\. You can use the `-v` parameter to [mount a volume in the Docker container](https://docs.docker.com/engine/reference/commandline/run/#mount-volume--v---read-only) that you run\.
 
 The following example component recipe uses the `-e` parameter to set the required environment variables from AWS IoT Greengrass Core in the Docker container, and mounts the */greengrass/v2* folder as a volume\. Replace */greengrass/v2* with the path to the root folder that you used to install the AWS IoT Greengrass Core software\. 
-
-------
-#### [ YAML ]
-
-```
----
-RecipeFormatVersion: '2020-01-25'
-ComponentName: com.example.MyDockerComponent
-ComponentVersion: '1.0.0'
-ComponentDescription: A component that runs a Docker container.
-ComponentPublisher: Amazon
-ComponentConfiguration:
-  DefaultConfiguration:
-    accessControl: >-
-      aws.greengrass.ipc.pubsub:
-        "com.example.MyDockerComponent:pubsub:1":
-          policyDescription: Allows access to publish and subscribe to all topics.
-          operations:
-            - "*"
-          resources:
-            - "*"
-Manifests:
-  - Platform:
-      os: linux
-    Lifecycle:
-      Install:
-        Script: docker load -i {artifacts:path}/hello-world.tar
-      Run:
-        Script: docker run -v /greengrass/v2:/greengrass/v2 -e AWS_REGION -e SVCUID -e AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT -e AWS_CONTAINER_AUTHORIZATION_TOKEN -e AWS_CONTAINER_CREDENTIALS_FULL_URI --rm hello-world
-    Artifacts:
-      - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.MyDockerComponent/1.0.0/hello-world.tar
-```
 
 ------
 #### [ JSON ]
@@ -246,6 +214,38 @@ Manifests:
     }
   ]
 }
+```
+
+------
+#### [ YAML ]
+
+```
+---
+RecipeFormatVersion: '2020-01-25'
+ComponentName: com.example.MyDockerComponent
+ComponentVersion: '1.0.0'
+ComponentDescription: A component that runs a Docker container.
+ComponentPublisher: Amazon
+ComponentConfiguration:
+  DefaultConfiguration:
+    accessControl: >-
+      aws.greengrass.ipc.pubsub:
+        "com.example.MyDockerComponent:pubsub:1":
+          policyDescription: Allows access to publish and subscribe to all topics.
+          operations:
+            - "*"
+          resources:
+            - "*"
+Manifests:
+  - Platform:
+      os: linux
+    Lifecycle:
+      Install:
+        Script: docker load -i {artifacts:path}/hello-world.tar
+      Run:
+        Script: docker run -v /greengrass/v2:/greengrass/v2 -e AWS_REGION -e SVCUID -e AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT -e AWS_CONTAINER_AUTHORIZATION_TOKEN -e AWS_CONTAINER_CREDENTIALS_FULL_URI --rm hello-world
+    Artifacts:
+      - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.MyDockerComponent/1.0.0/hello-world.tar
 ```
 
 ------

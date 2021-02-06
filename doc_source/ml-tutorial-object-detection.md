@@ -7,7 +7,7 @@ This tutorial shows you how to perform object detection using the public DLR Obj
 To complete this tutorial, you will need the following:
 + One of the following devices, set up and configured for use with AWS IoT Greengrass V2:<a name="dlr-supported-platforms"></a>
 
-  This component requires one of the following devices configured for use with AWS IoT Greengrass\. For more information see [Setting up AWS IoT Greengrass Version 2](setting-up.md)\.
+  This component requires one of the following devices configured for use with AWS IoT Greengrass\. For more information see [Setting up AWS IoT Greengrass core devices](setting-up.md)\.
   + **32\-bit Armv7l**
 
     [Raspberry Pi](https://www.raspberrypi.org) running Raspberry Pi OS, 2020\-08\-24\.
@@ -15,8 +15,8 @@ To complete this tutorial, you will need the following:
 
     Device running Amazon Linux 2 or Ubuntu 18\.04, with [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.27 or later\.
 
-   For more information, see [Setting up AWS IoT Greengrass Version 2](setting-up.md)\.
-+ A Greengrass core device and a Greengrass group\. For more information, see [Install AWS IoT Greengrass V2](getting-started.md#install-greengrass-v2)\.
+   For more information, see [Setting up AWS IoT Greengrass core devices](setting-up.md)\.
++ A Greengrass core device and a Greengrass group\. For more information, see [Install the AWS IoT Greengrass Core software](getting-started.md#install-greengrass-v2)\.
 
 ## Deploy the DLR Object Detection component<a name="ml-object-detection-deploy"></a>
 
@@ -24,9 +24,7 @@ Complete the following steps to deploy the DLR Object Detection component to you
 
 ### To deploy the DLR Object Detection component \(console\)<a name="ml-object-detection-deploy-console"></a>
 
-1. Sign in to the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\.
-
-1. In the navigation menu, choose **Components**\.
+1. In to the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass) navigation menu, choose **Components**\.
 
 1. On the **Components** page, on the **Public components** tab, choose `aws.greengrass.DLRObjectDetection`\.
 

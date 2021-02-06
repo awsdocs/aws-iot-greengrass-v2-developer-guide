@@ -10,7 +10,7 @@ This component has the following versions:
 ## Requirements<a name="secret-manager-component-requirements"></a>
 
 This component has the following requirements:
-+ The [Greengrass device role](device-service-role.md) must allow the `secretmanager:GetSecretValue` action, as shown in the following example IAM policy\.
++ The [Greengrass device role](device-service-role.md) must allow the `secretsmanager:GetSecretValue` action, as shown in the following example IAM policy\.
 
   ```
   {
@@ -18,11 +18,11 @@ This component has the following requirements:
     "Statement": [
       {
         "Action": [
-          "secretmanager:GetSecretValue"
+          "secretsmanager:GetSecretValue"
         ],
         "Effect": "Allow",
         "Resource": [
-          "aws:aws:secretsmanager:region:123456789012:secret:MySecret"
+          "arn:aws:secretsmanager:region:123456789012:secret:MySecret"
         ]
       }
     ]

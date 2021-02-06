@@ -251,6 +251,40 @@ IPC service identifier:
 The following example component recipe includes an `accessControl` object defines an authorization policy\. This policy authorizes the `com.example.HelloWorld` component to publish to the `test/topic` topic\.  
 
 ```
+{
+  "RecipeFormatVersion": "2020-01-25",
+  "ComponentName": "com.example.HelloWorld",
+  "ComponentVersion": "1.0.0",
+  "ComponentDescription": "A component that publishes messages.",
+  "ComponentPublisher": "Amazon",
+  "ComponentConfiguration": {
+    "DefaultConfiguration": {
+      "accessControl": {
+        "aws.greengrass.ipc.pubsub": {
+          "com.example.HelloWorld:pubsub:1": {
+            "policyDescription": "Allows access to publish to test/topic.",
+            "operations": [
+              "aws.greengrass#PublishToTopic"
+            ],
+            "resources": [
+              "test/topic"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "Manifests": [
+    {
+      "Lifecycle": {
+        "Run": "java -Dlog.level=INFO -jar {artifacts:path}/HelloWorld.jar"
+      }
+    }
+  ]
+}
+```
+
+```
 ---
 RecipeFormatVersion: '2020-01-25'
 ComponentName: com.example.HelloWorld

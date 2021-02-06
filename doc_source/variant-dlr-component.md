@@ -7,7 +7,7 @@ This component has the following versions:
 
 ## Requirements<a name="variant-dlr-component-requirements"></a><a name="dlr-supported-platforms"></a>
 
-This component requires one of the following devices configured for use with AWS IoT Greengrass\. For more information see [Setting up AWS IoT Greengrass Version 2](setting-up.md)\.
+This component requires one of the following devices configured for use with AWS IoT Greengrass\. For more information see [Setting up AWS IoT Greengrass core devices](setting-up.md)\.
 + **32\-bit Armv7l**
 
   [Raspberry Pi](https://www.raspberrypi.org) running Raspberry Pi OS, 2020\-08\-24\.
@@ -79,38 +79,6 @@ To view the component recipe for the latest version of a public component, do on
 The following excerpt shows the component recipe for version 1\.3\.0 of the component\. 
 
 ------
-#### [ YAML ]
-
-```
-RecipeFormatVersion: "2020-01-25"
-ComponentName: variant.DLR
-ComponentVersion: "1.3.0"
-ComponentDescription: Runtime for deep learning models and decision tree models compiled by AWS SageMaker Neo, TVM, or Treelite.
-ComponentPublisher: Amazon
-ComponentDependencies:
-  aws.greengrass.Nucleus:
-    VersionRequirement: "~2.0.0"
-    DependencyType: SOFT
-Manifests:
-  - Platform:
-      os: linux
-      architecture: arm
-    Name: 32-bit armv7l - Linux (raspberry pi)
-    Artifacts:
-      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/installer.zip
-        Unarchive: ZIP
-      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/amd64/environment.yaml
-  - Platform:
-      os: linux
-      architecture: amd64
-    Name: 64-bit x86_64 - Linux (ubuntu, deeplens, amazon linux 2 with GLIBC version >= 2.27)
-    Artifacts:
-      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/installer.zip
-        Unarchive: ZIP
-      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/amd64/environment.yaml
-```
-
-------
 #### [ JSON ]
 
 ```
@@ -161,6 +129,38 @@ Manifests:
     }
   ]
 }
+```
+
+------
+#### [ YAML ]
+
+```
+RecipeFormatVersion: "2020-01-25"
+ComponentName: variant.DLR
+ComponentVersion: "1.3.0"
+ComponentDescription: Runtime for deep learning models and decision tree models compiled by AWS SageMaker Neo, TVM, or Treelite.
+ComponentPublisher: Amazon
+ComponentDependencies:
+  aws.greengrass.Nucleus:
+    VersionRequirement: "~2.0.0"
+    DependencyType: SOFT
+Manifests:
+  - Platform:
+      os: linux
+      architecture: arm
+    Name: 32-bit armv7l - Linux (raspberry pi)
+    Artifacts:
+      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/installer.zip
+        Unarchive: ZIP
+      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/amd64/environment.yaml
+  - Platform:
+      os: linux
+      architecture: amd64
+    Name: 64-bit x86_64 - Linux (ubuntu, deeplens, amazon linux 2 with GLIBC version >= 2.27)
+    Artifacts:
+      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/installer.zip
+        Unarchive: ZIP
+      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/amd64/environment.yaml
 ```
 
 ------

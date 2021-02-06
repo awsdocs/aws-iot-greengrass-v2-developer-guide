@@ -1,10 +1,13 @@
 # Getting started with AWS IoT Greengrass V2<a name="getting-started"></a>
 
 You can complete this getting started tutorial to learn about the basic features of AWS IoT Greengrass V2\. In this tutorial, you do the following:
-+ Install and configure the AWS IoT Greengrass V2 Core software on a Linux device, such as a Raspberry Pi\. This device is an AWS IoT Greengrass core device\.
++ Install and configure the AWS IoT Greengrass Core software on a Linux device, such as a Raspberry Pi\. This device is an AWS IoT Greengrass core device\.
 + Develop a Hello World component on your Greengrass core device\. Components are software modules that run on Greengrass core devices\.
 + Upload that component to AWS IoT Greengrass V2 in the AWS Cloud\.
-+ Deploy that component to your Greengrass core device\.
++ Deploy that component from the AWS Cloud to your Greengrass core device\.
+
+**Note**  
+This tutorial describes how to set up a development environment and explore the features of AWS IoT Greengrass\. For more information about how to set up and configure production devices, see [Setting up AWS IoT Greengrass core devices](setting-up.md)\.
 
 ## Prerequisites<a name="getting-started-prerequisites"></a>
 
@@ -13,10 +16,12 @@ To complete this getting started tutorial, you need the following:
 + An AWS Identity and Access Management \(IAM\) user with administrator permissions\.
 + A Windows, Mac, or Unix\-like development computer with an internet connection\.
 + A device with a Linux operating system and an internet connection to the same network as your development computer\. We recommend that you use a Raspberry Pi with [Raspberry Pi OS](https://www.raspberrypi.org/downloads/) \(previously called Raspbian\)\.
-+ AWS CLI installed and configured with credentials on your development computer and on your device\. For more information, see [Installing the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and [Configuring the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)\.
++ [Python](https://www.python.org/downloads/) 3\.5 or later installed on the device\.
++ AWS Command Line Interface \(AWS CLI\) installed and configured with credentials on your development computer and on your device\. For more information, see [Installing the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and [Configuring the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)\.
   + Minimum AWS CLI V1 version: v1\.18\.197
   + Minimum AWS CLI V2 version: v2\.1\.11
-+ [Python](https://www.python.org/downloads/) 3\.5 or later installed on the device\.
+**Note**  
+If you use a Raspberry Pi or another 32\-bit ARM device, install AWS CLI V1\. AWS CLI V2 isn't available for 32\-bit ARM devices\. For more information, see [Installing, updating, and uninstalling the AWS CLI version 1](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv1.html)\.
 
 ## Set up your environment<a name="set-up-environment"></a>
 
@@ -42,7 +47,7 @@ Follow the steps in this section to set up a Linux device to use as your AWS IoT
 **Important**  
 If your development computer uses an earlier version of Windows, you might not have the `ssh` command, or you might have `ssh` but can't connect to your Raspberry Pi\. To connect to your Raspberry Pi, you can install and configure [PuTTY](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html), which is a no\-cost, open source SSH client\. Consult the [PuTTY documentation](https://tartarus.org/~simon/putty-snapshots/htmldoc/Chapter2.html#gs) to connect to your Raspberry Pi\.
 
-1. Install the Java 8 runtime, which the AWS IoT Greengrass V2 Core software requires to run\. On your Raspberry Pi, run the following command\.
+1. Install the Java runtime, which the AWS IoT Greengrass Core software requires to run\. On your Raspberry Pi, run the following command to install Java 8\.
 
    ```
    sudo apt install openjdk-8-jdk
@@ -54,7 +59,7 @@ If your development computer uses an earlier version of Windows, you might not h
    java -version
    ```
 
-   The command output should be similar to the following\.
+   The command prints the version of Java that runs on the device\. The output might look similar to the following example\.
 
    ```
    openjdk version "1.8.0_242"
@@ -62,11 +67,16 @@ If your development computer uses an earlier version of Windows, you might not h
    OpenJDK 64-Bit Server VM (build 25.242-b08, mixed mode)
    ```
 
-## Install AWS IoT Greengrass V2<a name="install-greengrass-v2"></a>
+## Install the AWS IoT Greengrass Core software<a name="install-greengrass-v2"></a>
 
-Follow the steps in this section to install and configure the AWS IoT Greengrass V2 Core software on your Raspberry Pi\.
+Follow the steps in this section to set up your Raspberry Pi as a AWS IoT Greengrass core device that you can use for local development\. In this section, you download and run an installer that does the following to configure the AWS IoT Greengrass Core software for your device:
++ Installs the Greengrass nucleus component, which is the only mandatory component and the minimum requirement to run the AWS IoT Greengrass Core software on a device\. For more information, see [Greengrass nucleus component](greengrass-nucleus-component.md)\.
++ Registers your device as an AWS IoT thing and downloads a digital certificate that allows your device to connect to AWS\. For more information, see [Device authentication and authorization for AWS IoT Greengrass](device-auth.md)\.
++ Adds the device's AWS IoT thing to a thing group, which is a group or fleet of AWS IoT things\. Thing groups enable you to manage fleets of Greengrass core devices\. When you deploy software components to your devices, you can choose to deploy to individual devices or to groups of devices\. For more information, see [Managing devices with AWS IoT](https://docs.aws.amazon.com/iot/latest/developerguide/iot-thing-management.html) in the *AWS IoT Core Developer Guide*\.
++ Creates the IAM role that allows your Greengrass core device to interact with AWS services\. By default, this role allows your device to interact with AWS IoT and send logs to Amazon CloudWatch Logs\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
++ Installs the AWS IoT Greengrass command line interface \(`greengrass-cli`\), which you can use to test custom components that you develop on the core device\. For more information, see [Greengrass Command Line Interface](gg-cli.md)\.
 
-**To install and configure AWS IoT Greengrass V2**
+**To install and configure the AWS IoT Greengrass Core software**
 
 1. On your AWS IoT Greengrass core device \(your Raspberry Pi\), run the following command to switch to the home directory\.
 
@@ -88,14 +98,20 @@ Follow the steps in this section to install and configure the AWS IoT Greengrass
    unzip greengrass-nucleus-latest.zip -d GreengrassCore && rm greengrass-nucleus-latest.zip
    ```
 
-1. When you install the AWS IoT Greengrass Core software, you can configure options such as the root folder and AWS Region to use\. You can also choose to provision the AWS IoT Core thing that represents the AWS IoT Greengrass core device and choose to create the IAM role that AWS IoT Greengrass assumes to perform actions in the AWS Cloud\. The AWS IoT Greengrass Core software creates these resources only if they don't already exist\.
-
-   The installer can also deploy the AWS IoT Greengrass CLI \(`greengrass-cli`\), which you can use to interact with the AWS IoT Greengrass Core software\. The Greengrass CLI includes commands to deploy and test custom components that you develop on the core device\.
-
-   The core device uses your AWS credentials to provision these resources and create the deployment\. For more information, see [Minimal IAM policy to provision resources](install-greengrass-core-v2.md#provision-minimal-iam-policy)\.
+1. Provide your AWS credentials so that the installer can provision the AWS IoT and IAM resources for your core device\. To increase security, you can get credentials for an IAM role that allows only the minimum permissions necessary to provision\. For more information, see [Minimal IAM policy to provision resources](install-greengrass-core-v2.md#provision-minimal-iam-policy)\.
 
    Do one of the following to retrieve credentials and provide them to the AWS IoT Greengrass Core software:<a name="installer-export-aws-credentials"></a>
-   + \(Recommended\) Use temporary security credentials:
+   + Use long\-term credentials from an IAM user:
+
+     1. Provide the access key ID and secret access key for your IAM user\. For more information about how to retrieve long\-term credentials, see [Managing access keys for IAM users](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html) in the *IAM User Guide*\.
+
+     1. Run the following commands to provide the credentials to the AWS IoT Greengrass Core software\.
+
+        ```
+        export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+        export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+        ```
+   + \(Recommended\) Use temporary security credentials from an IAM role:
 
      1. Provide the access key ID, secret access key, and session token from an IAM role that you assume\. For more information about how to retrieve these credentials, see [Using temporary security credentials with the AWS CLI](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_use-resources.html#using-temp-creds-sdk-cli) in the *IAM User Guide*\.
 
@@ -105,16 +121,6 @@ Follow the steps in this section to install and configure the AWS IoT Greengrass
         export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
         export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
         export AWS_SESSION_TOKEN=AQoDYXdzEJr1K...o5OytwEXAMPLE=
-        ```
-   + Use long\-term credentials:
-
-     1. Provide the access key ID and secret access key for your IAM user\. For more information about how to retrieve long\-term credentials, see [Managing access keys for IAM users](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html) in the *IAM User Guide*\.
-
-     1. Run the following commands to provide the credentials to the AWS IoT Greengrass Core software\.
-
-        ```
-        export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
-        export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
         ```
 
    The AWS IoT Greengrass Core software doesn't save or store your credentials\.
@@ -149,7 +155,7 @@ Follow the steps in this section to install and configure the AWS IoT Greengrass
      --deploy-dev-tools true
    ```
 **Note**  
-<a name="jvm-tuning-note"></a>If you are running AWS IoT Greengrass on a device with limited memory, you might want to control the amount of memory that AWS IoT Greengrass Core software uses\. To control memory allocation, you can set JVM heap size options in the `jvmOptions` configuration parameter in your nucleus component\. For more information, see [Control memory allocation with JVM options](configure-greengrass-core-v2.md#jvm-tuning)\.
+<a name="jvm-tuning-note"></a>If you are running AWS IoT Greengrass on a device with limited memory, you can control the amount of memory that AWS IoT Greengrass Core software uses\. To control memory allocation, you can set JVM heap size options in the `jvmOptions` configuration parameter in your nucleus component\. For more information, see [Control memory allocation with JVM options](configure-greengrass-core-v2.md#jvm-tuning)\.
 
    When you run this command, you should see the following messages to indicate that the installer succeeded\.
 
@@ -160,12 +166,6 @@ Follow the steps in this section to install and configure the AWS IoT Greengrass
    ```
 **Note**  
 If your system doesn't have systemd, the installer won't set up the software as a system service, and you won't see that success message\.
-
-1. <a name="root-file-permissions"></a>Run the following command to set the required file permissions for your AWS IoT Greengrass Core software root folder\. Replace */greengrass/v2* with the root folder that you specified in your installation command and replace */greengrass* with the parent folder for your root folder\.
-
-   ```
-   sudo chmod 755 /greengrass/v2 && sudo chmod 755 /greengrass
-   ```
 
 1. The local development tools can take up to a minute to deploy\. You can run the following command to check the status of the deployment\. Replace *MyGreengrassCore* with the name of your core device\.
 
@@ -180,8 +180,46 @@ If your system doesn't have systemd, the installer won't set up the software as 
    ```
 
    The command outputs help information for the Greengrass CLI\. If the `greengrass-cli` isn't found, the deployment might have failed to install the Greengrass CLI\. For more information, see [Troubleshooting](troubleshooting.md)\.
+
+   You can also run the following command to manually deploy the AWS IoT Greengrass CLI to your device\.
+   + Replace *region* with the Region that you use\.
+   + Replace *account\-id* with your AWS account ID\.
+   + Replace *MyGreengrassCore* with the name of your core device\.
+
+------
+#### [ Linux, macOS, or Unix ]
+
+   ```
+   aws greengrassv2 create-deployment \
+     --target-arn "arn:aws:iot:region:account-id:thing/MyGreengrassCore" \
+     --components '{
+       "aws.greengrass.Cli": {
+         "componentVersion": "2.0.3"
+       }
+     }'
+   ```
+
+------
+#### [ Windows \(CMD\) ]
+
+   ```
+   aws greengrassv2 create-deployment ^
+     --target-arn "arn:aws:iot:region:account-id:thing/MyGreengrassCore" ^
+     --components "{\"aws.greengrass.Cli\":{\"componentVersion\":\"2.0.3\"}}"
+   ```
+
+------
+#### [ Windows \(PowerShell\) ]
+
+   ```
+   aws greengrassv2 create-deployment `
+     --target-arn "arn:aws:iot:region:account-id:thing/MyGreengrassCore" `
+     --components '{\"aws.greengrass.Cli\":{\"componentVersion\":\"2.0.3\"}}'
+   ```
+
+------
 **Tip**  
-You can add the Greengrass CLI to your `PATH` environment variable to run `greengrass-cli` without its absolute path\.
+You can add `/greengrass/v2/bin` to your `PATH` environment variable to run `greengrass-cli` without its absolute path\.
 
 1. If you installed the software as a system service, the installer runs the software for you\. Otherwise, you must run the software\. To see if the installer set up the software as a system service, look for the following line in the installer output\.
 
@@ -208,32 +246,24 @@ You can add the Greengrass CLI to your `PATH` environment variable to run `green
       ```
       ssh username@pi-ip-address
       ```
-**Note**  
-If the software runs as a system service, you can start and stop it with the following commands\.  
-To start the software as a service, run the following command\.  
 
-     ```
-     sudo service greengrass start
-     ```
-To stop the software as a service, run the following command\.  
-
-     ```
-     sudo service greengrass stop
-     ```
+   For more information about how to interact with the Greengrass system service, see [Configure AWS IoT Greengrass as a system service](configure-greengrass-core-v2.md#configure-system-service)\.
 
 The AWS IoT Greengrass Core software and local development tools run on your device\. Next, you can develop a Hello World AWS IoT Greengrass component on your device\.
 
 ## Create your first component<a name="create-first-component"></a>
 
-Components are software that run on the AWS IoT Greengrass core device\. Every component is composed of a *recipe* and *artifacts*\.
+A component is a software module that runs on AWS IoT Greengrass core devices\. Components enable you to create and manage complex applications as discrete building blocks that you can reuse from one Greengrass core device to another\. Every component is composed of a *recipe* and *artifacts*\.
 + <a name="component-recipe-definition"></a>**Recipes**
 
-  Every component contains a recipe file, which defines its metadata\. The recipe also specifies the component's parameters, dependencies, lifecycle, and platform compatibility\. For more information, see [AWS IoT Greengrass component recipe reference](component-recipe-reference.md)\.
+  Every component contains a recipe file, which defines its metadata\. The recipe also specifies the component's configuration parameters, component dependencies, lifecycle, and platform compatibility\. The component lifecycle defines the commands that install, run, and shut down the component\. For more information, see [AWS IoT Greengrass component recipe reference](component-recipe-reference.md)\.
+
+  You can define recipes in [JSON](https://en.wikipedia.org/wiki/JSON) or [YAML](https://en.wikipedia.org/wiki/YAML) format\.
 + <a name="component-artifacts-definition"></a>**Artifacts**
 
-  Components can have any number of artifacts, which are component binaries\. Artifacts can include scripts, compiled code, static resources, and anything else that a component consumes\. Components can also consume artifacts from component dependencies\.
+  Components can have any number of artifacts, which are component binaries\. Artifacts can include scripts, compiled code, static resources, and any other files that a component consumes\. Components can also consume artifacts from component dependencies\.
 
-With AWS IoT Greengrass, you can develop and test components on your Greengrass core device without interaction with the AWS Cloud\. When you complete your component, you can upload it to AWS IoT Greengrass to deploy it to other devices\.
+With AWS IoT Greengrass, you can develop and test components on your Greengrass core device without interaction with the AWS Cloud\. When you complete your component, you can upload it to AWS IoT Greengrass to deploy it to other devices\. For more information, see [Manage AWS IoT Greengrass components](manage-components.md)\.
 
 In this section, you learn how to create and run a basic Hello World component\.
 
@@ -255,11 +285,54 @@ In this section, you learn how to create and run a basic Hello World component\.
 
 1. Run the following command to create the recipe file and open it in a text editor\.
 
+------
+#### [ JSON ]
+
+   ```
+   nano recipes/com.example.HelloWorld-1.0.0.json
+   ```
+
+------
+#### [ YAML ]
+
    ```
    nano recipes/com.example.HelloWorld-1.0.0.yaml
    ```
 
+------
+
    Paste the following recipe into the file\.
+
+------
+#### [ JSON ]
+
+   ```
+   {
+     "RecipeFormatVersion": "2020-01-25",
+     "ComponentName": "com.example.HelloWorld",
+     "ComponentVersion": "1.0.0",
+     "ComponentDescription": "My first AWS IoT Greengrass component.",
+     "ComponentPublisher": "Amazon",
+     "ComponentConfiguration": {
+       "DefaultConfiguration": {
+         "Message": "world"
+       }
+     },
+     "Manifests": [
+       {
+         "Platform": {
+           "os": "linux"
+         },
+         "Lifecycle": {
+           "Run": "python3 {artifacts:path}/hello_world.py '{configuration:/Message}'"
+         }
+       }
+     ]
+   }
+   ```
+
+------
+#### [ YAML ]
 
    ```
    ---
@@ -279,7 +352,9 @@ In this section, you learn how to create and run a basic Hello World component\.
            python3 {artifacts:path}/hello_world.py '{configuration:/Message}'
    ```
 
-   This recipe's `ComponentConfiguration` section defines a parameter, `Message`, that defaults to `world`\. The `Lifecycle` section instructs the AWS IoT Greengrass core to run the Hello World script with the `Message` parameter value as an argument\.
+------
+
+   This recipe's `ComponentConfiguration` section defines a parameter, `Message`, that defaults to `world`\. The `Manifests` section defines a *manifest*, which is a set of lifecycle instructions and artifacts for a platform\. You can define multiple manifests to specify different install instructions for various platforms, for example\. In the manifest, the `Lifecycle` section instructs the Greengrass core device to run the Hello World script with the `Message` parameter value as an argument\.
 
 1. Run the following command to create a folder for the component artifacts\.
 
@@ -317,7 +392,7 @@ You must use the following format for the artifact folder path\. Include the com
 
    This Python script logs a hello message and the current time to `/tmp/Greengrass_HelloWorld.log`\.
 
-1. AWS IoT Greengrass provides a command line interface \(CLI\) that you can use to manage components on your AWS IoT Greengrass core device\.
+1. Use the local AWS IoT Greengrass CLI to manage components on your Greengrass core device\.
 
    Run the following command to deploy the component to the AWS IoT Greengrass core\. Replace */greengrass/v2* with your AWS IoT Greengrass V2 root folder, and replace *\~/GreengrassCore* with your AWS IoT Greengrass V2 installation folder\.
 
@@ -354,7 +429,7 @@ You can also view the log file for your Hello World component\.
    ```
 For more information, see [Troubleshooting](troubleshooting.md)\.
 
-1. You can modify local components to iterate and test your code\.
+1. Modify the local component to iterate and test your code\.
 
    Run the following command to edit `hello_world.py`\.
 
@@ -395,7 +470,7 @@ For more information, see [Troubleshooting](troubleshooting.md)\.
 
    This command applies the latest Hello World artifact to the AWS IoT Greengrass core runtime\.
 
-1. Run the following command to restart the component\. When you restart a component, the AWS IoT Greengrass Core uses the latest changes\.
+1. Run the following command to restart the component\. When you restart a component, the core device uses the latest changes\.
 
    ```
    sudo /greengrass/v2/bin/greengrass-cli component restart \
@@ -414,7 +489,49 @@ For more information, see [Troubleshooting](troubleshooting.md)\.
    Hello, world! Current time: 2020-11-30 17:48:59.153933. Greetings from your first Greengrass component.
    ```
 
-1. After you finish your component, remove it from your core device\. This is required for you to deploy the component back to the core device after you upload it to AWS IoT Greengrass\. Otherwises, the deployment fails with a version compatibility error because the local deployment specifies a different version\. Run the following command\.
+1. You can update the component's configuration parameters to test different configurations\. When you deploy a component, you can specify a *configuration update*, which defines how to modify the component's configuration on the core device\. You can specify which configuration values to reset to default values and the new configuration values to merge onto the core device\. For more information, see [Update component configurations](update-component-configurations.md)\.
+
+   Do the following:
+
+   1. Create a file called `hello-world-config-update.json` to contain the configuration update\.
+
+      ```
+      nano hello-world-config-update-json
+      ```
+
+   1. Copy the following JSON object into the file\. This JSON object defines a configuration update that merges the value `friend` to the `Message` parameter to update its value\. This configuration update doesn't specify any values to reset\. You don't need to reset the `Message` parameter because the merge update replaces the existing value\.
+
+      ```
+      {
+        "com.example.HelloWorld": {
+          "MERGE": {
+            "Message": "friend"
+          }
+        }
+      }
+      ```
+
+   1. Run the following command to deploy the configuration update to the Hello World component\.
+
+      ```
+      sudo /greengrass/v2/bin/greengrass-cli deployment create \
+        --merge "com.example.HelloWorld=1.0.0" \
+        --update-config hello-world-config-update.json
+      ```
+
+   1. Check the log again to verify that the Hello World component outputs the new message\.
+
+      ```
+      tail -f /tmp/Greengrass_HelloWorld.log
+      ```
+
+      You should see messages similar to the following example\.
+
+      ```
+      Hello, friend! Current time: 2020-11-30 17:48:59.153933. Greetings from your first Greengrass component.
+      ```
+
+1. After you finish testing your component, remove it from your core device\. This is required for you to deploy the component back to the core device after you upload it to AWS IoT Greengrass\. Otherwise, the deployment fails with a version compatibility error because the local deployment specifies a different version of the component\. Run the following command\.
 
    ```
    sudo /greengrass/v2/bin/greengrass-cli deployment create --remove="com.example.HelloWorld"
@@ -424,16 +541,18 @@ Your Hello World component is complete, and you can now upload it to the AWS IoT
 
 ## Upload your component<a name="upload-first-component"></a>
 
-When you finish a component, you can upload it to the AWS Cloud\. AWS IoT Greengrass provides a component management service that hosts your components so that you can deploy them to devices or fleets of devices\. To upload a component to AWS IoT Greengrass, you complete the following steps:
-+ Upload component artifacts to an Amazon S3 bucket\.
-+ Add each artifact's Amazon S3 URI to the component recipe\.
+When you finish a component, you can upload it to the AWS IoT Greengrass service in the AWS Cloud\. AWS IoT Greengrass provides a component management service that hosts your components so that you can deploy them to individual devices or fleets of devices\. To upload a component to AWS IoT Greengrass, you complete the following steps:
++ Upload component artifacts to an S3 bucket\.
++ Add each artifact'sAmazon Simple Storage Service \(Amazon S3\) URI to the component recipe\.
 + Create a component in AWS IoT Greengrass from the component recipe\.
 
-In this section, you complete these steps on your AWS IoT Greengrass core to upload your Hello World component to AWS IoT Greengrass\.
+In this section, you complete these steps on your AWS IoT Greengrass core device to upload your Hello World component to AWS IoT Greengrass\.
 
 **To upload your Hello World component**
 
-1. Create an Amazon S3 bucket to host your AWS IoT Greengrass component artifacts\. Run the following command to create a bucket with your AWS account ID and AWS Region to use a unique bucket name\. Replace *123456789012* with your AWS account ID and *region* with the AWS Region that you use for this tutorial\.
+1. Use an S3 bucket in your AWS account to host AWS IoT Greengrass component artifacts\. When you deploy the component to a core device, the device downloads the component's artifacts from the bucket\.
+
+   You can use an existing S3 bucket, or run the following command to create a bucket\. This command creates a bucket with your AWS account ID and AWS Region to form a unique bucket name\. Replace *123456789012* with your AWS account ID and *region* with the AWS Region that you use for this tutorial\.
 
    ```
    aws s3 mb s3://greengrass-component-artifacts-123456789012-region
@@ -445,9 +564,11 @@ In this section, you complete these steps on your AWS IoT Greengrass core to upl
    make_bucket: greengrass-component-artifacts-123456789012-region
    ```
 
-1. Allow the core device to access component artifacts in this Amazon S3 bucket\. Each core device has a [core device IAM role](device-service-role.md) that allows it to interact with AWS IoT and send logs to the AWS Cloud\. This device role doesn't allow access to Amazon S3 buckets by default, so you must create and attach a policy that allows the core device to retrieve component artifacts from the S3 bucket\. Do the following:
+1. Allow the core device to access component artifacts in the S3 bucket\. Each core device has a [core device IAM role](device-service-role.md) that allows it to interact with AWS IoT and send logs to the AWS Cloud\. This device role doesn't allow access to S3 buckets by default, so you must create and attach a policy that allows the core device to retrieve component artifacts from the S3 bucket\.
 
-   1. Create a file called `component-artifact-policy.json` and copy the following JSON into the file\. This policy allows access to all files in the Amazon S3 bucket that you created in the previous step\. Replace *123456789012* with your AWS account ID and *region* with the AWS Region in the bucket name\.
+   If your device's role already allows access to the S3 bucket, you can skip this step\. Otherwise, create an IAM policy that allows access and attach it to the role, as follows:
+
+   1. Create a file called `component-artifact-policy.json` and copy the following JSON into the file\. This policy allows access to all files in the S3 bucket that you created in the previous step\. Replace *DOC\-EXAMPLE\-BUCKET* with the name of the bucket to use\.
 
       ```
       {
@@ -458,7 +579,7 @@ In this section, you complete these steps on your AWS IoT Greengrass core to upl
             "Action": [
               "s3:GetObject"
             ],
-            "Resource": "arn:aws:s3:::greengrass-component-artifacts-123456789012-region/*"
+            "Resource": "arn:aws:s3:::DOC-EXAMPLE-BUCKET/*"
           }
         ]
       }
@@ -472,9 +593,9 @@ In this section, you complete these steps on your AWS IoT Greengrass core to upl
         --policy-document file://component-artifact-policy.json
       ```
 
-      Copy the policy ARN from the policy metadata in the output\. You use this ARN to attach this policy to the core device role in the next step\.
+      Copy the policy Amazon Resource Name \(ARN\) from the policy metadata in the output\. You use this ARN to attach this policy to the core device role in the next step\.
 
-   1. Run the following command to attach the policy to the core device role\. Replace *MyGreengrassV2TokenExchangeRole* with the name of the role that you specified when you ran the AWS IoT Greengrass Core software, and replace the policy ARN with the ARN from the previous step\.
+   1. Run the following command to attach the policy to the core device role\. Replace *MyGreengrassV2TokenExchangeRole* with the name of the role that you specified when you ran the AWS IoT Greengrass Core software\. Replace the policy ARN with the ARN from the previous step\.
 
       ```
       aws iam attach-role-policy \
@@ -482,29 +603,81 @@ In this section, you complete these steps on your AWS IoT Greengrass core to upl
         --policy-arn arn:aws:iam::123456789012:policy/MyGreengrassV2ComponentArtifactPolicy
       ```
 
-      If the command has no output, it succeeded, and your core device can access artifacts that you upload to this Amazon S3 bucket\.
+      If the command has no output, it succeeded, and your core device can access artifacts that you upload to this S3 bucket\.
 
-1. Upload the Hello World Python script artifact to the Amazon S3 bucket\. Run the following command to upload the script to the same path in the bucket as the script exists at on your AWS IoT Greengrass core\.
+1. Upload the Hello World Python script artifact to the S3 bucket\. Run the following command to upload the script to the same path in the bucket where the script exists on your AWS IoT Greengrass core\. Replace *DOC\-EXAMPLE\-BUCKET* with the name of the S3 bucket\.
 
    ```
    aws s3 cp \
      artifacts/com.example.HelloWorld/1.0.0/hello_world.py \
-     s3://greengrass-component-artifacts-123456789012-region/artifacts/com.example.HelloWorld/1.0.0/hello_world.py
+     s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.HelloWorld/1.0.0/hello_world.py
    ```
 
    The command outputs a line that starts with `upload:` if the request succeeds\.
 
-1. Add the artifact's Amazon S3 URI to the component recipe\. The Amazon S3 URI is composed of the bucket name and the path to the artifact object in the bucket\. Your script artifact's Amazon S3 URI is the URI that you upload the artifact to in the previous step\. This URI should look similar to the following example\.
+1. Add the artifact's Amazon S3 URI to the component recipe\. The Amazon S3 URI is composed of the bucket name and the path to the artifact object in the bucket\. Your script artifact's Amazon S3 URI is the URI that you upload the artifact to in the previous step\. This URI should look similar to the following example\. Replace *DOC\-EXAMPLE\-BUCKET* with the name of the S3 bucket\.
 
    ```
-   s3://greengrass-component-artifacts-123456789012-region/artifacts/HelloWorld/1.0.0/hello_world.py
+   s3://DOC-EXAMPLE-BUCKET/artifacts/HelloWorld/1.0.0/hello_world.py
    ```
 
    To add the artifact to the recipe, add a list of `Artifacts` that contains a structure with the Amazon S3 URI\.
 
+------
+#### [ JSON ]
+
+   ```
+   "Artifacts": [
+     {
+       "URI": "s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.HelloWorld/1.0.0/hello_world.py"
+     }
+   ]
+   ```
+
+   Run the following command to open the recipe file\.
+
+   ```
+   nano recipes/com.example.HelloWorld-1.0.0.json
+   ```
+
+   Add the artifact to the recipe\. Your recipe file should look similar to the following example\.
+
+   ```
+   {
+     "RecipeFormatVersion": "2020-01-25",
+     "ComponentName": "com.example.HelloWorld",
+     "ComponentVersion": "1.0.0",
+     "ComponentDescription": "My first AWS IoT Greengrass component.",
+     "ComponentPublisher": "Amazon",
+     "ComponentConfiguration": {
+       "DefaultConfiguration": {
+         "Message": "world"
+       }
+     },
+     "Manifests": [
+       {
+         "Platform": {
+           "os": "linux"
+         },
+         "Lifecycle": {
+           "Run": "python3 {artifacts:path}/hello_world.py '{configuration:/Message}'"
+         },
+         "Artifacts": [
+           {
+             "URI": "s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.HelloWorld/1.0.0/hello_world.py"
+           }
+         ]
+       }
+     ]
+   }
+   ```
+
+------
+#### [ YAML ]
+
    ```
    Artifacts:
-     - URI: s3://greengrass-component-artifacts-123456789012-region/artifacts/com.example.HelloWorld/1.0.0/hello_world.py
+     - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.HelloWorld/1.0.0/hello_world.py
    ```
 
    Run the following command to open the recipe file\.
@@ -532,15 +705,30 @@ In this section, you complete these steps on your AWS IoT Greengrass core to upl
          Run: |
            python3 {artifacts:path}/hello_world.py '{configuration:/Message}'
        Artifacts:
-         - URI: s3://greengrass-component-artifacts-123456789012-region/artifacts/com.example.HelloWorld/1.0.0/hello_world.py
+         - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.HelloWorld/1.0.0/hello_world.py
    ```
 
+------
+
 1. Create a component resource in AWS IoT Greengrass from the recipe\. Run the following command to create the component from the recipe, which you provide as a binary file\.
+
+------
+#### [ JSON ]
+
+   ```
+   aws greengrassv2 create-component-version \
+     --inline-recipe fileb://recipes/com.example.HelloWorld-1.0.0.json
+   ```
+
+------
+#### [ YAML ]
 
    ```
    aws greengrassv2 create-component-version \
      --inline-recipe fileb://recipes/com.example.HelloWorld-1.0.0.yaml
    ```
+
+------
 
    The response looks similar to the following example if the request succeeds\.
 
@@ -562,7 +750,7 @@ In this section, you complete these steps on your AWS IoT Greengrass core to upl
 **Note**  
 You can also see your Hello World component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass) on the **Components** page\.
 
-1. When you create a component, its state is `REQUESTED`\. Then, AWS IoT Greengrass validates that the component is deployable\. You can run the following command to query the component status and verify that your component is deployable\. Replace the `arn` with the ARN from the previous step\.
+1. Verify that the component creates and is ready to be deployed\. When you create a component, its state is `REQUESTED`\. Then, AWS IoT Greengrass validates that the component is deployable\. You can run the following command to query the component status and verify that your component is deployable\. Replace the `arn` with the ARN from the previous step\.
 
    ```
    aws greengrassv2 describe-component \
@@ -593,11 +781,11 @@ You can also see your Hello World component in the [AWS IoT Greengrass console](
    }
    ```
 
-Your Hello World component is now available in AWS IoT Greengrass and you can deploy it to other AWS IoT Greengrass core devices\.
+Your Hello World component is now available in AWS IoT Greengrass\. You can deploy it back to this Greengrass core device or to other core devices\.
 
 ## Deploy your component<a name="deploy-first-component"></a>
 
-With AWS IoT Greengrass, you can deploy components to individual devices or groups of devices\. You specify which components to deploy and the configuration update to deploy for each component\. You can also control how the deployment rolls out to the devices that you choose to receive the update\.
+With AWS IoT Greengrass, you can deploy components to individual devices or groups of devices\. When you deploy a component, AWS IoT Greengrass installs and runs that component's software on each target device\. You specify which components to deploy and the configuration update to deploy for each component\. You can also control how the deployment rolls out to the devices that the deployment targets\. For more information, see [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)\.
 
 In this section, you deploy your Hello World component back to your AWS IoT Greengrass core device\.
 
@@ -618,13 +806,13 @@ In this section, you deploy your Hello World component back to your AWS IoT Gree
    }
    ```
 
-   This configuration file specifies to deploy version `1.0.0` of the hello world component that you developed and published in the previous procedure\. The `configurationUpdate` specifies to merge the component configuration in a JSON\-encoded string\. This configuration update sets the Hello World `Message` parameter to `universe` for the device in this deployment\.
+   This configuration file specifies to deploy version `1.0.0` of the Hello World component that you developed and published in the previous procedure\. The `configurationUpdate` specifies to merge the component configuration in a JSON\-encoded string\. This configuration update sets the Hello World `Message` parameter to `universe` for the device in this deployment\.
 
-1. You deploy to things \(individual devices\) or thing groups \(groups of devices\)\. Run the following command to create a deployment for your AWS IoT Greengrass core device\. Replace *MyGreengrassCoreGroup* with the name of the AWS IoT thing group for your AWS IoT Greengrass core device\.
+1. Run the following command to deploy the component to your Greengrass core device\. You can deploy to things, which are individual devices, or thing groups, which are groups of devices\. Replace *MyGreengrassCore* with the name of the AWS IoT thing for your core device\.
 
    ```
    aws greengrassv2 create-deployment \
-     --target-arn "arn:aws:iot:region:account-id:thinggroup/MyGreengrassCoreGroup" \
+     --target-arn "arn:aws:iot:region:account-id:thing/MyGreengrassCore" \
      --cli-input-json file://hello-world-deployment.json
    ```
 
@@ -638,7 +826,7 @@ In this section, you deploy your Hello World component back to your AWS IoT Gree
    }
    ```
 
-1. The deployment can take several minutes to complete\. Check the Hello World log to verify the change\. Run the following command on your AWS IoT Greengrass core device\.
+1. Verify that the deployment completes successfully\. The deployment can take several minutes to complete\. Check the Hello World log to verify the change\. Run the following command on your Greengrass core device\.
 
    ```
    tail -f /tmp/Greengrass_HelloWorld.log
@@ -650,14 +838,14 @@ In this section, you deploy your Hello World component back to your AWS IoT Gree
    Hello, universe! Current time: 2020-11-30 18:18:59.153933. Greetings from your first Greengrass component.
    ```
 **Note**  
-If the log messages don't change, the deployment failed or didn't reach the core device\. This can occur if your core device isn't connected to the internet or doesn't have permissions to retrieve artifacts from your S3 bucket\. Run the following command on your core device to view the AWS IoT Greengrass core log file\. This file includes logs from the Greengrass core device's deployment service\.  
+If the log messages don't change, the deployment failed or didn't reach the core device\. This can occur if your core device isn't connected to the internet or doesn't have permissions to retrieve artifacts from your S3 bucket\. Run the following command on your core device to view the AWS IoT Greengrass Core software log file\. This file includes logs from the Greengrass core device's deployment service\.  
 
    ```
    sudo tail -f /greengrass/v2/logs/greengrass.log
    ```
 For more information, see [Troubleshooting](troubleshooting.md)\.
 
-You've completed this tutorial\. The AWS IoT Greengrass Core software and your Hello World component run on your device\. Also, your Hello World component is available in the AWS Cloud to deploy to other devices\. For more information about the topics that this tutorial explores, see the following:
+You've completed this tutorial\. The AWS IoT Greengrass Core software and your Hello World component run on your device\. Also, your Hello World component is available in AWS IoT Greengrass to deploy to other devices\. For more information about the topics that this tutorial explores, see the following:
 + [Create custom AWS IoT Greengrass components](create-components.md)
 + [Upload components to deploy to your core devicesUpload components to deploy](upload-components.md)
 + [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)

@@ -1,10 +1,13 @@
 # Document history for the AWS IoT Greengrass V2 Developer Guide<a name="document-history"></a>
 
 The following table describes the documentation for this release of AWS IoT Greengrass Version 2\.
-+ **API version: 2020\-11\-30**
++ **API version:** 2020\-11\-30
 
 | Change | Description | Date | 
 | --- |--- |--- |
-| [Secure tunneling component released](https://docs.aws.amazon.com/greengrass/v2/developerguide/secure-tunneling-component.html) | Version 1\.0 of the secure tunneling component is available\. This public component enables you to use AWS IoT secure tunneling to establish secure bidirectional communication with a Greengrass core device that is behind restricted firewalls\. | January 21, 2021 | 
+| [Support update for AWS IoT Device Tester for AWS IoT Greengrass](https://docs.aws.amazon.com/greengrass/v2/developerguide/dev-test-versions.html) | IDT for AWS IoT Greengrass version 4\.0\.1 now supports using Greengrass nucleus version 2\.0\.4 with Greengrass CLI version 2\.0\.4 for device qualification\. | February 5, 2021 | 
+| [New tutorial to import Lambda functions](greengrass/v2/developerguide/import-lambda-function-console.html) | Added a new console\-based tutorial to import a Lambda function as a component that runs on Greengrass core device\. | February 5, 2021 | 
+| [AWS IoT Greengrass Core software update](https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-release-2021-02-04-ggc-updates.html) | This release provides version 2\.0\.4 of the Greengrass nucleus component\. It includes the new `greengrassDataPlanePort` parameter to configure HTTPS communication over port 443 and fixes bugs\. The minimal IAM policy now requires the `iam:GetPolicy` and `sts:GetCallerIdentity` when the AWS IoT Greengrass Core software installer is run with `--provision true`\. | February 4, 2021 | 
+| [New secure tunneling component released](https://docs.aws.amazon.com/greengrass/v2/developerguide/secure-tunneling-component.html) | Version 1\.0\.0 of the secure tunneling component is available for AWS IoT Greengrass\. This public component enables you to use AWS IoT secure tunneling to establish secure bidirectional communication with a Greengrass core device that is behind restricted firewalls\. | January 21, 2021 | 
 | [AWS IoT Device Tester for AWS IoT Greengrass version 4\.0\.1 released](https://docs.aws.amazon.com/greengrass/v2/developerguide/device-tester-for-greengrass-ug.html) | Version 4\.0\.1 of IDT for AWS IoT Greengrass is available\. This version enables you to use IDT to develop and run your custom test suites for device validation\. This also includes code signed IDT applications for macOS and Windows\. | December 22, 2020 | 
 | [Initial release of AWS IoT Greengrass Version 2](https://docs.aws.amazon.com/greengrass/v2/developerguide) | AWS IoT Greengrass V2 is a new major version release of AWS IoT Greengrass\. This version adds several features such as modular software components and continuous deployments\. These features make it easier for you to develop and manage edge applications\. | December 15, 2020 | 

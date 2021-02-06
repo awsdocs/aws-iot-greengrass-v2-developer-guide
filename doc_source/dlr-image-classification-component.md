@@ -9,7 +9,7 @@ This component has the following versions:
 
 ## Requirements<a name="dlr-image-classification-component-requirements"></a><a name="dlr-supported-platforms"></a>
 
-This component requires one of the following devices configured for use with AWS IoT Greengrass\. For more information see [Setting up AWS IoT Greengrass Version 2](setting-up.md)\.
+This component requires one of the following devices configured for use with AWS IoT Greengrass\. For more information see [Setting up AWS IoT Greengrass core devices](setting-up.md)\.
 + **32\-bit Armv7l**
 
   [Raspberry Pi](https://www.raspberrypi.org) running Raspberry Pi OS, 2020\-08\-24\.
@@ -83,89 +83,6 @@ To view the component recipe for the latest version of a public component, do on
   + `<recipe-file>`\. The name of the recipe in the format `<component-name>-<component-version>`\. 
 
 The following excerpt shows the component recipe for version 2\.0\.0 of the component\. 
-
-------
-#### [ YAML ]
-
-```
-RecipeFormatVersion: "2020-01-25"
-ComponentName: aws.greengrass.DLRImageClassification
-ComponentVersion: "2.0.0"
-ComponentDescription: Sample Image classification inference using DLR and amazon resnet50 default model.
-ComponentPublisher: Amazon
-ComponentDependencies:
-  variant.DLR:
-    VersionRequirement: "~1.3.0"
-    DependencyType: HARD
-  variant.ImageClassification.ModelStore:
-    VersionRequirement: "~2.0.0"
-    DependencyType: HARD
-  aws.greengrass.Nucleus:
-    VersionRequirement: "~2.0.0"
-    DependencyType: SOFT
-ComponentConfiguration:
-  DefaultConfiguration:
-    Accelerator: "cpu"
-    MLRootPath: "$HOME/greengrass_ml"
-    ImageName: "cat.jpeg"
-    InferenceInterval: 3600
-    ModelResourceKey:
-      armv7l: "DLR-resnet50-armv7l-cpu-ImageClassification"
-      x86_64: "DLR-resnet50-x86_64-cpu-ImageClassification"
-Manifests:
-  - Platform:
-      os: linux
-      architecture: arm
-    Name: 32-bit armv7l - Linux (raspberry pi)
-    Artifacts:
-      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/image_classification.zip
-        Unarchive: ZIP
-      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/init.sh
-    Lifecycle:
-      Install:
-        RequiresPrivilege: true
-        script: |-
-          bash {artifacts:path}/init.sh {artifacts:decompressedPath}/image_classification/sample_images {configuration:/MLRootPath}
-          bash {variant.DLR:artifacts:decompressedPath}/installer/installer.sh -a {configuration:/Accelerator} -p {configuration:/MLRootPath}
-        timeout: 900
-      Run:
-        RequiresPrivilege: true
-        script: |-
-          . {configuration:/MLRootPath}/greengrass_ml_dlr_venv/bin/activate
-          python3 {artifacts:decompressedPath}/image_classification/inference.py -a {configuration:/Accelerator} -m {variant.ImageClassification.ModelStore:artifacts:decompressedPath}/{configuration:/ModelResourceKey/armv7l} -p {configuration:/MLRootPath} -i {configuration:/ImageName} -s {configuration:/InferenceInterval}
-      shutdown:
-        RequiresPrivilege: true
-        script: |-
-          deactivate
-  - Platform:
-      os: linux
-      architecture: amd64
-    Name: 64-bit x86_64 - Linux (ubuntu, deeplens, amazon linux 2)
-    Artifacts:
-      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/image_classification.zip
-        Unarchive: ZIP
-      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/init.sh
-    Lifecycle:
-      Install:
-        RequiresPrivilege: true
-        script: |-
-          bash {artifacts:path}/init.sh {artifacts:decompressedPath}/image_classification/sample_images {configuration:/MLRootPath}
-          bash {variant.DLR:artifacts:decompressedPath}/installer/installer.sh -a {configuration:/Accelerator} -p {configuration:/MLRootPath} -e {variant.DLR:artifacts:path}/environment.yaml
-        timeout: 900
-      Run:
-        RequiresPrivilege: true
-        script: |-
-          export PATH="{configuration:/MLRootPath}/greengrass_ml_dlr_conda/bin:$PATH"
-          eval "$({configuration:/MLRootPath}/greengrass_ml_dlr_conda/bin/conda shell.bash hook)"
-          conda activate greengrass_ml_dlr_conda
-          python3 {artifacts:decompressedPath}/image_classification/inference.py -a {configuration:/Accelerator} -m {variant.ImageClassification.ModelStore:artifacts:decompressedPath}/{configuration:/ModelResourceKey/x86_64} -p {configuration:/MLRootPath} -i {configuration:/ImageName} -s {configuration:/InferenceInterval}
-      shutdown:
-        RequiresPrivilege: true
-        script: |-
-          export PATH="{configuration:/MLRootPath}/greengrass_ml_dlr_conda/bin:$PATH"
-          eval "$({configuration:/MLRootPath}/greengrass_ml_dlr_conda/bin/conda shell.bash hook)"
-          conda deactivate
-```
 
 ------
 #### [ JSON ]
@@ -268,6 +185,89 @@ Manifests:
     }
   ]
 }
+```
+
+------
+#### [ YAML ]
+
+```
+RecipeFormatVersion: "2020-01-25"
+ComponentName: aws.greengrass.DLRImageClassification
+ComponentVersion: "2.0.0"
+ComponentDescription: Sample Image classification inference using DLR and amazon resnet50 default model.
+ComponentPublisher: Amazon
+ComponentDependencies:
+  variant.DLR:
+    VersionRequirement: "~1.3.0"
+    DependencyType: HARD
+  variant.ImageClassification.ModelStore:
+    VersionRequirement: "~2.0.0"
+    DependencyType: HARD
+  aws.greengrass.Nucleus:
+    VersionRequirement: "~2.0.0"
+    DependencyType: SOFT
+ComponentConfiguration:
+  DefaultConfiguration:
+    Accelerator: "cpu"
+    MLRootPath: "$HOME/greengrass_ml"
+    ImageName: "cat.jpeg"
+    InferenceInterval: 3600
+    ModelResourceKey:
+      armv7l: "DLR-resnet50-armv7l-cpu-ImageClassification"
+      x86_64: "DLR-resnet50-x86_64-cpu-ImageClassification"
+Manifests:
+  - Platform:
+      os: linux
+      architecture: arm
+    Name: 32-bit armv7l - Linux (raspberry pi)
+    Artifacts:
+      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/image_classification.zip
+        Unarchive: ZIP
+      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/init.sh
+    Lifecycle:
+      Install:
+        RequiresPrivilege: true
+        script: |-
+          bash {artifacts:path}/init.sh {artifacts:decompressedPath}/image_classification/sample_images {configuration:/MLRootPath}
+          bash {variant.DLR:artifacts:decompressedPath}/installer/installer.sh -a {configuration:/Accelerator} -p {configuration:/MLRootPath}
+        timeout: 900
+      Run:
+        RequiresPrivilege: true
+        script: |-
+          . {configuration:/MLRootPath}/greengrass_ml_dlr_venv/bin/activate
+          python3 {artifacts:decompressedPath}/image_classification/inference.py -a {configuration:/Accelerator} -m {variant.ImageClassification.ModelStore:artifacts:decompressedPath}/{configuration:/ModelResourceKey/armv7l} -p {configuration:/MLRootPath} -i {configuration:/ImageName} -s {configuration:/InferenceInterval}
+      shutdown:
+        RequiresPrivilege: true
+        script: |-
+          deactivate
+  - Platform:
+      os: linux
+      architecture: amd64
+    Name: 64-bit x86_64 - Linux (ubuntu, deeplens, amazon linux 2)
+    Artifacts:
+      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/image_classification.zip
+        Unarchive: ZIP
+      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/init.sh
+    Lifecycle:
+      Install:
+        RequiresPrivilege: true
+        script: |-
+          bash {artifacts:path}/init.sh {artifacts:decompressedPath}/image_classification/sample_images {configuration:/MLRootPath}
+          bash {variant.DLR:artifacts:decompressedPath}/installer/installer.sh -a {configuration:/Accelerator} -p {configuration:/MLRootPath} -e {variant.DLR:artifacts:path}/environment.yaml
+        timeout: 900
+      Run:
+        RequiresPrivilege: true
+        script: |-
+          export PATH="{configuration:/MLRootPath}/greengrass_ml_dlr_conda/bin:$PATH"
+          eval "$({configuration:/MLRootPath}/greengrass_ml_dlr_conda/bin/conda shell.bash hook)"
+          conda activate greengrass_ml_dlr_conda
+          python3 {artifacts:decompressedPath}/image_classification/inference.py -a {configuration:/Accelerator} -m {variant.ImageClassification.ModelStore:artifacts:decompressedPath}/{configuration:/ModelResourceKey/x86_64} -p {configuration:/MLRootPath} -i {configuration:/ImageName} -s {configuration:/InferenceInterval}
+      shutdown:
+        RequiresPrivilege: true
+        script: |-
+          export PATH="{configuration:/MLRootPath}/greengrass_ml_dlr_conda/bin:$PATH"
+          eval "$({configuration:/MLRootPath}/greengrass_ml_dlr_conda/bin/conda shell.bash hook)"
+          conda deactivate
 ```
 
 ------

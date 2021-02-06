@@ -5,10 +5,12 @@ AWS IoT Greengrass *components* are software modules you deploy to and run on Gr
 Every component is composed of a *recipe* and *artifacts*\.
 + <a name="component-recipe-definition"></a>**Recipes**
 
-  Every component contains a recipe file, which defines its metadata\. The recipe also specifies the component's parameters, dependencies, lifecycle, and platform compatibility\. For more information, see [AWS IoT Greengrass component recipe reference](component-recipe-reference.md)\.
+  Every component contains a recipe file, which defines its metadata\. The recipe also specifies the component's configuration parameters, component dependencies, lifecycle, and platform compatibility\. The component lifecycle defines the commands that install, run, and shut down the component\. For more information, see [AWS IoT Greengrass component recipe reference](component-recipe-reference.md)\.
+
+  You can define recipes in [JSON](https://en.wikipedia.org/wiki/JSON) or [YAML](https://en.wikipedia.org/wiki/YAML) format\.
 + <a name="component-artifacts-definition"></a>**Artifacts**
 
-  Components can have any number of artifacts, which are component binaries\. Artifacts can include scripts, compiled code, static resources, and anything else that a component consumes\. Components can also consume artifacts from component dependencies\.
+  Components can have any number of artifacts, which are component binaries\. Artifacts can include scripts, compiled code, static resources, and any other files that a component consumes\. Components can also consume artifacts from component dependencies\.
 
 AWS IoT Greengrass provides pre\-built components that you can use in your applications and deploy to your devices\. For example, you can use the stream manager component to upload data to various AWS services, or you can use the CloudWatch metrics component to publish custom metrics to Amazon CloudWatch\. For more information, see [AWS\-provided components](public-components.md)\.
 
@@ -27,7 +29,14 @@ The *component lifecycle* defines the stages that the AWS IoT Greengrass Core so
 **Note**  <a name="semver-note"></a>
 <a name="semver-para"></a>AWS IoT Greengrass uses semantic versions for components\. Semantic versions follow a *major*\.*minor*\.*patch* number system\. For example, version `1.0.0` represents the first major release for a component\. For more information, see the [semantic version specification](https://semver.org/)\.
 
+**Important**  <a name="component-patch-update-note"></a>
+<a name="component-patch-update"></a>When you deploy a component, AWS IoT Greengrass installs the latest supported versions of all component dependencies for that component\. Because of this, new patch versions of AWS\-provided public components might be automatically deployed to your core devices if you add new devices to a thing group, or you update the deployment that targets those devices\. Some automatic updates, such as a nucleus update, can cause your devices to restart unexpectedly\.   
+<a name="component-version-pinning"></a>To prevent unintended updates for a component that is running on your device, we recommend that you directly include your preferred version of that component when you [create a deployment](create-deployments.md)\. For more information about update behavior for AWS IoT Greengrass Core software, see [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)\.
+
 **Topics**
 + [AWS\-provided components](public-components.md)
 + [Create custom AWS IoT Greengrass components](create-components.md)
++ [Interact with AWS services](interact-with-aws-services.md)
++ [Run a Docker container](run-docker-container.md)
++ [AWS IoT Greengrass component recipe reference](component-recipe-reference.md)
 + [Upload components to deploy to your core devices](upload-components.md)

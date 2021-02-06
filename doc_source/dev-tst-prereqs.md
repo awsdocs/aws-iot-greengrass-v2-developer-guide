@@ -12,10 +12,10 @@ Windows has a path length limitation of 260 characters\. If you are using Window
 
 ## Download the AWS IoT Greengrass software<a name="config-gg"></a>
 
-IDT for AWS IoT Greengrass tests your device for compatibility with a specific version of AWS IoT Greengrass\. Run the following command to download the latest version of the AWS IoT Greengrass software:
+IDT for AWS IoT Greengrass tests your device for compatibility with a specific version of AWS IoT Greengrass\. Run the following command to download the AWS IoT Greengrass Core software to a file named `aws.greengrass.nucleus.zip`\. Replace *version* with a [supported nucleus component version](dev-test-versions.md) for your IDT version\. 
 
 ```
-curl -s https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-nucleus-latest.zip > greengrass-nucleus-latest.zip
+curl -s https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-version.zip > aws.greengrass.nucleus.zip
 ```
 
 Place the downloaded `aws.greengrass.nucleus.zip` file in the `<device-tester-extract-location>/products/` folder\.

@@ -9,7 +9,7 @@ This component has the following versions:
 
 ## Requirements<a name="variant-image-classification-component-requirements"></a><a name="dlr-supported-platforms"></a>
 
-This component requires one of the following devices configured for use with AWS IoT Greengrass\. For more information see [Setting up AWS IoT Greengrass Version 2](setting-up.md)\.
+This component requires one of the following devices configured for use with AWS IoT Greengrass\. For more information see [Setting up AWS IoT Greengrass core devices](setting-up.md)\.
 + **32\-bit Armv7l**
 
   [Raspberry Pi](https://www.raspberrypi.org) running Raspberry Pi OS, 2020\-08\-24\.
@@ -63,36 +63,6 @@ To view the component recipe for the latest version of a public component, do on
 The following excerpt shows the component recipe for version 2\.0\.0 of the component\. 
 
 ------
-#### [ YAML ]
-
-```
-RecipeFormatVersion: "2020-01-25"
-ComponentName: variant.ImageClassification.ModelStore
-ComponentVersion: "2.0.0"
-ComponentDescription: Downloads ml models to the device as artifacts.
-ComponentPublisher: Amazon
-ComponentDependencies:
-  aws.greengrass.Nucleus:
-    VersionRequirement: "~2.0.0"
-    DependencyType: SOFT
-Manifests:
-  - Platform:
-      os: linux
-      architecture: arm
-    Name: 32-bit armv7l - Linux (raspberry pi)
-    Artifacts:
-      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/DLR-resnet50-armv7l-cpu-ImageClassification.zip
-        Unarchive: ZIP
-  - Platform:
-      os: linux
-      architecture: amd64
-    Name: 64-bit x86_64 - Linux (ubuntu, deeplens, amazon linux 2)
-    Artifacts:
-      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/DLR-resnet50-x86_64-cpu-ImageClassification.zip
-        Unarchive: ZIP
-```
-
-------
 #### [ JSON ]
 
 ```
@@ -137,6 +107,36 @@ Manifests:
     }
   ]
 }
+```
+
+------
+#### [ YAML ]
+
+```
+RecipeFormatVersion: "2020-01-25"
+ComponentName: variant.ImageClassification.ModelStore
+ComponentVersion: "2.0.0"
+ComponentDescription: Downloads ml models to the device as artifacts.
+ComponentPublisher: Amazon
+ComponentDependencies:
+  aws.greengrass.Nucleus:
+    VersionRequirement: "~2.0.0"
+    DependencyType: SOFT
+Manifests:
+  - Platform:
+      os: linux
+      architecture: arm
+    Name: 32-bit armv7l - Linux (raspberry pi)
+    Artifacts:
+      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/DLR-resnet50-armv7l-cpu-ImageClassification.zip
+        Unarchive: ZIP
+  - Platform:
+      os: linux
+      architecture: amd64
+    Name: 64-bit x86_64 - Linux (ubuntu, deeplens, amazon linux 2)
+    Artifacts:
+      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/DLR-resnet50-x86_64-cpu-ImageClassification.zip
+        Unarchive: ZIP
 ```
 
 ------

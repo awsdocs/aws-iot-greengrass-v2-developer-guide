@@ -4,7 +4,7 @@ You can create a deployment that targets a thing or thing group\.
 
 When you create a deployment, you configure the software components to deploy and how the deployment job rolls out to target devices\. You can define the deployment in the JSON file that you provide to the AWS CLI\.
 
-You specify the target devices that receive the deployment\. To deploy to one core device, specify a thing\. To deploy to multiple core devices, specify a thing group that includes those devices\. For more information about how to configure thing groups, see [Static thing groups](https://docs.aws.amazon.com/iot/latest/developerguide/thing-groups.html) and [Dynamic thing groups](https://docs.aws.amazon.com/iot/latest/developerguide/dynamic-thing-groups.html) in the *AWS IoT Developer Guide*\.
+The deployment target determines the devices on which you want to run your components\. To deploy to one core device, specify a thing\. To deploy to multiple core devices, specify a thing group that includes those devices\. For more information about how to configure thing groups, see [Static thing groups](https://docs.aws.amazon.com/iot/latest/developerguide/thing-groups.html) and [Dynamic thing groups](https://docs.aws.amazon.com/iot/latest/developerguide/dynamic-thing-groups.html) in the *AWS IoT Developer Guide*\.
 
 Follow the steps in this section to create a deployment to a target for the first time\. For more information about how to update the software components on a target that has a deployment, see [Revise deployments](revise-deployments.md)\.
 

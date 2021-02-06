@@ -11,6 +11,36 @@ Support to acquire AWS credentials in this way was added to the AWS SDKs on July
 
 To acquire AWS credentials in your custom component, define `aws.greengrass.TokenExchangeService` as a dependency in the component recipe\. The following example recipe defines a component that installs [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) and runs a Python script that uses AWS credentials from the token exchange service to list Amazon S3 buckets\.
 
+------
+#### [ JSON ]
+
+```
+{
+  "RecipeFormatVersion": "2020-01-25",
+  "ComponentName": "com.example.MyTokenExchangeServiceComponent",
+  "ComponentVersion": "1.0.0",
+  "ComponentDescription": "A component that uses the token exchange service to list S3 buckets.",
+  "ComponentPublisher": "Amazon",
+  "ComponentDependencies": {
+    "aws.greengrass.TokenExchangeService": {
+      "VersionRequirement": ">=0.0.0",
+      "DependencyType": "HARD"
+    }
+  },
+  "Manifests": [
+    {
+      "Lifecycle": {
+        "Install": "pip3 install boto3",
+        "Run": "python3 {artifacts:path}/list-s3-buckets.py"
+      }
+    }
+  ]
+}
+```
+
+------
+#### [ YAML ]
+
 ```
 ---
 RecipeFormatVersion: '2020-01-25'
@@ -29,6 +59,8 @@ Manifests:
       Run: |-
         python3 {artifacts:path}/list-s3-buckets.py
 ```
+
+------
 
 This example component runs the following Python script that lists Amazon S3 buckets\.
 

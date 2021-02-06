@@ -160,15 +160,6 @@ To view the artifacts used by the public components, you can deploy the public i
      **Public runtime component**
 
 ------
-#### [ YAML ]
-
-     ```
-     variant.DLR:
-         VersionRequirement: "<version>"
-         DependencyType: HARD
-     ```
-
-------
 #### [ JSON ]
 
      ```
@@ -181,17 +172,17 @@ To view the artifacts used by the public components, you can deploy the public i
      ```
 
 ------
-
-     **Private runtime component**
-
-------
 #### [ YAML ]
 
      ```
-     <custom-runtime-component>:
+     variant.DLR:
          VersionRequirement: "<version>"
          DependencyType: HARD
      ```
+
+------
+
+     **Private runtime component**
 
 ------
 #### [ JSON ]
@@ -206,18 +197,18 @@ To view the artifacts used by the public components, you can deploy the public i
      ```
 
 ------
-   + Include the following dependency for a model component\. When you include a dependency for a variant model component, if a private version of the component exists in your component registry, then the inference component will use that private component\.
-
-     **Public model component**
-
-------
 #### [ YAML ]
 
      ```
-     variant.<type>.ModelStore:
+     <custom-runtime-component>:
          VersionRequirement: "<version>"
          DependencyType: HARD
      ```
+
+------
+   + Include the following dependency for a model component\. When you include a dependency for a variant model component, if a private version of the component exists in your component registry, then the inference component will use that private component\.
+
+     **Public model component**
 
 ------
 #### [ JSON ]
@@ -232,17 +223,17 @@ To view the artifacts used by the public components, you can deploy the public i
      ```
 
 ------
-
-     **Private model component**
-
-------
 #### [ YAML ]
 
      ```
-     <custom-model-component>:
+     variant.<type>.ModelStore:
          VersionRequirement: "<version>"
          DependencyType: HARD
      ```
+
+------
+
+     **Private model component**
 
 ------
 #### [ JSON ]
@@ -257,25 +248,19 @@ To view the artifacts used by the public components, you can deploy the public i
      ```
 
 ------
+#### [ YAML ]
+
+     ```
+     <custom-model-component>:
+         VersionRequirement: "<version>"
+         DependencyType: HARD
+     ```
+
+------
 
 1. In the `ComponentConfiguration` object, add the default configuration for this component\. You can later modify this configuration when you deploy the component\. The following excerpt shows the component configuration for the DLR Image Classification component that you can use as a template for your custom inference component\. 
 
    For example, if you use a private model component as a dependency for your custom inference component, then modify `ModelResourceKey` to provide the names of the models that you are using\.
-
-------
-#### [ YAML ]
-
-   ```
-   ComponentConfiguration:
-     DefaultConfiguration:
-       Accelerator: "cpu"
-       MLRootPath: "$HOME/greengrass_ml"
-       ImageName: "cat.jpeg"
-       InferenceInterval: 3600
-       ModelResourceKey:
-         armv7l: "DLR-resnet50-armv7l-cpu-ImageClassification"
-         x86_64: "DLR-resnet50-x86_64-cpu-ImageClassification"
-   ```
 
 ------
 #### [ JSON ]
@@ -298,39 +283,23 @@ To view the artifacts used by the public components, you can deploy the public i
    ```
 
 ------
-
-1. In the `Manifests` object, provide information about the artifacts and the configuration of this component that are used when the component is deployed to different platforms and any other information required to successfully run the component\. The following excerpt shows the `Manifests` object for the DLR Image Classification component that you can use as a template for your custom inference component\.
-
-------
 #### [ YAML ]
 
    ```
-   Manifests:
-     - Platform:
-         os: linux
-         architecture: arm
-       Name: 32-bit armv7l - Linux (raspberry pi)
-       Artifacts:
-         - URI: s3://$bucketName$/$testArtifactsDirectory$/image_classification.zip
-           Unarchive: ZIP
-         - URI: s3://$bucketName$/$testArtifactsDirectory$/init.sh
-       Lifecycle:
-         Install:
-           RequiresPrivilege: true
-           script: |-
-             bash {artifacts:path}/init.sh {artifacts:decompressedPath}/image_classification/sample_images {configuration:/MLRootPath}
-             bash {variant.DLR:artifacts:path}/installer.sh -a {configuration:/Accelerator} -p {configuration:/MLRootPath}
-           timeout: 900
-         Run:
-           RequiresPrivilege: true
-           script: |-
-             . {configuration:/MLRootPath}/greengrass_ml_dlr_venv/bin/activate
-             python3 {artifacts:decompressedPath}/image_classification/inference.py -a {configuration:/Accelerator} -m {variant.ImageClassification.ModelStore:artifacts:decompressedPath}/{configuration:/ModelResourceKey/armv7l} -p {configuration:/MLRootPath} -i {configuration:/ImageName} -s {configuration:/InferenceInterval}
-         shutdown:
-           RequiresPrivilege: true
-           script: |-
-             deactivate
+   ComponentConfiguration:
+     DefaultConfiguration:
+       Accelerator: "cpu"
+       MLRootPath: "$HOME/greengrass_ml"
+       ImageName: "cat.jpeg"
+       InferenceInterval: 3600
+       ModelResourceKey:
+         armv7l: "DLR-resnet50-armv7l-cpu-ImageClassification"
+         x86_64: "DLR-resnet50-x86_64-cpu-ImageClassification"
    ```
+
+------
+
+1. In the `Manifests` object, provide information about the artifacts and the configuration of this component that are used when the component is deployed to different platforms and any other information required to successfully run the component\. The following excerpt shows the `Manifests` object for the DLR Image Classification component that you can use as a template for your custom inference component\.
 
 ------
 #### [ JSON ]
@@ -371,6 +340,37 @@ To view the artifacts used by the public components, you can deploy the public i
          }
       ]
    }
+   ```
+
+------
+#### [ YAML ]
+
+   ```
+   Manifests:
+     - Platform:
+         os: linux
+         architecture: arm
+       Name: 32-bit armv7l - Linux (raspberry pi)
+       Artifacts:
+         - URI: s3://$bucketName$/$testArtifactsDirectory$/image_classification.zip
+           Unarchive: ZIP
+         - URI: s3://$bucketName$/$testArtifactsDirectory$/init.sh
+       Lifecycle:
+         Install:
+           RequiresPrivilege: true
+           script: |-
+             bash {artifacts:path}/init.sh {artifacts:decompressedPath}/image_classification/sample_images {configuration:/MLRootPath}
+             bash {variant.DLR:artifacts:path}/installer.sh -a {configuration:/Accelerator} -p {configuration:/MLRootPath}
+           timeout: 900
+         Run:
+           RequiresPrivilege: true
+           script: |-
+             . {configuration:/MLRootPath}/greengrass_ml_dlr_venv/bin/activate
+             python3 {artifacts:decompressedPath}/image_classification/inference.py -a {configuration:/Accelerator} -m {variant.ImageClassification.ModelStore:artifacts:decompressedPath}/{configuration:/ModelResourceKey/armv7l} -p {configuration:/MLRootPath} -i {configuration:/ImageName} -s {configuration:/InferenceInterval}
+         shutdown:
+           RequiresPrivilege: true
+           script: |-
+             deactivate
    ```
 
 ------

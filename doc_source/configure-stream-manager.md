@@ -82,6 +82,15 @@ Parameter name: `JVM_ARGS`
 Custom Java Virtual Machine arguments to pass to stream manager at startup\. Multiple arguments should be separated by spaces\.  
 Use this parameter only when you must override the default settings used by the JVM\. For example, you might need to increase the default heap size if you plan to export a large number of streams\.
 
+**Logging level**  
+Parameter name: `LOG_LEVEL`  
+The logging configuration for the component\. Choose from the following log levels, listed here in level order:  
++ `DEBUG`
++ `INFO`
++ `WARN`
++ `ERROR`
+Default: `INFO`
+
 **Minimum size for multipart upload**  <a name="stream-manager-minimum-part-size"></a>
 Parameter name: `STREAM_MANAGER_EXPORTER_S3_DESTINATION_MULTIPART_UPLOAD_MIN_PART_SIZE_BYTES`  
 The minimum size \(in bytes\) of a part in a multipart upload to Amazon S3\. Stream manager uses this setting and the size of the input file to determine how to batch data in a multipart PUT request\. The default and minimum value is `5242880` bytes \(5 MB\)\.  

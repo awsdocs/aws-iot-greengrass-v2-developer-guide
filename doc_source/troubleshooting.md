@@ -7,6 +7,7 @@ Use the troubleshooting information and solutions in this section to help resolv
 + [View component logs](#view-component-logs)
 + [AWS IoT Greengrass Core software issues](#greengrass-core-issues)
 + [Core device deployment issues](#greengrass-core-deployment-issues)
++ [Core device component issues](#greengrass-core-component-issues)
 
 ## View AWS IoT Greengrass Core logs<a name="view-greengrass-core-logs"></a>
 
@@ -36,52 +37,14 @@ Use the following information to troubleshoot AWS IoT Greengrass Core software i
 
 **Topics**
 + [Unable to set up core device](#unable-to-set-up-core-device)
-+ [Unable to install AWS IoT Greengrass Core software on NVIDIA Jetson device](#unable-to-install-on-jetson-device)
 + [Error: Unable to connect to AWS IoT Core](#core-error-unable-to-connect-to-aws-iot)
 + [Out of memory error](#java-out-of-memory)
 + [Unable to install Greengrass CLI](#unable-to-install-greengrass-cli)
++ [Failed to map segment from shared object: operation not permitted](#unable-to-start-greengrass)
 
 ### Unable to set up core device<a name="unable-to-set-up-core-device"></a>
 
 If the AWS IoT Greengrass Core software installer fails and you aren't able to set up a core device, you might need to uninstall the software and try again\. For more information, see [Uninstall the AWS IoT Greengrass Core software](configure-greengrass-core-v2.md#uninstall-greengrass-core-v2)\.
-
-### Unable to install AWS IoT Greengrass Core software on NVIDIA Jetson device<a name="unable-to-install-on-jetson-device"></a>
-
-You might see the following error and stack trace when you install the AWS IoT Greengrass Core software on an NVIDIA Jetson device, such as the Jetson Nano\.
-
-```
-Error while trying to setup Greengrass Nucleus
-java.lang.RuntimeException: Error setting up component default user / group
-at com.aws.greengrass.easysetup.GreengrassSetup.setComponentDefaultUserAndGroup(GreengrassSetup.java:492)
-at com.aws.greengrass.easysetup.GreengrassSetup.performSetup(GreengrassSetup.java:283)
-at com.aws.greengrass.easysetup.GreengrassSetup.main(GreengrassSetup.java:242)
-Caused by: java.io.IOException: Failed to add user to group , command : sudo dscl . -append /Groups/ggc_group GroupMembership ggc_user
-at com.aws.greengrass.util.platforms.unix.UnixPlatform.runCmd(UnixPlatform.java:433)
-at com.aws.greengrass.util.platforms.unix.DarwinPlatform.addUserToGroup(DarwinPlatform.java:48)
-at com.aws.greengrass.easysetup.GreengrassSetup.setComponentDefaultUserAndGroup(GreengrassSetup.java:484)
-... 2 more
-Caused by: java.io.IOException: Failed to add user to group - command: sudo dscl . -append /Groups/g
-```
-
-To resolve this issue, create and use a custom system user and group other than `ggc_user` and `ggc_group`\. The AWS IoT Greengrass Core software runs components as this user and group by default\. 
-
-**To create and use a custom system user and group**
-
-1. Run the following commands to create a user, create a group, and add the user to the group\. Replace *my\_ggc\_user* with a user name, and replace *my\_ggc\_group* with a group name\.
-
-   ```
-   sudo useradd -r -m my_ggc_user
-   sudo groupadd -r my_ggc_group
-   sudo usermod -a -G my_ggc_group my_ggc_user
-   ```
-
-1. Run the AWS IoT Greengrass Core software installer by using the following argument, so that you can use the custom user and group\.
-
-   ```
-   --component-default-user my_ggc_user:my_ggc_group
-   ```
-
-   For more information, see [Install the AWS IoT Greengrass Core software](install-greengrass-core-v2.md)\.
 
 ### Error: Unable to connect to AWS IoT Core<a name="core-error-unable-to-connect-to-aws-iot"></a>
 
@@ -103,6 +66,16 @@ Thing group exists, it could have existing deployment and devices, hence NOT cre
 ```
 
 This occurs when the Greengrass CLI component is not installed because your core device is a member of a thing group that has an existing deployment\. If you see this message, you can manually deploy the Greengrass CLI component \(`aws.greengrass.Cli`\) to the device to install the Greengrass CLI\. For more information, see [Install the Greengrass CLI](install-gg-cli.md)\.
+
+### Failed to map segment from shared object: operation not permitted<a name="unable-to-start-greengrass"></a>
+
+This error typically occurs when the AWS IoT Greengrass Core software fails to start because the `/tmp` directory is mounted with `noexec` permissions\.
+
+Run the following command to remount the `/tmp` directory with `exec` permissions and try again\.
+
+```
+sudo mount -o remount,exec /tmp
+```
 
 ## Core device deployment issues<a name="greengrass-core-deployment-issues"></a>
 
@@ -143,3 +116,38 @@ This issue can occur in the following cases:
 + There exists component versions that meet the version requirements, but none are compatible with the core device's platform\.
 
 To resolve this issue, revise the deployments to include compatible component versions or remove incompatible ones\. For more information about how to revise cloud deployments, see [Revise deployments](revise-deployments.md)\. For more information about how to revise local deployments, see the [AWS IoT Greengrass CLI deployment create](gg-cli-deployment.md#deployment-create) command\.
+
+## Core device component issues<a name="greengrass-core-component-issues"></a>
+
+Use the following information to troubleshoot Greengrass component issues on core devices\.
+
+**Topics**
++ [Python script doesn't log messages](#python-component-no-log-output)
+
+### Python script doesn't log messages<a name="python-component-no-log-output"></a>
+
+Greengrass core devices collect logs that you can use to identify issues with components\. If your Python script's `stdout` and `stderr` messages don't appear in your component logs, you might need to flush the buffer or disable buffering for these standard output streams in Python\. Do any of the following:
++ Run Python with the [\-u](https://docs.python.org/3/using/cmdline.html#cmdoption-u) argument to disable buffering on `stdout` and `stderr`\.
+
+  ```
+  python3 -u hello_world.py
+  ```
++ Use [Setenv](component-recipe-reference.md#lifecycle-setenv-definition) in your component's recipe to set the [PYTHONUNBUFFERED](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONUNBUFFERED) environment variable to a non\-empty string\. This environment variable disables buffering on `stdout` and `stderr`\.
++ Flush the buffer for the `stdout` or `stderr` streams\. Do one of the following:
+  + Flush a message when you print\.
+
+    ```
+    import sys
+    
+    print('Hello, error!', file=sys.stderr, flush=True)
+    ```
+  + Flush a message after you print\. You can send multiple messages before you flush the stream\.
+
+    ```
+    import sys
+    
+    print('Hello, error!', file=sys.stderr)
+    sys.stderr.flush()
+    ```
+
+For more information about how to verify that your Python script outputs log messages, see [View component logs](#view-component-logs)\.

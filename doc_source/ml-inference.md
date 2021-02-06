@@ -44,7 +44,7 @@ The following requirements apply to model sources:
 
 To perform inference on a Greengrass core device, you must install the machine learning runtime or library for your ML model type\. The machine learning components provided in AWS IoT Greengrass use the [Deep Learning Runtime \(DLR\) 1\.3\.0](https://neo-ai-dlr.readthedocs.io/en/latest/install.html) runtime included in the DLR Installer component\. <a name="dlr-supported-platforms"></a>
 
-This component requires one of the following devices configured for use with AWS IoT Greengrass\. For more information see [Setting up AWS IoT Greengrass Version 2](setting-up.md)\.
+This component requires one of the following devices configured for use with AWS IoT Greengrass\. For more information see [Setting up AWS IoT Greengrass core devices](setting-up.md)\.
 + **32\-bit Armv7l**
 
   [Raspberry Pi](https://www.raspberrypi.org) running Raspberry Pi OS, 2020\-08\-24\.

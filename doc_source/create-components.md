@@ -5,10 +5,6 @@ With AWS IoT Greengrass, you can develop and test components on your Greengrass 
 **Topics**
 + [Develop a custom component](#develop-component)
 + [Test a custom component](#test-component)
-+ [Interact with AWS services](interact-with-aws-services.md)
-+ [Run AWS Lambda functions](run-lambda-functions.md)
-+ [Run a Docker container](run-docker-container.md)
-+ [AWS IoT Greengrass component recipe reference](component-recipe-reference.md)
 
 ## Develop a custom component<a name="develop-component"></a>
 
@@ -26,13 +22,6 @@ To develop a new component or a new version of a component, create a recipe and 
 1. Create a recipe that defines your component's metadata, parameters, dependencies, lifecycle, and platform capability\. Run the following command to create the recipe file and open it in the `nano` text editor\. Include the component version in the recipe file name so that you can identify which recipe reflects which component version\. You can choose YAML or JSON format for your recipe\.
 
 ------
-#### [ YAML ]
-
-   ```
-   nano recipes/com.example.HelloWorld-1.0.0.yaml
-   ```
-
-------
 #### [ JSON ]
 
    ```
@@ -40,31 +29,17 @@ To develop a new component or a new version of a component, create a recipe and 
    ```
 
 ------
+#### [ YAML ]
+
+   ```
+   nano recipes/com.example.HelloWorld-1.0.0.yaml
+   ```
+
+------
 
 1. Define the recipe for your component\. For more information, see [AWS IoT Greengrass component recipe reference](component-recipe-reference.md)\.
 
    Your recipe might look similar to the following Hello World example recipe\.
-
-------
-#### [ YAML ]
-
-   ```
-   ---
-   RecipeFormatVersion: 2020-01-25
-   ComponentName: com.example.HelloWorld
-   ComponentVersion: '1.0.0'
-   ComponentDescription: My first AWS IoT Greengrass component.
-   ComponentPublisher: Amazon
-   ComponentConfiguration:
-     DefaultConfiguration:
-       Message: world
-   Manifests:
-     - Platform:
-         os: linux
-       Lifecycle:
-         Run: |
-           python3 {artifacts:path}/hello_world.py '{configuration:/Message}'
-   ```
 
 ------
 #### [ JSON ]
@@ -92,6 +67,27 @@ To develop a new component or a new version of a component, create a recipe and 
        }
      ]
    }
+   ```
+
+------
+#### [ YAML ]
+
+   ```
+   ---
+   RecipeFormatVersion: 2020-01-25
+   ComponentName: com.example.HelloWorld
+   ComponentVersion: '1.0.0'
+   ComponentDescription: My first AWS IoT Greengrass component.
+   ComponentPublisher: Amazon
+   ComponentConfiguration:
+     DefaultConfiguration:
+       Message: world
+   Manifests:
+     - Platform:
+         os: linux
+       Lifecycle:
+         Run: |
+           python3 {artifacts:path}/hello_world.py '{configuration:/Message}'
    ```
 
 ------

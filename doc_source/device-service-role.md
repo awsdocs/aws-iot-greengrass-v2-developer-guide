@@ -12,7 +12,7 @@ This policy doesn't include access to files in S3 buckets\. You must add permiss
 
   This role alias refers to the IAM role\.
 
-For more information, see [Install AWS IoT Greengrass V2](getting-started.md#install-greengrass-v2)\.
+For more information, see [Install the AWS IoT Greengrass Core software](getting-started.md#install-greengrass-v2)\.
 
 You can also set the role alias for an existing core device\. To do so, configure the `iotRoleAlias` configuration parameter of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.
 

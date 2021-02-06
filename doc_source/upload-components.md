@@ -45,16 +45,48 @@ Core device roles don't allow access to S3 buckets by default\. If this is your 
       s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.HelloWorld/1.0.0/artifact.py
       ```
 
-   After you complete these steps, your recipe should have an `Artifacts` list that looks like the following:
+   After you complete these steps, your recipe should have an `Artifacts` list that looks like the following\.
+
+------
+#### [ JSON ]
+
+   ```
+   {
+     ...
+     "Manifests": [
+       {
+         "Lifecycle": {
+           ...
+         }
+         "Artifacts": [
+           {
+             "URL": "s3://DOC-EXAMPLE-BUCKET/artifacts/MyGreengrassComponent/1.0.0/artifact.py"
+           }
+         ]
+       }
+     ]
+   }
+   ```
+
+**Note**  
+You can add the `"Unarchive": "ZIP"` option for a ZIP artifact to configure the AWS IoT Greengrass Core software to unzip the artifact when the component deploys\.
+
+------
+#### [ YAML ]
 
    ```
    ...
    Manifests:
-     - Artifacts:
-       - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.HelloWorld/1.0.0/artifact.py
+     - Lifecycle:
+         ...
+       Artifacts:
+         - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/MyGreengrassComponent/1.0.0/artifact.py
    ```
+
 **Note**  
-You can add the `Unarchive: ZIP` option for a ZIP artifact to configure core devices to unzip the artifact when the component deploys\.
+You can add the `Unarchive: ZIP` option for a ZIP artifact to configure the AWS IoT Greengrass Core software to unzip the artifact when the component deploys\.
+
+------
 
    For more information about recipes, see [AWS IoT Greengrass component recipe reference](component-recipe-reference.md)\.
 

@@ -144,7 +144,7 @@ Test runners can provide this information using the following template `resource
         "features": [
             {
                 "name": "<feature-name>",             
-                "version": "<feature-value>",                
+                "version": "<feature-version>",                
                 "jobSlots": <job-slots>
             }
         ],     

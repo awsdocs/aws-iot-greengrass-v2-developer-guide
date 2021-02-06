@@ -25,6 +25,7 @@ This component has the following versions:
 **Topics**
 + [Requirements](#greengrass-cli-component-requirements)
 + [Configuration](#greengrass-cli-component-configuration)
++ [Changelog](#greengrass-cli-component-changelog)
 
 ## Requirements<a name="greengrass-cli-component-requirements"></a>
 
@@ -41,3 +42,13 @@ This component provides the following configuration parameters that you can cust
   `AuthorizedPosixGroups`   
 \(Optional\) A string that contains a comma\-separated list of system groups\. You authorize these system groups to use the Greengrass CLI to interact with the AWS IoT Greengrass Core software\. You can specify group names or group IDs\. For example, `group1,1002,group3` authorizes three system groups \(`group1`, `1002`, and `group3`\) to use the Greengrass CLI\.  
 If you don't specify any groups to authorize, you can use the Greengrass CLI as the root user \(`sudo`\) or as the system user that runs the AWS IoT Greengrass Core software\.
+
+## Changelog<a name="greengrass-cli-component-changelog"></a>
+
+The following table describes the changes in each version of the component\.
+
+
+|  Version  |  Changes  | 
+| --- | --- | 
+|  2\.0\.4  | Version updated for Greengrass nucleus version 2\.0\.4 release\. | 
+|  2\.0\.3  |  Initial version\.  | 

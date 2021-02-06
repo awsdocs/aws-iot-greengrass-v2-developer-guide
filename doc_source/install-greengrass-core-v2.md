@@ -9,8 +9,15 @@ Before you download the AWS IoT Greengrass Core software, check that your core d
 
 The AWS IoT Greengrass Core software includes an installer that sets up your device as a Greengrass core device\. When you run the installer, you can configure options such as the root folder and the AWS Region to use\. You can specify to provision the AWS IoT thing, \(optional\) AWS IoT thing group, IAM role, and AWS IoT role alias that the core device requires to operate\. The installer can also deploy the local development tools to the core device, so you can use the device to develop and test custom software components\. The installer requires AWS credentials to provision these resources and create the deployment\.
 
-You can download the AWS IoT Greengrass Core software from the following location:
+You can download the latest version of the AWS IoT Greengrass Core software from the following location:
 + [https://d2s8p88vqu9w66\.cloudfront\.net/releases/greengrass\-nucleus\-latest\.zip](https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-nucleus-latest.zip)
+
+**Note**  
+You can download a specific version of the AWS IoT Greengrass Core software from the following location\. Replace *version* with the version to download\.  
+
+```
+https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-version.zip
+```
 
 **To download and install the AWS IoT Greengrass Core software**
 
@@ -27,11 +34,27 @@ You can download the AWS IoT Greengrass Core software from the following locatio
    ```
    unzip greengrass-nucleus-latest.zip -d GreengrassCore && rm greengrass-nucleus-latest.zip
    ```
+**Tip**  
+You can run the following command to see the version of the AWS IoT Greengrass Core software\.  
+
+   ```
+   java -jar ./GreengrassCore/lib/Greengrass.jar --version
+   ```
 
 1. When you run the installer, you can provision required AWS resources or deploy local development tools\. If you choose either of these options, the installer requires your AWS credentials so that it can create these AWS resources for you\. For more information, see [Minimal IAM policy to provision resources](#provision-minimal-iam-policy)\.
 
    Do one of the following to retrieve credentials and provide them to the installer\.<a name="installer-export-aws-credentials"></a>
-   + \(Recommended\) Use temporary security credentials:
+   + Use long\-term credentials from an IAM user:
+
+     1. Provide the access key ID and secret access key for your IAM user\. For more information about how to retrieve long\-term credentials, see [Managing access keys for IAM users](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html) in the *IAM User Guide*\.
+
+     1. Run the following commands to provide the credentials to the AWS IoT Greengrass Core software\.
+
+        ```
+        export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+        export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+        ```
+   + \(Recommended\) Use temporary security credentials from an IAM role:
 
      1. Provide the access key ID, secret access key, and session token from an IAM role that you assume\. For more information about how to retrieve these credentials, see [Using temporary security credentials with the AWS CLI](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_use-resources.html#using-temp-creds-sdk-cli) in the *IAM User Guide*\.
 
@@ -42,16 +65,6 @@ You can download the AWS IoT Greengrass Core software from the following locatio
         export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
         export AWS_SESSION_TOKEN=AQoDYXdzEJr1K...o5OytwEXAMPLE=
         ```
-   + Use long\-term credentials:
-
-     1. Provide the access key ID and secret access key for your IAM user\. For more information about how to retrieve long\-term credentials, see [Managing access keys for IAM users](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html) in the *IAM User Guide*\.
-
-     1. Run the following commands to provide the credentials to the AWS IoT Greengrass Core software\.
-
-        ```
-        export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
-        export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
-        ```
 
    The installer doesn't save or store your credentials\.
 
@@ -61,7 +74,7 @@ You can download the AWS IoT Greengrass Core software from the following locatio
    + Specifies to install the software as a system service that runs on boot, if your device has the [systemd](https://en.wikipedia.org/wiki/Systemd) init system\.
 **Note**  
 To set up a development device with local development tools, specify the `--deploy-dev-tools true` argument\. The local development tools can take up to a minute to deploy after the installation completes\.   
-<a name="jvm-tuning-note"></a>If you are running AWS IoT Greengrass on a device with limited memory, you might want to control the amount of memory that AWS IoT Greengrass Core software uses\. To control memory allocation, you can set JVM heap size options in the `jvmOptions` configuration parameter in your nucleus component\. For more information, see [Control memory allocation with JVM options](configure-greengrass-core-v2.md#jvm-tuning)\.
+<a name="jvm-tuning-note"></a>If you are running AWS IoT Greengrass on a device with limited memory, you can control the amount of memory that AWS IoT Greengrass Core software uses\. To control memory allocation, you can set JVM heap size options in the `jvmOptions` configuration parameter in your nucleus component\. For more information, see [Control memory allocation with JVM options](configure-greengrass-core-v2.md#jvm-tuning)\.
 
    For more information about the arguments that you can specify, see [Configure the installer](#configure-installer)\.
 
@@ -100,7 +113,9 @@ To set up a development device with local development tools, specify the `--depl
    + If you specify `--setup-system-service true`, the installer prints `Successfully set up Nucleus as a system service` if it set up and ran the software as a service\.
    + If you don't specify `--setup-system-service true`, the installer prints `Launched Nucleus successfully` if it succeeded and ran the software\.
 
-1. <a name="root-file-permissions"></a>Run the following command to set the required file permissions for your AWS IoT Greengrass Core software root folder\. Replace */greengrass/v2* with the root folder that you specified in your installation command and replace */greengrass* with the parent folder for your root folder\.
+1. Skip this step if you installed [Greengrass nucleus](greengrass-nucleus-component.md) v2\.0\.4 or later\. If you downloaded the latest version of the software, you installed v2\.0\.4 or later\.
+
+   Run the following command to set the required file permissions for your AWS IoT Greengrass Core software root folder\. Replace */greengrass/v2* with the root folder that you specified in your installation command and replace */greengrass* with the parent folder for your root folder\.
 
    ```
    sudo chmod 755 /greengrass/v2 && sudo chmod 755 /greengrass
@@ -203,7 +218,9 @@ The `DeployDevTools` policy statement is required only if you specify the `--dep
         "iam:CreateRole",
         "iam:PassRole",
         "iam:CreatePolicy",
-        "iam:AttachRolePolicy"
+        "iam:AttachRolePolicy",
+        "iam:GetPolicy",
+        "sts:GetCallerIdentity"
       ],
       "Resource": "*"
     },

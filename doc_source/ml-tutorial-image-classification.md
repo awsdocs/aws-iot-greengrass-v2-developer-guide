@@ -7,14 +7,14 @@ This tutorial shows you how to perform image classification inference with a one
 To complete this tutorial, you will need the following:
 + <a name="dlr-supported-platforms"></a>
 
-  This component requires one of the following devices configured for use with AWS IoT Greengrass\. For more information see [Setting up AWS IoT Greengrass Version 2](setting-up.md)\.
+  This component requires one of the following devices configured for use with AWS IoT Greengrass\. For more information see [Setting up AWS IoT Greengrass core devices](setting-up.md)\.
   + **32\-bit Armv7l**
 
     [Raspberry Pi](https://www.raspberrypi.org) running Raspberry Pi OS, 2020\-08\-24\.
   + **64\-bit x86\_64**
 
     Device running Amazon Linux 2 or Ubuntu 18\.04, with [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.27 or later\.
-+ A Greengrass core device and a Greengrass group\. For more information, see [Install AWS IoT Greengrass V2](getting-started.md#install-greengrass-v2)\.
++ A Greengrass core device and a Greengrass group\. For more information, see [Install the AWS IoT Greengrass Core software](getting-started.md#install-greengrass-v2)\.
 
 ## Deploy the DLR Image Classification component<a name="ml-image-classification-deploy"></a>
 
@@ -22,9 +22,7 @@ Complete the following steps to deploy the DLR Image Classification component to
 
 ### To deploy the DLR Image Classification component \(console\)<a name="ml-image-classification-deploy-console"></a>
 
-1. Sign in to the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\.
-
-1. In the navigation menu, choose **Components**\.
+1. In to the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass) navigation menu, choose **Components**\.
 
 1. On the **Components** page, on the **Public components** tab, choose `aws.greengrass.DLRImageClassification`\.
 

@@ -3,9 +3,11 @@
 The Greengrass nucleus component \(`aws.greengrass.Nucleus`\) is the only mandatory component and the minimum requirement to run the AWS IoT Greengrass Core software on a device\. You can configure this component to customize and update your AWS IoT Greengrass Core software remotely\. You can deploy this component to configure settings such as proxy, device role, and AWS IoT thing configuration on your core devices\.
 
 **Important**  
-When you change the version of this component, or when you change certain parameters, the AWS IoT Greengrass Core software and all components restart to apply the changes\.
+When the version of the nucleus component changes, or when you change certain configuration parameters, the AWS IoT Greengrass Core software—which includes the nucleus and all other components on your device—restarts to apply the changes\.   
+<a name="component-patch-update"></a>When you deploy a component, AWS IoT Greengrass installs the latest supported versions of all component dependencies for that component\. Because of this, new patch versions of AWS\-provided public components might be automatically deployed to your core devices if you add new devices to a thing group, or you update the deployment that targets those devices\. Some automatic updates, such as a nucleus update, can cause your devices to restart unexpectedly\.   
+<a name="component-version-pinning"></a>To prevent unintended updates for a component that is running on your device, we recommend that you directly include your preferred version of that component when you [create a deployment](create-deployments.md)\. For more information about update behavior for AWS IoT Greengrass Core software, see [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)\.
 
-For more information about requirements and how to configure this component, see [Configure the AWS IoT Greengrass Core software](configure-greengrass-core-v2.md) and [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)\.
+For more information about requirements and how to configure this component, see [Configure the AWS IoT Greengrass Core software](configure-greengrass-core-v2.md)\.
 
 This component has the following versions:
 + 2\.0\.x
@@ -20,7 +22,7 @@ When you run the AWS IoT Greengrass Core software with the `--provision true` op
 
 `networkProxy`  
 \(Optional\) The network proxy to use for all connections\. For more information, see [Connect on port 443 or through a network proxy](configure-greengrass-core-v2.md#configure-alpn-network-proxy)\.  
-When you deploy a change to this configuration parameter, the AWS IoT Greengrass Core software restarts for the change to take effect\.
+<a name="nucleus-component-parameter-restart-para"></a>When you deploy a change to this configuration parameter, the AWS IoT Greengrass Core software restarts for the change to take effect\.
 This object contains the following information:    
 `noProxyAddresses`  
 \(Optional\) A comma\-separated list of IP addresses or host names that are exempt from the proxy\.  
@@ -41,7 +43,7 @@ The URL of the proxy server in the format `scheme://userinfo@host:port`\.
 
 `mqtt`  
 \(Optional\) The MQTT configuration for the Greengrass core device\. For more information, see [Connect on port 443 or through a network proxy](configure-greengrass-core-v2.md#configure-alpn-network-proxy)\.  
-When you deploy a change to this configuration parameter, the AWS IoT Greengrass Core software restarts for the change to take effect\.
+<a name="nucleus-component-parameter-restart-para"></a>When you deploy a change to this configuration parameter, the AWS IoT Greengrass Core software restarts for the change to take effect\.
 This object contains the following information:    
 `port`  
 \(Optional\) The port to use for MQTT connections\.  
@@ -63,7 +65,7 @@ Default: `false`
 
 `jvmOptions`  
 \(Optional\) The JVM options to use to run the AWS IoT Greengrass Core software\. For example, to specify a maximum heap size, you can set this option to `-Xmx64m`\.  
-When you deploy a change to this configuration parameter, the AWS IoT Greengrass Core software restarts for the change to take effect\.
+<a name="nucleus-component-parameter-restart-para"></a>When you deploy a change to this configuration parameter, the AWS IoT Greengrass Core software restarts for the change to take effect\.
 
 `iotDataEndpoint`  
 The AWS IoT data endpoint for your AWS account\.  
@@ -73,12 +75,21 @@ The AWS IoT data endpoint for your AWS account\.
 The AWS IoT credentials endpoint for your AWS account\.  
 <a name="nucleus-component-set-iot-endpoints"></a>When you run the AWS IoT Greengrass Core software with the `--provision true` option, the software gets your data and credentials endpoints from AWS IoT and sets them in the nucleus component\.
 
+`greengrassDataPlanePort`  
+This parameter is available in v2\.0\.4 and later of this component\.  
+\(Optional\) The port to use for data plane connections\. For more information, see [Connect on port 443 or through a network proxy](configure-greengrass-core-v2.md#configure-alpn-network-proxy)\.  
+You must specify a port where the device can make outbound connections\. If you specify a port that is blocked, the device won't be able to connect to AWS IoT Greengrass to receive deployments\.
+Choose from the following options:  
++ `443`
++ `8443`
+Default: `8443`
+
 `awsRegion`  
 The AWS Region to use\.
 
 `runWithDefault`  
 The system user and group to use to run components\.  
-When you deploy a change to this configuration parameter, the AWS IoT Greengrass Core software restarts for the change to take effect\.
+<a name="nucleus-component-parameter-restart-para"></a>When you deploy a change to this configuration parameter, the AWS IoT Greengrass Core software restarts for the change to take effect\.
 This object contains the following information:    
 `posixUser`  
 The name or ID of the system user and system group that the core device uses to run components\. Specify the user and group separated by a colon \(`:`\), where the group is optional\. If you omit the group, the AWS IoT Greengrass Core software defaults to the primary group of the user that you specify\. For example, you can specify `ggc_user` or `ggc_user:ggc_group`\. For more information, see [Configure the user and group that run components](configure-greengrass-core-v2.md#configure-component-user)\.  
@@ -144,3 +155,13 @@ Default: `10000000000` \(10 GB\)
   `platformOverrides`   
 \(Optional\) A dictionary of attributes that identify the core device's platform\. Use this to define custom platform attributes that component recipes can use to identify the correct lifecycle and artifacts for the component\. For example, you might define a hardware capability attribute to deploy only the minimal set of artifacts for a component to run\. For more information, see the [manifest platform parameter](component-recipe-reference.md#component-platform-definition) in the component recipe\.  
 You can also use this parameter to override the `os` and `architecture` platform attributes of the core device\.
+
+## Changelog<a name="greengrass-nucleus-component-changelog"></a>
+
+The following table describes the changes in each version of the component\.
+
+
+|  Version  |  Changes  | 
+| --- | --- | 
+|  2\.0\.4  |  <a name="changelog-nucleus-2.0.4"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
+|  2\.0\.3  |  Initial version\.  | 

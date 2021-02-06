@@ -17,7 +17,7 @@ After the AWS IoT Greengrass Core software selects a manifest that matches the c
 **Important**  <a name="recipe-core-device-manifest-requirement"></a>
 A core device must match least one manifest's platform requirements to install the component\. If no manifest matches the core device, then the AWS IoT Greengrass Core software doesn't install the component and the deployment fails\.
 
-You can define recipes in [YAML](https://en.wikipedia.org/wiki/YAML) or [JSON](https://en.wikipedia.org/wiki/JSON) format\. The recipe examples section includes recipes in each format\.
+You can define recipes in [JSON](https://en.wikipedia.org/wiki/JSON) or [YAML](https://en.wikipedia.org/wiki/YAML) format\. The recipe examples section includes recipes in each format\.
 
 **Topics**
 + [Recipe format](#recipe-format)
@@ -97,8 +97,8 @@ For example, you might define a platform attribute, `com.example.radio.RadioModu
 An object that defines how to install and run the component on the platform that this manifest defines\. You can also define a [global lifecycle](#global-lifecycle-definition) that applies to all platforms\. The core device uses the global lifecycle only if the manifest to use doesn't specify a lifecycle\.  
 You define this lifecycle within a manifest\. The lifecycle steps that you specify here apply to only the platform that this manifest defines\. You can also define a [global lifecycle](#global-lifecycle-definition) that applies to all platforms\.
 This object contains the following information:    
-`Setenv`  
-\(Optional\) A dictionary of environment variables to provide to all lifecycle scripts\.  
+  `Setenv`   
+\(Optional\) A dictionary of environment variables to provide to all lifecycle scripts\. You can override these environment variables with `Setenv` in each lifecycle script\.  
   `Bootstrap`   
 \(Optional\) An object that defines the script to run when the AWS IoT Greengrass Core software deploys the component\. This lifecycle step runs before the [install lifecycle step](#install-lifecycle-definition) in the following cases:  
 + The component deploys to the core device for the first time\.
@@ -343,6 +343,13 @@ Each artifact unzips to a folder within the decompressed path, where the folder 
 This recipe variable has the following inputs:  
 + <a name="recipe-variable-component-dependency-name"></a>`component_dependency_name` – \(Optional\) The name of the component dependency to query\. Omit this segment to query the component that this recipe defines\. You can specify only direct dependencies\.
 
+  `component_dependency_name:work:path`   
+The work path for the component that this recipe defines or for a component on which this component depends\. The value of this recipe variable is equivalent to the output of the `$PWD` environment variable and the [pwd](https://en.wikipedia.org/wiki/Pwd) command when run from the context of the component\.  
+You can use this recipe variable to share files between a component and a dependency\.  
+The folder at this path is readable and writable by the component that this recipe defines and by other components that run as the same user and group\.  
+This recipe variable has the following inputs:  
++ <a name="recipe-variable-component-dependency-name"></a>`component_dependency_name` – \(Optional\) The name of the component dependency to query\. Omit this segment to query the component that this recipe defines\. You can specify only direct dependencies\.
+
 `kernel:rootPath`  
 The AWS IoT Greengrass Core root path\.
 
@@ -358,27 +365,6 @@ You can reference the following recipe examples to help you create recipes for y
 ### Hello World component recipe<a name="recipe-example-hello-world"></a>
 
 The following recipe describes a Hello World component that runs a Python script\. This component supports Linux and accepts a `Message` parameter that AWS IoT Greengrass passes as an argument to the Python script\. This is the recipe for the Hello World component in the [Getting started tutorial](getting-started.md)\.
-
-------
-#### [ YAML ]
-
-```
----
-RecipeFormatVersion: 2020-01-25
-ComponentName: com.example.HelloWorld
-ComponentVersion: '1.0.0'
-ComponentDescription: My first AWS IoT Greengrass component.
-ComponentPublisher: Amazon
-ComponentConfiguration:
-  DefaultConfiguration:
-    Message: world
-Manifests:
-  - Platform:
-      os: linux
-    Lifecycle:
-      Run: |
-        python3 {artifacts:path}/hello_world.py '{configuration:/Message}'
-```
 
 ------
 #### [ JSON ]
@@ -409,29 +395,31 @@ Manifests:
 ```
 
 ------
-
-### Python runtime component example<a name="recipe-example-python-runtime"></a>
-
-The following recipe describes a component that installs Python\. This component supports 64\-bit Linux devices\.
-
-------
 #### [ YAML ]
 
 ```
 ---
 RecipeFormatVersion: 2020-01-25
-ComponentName: com.example.PythonRuntime
-ComponentDescription: Installs Python 3.7
+ComponentName: com.example.HelloWorld
+ComponentVersion: '1.0.0'
+ComponentDescription: My first AWS IoT Greengrass component.
 ComponentPublisher: Amazon
-ComponentVersion: '1.1.0'
+ComponentConfiguration:
+  DefaultConfiguration:
+    Message: world
 Manifests:
   - Platform:
       os: linux
-      architecture: amd64
     Lifecycle:
-      Install:
-        apt-get install python3.7
+      Run: |
+        python3 {artifacts:path}/hello_world.py '{configuration:/Message}'
 ```
+
+------
+
+### Python runtime component example<a name="recipe-example-python-runtime"></a>
+
+The following recipe describes a component that installs Python\. This component supports 64\-bit Linux devices\.
 
 ------
 #### [ JSON ]
@@ -458,48 +446,29 @@ Manifests:
 ```
 
 ------
-
-### Component recipe that specifies several fields<a name="recipe-example-all-fields"></a>
-
-The following component recipe uses several recipe fields\.
-
-------
 #### [ YAML ]
 
 ```
 ---
 RecipeFormatVersion: 2020-01-25
-ComponentName: com.example.FooService
-ComponentDescription: Complete recipe for AWS IoT Greengrass components
+ComponentName: com.example.PythonRuntime
+ComponentDescription: Installs Python 3.7
 ComponentPublisher: Amazon
-ComponentVersion: '1.0.0'
-ComponentConfiguration:
-  DefaultConfiguration:
-    TestParam: TestValue
-ComponentDependencies:
-  BarService:
-    VersionRequirement: ^1.1.0
-    DependencyType: SOFT
-  BazService: VersionRequirement: ^2.0.0
+ComponentVersion: '1.1.0'
 Manifests:
   - Platform:
       os: linux
       architecture: amd64
     Lifecycle:
       Install:
-        Skipif: onpath git
-        Script: sudo apt-get install git
-    Artifacts:
-      - URI: s3://DOC-EXAMPLE-BUCKET/hello_world.zip
-        Unarchive: ZIP
-      - URI: s3//DOC-EXAMPLE-BUCKET/hello-world2.py
-  - Lifecycle:
-      Install:
-        Skipif: onpath git
-        Script: sudo apt-get install git
-    Artifacts:
-      - URI: s3://DOC-EXAMPLE-BUCKET/hello_world.py
+        apt-get install python3.7
 ```
+
+------
+
+### Component recipe that specifies several fields<a name="recipe-example-all-fields"></a>
+
+The following component recipe uses several recipe fields\.
 
 ------
 #### [ JSON ]
@@ -562,6 +531,44 @@ Manifests:
     }
   ]
 }
+```
+
+------
+#### [ YAML ]
+
+```
+---
+RecipeFormatVersion: 2020-01-25
+ComponentName: com.example.FooService
+ComponentDescription: Complete recipe for AWS IoT Greengrass components
+ComponentPublisher: Amazon
+ComponentVersion: '1.0.0'
+ComponentConfiguration:
+  DefaultConfiguration:
+    TestParam: TestValue
+ComponentDependencies:
+  BarService:
+    VersionRequirement: ^1.1.0
+    DependencyType: SOFT
+  BazService: VersionRequirement: ^2.0.0
+Manifests:
+  - Platform:
+      os: linux
+      architecture: amd64
+    Lifecycle:
+      Install:
+        Skipif: onpath git
+        Script: sudo apt-get install git
+    Artifacts:
+      - URI: s3://DOC-EXAMPLE-BUCKET/hello_world.zip
+        Unarchive: ZIP
+      - URI: s3//DOC-EXAMPLE-BUCKET/hello-world2.py
+  - Lifecycle:
+      Install:
+        Skipif: onpath git
+        Script: sudo apt-get install git
+    Artifacts:
+      - URI: s3://DOC-EXAMPLE-BUCKET/hello_world.py
 ```
 
 ------

@@ -1,4 +1,4 @@
-# Setting up AWS IoT Greengrass Version 2<a name="setting-up"></a>
+# Setting up AWS IoT Greengrass core devices<a name="setting-up"></a>
 
 Complete the tasks in this section to install, configure, and run the AWS IoT Greengrass Core software V2\.
 
@@ -29,7 +29,7 @@ Devices must meet the following requirements to install and run the AWS IoT Gree
 
       AWS tests the AWS IoT Greengrass Core software on the following distributions: Amazon Linux 2, Ubuntu 18\.04\.
 + Minimum 256 MB disk space available for the AWS IoT Greengrass Core software\. This requirement doesn't include components deployed to the core device\.
-+ Minimum 128 MB RAM allocated to the AWS IoT Greengrass Core software\. This requirement doesn't include components that run on the core device\.
++ Minimum 96 MB RAM allocated to the AWS IoT Greengrass Core software\. This requirement doesn't include components that run on the core device\. For more information, see [Control memory allocation with JVM options](configure-greengrass-core-v2.md#jvm-tuning)\.
 + Java version 8 or greater\. We recommend [OpenJDK](https://openjdk.java.net/) or [Amazon Corretto](http://aws.amazon.com/corretto/)\.
 + [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.25 or greater\.
 + The user that runs the AWS IoT Greengrass Core software \(typically `root`\), must have permission to run `sudo` with any user and any group\. The `/etc/sudoers` file must give this user permission to run `sudo` as other groups\. The permission for the user in `/etc/sudoers` should look like the following example\.
