@@ -496,7 +496,7 @@ For more information, see [Troubleshooting](troubleshooting.md)\.
    1. Create a file called `hello-world-config-update.json` to contain the configuration update\.
 
       ```
-      nano hello-world-config-update-json
+      nano hello-world-config-update.json
       ```
 
    1. Copy the following JSON object into the file\. This JSON object defines a configuration update that merges the value `friend` to the `Message` parameter to update its value\. This configuration update doesn't specify any values to reset\. You don't need to reset the `Message` parameter because the merge update replaces the existing value\.
