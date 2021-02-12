@@ -618,7 +618,7 @@ In this section, you complete these steps on your AWS IoT Greengrass core device
 1. Add the artifact's Amazon S3 URI to the component recipe\. The Amazon S3 URI is composed of the bucket name and the path to the artifact object in the bucket\. Your script artifact's Amazon S3 URI is the URI that you upload the artifact to in the previous step\. This URI should look similar to the following example\. Replace *DOC\-EXAMPLE\-BUCKET* with the name of the S3 bucket\.
 
    ```
-   s3://DOC-EXAMPLE-BUCKET/artifacts/HelloWorld/1.0.0/hello_world.py
+   s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.HelloWorld/1.0.0/hello_world.py
    ```
 
    To add the artifact to the recipe, add a list of `Artifacts` that contains a structure with the Amazon S3 URI\.
