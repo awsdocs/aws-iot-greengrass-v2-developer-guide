@@ -11,27 +11,30 @@ Support to acquire AWS credentials in this way was added to the AWS SDKs on July
 
 To acquire AWS credentials in your custom component, define `aws.greengrass.TokenExchangeService` as a dependency in the component recipe\. The following example recipe defines a component that installs [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) and runs a Python script that uses AWS credentials from the token exchange service to list Amazon S3 buckets\.
 
+**Note**  
+To run this example component, your device must have the `s3:ListAllMyBuckets` permission\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
+
 ------
 #### [ JSON ]
 
 ```
 {
   "RecipeFormatVersion": "2020-01-25",
-  "ComponentName": "com.example.MyTokenExchangeServiceComponent",
+  "ComponentName": "com.example.ListS3Buckets",
   "ComponentVersion": "1.0.0",
   "ComponentDescription": "A component that uses the token exchange service to list S3 buckets.",
   "ComponentPublisher": "Amazon",
   "ComponentDependencies": {
     "aws.greengrass.TokenExchangeService": {
-      "VersionRequirement": ">=0.0.0",
+      "VersionRequirement": "^2.0.0",
       "DependencyType": "HARD"
     }
   },
   "Manifests": [
     {
       "Lifecycle": {
-        "Install": "pip3 install boto3",
-        "Run": "python3 {artifacts:path}/list-s3-buckets.py"
+        "Install": "pip3 install --user boto3",
+        "Run": "python3 {artifacts:path}/list_s3_buckets.py"
       }
     }
   ]
@@ -44,25 +47,25 @@ To acquire AWS credentials in your custom component, define `aws.greengrass.Toke
 ```
 ---
 RecipeFormatVersion: '2020-01-25'
-ComponentName: com.example.MyTokenExchangeServiceComponent
+ComponentName: com.example.ListS3Buckets
 ComponentVersion: '1.0.0'
 ComponentDescription: A component that uses the token exchange service to list S3 buckets.
 ComponentPublisher: Amazon
 ComponentDependencies:
   aws.greengrass.TokenExchangeService:
-    VersionRequirement: '>=0.0.0'
+    VersionRequirement: '^2.0.0'
     DependencyType: HARD
 Manifests:
   - Lifecycle:
       Install:
-        pip3 install boto3
+        pip3 install --user boto3
       Run: |-
-        python3 {artifacts:path}/list-s3-buckets.py
+        python3 {artifacts:path}/list_s3_buckets.py
 ```
 
 ------
 
-This example component runs the following Python script that lists Amazon S3 buckets\.
+This example component runs the following Python script, `list_s3_buckets.py` that lists Amazon S3 buckets\.
 
 ```
 import boto3

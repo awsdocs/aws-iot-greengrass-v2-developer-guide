@@ -53,6 +53,11 @@ On the **Create component** page, under **Lambda function configuration**, confi
    + **Maximum queue size** – The maximum size of the message queue for the Lambda function component\. The AWS IoT Greengrass Core software stores messages in a FIFO \(first\-in, first\-out\) queue until it can run the Lambda function to consume each message\. The default is 1,000 messages\.
    + **Maximum number of instances** – The maximum number of instances that a non\-pinned Lambda function can run at the same time\. The default is 100 instances\.
    + **Maximum idle time \(seconds\)** – The maximum amount of time in seconds that a non\-pinned Lambda function can idle before the AWS IoT Greengrass Core software stops its process\. The default is 60 seconds\.
+   + **Encoding type** – The type of payload that the Lambda function supports\. Choose from the following options:
+     + **JSON**
+     + **Binary**
+
+     The default is JSON\.
 
 1. \(Optional\) Specify the list of command line arguments to pass to the Lambda function when it runs\. 
 

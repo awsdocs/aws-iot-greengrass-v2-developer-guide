@@ -1,24 +1,34 @@
 # Use the AWS IoT Device SDK for interprocess communication \(IPC\)<a name="interprocess-communication"></a>
 
-AWS IoT Greengrass Core provides an interprocess communication \(IPC\) SDK that you can use in your custom components to communicate with other components and processes\.
+Components running on your core device can use the AWS IoT Greengrass Core IPC library in the AWS IoT Device SDK to communicate with other AWS IoT Greengrass components and processes\. To develop and run custom components that use IPC, you must use the AWS IoT Device SDK to connect to the AWS IoT Greengrass Core IPC service and perform IPC operations\. 
 
 **Topics**
-+ [Requirements](#ipc-requirements)
-+ [Authorize components to use interprocess communication](#ipc-authorization-policies)
++ [Supported SDKs for interprocess communication](#ipc-requirements)
++ [Connect to the AWS IoT Greengrass Core IPC service](#ipc-service-connect)
++ [Authorize components to perform IPC operations](#ipc-authorization-policies)
 + [Publish/subscribe local messages](ipc-publish-subscribe.md)
 + [Publish/subscribe AWS IoT Core MQTT messages](ipc-iot-core-mqtt.md)
 + [Interact with component lifecycle](ipc-component-lifecycle.md)
 + [Interact with component configuration](ipc-component-configuration.md)
 + [Retrieve secret values](ipc-secret-manager.md)
 
-## Requirements<a name="ipc-requirements"></a>
+## Supported SDKs for interprocess communication<a name="ipc-requirements"></a>
 
-To develop custom components that use IPC, you must use the AWS IoT Device SDK v2\. Use the following information to download and use the SDK in the language of your choice\.
+The AWS IoT Greengrass Core IPC libraries are included in the following AWS IoT Device SDK versions\.
++ [AWS IoT Device SDK for Java v2](https://github.com/aws/aws-iot-device-sdk-java-v2) \(v1\.2\.10 or later\)
 
-------
-#### [ Java ]
+  For more information about using the AWS IoT Device SDK for Java v2 to connect to the AWS IoT Greengrass Core IPC service, see [Use AWS IoT Device SDK for Java v2](#ipc-java)\.
++ [AWS IoT Device SDK for Python v2](https://github.com/aws/aws-iot-device-sdk-python-v2) \(v1\.5\.3 or later\)
 
-**To use the AWS IoT Device SDK v2 for Java**
+  For more information about using the AWS IoT Device SDK for Java v2 to connect to the AWS IoT Greengrass Core IPC service, see [Use AWS IoT Device SDK for Python v2](#ipc-python)\.
+
+## Connect to the AWS IoT Greengrass Core IPC service<a name="ipc-service-connect"></a>
+
+To use interprocess communication in your custom component, you must create a connection to an IPC server socket that the AWS IoT Greengrass Core software runs\. Complete the following tasks to download and use the AWS IoT Device SDK in the language of your choice\. 
+
+### Use AWS IoT Device SDK for Java v2<a name="ipc-java"></a>
+
+**To use the AWS IoT Device SDK for Java v2**
 
 1. Download the [AWS IoT Device SDK for Java](https://github.com/aws/aws-iot-device-sdk-java-v2) \(v1\.2\.10 or later\)\.
 
@@ -26,7 +36,7 @@ To develop custom components that use IPC, you must use the AWS IoT Device SDK v
    + Build your component as a JAR file that includes the AWS IoT Device SDK, and run this JAR file in your component recipe\.
    + Define the AWS IoT Device SDK JAR as a component artifact, and add that artifact to the classpath when you run your application in your component recipe\.
 
-1. To use IPC in your custom component, you must create a connection to an IPC server socket that the AWS IoT Greengrass Core software runs\. The IPC client, `GreengrassCoreIPCClient`, requires an `EventStreamRPCConnection`\. Download the following `IPCUtils` class that provides this connection for you\.
+1. Create a connection to the AWS IoT Greengrass Core IPC service\. The IPC client, `GreengrassCoreIPCClient`, requires an `EventStreamRPCConnection`\. Download the following `IPCUtils` class that provides this connection for you\.
 
    ```
    /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
@@ -133,70 +143,85 @@ To develop custom components that use IPC, you must use the AWS IoT Device SDK v
    }
    ```
 
-------
-#### [ Python ]
+### Use AWS IoT Device SDK for Python v2<a name="ipc-python"></a>
 
-**To use the AWS IoT Device SDK v2 for Python**
+**To use the AWS IoT Device SDK for Python v2**
 
 1. Download the [AWS IoT Device SDK for Python](https://github.com/aws/aws-iot-device-sdk-python-v2) \(v1\.5\.3 or later\)\.
 
 1. Add the SDK's [installation steps](https://github.com/aws/aws-iot-device-sdk-python-v2#installation) to the install lifecycle in your component's recipe\.
 
-1. To use IPC in your custom component, you must create a connection to an IPC server socket that the AWS IoT Greengrass Core software runs\. Download the following `IPCUtils` class that provides this connection for you\.
+1. Create a connection to the AWS IoT Greengrass Core IPC service\. Complete the following steps to create the IPC client and establish a connection\.
+
+------
+#### [ SDK v1\.5\.4 or later ]
+
+   Use the following code to create the IPC client\.
 
    ```
-   # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   # SPDX-License-Identifier: Apache-2.0
+   import awsiot.greengrasscoreipc
    
-   import os
-   
-   from awscrt.io import (
-       ClientBootstrap,
-       DefaultHostResolver,
-       EventLoopGroup,
-       SocketDomain,
-       SocketOptions,
-   )
-   from awsiot.eventstreamrpc import Connection, LifecycleHandler, MessageAmendment
-   
-   TIMEOUT = 10
-   
-   
-   class IPCUtils:
-       def connect(self):
-           elg = EventLoopGroup()
-           resolver = DefaultHostResolver(elg)
-           bootstrap = ClientBootstrap(elg, resolver)
-           socket_options = SocketOptions()
-           socket_options.domain = SocketDomain.Local
-           amender = MessageAmendment.create_static_authtoken_amender(os.getenv("SVCUID"))
-           hostname = os.getenv("AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT")
-           connection = Connection(
-               host_name=hostname,
-               port=8033,
-               bootstrap=bootstrap,
-               socket_options=socket_options,
-               connect_message_amender=amender,
-           )
-           self.lifecycle_handler = LifecycleHandler()
-           connect_future = connection.connect(self.lifecycle_handler)
-           connect_future.result(TIMEOUT)
-           return connection
-   ```
-
-1. Use the following code to create the IPC client\.
-
-   ```
-   import awsiot.greengrasscoreipc.client as client
-   
-   ipc_utils = IPCUtils()
-   connection = ipc_utils.connect()
-   ipc_client = client.GreengrassCoreIPCClient(connection)
+   ipc_client = awsiot.greengrasscoreipc.connect()
    ```
 
 ------
+#### [ SDK v1\.5\.3 ]
 
-## Authorize components to use interprocess communication<a name="ipc-authorization-policies"></a>
+   1. Download the following `IPCUtils` class that provides the IPC server connection for you\.
+
+      ```
+      # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+      # SPDX-License-Identifier: Apache-2.0
+      
+      import os
+      
+      from awscrt.io import (
+          ClientBootstrap,
+          DefaultHostResolver,
+          EventLoopGroup,
+          SocketDomain,
+          SocketOptions,
+      )
+      from awsiot.eventstreamrpc import Connection, LifecycleHandler, MessageAmendment
+      
+      TIMEOUT = 10
+      
+      
+      class IPCUtils:
+          def connect(self):
+              elg = EventLoopGroup()
+              resolver = DefaultHostResolver(elg)
+              bootstrap = ClientBootstrap(elg, resolver)
+              socket_options = SocketOptions()
+              socket_options.domain = SocketDomain.Local
+              amender = MessageAmendment.create_static_authtoken_amender(os.getenv("SVCUID"))
+              hostname = os.getenv("AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT")
+              connection = Connection(
+                  host_name=hostname,
+                  port=8033,
+                  bootstrap=bootstrap,
+                  socket_options=socket_options,
+                  connect_message_amender=amender,
+              )
+              self.lifecycle_handler = LifecycleHandler()
+              connect_future = connection.connect(self.lifecycle_handler)
+              connect_future.result(TIMEOUT)
+              return connection
+      ```
+
+   1. Use the following code to create the IPC client\.
+
+      ```
+      import awsiot.greengrasscoreipc.client as client
+      
+      ipc_utils = IPCUtils()
+      connection = ipc_utils.connect()
+      ipc_client = client.GreengrassCoreIPCClient(connection)
+      ```
+
+------
+
+## Authorize components to perform IPC operations<a name="ipc-authorization-policies"></a>
 
 To allow your custom components to use some IPC operations, you must define *authorization policies* that allow the component to perform the operation on certain resources\. Each authorization policy defines a list of operations and a list of resources that the policy allows\. For example, the publish/subscribe messaging IPC service defines publish and subscribe operations for topic resources\. You can use the `*` wildcard to allow access to all operations or all resources\.
 
@@ -208,21 +233,6 @@ To create unique policy IDs, you can combine the component name, IPC service nam
 `com.example.HelloWorld:pubsub:2`
 
 Authorization policies use the following format\. This object is the `accessControl` configuration parameter\.
-
-------
-#### [ YAML ]
-
-```
-IPC service identifier:
-  policyId:
-    policyDescription: description
-    operations:
-      - operation1
-      - operation2
-    resources:
-      - resource1
-      - resource2
-```
 
 ------
 #### [ JSON ]
@@ -246,8 +256,23 @@ IPC service identifier:
 ```
 
 ------
+#### [ YAML ]
 
-**Example recipe with an authorization policy**  
+```
+IPC service identifier:
+  policyId:
+    policyDescription: description
+    operations:
+      - operation1
+      - operation2
+    resources:
+      - resource1
+      - resource2
+```
+
+------
+
+**Example component recipe with an authorization policy**  
 The following example component recipe includes an `accessControl` object defines an authorization policy\. This policy authorizes the `com.example.HelloWorld` component to publish to the `test/topic` topic\.  
 
 ```

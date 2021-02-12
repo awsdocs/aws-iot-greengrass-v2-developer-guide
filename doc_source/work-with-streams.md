@@ -69,7 +69,7 @@ try:
             kinesis=None,
             iot_analytics=None,
             iot_sitewise=None,
-            s3=None
+            s3_task_executor=None
         )
     ))
 except StreamManagerException:

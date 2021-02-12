@@ -18,16 +18,12 @@ Devices must meet the following requirements to install and run the AWS IoT Gree
 + One of the following supported platforms:<a name="greengrass-supported-platforms"></a>
   + Architecture: Armv7l
     + OS: Linux
-
-      AWS tests the AWS IoT Greengrass Core software on the following distribution: [Raspberry Pi OS, 2020\-08\-24](https://downloads.raspberrypi.org/raspios_armhf/images/raspios_armhf-2020-08-24/)\. The AWS IoT Greengrass Core software might work with other distributions for a Raspberry Pi, but we recommend Raspberry Pi OS because it's the officially supported distribution\.
   + Architecture: Armv8 \(AArch64\)
     + OS: Linux
-
-      AWS tests the AWS IoT Greengrass Core software on the following distributions: Amazon Linux 2, Ubuntu 18\.04\.
   + Architecture: x86\_64
     + OS: Linux
-
-      AWS tests the AWS IoT Greengrass Core software on the following distributions: Amazon Linux 2, Ubuntu 18\.04\.
+**Note**  
+You can use AWS IoT Device Tester for AWS IoT Greengrass to verify that the AWS IoT Greengrass Core software runs on your hardware and can communicate with the AWS Cloud\. For more information, see [Using AWS IoT Device Tester for AWS IoT Greengrass V2](device-tester-for-greengrass-ug.md)\.
 + Minimum 256 MB disk space available for the AWS IoT Greengrass Core software\. This requirement doesn't include components deployed to the core device\.
 + Minimum 96 MB RAM allocated to the AWS IoT Greengrass Core software\. This requirement doesn't include components that run on the core device\. For more information, see [Control memory allocation with JVM options](configure-greengrass-core-v2.md#jvm-tuning)\.
 + Java version 8 or greater\. We recommend [OpenJDK](https://openjdk.java.net/) or [Amazon Corretto](http://aws.amazon.com/corretto/)\.
@@ -37,6 +33,7 @@ Devices must meet the following requirements to install and run the AWS IoT Gree
   ```
   root    ALL=(ALL:ALL) ALL
   ```
++  The `/tmp` directory must be mounted with `exec` permissions\. 
 + All of the following shell commands:
   + `ps`
   + `sudo`

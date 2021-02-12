@@ -12,7 +12,7 @@ You can't use this publish/subscribe IPC service to publish or subscribe to AWS 
 
 ## Authorization<a name="ipc-publish-subscribe-authorization"></a>
 
-To use publish/subscribe messaging IPC service in a custom component, you must define authorization policies that allows your component to send and receive messages to topics\. For information about defining authorization policies, see [Authorize components to use interprocess communication](interprocess-communication.md#ipc-authorization-policies)\.
+To use publish/subscribe messaging IPC service in a custom component, you must define authorization policies that allows your component to send and receive messages to topics\. For information about defining authorization policies, see [Authorize components to perform IPC operations](interprocess-communication.md#ipc-authorization-policies)\.
 
 Authorization policies for publish/subscribe messaging have the following properties\.
 
@@ -86,9 +86,10 @@ greengrassCoreIPCClient.publishToTopic(publishToTopicRequest, Optional.empty()).
 #### [ Python ]
 
 **Example: Publish a binary message**  
+This example assumes that you are using version 1\.5\.4 or later of the AWS IoT Device SDK for Python v2\. If you are using version 1\.5\.3 of the SDK, see [Use AWS IoT Device SDK for Python v2](interprocess-communication.md#ipc-python) for information about connecting to the AWS IoT Greengrass Core IPC service\. 
 
 ```
-import awsiot.greengrasscoreipc.client as client
+import awsiot.greengrasscoreipc
 from awsiot.greengrasscoreipc.model import (
     PublishToTopicRequest,
     PublishMessage,
@@ -97,9 +98,7 @@ from awsiot.greengrasscoreipc.model import (
 
 TIMEOUT = 10
 
-ipc_utils = IPCUtils()
-connection = ipc_utils.connect()
-ipc_client = client.GreengrassCoreIPCClient(connection)
+ipc_client = awsiot.greengrasscoreipc.connect()
                     
 topic = "my/topic"
 message = "Hello, World!"
@@ -195,8 +194,10 @@ operationResponseHandler.closeStream();
 #### [ Python ]
 
 **Example: Subscribe to messages**  
+This example assumes that you are using version 1\.5\.4 or later of the AWS IoT Device SDK for Python v2\. If you are using version 1\.5\.3 of the SDK, see [Use AWS IoT Device SDK for Python v2](interprocess-communication.md#ipc-python) for information about connecting to the AWS IoT Greengrass Core IPC service\. 
 
 ```
+import awsiot.greengrasscoreipc
 import awsiot.greengrasscoreipc.client as client
 from awsiot.greengrasscoreipc.model import (
     SubscribeToTopicRequest,
@@ -205,9 +206,7 @@ from awsiot.greengrasscoreipc.model import (
 
 TIMEOUT = 10
 
-ipc_utils = IPCUtils()
-connection = ipc_utils.connect()
-ipc_client = client.GreengrassCoreIPCClient(connection)
+ipc_client = awsiot.greengrasscoreipc.connect()
                     
 class StreamHandler(client.SubscribeToTopicStreamHandler):
     def __init__(self):
