@@ -180,8 +180,8 @@ You must provide this information using the `userdata.json` template located in 
     "TempResourcesDirOnDevice": "/path/to/temp/folder",
     "InstallationDirRootOnDevice": "/path/to/installation/folder",
     "GreengrassNucleusZip": "/path/to/aws.greengrass.nucleus.zip",
-    "GreengrassNucleusVersion": "2.0.3",
-    "GreengrassCliVersion": "2.0.3"
+    "GreengrassNucleusVersion": "2.0.4",
+    "GreengrassCliVersion": "2.0.4"
 }
 ```
 

@@ -9,6 +9,8 @@ You can complete this getting started tutorial to learn about the basic features
 **Note**  
 This tutorial describes how to set up a development environment and explore the features of AWS IoT Greengrass\. For more information about how to set up and configure production devices, see [Setting up AWS IoT Greengrass core devices](setting-up.md)\.
 
+You can expect to spend 20\-30 minutes on this tutorial\.
+
 ## Prerequisites<a name="getting-started-prerequisites"></a>
 
 To complete this getting started tutorial, you need the following:
@@ -98,7 +100,7 @@ Follow the steps in this section to set up your Raspberry Pi as a AWS IoT Greeng
    unzip greengrass-nucleus-latest.zip -d GreengrassCore && rm greengrass-nucleus-latest.zip
    ```
 
-1. Provide your AWS credentials so that the installer can provision the AWS IoT and IAM resources for your core device\. To increase security, you can get credentials for an IAM role that allows only the minimum permissions necessary to provision\. For more information, see [Minimal IAM policy to provision resources](install-greengrass-core-v2.md#provision-minimal-iam-policy)\.
+1. Provide your AWS credentials so that the installer can provision the AWS IoT and IAM resources for your core device\. To increase security, you can get credentials for an IAM role that allows only the minimum permissions necessary to provision\. For more information, see [Minimal IAM policy for installer to provision resources](provision-minimal-iam-policy.md)\.
 
    Do one of the following to retrieve credentials and provide them to the AWS IoT Greengrass Core software:<a name="installer-export-aws-credentials"></a>
    + Use long\-term credentials from an IAM user:
