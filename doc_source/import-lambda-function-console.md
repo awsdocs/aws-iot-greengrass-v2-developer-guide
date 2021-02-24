@@ -1,6 +1,6 @@
 # Import a Lambda function as a component \(console\)<a name="import-lambda-function-console"></a>
 
-When you use the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass) to create a Lambda function component, you import an existing AWS Lambda function and then configure it to create a the component that runs on your Greengrass device\.
+When you use the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass) to create a Lambda function component, you import an existing AWS Lambda function and then configure it to create the component that runs on your Greengrass device\.
 
 Before you begin, review the [requirements]() to run Lambda functions on Greengrass devices\.
 
