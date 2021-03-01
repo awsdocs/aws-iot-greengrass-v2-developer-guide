@@ -20,7 +20,7 @@ The AWS IoT Greengrass Core IPC libraries are included in the following AWS IoT 
   For more information about using the AWS IoT Device SDK for Java v2 to connect to the AWS IoT Greengrass Core IPC service, see [Use AWS IoT Device SDK for Java v2](#ipc-java)\.
 + [AWS IoT Device SDK for Python v2](https://github.com/aws/aws-iot-device-sdk-python-v2) \(v1\.5\.3 or later\)
 
-  For more information about using the AWS IoT Device SDK for Java v2 to connect to the AWS IoT Greengrass Core IPC service, see [Use AWS IoT Device SDK for Python v2](#ipc-python)\.
+  For more information about using the AWS IoT Device SDK for Python v2 to connect to the AWS IoT Greengrass Core IPC service, see [Use AWS IoT Device SDK for Python v2](#ipc-python)\.
 
 ## Connect to the AWS IoT Greengrass Core IPC service<a name="ipc-service-connect"></a>
 
