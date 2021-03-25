@@ -51,6 +51,8 @@ You can use AWS IoT Device Tester for AWS IoT Greengrass to verify that the AWS 
 + Your device may also require the following optional shell commands:
   + \(Optional\) `systemctl` \(to set up the AWS IoT Greengrass Core software as a system service\)
   + \(Optional\) `mkfifo` \(to run Lambda functions as components\)
+  + \(Optional\) `useradd` and `groupadd` to setup the `ggc_user` and `ggc_group` on install
+  + \(Optional\) `id` and `usermod` to verify `ggc_user` and `ggc_group` on startup
 + To run Lambda functions, your device must meet additional requirements\. For more information, see [Requirements to run Lambda functions](#greengrass-v2-lambda-requirements)\.
 
 ### Requirements to run Lambda functions<a name="greengrass-v2-lambda-requirements"></a>
