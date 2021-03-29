@@ -17,6 +17,7 @@ Lambda functions include dependencies on the following components\. You don't ne
 ## Requirements<a name="run-lambda-functions-requirements"></a>
 
 Your core devices and Lambda functions must meet the following requirements for you to run the functions on the AWS IoT Greengrass Core software:
++ <a name="core-device-lambda-function-requirements"></a>Your core device must meet the requirements to run Lambda functions\. If you want the core device to run containerized Lambda functions, the device must meet the requirements to do so\. For more information, see [Requirements to run Lambda functions](setting-up.md#greengrass-v2-lambda-requirements)\.
 + You must install the programming languages that the Lambda function uses on your core devices\.
 **Tip**  
 You can create a component that installs the programming language, and then specify that component as a dependency of your Lambda function component\.
@@ -27,4 +28,3 @@ You can create a component that installs the programming language, and then spec
   + Java 8 – `java8`
   + Node\.js 10 – `nodejs10.x`
   + Node\.js 12 – `nodejs12.x`
-+ <a name="core-device-lambda-function-requirements"></a>Your core device must meet the requirements to run Lambda functions\. If you want the core device to run containerized Lambda functions, the device must meet the requirements to do so\. For more information, see [Requirements to run Lambda functions](setting-up.md#greengrass-v2-lambda-requirements)\.

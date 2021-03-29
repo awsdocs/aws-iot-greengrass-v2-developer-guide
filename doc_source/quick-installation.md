@@ -138,6 +138,10 @@ For more information about the arguments that you can specify, see [Installer ar
 
 <a name="install-greengrass-core-run-software"></a>If you installed the AWS IoT Greengrass Core software as a system service, the installer runs the software for you\. Otherwise, you must run the software manually\. For more information, see [Run the AWS IoT Greengrass Core software](run-greengrass-core-v2.md)\.
 
+**Note**  
+By default, the IAM role that the installer creates doesn't allow access to component artifacts in S3 buckets\. To deploy custom components that define artifacts in S3, you must add permissions to the role to allow your core device to retrieve component artifacts\. For more information, see [Allow access to S3 buckets for component artifacts](device-service-role.md#device-service-role-access-s3-bucket)\.  
+If you don't yet have an S3 bucket for component artifacts, you can add these permissions later after you create a bucket\.
+
 <a name="install-greengrass-core-next-steps-intro"></a>For more information about how to configure and use the software and AWS IoT Greengrass, see the following:<a name="install-greengrass-core-next-steps-links"></a>
 + [Configure the AWS IoT Greengrass Core software](configure-greengrass-core-v2.md)
 + [Manage AWS IoT Greengrass components](manage-components.md)

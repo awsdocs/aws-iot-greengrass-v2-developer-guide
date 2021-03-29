@@ -10,7 +10,6 @@ The AWS IoT Greengrass Core software provides options that you can use to config
 + [Connect on port 443 or through a network proxy](#configure-alpn-network-proxy)
 + [Configure MQTT timeouts and cache settings](#configure-mqtt)
 + [Configure AWS IoT Greengrass as a system service](#configure-system-service)
-+ [Uninstall the AWS IoT Greengrass Core software](#uninstall-greengrass-core-v2)
 
 ## Deploy the Greengrass core nucleus component<a name="configure-nucleus-component"></a>
 
@@ -135,7 +134,7 @@ The following example defines a deployment that configures MQTT over port 443\. 
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.0.4",
+      "version": "2.0.5",
       "configurationUpdate": {
         "merge": "{\"mqtt\":{\"port\":443}}"
       }
@@ -164,7 +163,7 @@ The following example defines a deployment that configures HTTPS over port 443\.
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.0.4",
+      "version": "2.0.5",
       "configurationUpdate": {
         "merge": "{\"greengrassDataPlanePort\":443}"
       }
@@ -209,7 +208,7 @@ The following example defines a deployment that configures a network proxy\. The
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.0.4",
+      "version": "2.0.5",
       "configurationUpdate": {
         "merge": "{\"networkProxy\":{\"noProxyAddresses\":\"http://192.168.0.1,www.example.com\",\"proxy\":{\"url\":\"https://my-proxy-server:1100\",\"username\":\"Mary_Major\",\"password\":\"pass@word1357\"}}}"
       }
@@ -302,21 +301,3 @@ Then, you can use the following commands to configure starting the device on boo
   ```
   sudo systemctl stop greengrass.service
   ```
-
-## Uninstall the AWS IoT Greengrass Core software<a name="uninstall-greengrass-core-v2"></a>
-
-You can uninstall the AWS IoT Greengrass Core software to remove it from a device that you don't want to use as a Greengrass core device\. You might also do this to clean up an installation that fails\.
-
-**To uninstall the AWS IoT Greengrass Core software**
-
-1. If you run the software as a system service, you must stop and disable the service\. Run the following command\.
-
-   ```
-   sudo systemctl stop greengrass.service && sudo systemctl disable greengrass.service
-   ```
-
-1. Remove the root folder from the device\. Replace */greengrass/v2* with the path to the root folder\.
-
-   ```
-   sudo rm -rf /greengrass/v2
-   ```

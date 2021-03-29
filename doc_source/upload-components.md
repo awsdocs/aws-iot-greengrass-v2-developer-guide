@@ -35,7 +35,7 @@ We recommend that you include the component name and version in the path to the 
       aws s3 cp artifacts/com.example.HelloWorld/1.0.0/artifact.py s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.HelloWorld/1.0.0/artifact.py
       ```
 **Important**  
-Core device roles don't allow access to S3 buckets by default\. If this is your first time using this S3 bucket, you must add permissions to the role to allow core devices to retrieve component artifacts from this S3 bucket\. For more information, see [Access to S3 buckets for component artifacts](device-service-role.md#device-service-role-access-s3-bucket)\.
+Core device roles don't allow access to S3 buckets by default\. If this is your first time using this S3 bucket, you must add permissions to the role to allow core devices to retrieve component artifacts from this S3 bucket\. For more information, see [Allow access to S3 buckets for component artifacts](device-service-role.md#device-service-role-access-s3-bucket)\.
 
    1. Add a list named `Artifacts` to the component recipe if it isn't present\. The `Artifacts` list appears in each manifest, which defines the component's requirements on each platform that it supports \(or the component's default requirements for all platforms\)\.
 
@@ -60,7 +60,7 @@ Core device roles don't allow access to S3 buckets by default\. If this is your 
          }
          "Artifacts": [
            {
-             "URL": "s3://DOC-EXAMPLE-BUCKET/artifacts/MyGreengrassComponent/1.0.0/artifact.py"
+             "URI": "s3://DOC-EXAMPLE-BUCKET/artifacts/MyGreengrassComponent/1.0.0/artifact.py"
            }
          ]
        }

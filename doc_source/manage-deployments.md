@@ -4,6 +4,10 @@ You can deploy components to individual devices or groups of devices with AWS Io
 
 Each core device runs the combination of the software from the deployments that target the device\. However, deployments to the same target overwrite previous deployments to that target\. When you create a deployment, you define the components and configurations to apply to the core devices' existing software\. When you revise a deployment for a target, you replace the components from the previous revision with the components in the new revision\. For example, you deploy components `A` and `B` to a thing group `X`\. You then deploy components `B` and `C` to a different thing group `Y`\. As a result, the components `A`, `B`, and `C` all run on any core device that is a member of both groups\. Then, you create another deployment to thing group `X` that specifies only component `B`\. As a result, the core devices in that group no longer run component `A`\.
 
+**Note**  
+When you remove a core device from a thing group, AWS IoT Greengrass doesn't delete that thing group's components from the device\. Because of this, we recommend that you don't remove core devices from thing groups where you deploy components\.  
+To remove a component from a device, where the device is no longer a member of the thing group that deploys that component, use the [deployment create](gg-cli-deployment.md#deployment-create) command of the Greengrass CLI\. Specify the component to remove with the `--remove` argument, and specify the thing group with the `--groupId` argument\.
+
 Deployments are continuous\. When you create a deployment, AWS IoT Greengrass rolls out the deployment to target devices that are online\. If a target device isn't online, then it receives the deployment the next time it connects to AWS IoT Greengrass\. When you add a core device to a target thing group, AWS IoT Greengrass sends the device the latest deployment for that thing group\.
 
 Each target thing or thing group can have one deployment at a time\. This means that when you create a deployment for a target, AWS IoT Greengrass no longer deploys the previous revision of that target's deployment\.
@@ -33,7 +37,7 @@ Deployments provide several options that let you control which devices receive a
   Define the maximum amount of time each device has to apply a deployment\. If a device exceeds the duration that you specify, then the device fails to apply the deployment\.
 
 **Important**  
-Custom components can define artifacts in S3 buckets\. When the AWS IoT Greengrass Core software deploys a component, it downloads the component's artifacts from the AWS Cloud\. Core device roles don't allow access to S3 buckets by default\. To deploy custom components that define artifacts in an S3 bucket, the core device role must grant permissions to download artifacts from that bucket\. For more information, see [Access to S3 buckets for component artifacts](device-service-role.md#device-service-role-access-s3-bucket)\.
+Custom components can define artifacts in S3 buckets\. When the AWS IoT Greengrass Core software deploys a component, it downloads the component's artifacts from the AWS Cloud\. Core device roles don't allow access to S3 buckets by default\. To deploy custom components that define artifacts in an S3 bucket, the core device role must grant permissions to download artifacts from that bucket\. For more information, see [Allow access to S3 buckets for component artifacts](device-service-role.md#device-service-role-access-s3-bucket)\.
 
 **Topics**
 + [Create deployments](create-deployments.md)

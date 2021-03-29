@@ -21,6 +21,7 @@ This component has the following versions:
 ## Requirements<a name="modbus-rtu-protocol-adapter-component-requirements"></a>
 
 This component has the following requirements:
++ <a name="core-device-lambda-function-requirements"></a>Your core device must meet the requirements to run Lambda functions\. If you want the core device to run containerized Lambda functions, the device must meet the requirements to do so\. For more information, see [Requirements to run Lambda functions](setting-up.md#greengrass-v2-lambda-requirements)\.
 + <a name="public-component-python3-requirement"></a>[Python](https://www.python.org/) version 3\.7 installed on the core device and added to the PATH environment variable\.
 + A physical connection between the AWS IoT Greengrass core device and the Modbus devices\. The core device must be physically connected to the Modbus RTU network through a serial port, such as a USB port\.
 + <a name="connector-component-legacy-subscription-router-dependency"></a>To receive output data from this component, you must merge the following configuration update for the [legacy subscription router component](legacy-subscription-router-component.md) when you deploy this component\. The legacy subscription router component \(`aws.greengrass.LegacySubscriptionRouter`\) is a dependency of this component\. This configuration specifies the topic where this component publishes responses\.<a name="connector-component-legacy-subscription-router-dependency-replace"></a>
@@ -43,7 +44,6 @@ This component has the following requirements:
 You must update the Lambda function version on the legacy subscription router every time you deploy this component\. This ensures that you use the correct Lambda function version for the component version that you deploy\.
 
   <a name="connector-component-create-deployments"></a>For more information, see [Create deployments](create-deployments.md)\.
-+ <a name="core-device-lambda-function-requirements"></a>Your core device must meet the requirements to run Lambda functions\. If you want the core device to run containerized Lambda functions, the device must meet the requirements to do so\. For more information, see [Requirements to run Lambda functions](setting-up.md#greengrass-v2-lambda-requirements)\.
 
 ## Configuration<a name="modbus-rtu-protocol-adapter-component-configuration"></a>
 

@@ -7,7 +7,7 @@ When you run the AWS IoT Greengrass Core software, you can choose to provision t
 
   This role has a policy named `GreengrassV2TokenExchangeRoleAccess` and a trust relationship that allows `credentials.iot.amazonaws.com` to assume the role\. The policy includes the minimum permissions for the core device\.
 **Important**  
-This policy doesn't include access to files in S3 buckets\. You must add permissions to the role to allow core devices to retrieve component artifacts from S3 buckets\. For more information, see [Access to S3 buckets for component artifacts](#device-service-role-access-s3-bucket)\.
+This policy doesn't include access to files in S3 buckets\. You must add permissions to the role to allow core devices to retrieve component artifacts from S3 buckets\. For more information, see [Allow access to S3 buckets for component artifacts](#device-service-role-access-s3-bucket)\.
 + AWS IoT role alias: `GreengrassV2TokenExchangeRoleAlias`
 
   This role alias refers to the IAM role\.
@@ -20,7 +20,7 @@ You can acquire temporary AWS credentials for this IAM role to perform AWS opera
 
 **Topics**
 + [Service role permissions for core devices](#device-service-role-permissions)
-+ [Access to S3 buckets for component artifacts](#device-service-role-access-s3-bucket)
++ [Allow access to S3 buckets for component artifacts](#device-service-role-access-s3-bucket)
 
 ## Service role permissions for core devices<a name="device-service-role-permissions"></a>
 
@@ -53,7 +53,7 @@ If you use the AWS IoT Greengrass Core software to create this role, it uses the
 }
 ```
 
-## Access to S3 buckets for component artifacts<a name="device-service-role-access-s3-bucket"></a>
+## Allow access to S3 buckets for component artifacts<a name="device-service-role-access-s3-bucket"></a>
 
 The default core device role doesn't allow core devices to access S3 buckets\. To deploy components that have artifacts in S3 buckets, you must add the `s3:GetObject` permission to allow core devices to download component artifacts\. You can add a new policy to the core device role to grant this permission\.
 

@@ -22,7 +22,7 @@ Your IoT applications can include multiple custom components that read or write 
 
 To get started, deploy the stream manager component to your AWS IoT Greengrass core device\. In the deployment, configure the stream manager component parameters to define settings that apply to all streams on the Greengrass core device\. Use these parameters to control how stream manager stores, processes, and exports streams based on your business needs and environment constraints\. 
 
-After you configure stream manager, you can create and deploy your IoT applications\. These are typically custom components that use `StreamManagerClient` in the Stream Manager SDK to create and interact with streams\. When a stream creates, the component defines per\-stream policies, such as export destinations, priority, and persistence\. 
+After you configure stream manager, you can create and deploy your IoT applications\. These are typically custom components that use `StreamManagerClient` in the Stream Manager SDK to create and interact with streams\. When you create a stream, you can define per\-stream policies, such as export destinations, priority, and persistence\. 
 
 ## Requirements<a name="stream-manager-requirements"></a>
 

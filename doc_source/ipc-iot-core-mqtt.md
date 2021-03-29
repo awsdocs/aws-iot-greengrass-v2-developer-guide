@@ -178,6 +178,15 @@ SubscribeToIoTCoreResponseHandler operationResponseHandler = greengrassCoreIPCCl
         .subscribeToIoTCore(subscribeToIoTCoreRequest, Optional.of(streamResponseHandler));
 operationResponseHandler.getResponse().get();
 
+// Keep the main thread alive, or the process will exit.
+try {
+    while (true) {
+        Thread.sleep(10000);
+    }
+} catch (InterruptedException e) {
+    System.out.println("Subscribe interrupted.");
+}
+
 // To stop subscribing, close the stream.
 operationResponseHandler.closeStream();
 ```
@@ -189,6 +198,8 @@ operationResponseHandler.closeStream();
 This example assumes that you are using version 1\.5\.4 or later of the AWS IoT Device SDK for Python v2\. If you are using version 1\.5\.3 of the SDK, see [Use AWS IoT Device SDK for Python v2](interprocess-communication.md#ipc-python) for information about connecting to the AWS IoT Greengrass Core IPC service\. 
 
 ```
+import time
+
 import awsiot.greengrasscoreipc
 import awsiot.greengrasscoreipc.client as client
 from awsiot.greengrasscoreipc.model import (
@@ -227,6 +238,10 @@ handler = StreamHandler()
 operation = ipc_client.new_subscribe_to_iot_core(handler)
 future = operation.activate(request)
 future.result(TIMEOUT)
+
+# Keep the main thread alive, or the process will exit.
+while True:
+    time.sleep(10)
                   
 # To stop subscribing, close the operation stream.
 operation.close()

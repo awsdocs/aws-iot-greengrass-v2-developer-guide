@@ -6,6 +6,7 @@ Use the troubleshooting information and solutions in this section to help resolv
 + [View AWS IoT Greengrass Core logs](#view-greengrass-core-logs)
 + [View component logs](#view-component-logs)
 + [AWS IoT Greengrass Core software issues](#greengrass-core-issues)
++ [AWS IoT Greengrass cloud issues](#greengrass-cloud-issues)
 + [Core device deployment issues](#greengrass-core-deployment-issues)
 + [Core device component issues](#greengrass-core-component-issues)
 
@@ -44,7 +45,7 @@ Use the following information to troubleshoot AWS IoT Greengrass Core software i
 
 ### Unable to set up core device<a name="unable-to-set-up-core-device"></a>
 
-If the AWS IoT Greengrass Core software installer fails and you aren't able to set up a core device, you might need to uninstall the software and try again\. For more information, see [Uninstall the AWS IoT Greengrass Core software](configure-greengrass-core-v2.md#uninstall-greengrass-core-v2)\.
+If the AWS IoT Greengrass Core software installer fails and you aren't able to set up a core device, you might need to uninstall the software and try again\. For more information, see [Uninstall the AWS IoT Greengrass Core software](uninstall-greengrass-core-v2.md)\.
 
 ### Error: Unable to connect to AWS IoT Core<a name="core-error-unable-to-connect-to-aws-iot"></a>
 
@@ -76,6 +77,16 @@ Run the following command to remount the `/tmp` directory with `exec` permission
 ```
 sudo mount -o remount,exec /tmp
 ```
+
+## AWS IoT Greengrass cloud issues<a name="greengrass-cloud-issues"></a>
+
+Use the following information to troubleshoot issues with the AWS IoT Greengrass console and API\. Each entry corresponds to an error message that you might see when you perform an action\.
+
+### An error occurred \(AccessDeniedException\) when calling the CreateComponentVersion operation: User: arn:aws:iam::123456789012:user/<username> is not authorized to perform: null<a name="cloud-error-create-component-version-not-authorized-to-perform-null"></a>
+
+You might see this error when you create a component version from the AWS IoT Greengrass console or with the [CreateComponentVersion](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_CreateComponentVersion.html) operation\.
+
+This error indicates that your recipe isn't valid JSON or YAML\. Check the syntax of your recipe, fix any syntax issues, and try again\. You can use an online JSON or YAML syntax checker to identify syntax issues in your recipe\.
 
 ## Core device deployment issues<a name="greengrass-core-deployment-issues"></a>
 

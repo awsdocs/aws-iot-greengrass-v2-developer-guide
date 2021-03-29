@@ -1,7 +1,7 @@
 # AWS IoT Greengrass Developer Guide, Version 2
 
 -----
-*****Copyright &copy; 2021 Amazon Web Services, Inc. and/or its affiliates. All rights reserved.*****
+*****Copyright &copy;  Amazon Web Services, Inc. and/or its affiliates. All rights reserved.*****
 
 -----
 Amazon's trademarks and trade dress may not be used in 
@@ -27,6 +27,7 @@ Amazon's trademarks and trade dress may not be used in
    + [Run the AWS IoT Greengrass Core software](run-greengrass-core-v2.md)
    + [Configure the AWS IoT Greengrass Core software](configure-greengrass-core-v2.md)
    + [Update the AWS IoT Greengrass Core software (OTA)](update-greengrass-core-v2.md)
+   + [Uninstall the AWS IoT Greengrass Core software](uninstall-greengrass-core-v2.md)
 + [Manage AWS IoT Greengrass components](manage-components.md)
    + [AWS-provided components](public-components.md)
       + [Greengrass nucleus](greengrass-nucleus-component.md)
@@ -46,11 +47,12 @@ Amazon's trademarks and trade dress may not be used in
       + [Amazon SNS](sns-component.md)
       + [Stream manager](stream-manager-component.md)
       + [Token exchange service](token-exchange-service-component.md)
+   + [Upload components to deploy to your core devices](upload-components.md)
    + [Create custom AWS IoT Greengrass components](create-components.md)
    + [Interact with AWS services](interact-with-aws-services.md)
    + [Run a Docker container](run-docker-container.md)
    + [AWS IoT Greengrass component recipe reference](component-recipe-reference.md)
-   + [Upload components to deploy to your core devices](upload-components.md)
+   + [Component environment variable reference](component-environment-variables.md)
 + [Run AWS Lambda functions](run-lambda-functions.md)
    + [Import a Lambda function as a component (console)](import-lambda-function-console.md)
    + [Import a Lambda function as a component (AWS CLI)](import-lambda-function-cli.md)
@@ -67,9 +69,10 @@ Amazon's trademarks and trade dress may not be used in
    + [Interact with component configuration](ipc-component-configuration.md)
    + [Retrieve secret values](ipc-secret-manager.md)
 + [Manage data streams on the AWS IoT Greengrass Core](manage-data-streams.md)
-   + [Configure AWS IoT Greengrass stream manager](configure-stream-manager.md)
+   + [Create custom components that use stream manager](use-stream-manager-in-custom-components.md)
    + [Use StreamManagerClient to work with streams](work-with-streams.md)
       + [Export configurations for supported AWS Cloud destinations](stream-export-configurations.md)
+   + [Configure AWS IoT Greengrass stream manager](configure-stream-manager.md)
 + [Perform machine learning inference](ml-inference.md)
    + [Public machine learning components](ml-components.md)
       + [DLR Image Classification](dlr-image-classification-component.md)

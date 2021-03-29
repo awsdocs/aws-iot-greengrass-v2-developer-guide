@@ -306,9 +306,9 @@ Lifecycle:
 
 ## Recipe variables<a name="recipe-variables"></a>
 
-Recipe variables expose information from the current component and nucleus for you to use in your recipes\. For example, you can use recipe variables to pass component configuration parameters to a lifecycle script that exists as an artifact\.
+Recipe variables expose information from the current component and nucleus for you to use in your recipes\. You can use recipe variables within lifecycle definitions in component recipes\. For example, use a recipe variable to pass component configuration parameters to an application that you run in a lifecycle script\.
 
-Recipe variables use `{recipe_variable}` syntax\. The double curly braces indicate a recipe variable\.
+Recipe variables use `{recipe_variable}` syntax\. The curly braces indicate a recipe variable\.
 
 AWS IoT Greengrass supports the following recipe variables:
 
@@ -387,7 +387,7 @@ The following recipe describes a Hello World component that runs a Python script
         "os": "linux"
       },
       "Lifecycle": {
-        "Run": "python3 {artifacts:path}/hello_world.py '{configuration:/Message}'"
+        "Run": "python3 -u {artifacts:path}/hello_world.py '{configuration:/Message}'"
       }
     }
   ]
@@ -412,7 +412,7 @@ Manifests:
       os: linux
     Lifecycle:
       Run: |
-        python3 {artifacts:path}/hello_world.py '{configuration:/Message}'
+        python3 -u {artifacts:path}/hello_world.py '{configuration:/Message}'
 ```
 
 ------

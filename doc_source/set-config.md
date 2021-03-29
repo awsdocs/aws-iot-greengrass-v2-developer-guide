@@ -180,8 +180,8 @@ You must provide this information using the `userdata.json` template located in 
     "TempResourcesDirOnDevice": "/path/to/temp/folder",
     "InstallationDirRootOnDevice": "/path/to/installation/folder",
     "GreengrassNucleusZip": "/path/to/aws.greengrass.nucleus.zip",
-    "GreengrassNucleusVersion": "2.0.4",
-    "GreengrassCliVersion": "2.0.4"
+    "GreengrassNucleusVersion": "nucleus-version",
+    "GreengrassCliVersion": "cli-version"
 }
 ```
 
@@ -198,14 +198,14 @@ The full path to a folder on the device in which to install AWS IoT Greengrass\.
 The full path to the Greengrass nucleus ZIP \(`greengrass-nucleus-latest.zip`\) file on your host computer\.
 
 `GreengrassNucleusVersion`  
-The version of the downloaded Greengrass nucleus component\. To check the version of the nucleus component, extract the downloaded `greengrass-nucleus-latest.zip` file and run the following command\.  
+The version of the downloaded Greengrass nucleus component\. To check the version of the nucleus in the `greengrass-nucleus-latest.zip` file that you downloaded, extract the ZIP file and run the following command\.  
 
 ```
 java -jar /path/to/extracted/nucleus/zip/Greengrass.jar —version
 ```
 
 `GreengrassCliVersion`  
-The version of the Greengrass CLI component that IDT uses for device qualification\. You can use the value that is preset in the userdata\.json file, or you can specify a Greengrass CLI version that is supported for the nucleus version that you downloaded\.
+The version of the Greengrass CLI component that IDT uses for device qualification\. Use the same value as `GreengrassNucleusVersion`\. 
 
 **Note**  
-For information about the supported versions of the nucleus component and the Greengrass CLI component for IDT for AWS IoT Greengrass, see [Latest IDT version for AWS IoT Greengrass](dev-test-versions.md#idt-latest-version)\.
+For information about the supported versions of the Greengrass nucleus and Greengrass CLI for IDT for AWS IoT Greengrass, see [Latest IDT version for AWS IoT Greengrass](dev-test-versions.md#idt-latest-version)\.

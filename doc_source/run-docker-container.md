@@ -203,7 +203,7 @@ The following example component recipe uses the `-e` parameter to set the requir
           "Script": "docker load -i {artifacts:path}/hello-world.tar"
         },
         "Run": {
-          "Script": "docker run -e AWS_REGION -e SVCUID -e AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT -e AWS_CONTAINER_AUTHORIZATION_TOKEN -e AWS_CONTAINER_CREDENTIALS_FULL_URI --rm hello-world"
+          "Script": "docker run -v /greengrass/v2:/greengrass/v2 -e AWS_REGION=$AWS_REGION -e SVCUID=$SVCUID -e AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT=$AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT -e AWS_CONTAINER_AUTHORIZATION_TOKEN=$AWS_CONTAINER_AUTHORIZATION_TOKEN -e AWS_CONTAINER_CREDENTIALS_FULL_URI=$AWS_CONTAINER_CREDENTIALS_FULL_URI --rm hello-world"
         }
       },
       "Artifacts": [
@@ -243,7 +243,7 @@ Manifests:
       Install:
         Script: docker load -i {artifacts:path}/hello-world.tar
       Run:
-        Script: docker run -v /greengrass/v2:/greengrass/v2 -e AWS_REGION -e SVCUID -e AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT -e AWS_CONTAINER_AUTHORIZATION_TOKEN -e AWS_CONTAINER_CREDENTIALS_FULL_URI --rm hello-world
+        Script: docker run -v /greengrass/v2:/greengrass/v2 -e AWS_REGION=$AWS_REGION -e SVCUID=$SVCUID -e AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT=$AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT -e AWS_CONTAINER_AUTHORIZATION_TOKEN=$AWS_CONTAINER_AUTHORIZATION_TOKEN -e AWS_CONTAINER_CREDENTIALS_FULL_URI=$AWS_CONTAINER_CREDENTIALS_FULL_URI --rm hello-world
     Artifacts:
       - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.MyDockerComponent/1.0.0/hello-world.tar
 ```

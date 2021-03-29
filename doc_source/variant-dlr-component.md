@@ -7,7 +7,7 @@ This component has the following versions:
 
 ## Requirements<a name="variant-dlr-component-requirements"></a><a name="dlr-supported-platforms"></a>
 
-This component requires one of the following devices configured for use with AWS IoT Greengrass\. For more information see [Setting up AWS IoT Greengrass core devices](setting-up.md)\.
+The public machine learning inference components require a Greengrass core device running one of the following supported platforms\. For more information see [Setting up AWS IoT Greengrass core devices](setting-up.md)\.
 + **32\-bit Armv7l**
 
   [Raspberry Pi](https://www.raspberrypi.org) running Raspberry Pi OS, 2020\-08\-24\.

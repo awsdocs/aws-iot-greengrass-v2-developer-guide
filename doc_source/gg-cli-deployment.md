@@ -39,6 +39,8 @@ $ greengrass-cli deployment create
     } \
   }
   ```
+
+  `MERGE` and `RESET` are case\-sensitive and must be in upper case\.
 + `--groupId`, `-g`\. The target thing group for the deployment\.
 + `--merge`, `-m`\. The name and version of the target component that you want to add or update\. You must provide the component information in the format `<component>=<version>`\. Use a separate argument for each additional component to specify\. If needed, use the `--runWith` argument to provide the `posixUser` and `posixGroup` information for running the component\.
 + `--runWith`\. The `posixUser` and `posixGroup` information for running a component\. You must provide this information in the format `<component>:posixUser=<user>[:<group>]`\. For example, `HelloWorld:posixUser=ggc_user:ggc_group`\. Use a separate argument for each additional option to specify\.

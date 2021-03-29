@@ -326,7 +326,7 @@ In this section, you learn how to create and run a basic Hello World component\.
            "os": "linux"
          },
          "Lifecycle": {
-           "Run": "python3 {artifacts:path}/hello_world.py '{configuration:/Message}'"
+           "Run": "python3 -u {artifacts:path}/hello_world.py '{configuration:/Message}'"
          }
        }
      ]
@@ -351,7 +351,7 @@ In this section, you learn how to create and run a basic Hello World component\.
          os: linux
        Lifecycle:
          Run: |
-           python3 {artifacts:path}/hello_world.py '{configuration:/Message}'
+           python3 -u {artifacts:path}/hello_world.py '{configuration:/Message}'
    ```
 
 ------
@@ -649,7 +649,7 @@ In this section, you complete these steps on your AWS IoT Greengrass core device
      "RecipeFormatVersion": "2020-01-25",
      "ComponentName": "com.example.HelloWorld",
      "ComponentVersion": "1.0.0",
-     "ComponentDescription": "My first AWS IoT Greengrass component.",
+     "ComponentDescription": "My first Greengrass component.",
      "ComponentPublisher": "Amazon",
      "ComponentConfiguration": {
        "DefaultConfiguration": {
@@ -662,7 +662,7 @@ In this section, you complete these steps on your AWS IoT Greengrass core device
            "os": "linux"
          },
          "Lifecycle": {
-           "Run": "python3 {artifacts:path}/hello_world.py '{configuration:/Message}'"
+           "Run": "python3 -u {artifacts:path}/hello_world.py '{configuration:/Message}'"
          },
          "Artifacts": [
            {
@@ -705,7 +705,7 @@ In this section, you complete these steps on your AWS IoT Greengrass core device
          os: linux
        Lifecycle:
          Run: |
-           python3 {artifacts:path}/hello_world.py '{configuration:/Message}'
+           python3 -u {artifacts:path}/hello_world.py '{configuration:/Message}'
        Artifacts:
          - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.HelloWorld/1.0.0/hello_world.py
    ```
@@ -768,7 +768,7 @@ You can also see your Hello World component in the [AWS IoT Greengrass console](
      "componentVersion": "1.0.0",
      "creationTimestamp": "2020-11-30T18:04:05.823Z",
      "publisher": "Amazon",
-     "description": "My first AWS IoT Greengrass component.",
+     "description": "My first Greengrass component.",
      "status": {
        "componentState": "DEPLOYABLE",
        "message": "NONE",

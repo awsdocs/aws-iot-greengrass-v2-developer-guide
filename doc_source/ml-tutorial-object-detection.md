@@ -4,19 +4,15 @@ This tutorial shows you how to perform object detection using the public DLR Obj
 
 ## Prerequisites<a name="ml-tutorial-object-detection-prereqs"></a>
 
-To complete this tutorial, you will need the following:
-+ One of the following devices, set up and configured for use with AWS IoT Greengrass V2:<a name="dlr-supported-platforms"></a>
+To complete this tutorial, you will need a Greengrass core device\.<a name="dlr-supported-platforms"></a>
 
-  This component requires one of the following devices configured for use with AWS IoT Greengrass\. For more information see [Setting up AWS IoT Greengrass core devices](setting-up.md)\.
-  + **32\-bit Armv7l**
+The public machine learning inference components require a Greengrass core device running one of the following supported platforms\. For more information see [Setting up AWS IoT Greengrass core devices](setting-up.md)\.
++ **32\-bit Armv7l**
 
-    [Raspberry Pi](https://www.raspberrypi.org) running Raspberry Pi OS, 2020\-08\-24\.
-  + **64\-bit x86\_64**
+  [Raspberry Pi](https://www.raspberrypi.org) running Raspberry Pi OS, 2020\-08\-24\.
++ **64\-bit x86\_64**
 
-    Device running Amazon Linux 2 or Ubuntu 18\.04, with [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.27 or later\.
-
-   For more information, see [Setting up AWS IoT Greengrass core devices](setting-up.md)\.
-+ A Greengrass core device and a Greengrass group\. For more information, see [Install the AWS IoT Greengrass Core software](getting-started.md#install-greengrass-v2)\.
+  Device running Amazon Linux 2 or Ubuntu 18\.04, with [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.27 or later\.
 
 ## Deploy the DLR Object Detection component<a name="ml-object-detection-deploy"></a>
 

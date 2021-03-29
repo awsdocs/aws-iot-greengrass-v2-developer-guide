@@ -13,7 +13,7 @@ You can use this version of IDT for AWS IoT Greengrass with the AWS IoT Greengra
 
 **IDT v4\.0\.1 for AWS IoT Greengrass**    
 Supported AWS IoT Greengrass component versions:   
-+ [Greengrass nucleus](greengrass-nucleus-component.md) v2\.0\.4 with [Greengrass CLI](greengrass-cli-component.md) v2\.0\.4  
++ [Greengrass nucleus](greengrass-nucleus-component.md) v2\.0\.5 with [Greengrass CLI](greengrass-cli-component.md) v2\.0\.5  
 IDT software downloads:  
 + IDT v4\.0\.1 with test suite GGV2Q\_1\.0\.0 for [Linux](https://docs.aws.amazon.com/greengrass/v2/developerguide/download-idt-gg2-linux-4.0.1.html)
 + IDT v4\.0\.1 with test suite GGV2Q\_1\.0\.0 for [macOS](https://docs.aws.amazon.com/greengrass/v2/developerguide/download-idt-gg2-mac-4.0.1.html)

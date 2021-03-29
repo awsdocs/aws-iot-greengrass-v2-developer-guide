@@ -12,6 +12,7 @@ This section describes advanced configuration of the AWS IoT Greengrass Core sof
 + [Run the AWS IoT Greengrass Core software](run-greengrass-core-v2.md)
 + [Configure the AWS IoT Greengrass Core software](configure-greengrass-core-v2.md)
 + [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)
++ [Uninstall the AWS IoT Greengrass Core software](uninstall-greengrass-core-v2.md)
 
 ## Requirements<a name="greengrass-v2-requirements"></a>
 

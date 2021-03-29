@@ -1,55 +1,10 @@
 # Configure AWS IoT Greengrass stream manager<a name="configure-stream-manager"></a>
 
-On Greengrass core devices, stream manager can store, process, and export IoT device data\. Stream manager provides parameters that you use to configure group\-level runtime settings\. These settings apply to all streams on the Greengrass core device\. You can use the AWS IoT Greengrass console or API to configure stream manager settings when you deploy the component\. Changes take effect after the deployment completes\.
-
-**Note**  
-After you configure stream manager, you can create and deploy IoT applications that run on Greengrass core devices and interact with stream manager\. These IoT applications are typically custom Greengrass components\. For more information, see [Use StreamManagerClient to work with streams](work-with-streams.md)\.
-
-## Use stream manager in custom components<a name="custom-stream-manager-components"></a>
-
-To use stream manager in a custom component, you must define the `aws.greengrass.StreamManager` component as a dependency\. You must also provide the Stream Manager SDK, which you can define as an artifact\.
-
-**Example: Connect to stream manager with default port**  
-
-```
-void connectToStreamManagerWithDefaultPort() {
-    StreamManagerClient client = StreamManagerClientFactory.standard().build();
-    
-    // Use the client
-}
-```
-
-**Example: Connect to stream manager with non\-default port**  
-If you configure stream manager with a port other than the default, you must use [interprocess communication](interprocess-communication.md) to retrieve the port from the component configuration\.  
-The `port` configuration parameter contains the value that you specify in `STREAM_MANAGER_SERVER_PORT` when you deploy stream manager\.
-
-```
-void connectToStreamManagerWithCustomPort() {
-    EventStreamRPCConnection eventStreamRpcConnection = IPCUtils.getEventStreamRpcConnection();
-    GreengrassCoreIPCClient greengrassCoreIPCClient = new GreengrassCoreIPCClient(eventStreamRpcConnection);
-    List<String> keyPath = new ArrayList<>();
-    keyPath.add("port");
-
-    GetConfigurationRequest request = new GetConfigurationRequest();
-    request.setComponentName("aws.greengrass.StreamManager");
-    request.setKeyPath(keyPath);
-    GetConfigurationResponse response =
-            greengrassCoreIPCClient.getConfiguration(request, Optional.empty()).getResponse().get();
-    String port = response.getValue().get("port").toString();
-    System.out.print("Stream Manager is running on got the port: " + port);
-
-    final StreamManagerClientConfig config = StreamManagerClientConfig.builder()
-            .serverInfo(StreamManagerServerInfo.builder().port(Integer.parseInt(port)).build()).build();
-
-    StreamManagerClient client = StreamManagerClientFactory.standard().withClientConfig(config).build();
-    
-    // Use the client
-}
-```
+On Greengrass core devices, stream manager can store, process, and export IoT device data\. Stream manager provides parameters that you use to configure runtime settings\. These settings apply to all streams on the Greengrass core device\. You can use the AWS IoT Greengrass console or API to configure stream manager settings when you deploy the component\. Changes take effect after the deployment completes\.
 
 ## Stream manager parameters<a name="stream-manager-parameters"></a>
 
-Stream manager provides the following parameters that you use to define group\-level settings\. All parameters are optional\.
+Stream manager provides the following parameters that you can configure when you deploy the component to your core devices\. All parameters are optional\.
 
 **Storage directory**  <a name="STREAM_MANAGER_STORE_ROOT_DIR"></a>
 Parameter name: `STREAM_MANAGER_STORE_ROOT_DIR`  

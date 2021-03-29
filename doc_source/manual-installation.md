@@ -294,7 +294,7 @@ In this section, you create a token exchange IAM role and an AWS IoT role alias 
       }
       ```
 
-   1. Create a file that contains the policy document that the token exchange role requires\.
+   1. Create a file that contains the access policy document that the token exchange role requires\.
 
       ```
       nano device-role-access-policy.json
@@ -325,6 +325,9 @@ In this section, you create a token exchange IAM role and an AWS IoT role alias 
         ]
       }
       ```
+**Note**  
+This access policy doesn't allow access to component artifacts in S3 buckets\. To deploy custom components that define artifacts in S3, you must add permissions to the role to allow your core device to retrieve component artifacts\. For more information, see [Allow access to S3 buckets for component artifacts](device-service-role.md#device-service-role-access-s3-bucket)\.  
+If you don't yet have an S3 bucket for component artifacts, you can add these permissions later after you create a bucket\.
 
    1. Create the IAM policy from the policy document\.
       + Replace *MyGreengrassV2TokenExchangeRoleAccess* with the name of the IAM policy to create\.
@@ -556,7 +559,7 @@ For more information about the arguments that you can specify, see [Installer ar
    services:
      aws.greengrass.Nucleus:
        componentType: "NUCLEUS"
-       version: "2.0.4"
+       version: "2.0.5"
        configuration:
          awsRegion: "us-west-2"
          iotRoleAlias: "MyGreengrassCoreTokenExchangeRoleAlias"
@@ -567,7 +570,7 @@ For more information about the arguments that you can specify, see [Installer ar
    Then, do the following:
    + Replace each instance of */greengrass/v2* with the Greengrass root folder\.
    + Replace *MyGreengrassCore* with the name of the AWS IoT thing\.
-   + Replace *2\.0\.4* with the version of the AWS IoT Greengrass Core software\.
+   + Replace *2\.0\.5* with the version of the AWS IoT Greengrass Core software\.
    + Replace *us\-west\-2* with the AWS Region where you created the resources\.
    + Replace *MyGreengrassCoreTokenExchangeRoleAlias* with the token exchange role alias\.
    + Replace the `iotDataEndpoint` with your AWS IoT data endpoint\.
@@ -586,7 +589,7 @@ In this configuration file, you can customize other nucleus configuration option
    services:
      aws.greengrass.Nucleus:
        componentType: "NUCLEUS"
-       version: "2.0.4"
+       version: "2.0.5"
        configuration:
          awsRegion: "us-west-2"
          iotCredEndpoint: "device-credentials-prefix.credentials.iot.us-west-2.amazonaws.com"

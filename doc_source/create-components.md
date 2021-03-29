@@ -62,7 +62,7 @@ To develop a new component or a new version of a component, create a recipe and 
            "os": "linux"
          },
          "Lifecycle": {
-           "Run": "python3 {artifacts:path}/hello_world.py '{configuration:/Message}'"
+           "Run": "python3 -u {artifacts:path}/hello_world.py '{configuration:/Message}'"
          }
        }
      ]
@@ -87,7 +87,7 @@ To develop a new component or a new version of a component, create a recipe and 
          os: linux
        Lifecycle:
          Run: |
-           python3 {artifacts:path}/hello_world.py '{configuration:/Message}'
+           python3 -u {artifacts:path}/hello_world.py '{configuration:/Message}'
    ```
 
 ------

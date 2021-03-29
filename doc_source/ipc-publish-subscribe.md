@@ -186,6 +186,15 @@ SubscribeToTopicResponseHandler operationResponseHandler = greengrassCoreIPCClie
         .subscribeToTopic(subscribeToTopicRequest, Optional.of(streamResponseHandler));
 operationResponseHandler.getResponse().get();
 
+// Keep the main thread alive, or the process will exit.
+try {
+    while (true) {
+        Thread.sleep(10000);
+    }
+} catch (InterruptedException e) {
+    System.out.println("Subscribe interrupted.");
+}
+
 // To stop subscribing, close the stream.
 operationResponseHandler.closeStream();
 ```
@@ -197,6 +206,8 @@ operationResponseHandler.closeStream();
 This example assumes that you are using version 1\.5\.4 or later of the AWS IoT Device SDK for Python v2\. If you are using version 1\.5\.3 of the SDK, see [Use AWS IoT Device SDK for Python v2](interprocess-communication.md#ipc-python) for information about connecting to the AWS IoT Greengrass Core IPC service\. 
 
 ```
+import time
+
 import awsiot.greengrasscoreipc
 import awsiot.greengrasscoreipc.client as client
 from awsiot.greengrasscoreipc.model import (
@@ -233,6 +244,10 @@ operation = ipc_client.new_subscribe_to_topic(handler)
 future = operation.activate(request)
 future.result(TIMEOUT)
 
+# Keep the main thread alive, or the process will exit.
+while True:
+    time.sleep(10)
+    
 # To stop subscribing, close the operation stream.
 operation.close()
 ```
@@ -243,14 +258,54 @@ operation.close()
 
 Use the following examples to learn how to use the publish/subscribe IPC service in your components\.
 
-### Example publish/subscribe publisher<a name="ipc-publish-subscribe-example-publisher"></a>
+### Example publish/subscribe publisher \(Java\)<a name="ipc-publish-subscribe-example-publisher-java"></a>
 
 The following example recipe allows the component to publish to all topics\.
+
+------
+#### [ JSON ]
+
+```
+{
+  "RecipeFormatVersion": "2020-01-25",
+  "ComponentName": "com.example.PubSubPublisherJava",
+  "ComponentVersion": "1.0.0",
+  "ComponentDescription": "A component that publishes messages.",
+  "ComponentPublisher": "Amazon",
+  "ComponentConfiguration": {
+    "DefaultConfiguration": {
+      "accessControl": {
+        "aws.greengrass.ipc.pubsub": {
+          "com.example.PubSubPublisherJava:pubsub:1": {
+            "policyDescription": "Allows access to publish to all topics.",
+            "operations": [
+              "aws.greengrass#PublishToTopic"
+            ],
+            "resources": [
+              "*"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "Manifests": [
+    {
+      "Lifecycle": {
+        "Run": "java -jar {artifacts:path}/PubSubPublisher.jar"
+      }
+    }
+  ]
+}
+```
+
+------
+#### [ YAML ]
 
 ```
 ---
 RecipeFormatVersion: '2020-01-25'
-ComponentName: com.example.PubSubPublisher
+ComponentName: com.example.PubSubPublisherJava
 ComponentVersion: '1.0.0'
 ComponentDescription: A component that publishes messages.
 ComponentPublisher: Amazon
@@ -258,7 +313,7 @@ ComponentConfiguration:
   DefaultConfiguration:
     accessControl:
       aws.greengrass.ipc.pubsub:
-        'com.example.PubSubPublisher:pubsub:1':
+        'com.example.PubSubPublisherJava:pubsub:1':
           policyDescription: Allows access to publish to all topics.
           operations:
             - 'aws.greengrass#PublishToTopic'
@@ -267,8 +322,10 @@ ComponentConfiguration:
 Manifests:
   - Lifecycle:
       Run: |-
-        java -Dlog.level=INFO -jar {artifacts:path}/PubSubPublisher.jar
+        java -jar {artifacts:path}/PubSubPublisher.jar
 ```
+
+------
 
 The following example Java application demonstrates how to use the publish/subscribe IPC service to publish messages to other components\.
 
@@ -288,20 +345,17 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class PubSubPublisher {
-    private static final Logger LOGGER = Logger.getLogger(PubSubPublisher.class.getName());
 
     public static void main(String[] args) {
-        String message = "Hello from the pub/sub publisher.";
-        String topic = "test/topic";
+        String message = "Hello from the pub/sub publisher (Java).";
+        String topic = "test/topic/java";
 
-        while (true) {
-            try (EventStreamRPCConnection eventStreamRPCConnection = IPCUtils.getEventStreamRpcConnection()) {
-                GreengrassCoreIPCClient ipcClient = new GreengrassCoreIPCClient(eventStreamRPCConnection);
+        try (EventStreamRPCConnection eventStreamRPCConnection = IPCUtils.getEventStreamRpcConnection()) {
+            GreengrassCoreIPCClient ipcClient = new GreengrassCoreIPCClient(eventStreamRPCConnection);
 
+            while (true) {
                 PublishToTopicRequest publishRequest = new PublishToTopicRequest();
                 PublishMessage publishMessage = new PublishMessage();
                 BinaryMessage binaryMessage = new BinaryMessage();
@@ -309,39 +363,83 @@ public class PubSubPublisher {
                 publishMessage.setBinaryMessage(binaryMessage);
                 publishRequest.setPublishMessage(publishMessage);
                 publishRequest.setTopic(topic);
-                CompletableFuture<PublishToTopicResponse> futureResponse = ipcClient.publishToTopic(publishRequest, Optional.empty()).getResponse();
+                CompletableFuture<PublishToTopicResponse> futureResponse = ipcClient
+                        .publishToTopic(publishRequest, Optional.empty()).getResponse();
 
                 try {
                     futureResponse.get(10, TimeUnit.SECONDS);
-                    LOGGER.info("Successfully published to topic: " + topic);
+                    System.out.println("Successfully published to topic: " + topic);
                 } catch (TimeoutException e) {
-                    LOGGER.warning("Timeout occurred while publishing to topic " + topic);
+                    System.err.println("Timeout occurred while publishing to topic: " + topic);
                 } catch (ExecutionException e) {
                     if (e.getCause() instanceof UnauthorizedError) {
-                        LOGGER.severe("Unauthorized error while publishing to topic: " + topic);
+                        System.err.println("Unauthorized error while publishing to topic: " + topic);
                     } else {
-                        LOGGER.severe("Execution exception while publishing to topic: " + topic);
+                        System.err.println("Execution exception while publishing to topic: " + topic);
                     }
                     throw e;
                 }
                 Thread.sleep(5000);
-            } catch (Exception e) {
-                LOGGER.log(Level.SEVERE, "Exception occurred when using IPC.", e);
-                System.exit(1);
             }
+        } catch (InterruptedException e) {
+            System.out.println("Publisher interrupted.");
+        } catch (Exception e) {
+            System.err.println("Exception occurred when using IPC.");
+            e.printStackTrace();
+            System.exit(1);
         }
     }
 }
 ```
 
-### Example publish/subscribe subscriber<a name="ipc-publish-subscribe-example-subscriber"></a>
+### Example publish/subscribe subscriber \(Java\)<a name="ipc-publish-subscribe-example-subscriber-java"></a>
 
 The following example recipe allows the component to subscribe to all topics\.
+
+------
+#### [ JSON ]
+
+```
+{
+  "RecipeFormatVersion": "2020-01-25",
+  "ComponentName": "com.example.PubSubSubscriberJava",
+  "ComponentVersion": "1.0.0",
+  "ComponentDescription": "A component that subscribes to messages.",
+  "ComponentPublisher": "Amazon",
+  "ComponentConfiguration": {
+    "DefaultConfiguration": {
+      "accessControl": {
+        "aws.greengrass.ipc.pubsub": {
+          "com.example.PubSubSubscriberJava:pubsub:1": {
+            "policyDescription": "Allows access to subscribe to all topics.",
+            "operations": [
+              "aws.greengrass#SubscribeToTopic"
+            ],
+            "resources": [
+              "*"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "Manifests": [
+    {
+      "Lifecycle": {
+        "Run": "java -jar {artifacts:path}/PubSubSubscriber.jar"
+      }
+    }
+  ]
+}
+```
+
+------
+#### [ YAML ]
 
 ```
 ---
 RecipeFormatVersion: '2020-01-25'
-ComponentName: com.example.PubSubSubscriber
+ComponentName: com.example.PubSubSubscriberJava
 ComponentVersion: '1.0.0'
 ComponentDescription: A component that subscribes to messages.
 ComponentPublisher: Amazon
@@ -349,7 +447,7 @@ ComponentConfiguration:
   DefaultConfiguration:
     accessControl:
       aws.greengrass.ipc.pubsub:
-        'com.example.PubSubSubscriber:pubsub:1':
+        'com.example.PubSubSubscriberJava:pubsub:1':
           policyDescription: Allows access to subscribe to all topics.
           operations:
             - 'aws.greengrass#SubscribeToTopic'
@@ -358,8 +456,10 @@ ComponentConfiguration:
 Manifests:
   - Lifecycle:
       Run: |-
-        java -Dlog.level=INFO -jar {artifacts:path}/PubSubSubscriber.jar
+        java -jar {artifacts:path}/PubSubSubscriber.jar
 ```
+
+------
 
 The following example Java application demonstrates how to use the publish/subscribe IPC service to subscribe to messages to other components\.
 
@@ -370,6 +470,7 @@ The following example Java application demonstrates how to use the publish/subsc
 package com.example.ipc.pubsub;
 
 import software.amazon.awssdk.aws.greengrass.GreengrassCoreIPCClient;
+import software.amazon.awssdk.aws.greengrass.SubscribeToTopicResponseHandler;
 import software.amazon.awssdk.aws.greengrass.model.SubscribeToTopicRequest;
 import software.amazon.awssdk.aws.greengrass.model.SubscribeToTopicResponse;
 import software.amazon.awssdk.aws.greengrass.model.SubscriptionResponseMessage;
@@ -383,41 +484,48 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class PubSubSubscriber {
-    private static final Logger LOGGER = Logger.getLogger(PubSubSubscriber.class.getName());
 
     public static void main(String[] args) {
-        String topic = "test/topic";
+        String topic = "test/topic/java";
 
-        while (true) {
-            try (EventStreamRPCConnection eventStreamRPCConnection = IPCUtils.getEventStreamRpcConnection()) {
-                GreengrassCoreIPCClient ipcClient = new GreengrassCoreIPCClient(eventStreamRPCConnection);
+        try (EventStreamRPCConnection eventStreamRPCConnection = IPCUtils.getEventStreamRpcConnection()) {
+            GreengrassCoreIPCClient ipcClient = new GreengrassCoreIPCClient(eventStreamRPCConnection);
 
-                SubscribeToTopicRequest subscribeRequest = new SubscribeToTopicRequest();
-                subscribeRequest.setTopic(topic);
-                CompletableFuture<SubscribeToTopicResponse> futureResponse = ipcClient.subscribeToTopic(subscribeRequest, Optional.of(new SubscribeResponseHandler())).getResponse();
+            SubscribeToTopicRequest subscribeRequest = new SubscribeToTopicRequest();
+            subscribeRequest.setTopic(topic);
+            SubscribeToTopicResponseHandler operationResponseHandler = ipcClient
+                    .subscribeToTopic(subscribeRequest, Optional.of(new SubscribeResponseHandler()));
+            CompletableFuture<SubscribeToTopicResponse> futureResponse = operationResponseHandler.getResponse();
 
-                try {
-                    futureResponse.get(10, TimeUnit.SECONDS);
-                    LOGGER.info("Successfully subscribed to topic: " + topic);
-                } catch (TimeoutException e) {
-                    LOGGER.warning("Timeout occurred while subscribing to topic " + topic);
-                } catch (ExecutionException e) {
-                    if (e.getCause() instanceof UnauthorizedError) {
-                        LOGGER.severe("Unauthorized error while subscribing to topic: " + topic);
-                    } else {
-                        LOGGER.severe("Execution exception while subscribing to topic: " + topic);
-                    }
-                    throw e;
+            try {
+                futureResponse.get(10, TimeUnit.SECONDS);
+                System.out.println("Successfully subscribed to topic: " + topic);
+            } catch (TimeoutException e) {
+                System.err.println("Timeout occurred while subscribing to topic: " + topic);
+                throw e;
+            } catch (ExecutionException e) {
+                if (e.getCause() instanceof UnauthorizedError) {
+                    System.err.println("Unauthorized error while subscribing to topic: " + topic);
+                } else {
+                    System.err.println("Execution exception while subscribing to topic: " + topic);
                 }
-                Thread.sleep(5000);
-            } catch (Exception e) {
-                LOGGER.log(Level.SEVERE, "Exception occurred when using IPC.", e);
-                System.exit(1);
+                throw e;
             }
+
+            // Keep the main thread alive, or the process will exit.
+            try {
+                while (true) {
+                    Thread.sleep(10000);
+                }
+            } catch (InterruptedException e) {
+                System.out.println("Subscribe interrupted.");
+            }
+        } catch (Exception e) {
+            System.err.println("Exception occurred when using IPC.");
+            e.printStackTrace();
+            System.exit(1);
         }
     }
 
@@ -425,20 +533,284 @@ public class PubSubSubscriber {
 
         @Override
         public void onStreamEvent(SubscriptionResponseMessage subscriptionResponseMessage) {
-            String message = new String(subscriptionResponseMessage.getBinaryMessage().getMessage(), StandardCharsets.UTF_8);
-            LOGGER.info("Received new message: " + message);
+            String message = new String(subscriptionResponseMessage.getBinaryMessage()
+                    .getMessage(), StandardCharsets.UTF_8);
+            System.out.println("Received new message: " + message);
         }
 
         @Override
         public boolean onStreamError(Throwable error) {
-            LOGGER.log(Level.WARNING, "Received a stream error.", error);
+            System.err.println("Received a stream error.");
+            error.printStackTrace();
             return false;
         }
 
         @Override
         public void onStreamClosed() {
-            LOGGER.info("Subscribe to topic stream closed.");
+            System.out.println("Subscribe to topic stream closed.");
         }
     }
 }
+```
+
+### Example publish/subscribe publisher \(Python\)<a name="ipc-publish-subscribe-example-publisher-python"></a>
+
+The following example recipe allows the component to publish to all topics\.
+
+------
+#### [ JSON ]
+
+```
+{
+  "RecipeFormatVersion": "2020-01-25",
+  "ComponentName": "com.example.PubSubPublisherPython",
+  "ComponentVersion": "1.0.0",
+  "ComponentDescription": "A component that publishes messages.",
+  "ComponentPublisher": "Amazon",
+  "ComponentConfiguration": {
+    "DefaultConfiguration": {
+      "accessControl": {
+        "aws.greengrass.ipc.pubsub": {
+          "com.example.PubSubPublisherPython:pubsub:1": {
+            "policyDescription": "Allows access to publish to all topics.",
+            "operations": [
+              "aws.greengrass#PublishToTopic"
+            ],
+            "resources": [
+              "*"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "Manifests": [
+    {
+      "Lifecycle": {
+        "Run": "python3 -u {artifacts:path}/pubsub_publisher.py"
+      }
+    }
+  ]
+}
+```
+
+------
+#### [ YAML ]
+
+```
+---
+RecipeFormatVersion: '2020-01-25'
+ComponentName: com.example.PubSubPublisherPython
+ComponentVersion: 1.0.0
+ComponentDescription: A component that publishes messages.
+ComponentPublisher: Amazon
+ComponentConfiguration:
+  DefaultConfiguration:
+    accessControl:
+      aws.greengrass.ipc.pubsub:
+        com.example.PubSubPublisherPython:pubsub:1:
+          policyDescription: Allows access to publish to all topics.
+          operations:
+            - aws.greengrass#PublishToTopic
+          resources:
+            - "*"
+Manifests:
+  - Lifecycle:
+      Run: python3 -u {artifacts:path}/pubsub_publisher.py
+```
+
+------
+
+The following example Python application demonstrates how to use the publish/subscribe IPC service to publish messages to other components\.
+
+```
+import concurrent.futures
+import sys
+import time
+import traceback
+
+import awsiot.greengrasscoreipc
+from awsiot.greengrasscoreipc.model import (
+    PublishToTopicRequest,
+    PublishMessage,
+    BinaryMessage,
+    UnauthorizedError
+)
+
+                    
+topic = "test/topic/python"
+message = "Hello from the pub/sub publisher (Python)."
+TIMEOUT = 10
+
+try:
+    ipc_client = awsiot.greengrasscoreipc.connect()
+
+    while True:
+        request = PublishToTopicRequest()
+        request.topic = topic
+        publish_message = PublishMessage()
+        publish_message.binary_message = BinaryMessage()
+        publish_message.binary_message.message = bytes(message, "utf-8")
+        request.publish_message = publish_message
+        operation = ipc_client.new_publish_to_topic()
+        operation.activate(request)
+        futureResponse = operation.get_response()
+
+        try:
+            futureResponse.result(TIMEOUT)
+            print('Successfully published to topic: ' + topic)
+        except concurrent.futures.TimeoutError:
+            print('Timeout occurred while publishing to topic: ' + topic, file=sys.stderr)
+        except UnauthorizedError as e:
+            print('Unauthorized error while publishing to topic: ' + topic, file=sys.stderr)
+            raise e
+        except Exception as e:
+            print('Exception while publishing to topic: ' + topic, file=sys.stderr)
+            raise e
+        time.sleep(5)
+except InterruptedError:
+    print('Publisher interrupted.')
+except Exception:
+    print('Exception occurred when using IPC.', file=sys.stderr)
+    traceback.print_exc()
+    exit(1)
+```
+
+### Example publish/subscribe subscriber \(Python\)<a name="ipc-publish-subscribe-example-subscriber-python"></a>
+
+The following example recipe allows the component to subscribe to all topics\.
+
+------
+#### [ JSON ]
+
+```
+{
+  "RecipeFormatVersion": "2020-01-25",
+  "ComponentName": "com.example.PubSubSubscriberPython",
+  "ComponentVersion": "1.0.0",
+  "ComponentDescription": "A component that subscribes to messages.",
+  "ComponentPublisher": "Amazon",
+  "ComponentConfiguration": {
+    "DefaultConfiguration": {
+      "accessControl": {
+        "aws.greengrass.ipc.pubsub": {
+          "com.example.PubSubSubscriberPython:pubsub:1": {
+            "policyDescription": "Allows access to subscribe to all topics.",
+            "operations": [
+              "aws.greengrass#SubscribeToTopic"
+            ],
+            "resources": [
+              "*"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "Manifests": [
+    {
+      "Lifecycle": {
+        "Run": "python3 -u {artifacts:path}/pubsub_subscriber.py"
+      }
+    }
+  ]
+}
+```
+
+------
+#### [ YAML ]
+
+```
+---
+RecipeFormatVersion: '2020-01-25'
+ComponentName: com.example.PubSubSubscriberPython
+ComponentVersion: 1.0.0
+ComponentDescription: A component that subscribes to messages.
+ComponentPublisher: Amazon
+ComponentConfiguration:
+  DefaultConfiguration:
+    accessControl:
+      aws.greengrass.ipc.pubsub:
+        com.example.PubSubSubscriberPython:pubsub:1:
+          policyDescription: Allows access to subscribe to all topics.
+          operations:
+            - aws.greengrass#SubscribeToTopic
+          resources:
+            - "*"
+Manifests:
+  - Lifecycle:
+      Run: python3 -u {artifacts:path}/pubsub_subscriber.py
+```
+
+------
+
+The following example Python application demonstrates how to use the publish/subscribe IPC service to subscribe to messages to other components\.
+
+```
+import concurrent.futures
+import sys
+import time
+import traceback
+
+import awsiot.greengrasscoreipc
+import awsiot.greengrasscoreipc.client as client
+from awsiot.greengrasscoreipc.model import (
+    SubscribeToTopicRequest,
+    SubscriptionResponseMessage,
+    UnauthorizedError
+)
+
+topic = "test/topic/python"
+TIMEOUT = 10
+
+                    
+class StreamHandler(client.SubscribeToTopicStreamHandler):
+    def __init__(self):
+        super().__init__()
+
+    def on_stream_event(self, event: SubscriptionResponseMessage) -> None:
+        message = str(event.binary_message.message, "utf-8")
+        print("Received new message: " + message)
+
+    def on_stream_error(self, error: Exception) -> bool:
+        print("Received a stream error.", file=sys.stderr)
+        traceback.print_exc()
+        return False
+
+    def on_stream_closed(self) -> None:
+        print('Subscribe to topic stream closed.')
+
+
+try:
+    ipc_client = awsiot.greengrasscoreipc.connect()
+
+    request = SubscribeToTopicRequest()
+    request.topic = topic
+    handler = StreamHandler()
+    operation = ipc_client.new_subscribe_to_topic(handler)
+    future = operation.activate(request)
+    
+    try:
+        future.result(TIMEOUT)
+        print('Successfully subscribed to topic: ' + topic)
+    except concurrent.futures.TimeoutError as e:
+        print('Timeout occurred while subscribing to topic: ' + topic, file=sys.stderr)
+        raise e
+    except UnauthorizedError as e:
+        print('Unauthorized error while subscribing to topic: ' + topic, file=sys.stderr)
+        raise e
+    except Exception as e:
+        print('Exception while subscribing to topic: ' + topic, file=sys.stderr)
+        raise e
+
+    # Keep the main thread alive, or the process will exit.
+    try:
+        while True:
+            time.sleep(10)
+    except InterruptedError:
+        print('Subscribe interrupted.')
+except Exception:
+    print('Exception occurred when using IPC.', file=sys.stderr)
+    traceback.print_exc()
+    exit(1)
 ```

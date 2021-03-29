@@ -8,7 +8,9 @@ Use the secret manager IPC service to retrieve secret values from secrets on the
 
 ## Authorization<a name="ipc-secret-manager-authorization"></a>
 
-To use secret manager in a custom component, you must define authorization policies that allow your component to get the value of secrets that you store on the core device\. Authorization policies for secret manager have the following properties\.
+To use secret manager in a custom component, you must define authorization policies that allow your component to get the value of secrets that you store on the core device\. For information about defining authorization policies, see [Authorize components to perform IPC operations](interprocess-communication.md#ipc-authorization-policies)\.
+
+Authorization policies for secret manager have the following properties\.
 
 **IPC service identifier:** `aws.greengrass.SecretManager`
 

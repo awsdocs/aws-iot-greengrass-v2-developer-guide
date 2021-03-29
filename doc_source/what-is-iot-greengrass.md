@@ -8,9 +8,8 @@ The following example shows how an AWS IoT Greengrass device interacts with the 
 
 ## For first\-time users of AWS IoT Greengrass<a name="first-time-user"></a>
 
-If you're new to AWS IoT Greengrass, we recommend that you review the following sections in this topic:
+If you're new to AWS IoT Greengrass, we recommend that you review the following section:
 + [How AWS IoT Greengrass works](how-it-works.md)
-+ [Key concepts for AWS IoT Greengrass](how-it-works.md#concept-overview)
 
 Next, follow the [getting started tutorial](getting-started.md) to try out the basic features of AWS IoT Greengrass\. In this tutorial, you install the AWS IoT Greengrass Core software on a device, develop a Hello World component, and package that component for deployment\.
 

@@ -7,14 +7,28 @@ When the version of the nucleus component changes, or when you change certain co
 <a name="component-patch-update"></a>When you deploy a component, AWS IoT Greengrass installs the latest supported versions of all component dependencies for that component\. Because of this, new patch versions of AWS\-provided public components might be automatically deployed to your core devices if you add new devices to a thing group, or you update the deployment that targets those devices\. Some automatic updates, such as a nucleus update, can cause your devices to restart unexpectedly\.   
 <a name="component-version-pinning"></a>To prevent unintended updates for a component that is running on your device, we recommend that you directly include your preferred version of that component when you [create a deployment](create-deployments.md)\. For more information about update behavior for AWS IoT Greengrass Core software, see [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)\.
 
-For more information about requirements and how to configure this component, see [Configure the AWS IoT Greengrass Core software](configure-greengrass-core-v2.md)\.
-
 This component has the following versions:
 + 2\.0\.x
 
+**Topics**
++ [Requirements](#greengrass-nucleus-component-requirements)
++ [Installation](#greengrass-nucleus-component-install)
++ [Configuration](#greengrass-nucleus-component-configuration)
++ [Changelog](#greengrass-nucleus-component-changelog)
+
+## Requirements<a name="greengrass-nucleus-component-requirements"></a>
+
+Devices must meet certain requirements to install and run the Greengrass nucleus and the AWS IoT Greengrass Core software\. For more information, see [AWS IoT Greengrass Core software requirements](setting-up.md#greengrass-v2-requirements)\.
+
+## Installation<a name="greengrass-nucleus-component-install"></a>
+
+You can download an installer that sets up the Greengrass nucleus component on your device\. This installer sets up your device as a Greengrass core device\. There are two types of installations that you can perform: a quick installation that creates required AWS resources for you, or a manual installation where you create the AWS resources yourself\. For more information, see [Install the AWS IoT Greengrass Core software](install-greengrass-core-v2.md)\.
+
+You can also follow a tutorial to install the Greengrass nucleus and explore Greengrass component development\. For more information, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
+
 ## Configuration<a name="greengrass-nucleus-component-configuration"></a>
 
-This component provides the following configuration parameters that you can customize when you deploy the component\. Some parameters require that the AWS IoT Greengrass Core software restarts to take effect\.
+This component provides the following configuration parameters that you can customize when you deploy the component\. Some parameters require that the AWS IoT Greengrass Core software restarts to take effect\. For more information about why and how to configure this component, see [Configure the AWS IoT Greengrass Core software](configure-greengrass-core-v2.md)\.
 
 `iotRoleAlias`  
 The AWS IoT role alias that points to an IAM role\. The AWS IoT credentials provider assumes this role to allow the Greengrass core device to interact with AWS services\.  
@@ -99,7 +113,7 @@ You can't specify `root` or `0` for the user or the group\.
 `logging`  
 \(Optional\) The logging configuration for the core device\. This object contains the following information:    
 `level`  
-\(Optional\) The minimum level of information to log\. Choose from the following log levels, listed here in level order:  
+\(Optional\) The minimum level of information to upload\. Choose from the following log levels, listed here in level order:  
 + `DEBUG`
 + `INFO`
 + `WARN`
@@ -163,5 +177,6 @@ The following table describes the changes in each version of the component\.
 
 |  Version  |  Changes  | 
 | --- | --- | 
+|  2\.0\.5  |  <a name="changelog-nucleus-2.0.5"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
 |  2\.0\.4  |  <a name="changelog-nucleus-2.0.4"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
 |  2\.0\.3  |  Initial version\.  | 
