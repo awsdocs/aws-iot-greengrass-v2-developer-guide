@@ -33,7 +33,7 @@ You can check the status of a group of core devices \(a thing group\)\.
 + Run the following command to retrieve the status of multiple core devices\. Replace the ARN in the command with the ARN of the thing group to query\.
 
   ```
-  aws greengrass list-core-devices \
+  aws greengrassv2 list-core-devices \
     --thing-group-arn "arn:aws:iot:region:account-id:thinggroup/thingGroupName"
   ```
 
