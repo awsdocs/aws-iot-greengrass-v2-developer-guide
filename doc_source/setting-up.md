@@ -10,6 +10,7 @@ This section describes advanced configuration of the AWS IoT Greengrass Core sof
 + [Set up an AWS account](#set-up-aws-account)
 + [Install the AWS IoT Greengrass Core software](install-greengrass-core-v2.md)
 + [Run the AWS IoT Greengrass Core software](run-greengrass-core-v2.md)
++ [Run AWS IoT Greengrass Core software in a Docker container](run-greengrass-docker.md)
 + [Configure the AWS IoT Greengrass Core software](configure-greengrass-core-v2.md)
 + [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)
 + [Uninstall the AWS IoT Greengrass Core software](uninstall-greengrass-core-v2.md)
@@ -27,8 +28,8 @@ Devices must meet the following requirements to install and run the AWS IoT Gree
 **Note**  
 You can use AWS IoT Device Tester for AWS IoT Greengrass to verify that the AWS IoT Greengrass Core software runs on your hardware and can communicate with the AWS Cloud\. For more information, see [Using AWS IoT Device Tester for AWS IoT Greengrass V2](device-tester-for-greengrass-ug.md)\.
 + Minimum 256 MB disk space available for the AWS IoT Greengrass Core software\. This requirement doesn't include components deployed to the core device\.
-+ Minimum 128 MB RAM allocated to the AWS IoT Greengrass Core software\. This requirement doesn't include components that run on the core device\.
-+ Java version 8 or greater\. We recommend [OpenJDK](https://openjdk.java.net/) or [Amazon Corretto](http://aws.amazon.com/corretto/)\.
++ Minimum 96 MB RAM allocated to the AWS IoT Greengrass Core software\. This requirement doesn't include components that run on the core device\. For more information, see [Control memory allocation with JVM options](configure-greengrass-core-v2.md#jvm-tuning)\.
++ Java version 8 or greater\. We recommend [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.
 + [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.25 or greater\.
 + The user that runs the AWS IoT Greengrass Core software \(typically `root`\), must have permission to run `sudo` with any user and any group\. The `/etc/sudoers` file must give this user permission to run `sudo` as other groups\. The permission for the user in `/etc/sudoers` should look like the following example\.
 
@@ -37,7 +38,7 @@ You can use AWS IoT Device Tester for AWS IoT Greengrass to verify that the AWS 
   ```
 + The `/tmp` directory must be mounted with `exec` permissions\.
 + All of the following shell commands:
-  + `ps`
+  + `ps -ax -o pid,ppid`
   + `sudo`
   + `sh`
   + `kill`

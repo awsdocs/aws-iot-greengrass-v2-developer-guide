@@ -1,8 +1,8 @@
-# Quick installation<a name="quick-installation"></a>
+# Install AWS IoT Greengrass Core software with automatic resource provisioning<a name="quick-installation"></a>
 
 The AWS IoT Greengrass Core software includes an installer that sets up your device as a Greengrass core device\. To set up a device quickly, the installer can provision the AWS IoT thing, AWS IoT thing group, IAM role, and AWS IoT role alias that the core device requires to operate\. The installer can also deploy the local development tools to the core device, so you can use the device to develop and test custom software components\. The installer requires AWS credentials to provision these resources and create the deployment\.
 
-If you can't provide AWS credentials to the device, you can provision the AWS resources that the core device requires to operate\. You can also deploy the development tools to a core device to use as a development device\. This enables you to provide fewer permissions to the device when you run the installer\. For more information, see [Manual installation](manual-installation.md)\.
+If you can't provide AWS credentials to the device, you can provision the AWS resources that the core device requires to operate\. You can also deploy the development tools to a core device to use as a development device\. This enables you to provide fewer permissions to the device when you run the installer\. For more information, see [Install AWS IoT Greengrass Core software with manual resource provisioning](manual-installation.md)\.
 
 **Important**  <a name="install-greengrass-core-requirements-note"></a>
 Before you download the AWS IoT Greengrass Core software, check that your core device meets the [requirements](setting-up.md#greengrass-v2-requirements) to install and run the AWS IoT Greengrass Core software v2\.0\.
@@ -65,16 +65,16 @@ https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-version.zip
 
    <a name="core-software-license"></a>By downloading this software, you agree to the [Greengrass Core Software License Agreement](https://greengrass-release-license.s3.us-west-2.amazonaws.com/greengrass-license-v1.pdf)\.
 
-1. Unzip the AWS IoT Greengrass Core software to a folder on your device\. Replace *GreengrassCore* with the folder that you want to use\.
+1. Unzip the AWS IoT Greengrass Core software to a folder on your device\. Replace *MyGreengrassCore* with the folder that you want to use\.
 
    ```
-   unzip greengrass-nucleus-latest.zip -d GreengrassCore && rm greengrass-nucleus-latest.zip
+   unzip greengrass-nucleus-latest.zip -d MyGreengrassCore && rm greengrass-nucleus-latest.zip
    ```
 **Tip**  
 You can run the following command to see the version of the AWS IoT Greengrass Core software\.  
 
    ```
-   java -jar ./GreengrassCore/lib/Greengrass.jar --version
+   java -jar ./MyGreengrassCore/lib/Greengrass.jar --version
    ```
 
 ## Install the AWS IoT Greengrass Core software<a name="run-greengrass-core-v2-installer"></a>
@@ -95,28 +95,28 @@ For more information about the arguments that you can specify, see [Installer ar
 
 1. Run the AWS IoT Greengrass Core installer\. Replace argument values in your command as follows\.<a name="installer-replace-arguments"></a>
 
-   1. */greengrass/v2*: Replace with the path to the root folder to use to install the AWS IoT Greengrass Core software\.
+   1. */greengrass/v2*: The path to the root folder to use to install the AWS IoT Greengrass Core software\.
 
-   1. *GreengrassCore*: If you unpacked the installer to a different folder, replace this value with the folder that you want to use\.
+   1. *MyGreengrassCore*\. The path to the folder where you unpacked the AWS IoT Greengrass Core software installer\.
 
-   1. *region*: Replace with the AWS Region in which to find or create resources\.
+   1. *region*\. The AWS Region in which to find or create resources\.
 
-   1. *MyGreengrassCore*: Replace with the name of the AWS IoT thing for your Greengrass core device\. If the thing doesn't exist, the installer creates it\. The installer downloads the certificates to authenticate as the AWS IoT thing\. 
+   1. *MyGreengrassCore*\. The name of the AWS IoT thing for your Greengrass core device\. If the thing doesn't exist, the installer creates it\. The installer downloads the certificates to authenticate as the AWS IoT thing\. 
 
-   1. *MyGreengrassCoreGroup*: Replace with the name of AWS IoT thing group for your Greengrass core device\. If the thing group doesn't exist, the installer creates it and adds the thing to it\. If the thing group exists and has an active deployment, the core device downloads and runs the software which that deployment specifies\.
+   1. *MyGreengrassCoreGroup*\. The name of AWS IoT thing group for your Greengrass core device\. If the thing group doesn't exist, the installer creates it and adds the thing to it\. If the thing group exists and has an active deployment, the core device downloads and runs the software that the deployment specifies\.
 
-   1. *MyGreengrassV2TokenExchangeRole*: Replace with the name of the IAM role that allows the Greengrass core device to get temporary AWS credentials\. If the role doesn't exist, the installer creates it and creates and attaches a policy named `MyGreengrassV2TokenExchangeRoleAccess`\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
+   1. *GreengrassV2TokenExchangeRole*\. The name of the IAM role that allows the Greengrass core device to get temporary AWS credentials\. If the role doesn't exist, the installer creates it and creates and attaches a policy named `GreengrassV2TokenExchangeRoleAccess`\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
 
-   1. *MyGreengrassCoreTokenExchangeRoleAlias*: Replace with the alias to the IAM role that allows the Greengrass core device to get temporary credentials later\. If the role alias doesn't exist, the installer creates it and points it to the IAM role that you specify\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
+   1. *GreengrassCoreTokenExchangeRoleAlias*\. The alias to the IAM role that allows the Greengrass core device to get temporary credentials later\. If the role alias doesn't exist, the installer creates it and points it to the IAM role that you specify\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
 
    ```
    sudo -E java -Droot="/greengrass/v2" -Dlog.store=FILE \
-     -jar ./GreengrassCore/lib/Greengrass.jar \
+     -jar ./MyGreengrassCore/lib/Greengrass.jar \
      --aws-region region \
      --thing-name MyGreengrassCore \
      --thing-group-name MyGreengrassCoreGroup \
-     --tes-role-name MyGreengrassV2TokenExchangeRole \
-     --tes-role-alias-name MyGreengrassCoreTokenExchangeRoleAlias \
+     --tes-role-name GreengrassV2TokenExchangeRole \
+     --tes-role-alias-name GreengrassCoreTokenExchangeRoleAlias \
      --component-default-user ggc_user:ggc_group \
      --provision true \
      --setup-system-service true
@@ -139,7 +139,7 @@ For more information about the arguments that you can specify, see [Installer ar
 <a name="install-greengrass-core-run-software"></a>If you installed the AWS IoT Greengrass Core software as a system service, the installer runs the software for you\. Otherwise, you must run the software manually\. For more information, see [Run the AWS IoT Greengrass Core software](run-greengrass-core-v2.md)\.
 
 **Note**  
-By default, the IAM role that the installer creates doesn't allow access to component artifacts in S3 buckets\. To deploy custom components that define artifacts in S3, you must add permissions to the role to allow your core device to retrieve component artifacts\. For more information, see [Allow access to S3 buckets for component artifacts](device-service-role.md#device-service-role-access-s3-bucket)\.  
+By default, the IAM role that the installer creates doesn't allow access to component artifacts in S3 buckets\. To deploy custom components that define artifacts in Amazon S3, you must add permissions to the role to allow your core device to retrieve component artifacts\. For more information, see [Allow access to S3 buckets for component artifacts](device-service-role.md#device-service-role-access-s3-bucket)\.  
 If you don't yet have an S3 bucket for component artifacts, you can add these permissions later after you create a bucket\.
 
 <a name="install-greengrass-core-next-steps-intro"></a>For more information about how to configure and use the software and AWS IoT Greengrass, see the following:<a name="install-greengrass-core-next-steps-links"></a>

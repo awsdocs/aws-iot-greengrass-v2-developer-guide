@@ -23,8 +23,43 @@ AWS IoT Greengrass release notes provide details about AWS IoT Greengrass releas
 This section contains all of the AWS IoT Greengrass V2 release notes, latest first, and includes major feature changes and significant bug fixes\. For information about additional minor fixes, see the [aws\-greengrass](https://github.com/aws-greengrass) organization on GitHub\.
 
 **Topics**
++ [Release: AWS IoT Greengrass Core software update on April 26, 2021](#greengrass-release-2021-04-26)
 + [Release: AWS IoT Greengrass Core software update on March 09, 2021](#greengrass-release-2021-03-09)
 + [Release: AWS IoT Greengrass Core software update on February 04, 2021](#greengrass-release-2021-02-04)
+
+### Release: AWS IoT Greengrass Core software update on April 26, 2021<a name="greengrass-release-2021-04-26"></a>
+
+This release provides version 2\.1\.0 of the Greengrass nucleus component and updates AWS\-provided components\. It includes a new component that you can use to download Docker images from private Amazon ECR repositories, and new sample components to perform machine learning inference using TensorFlow Lite\.
+
+**Release date:** April 26, 2021
+
+
+
+#### Public component changes<a name="greengrass-2021-04-26-components"></a>
+
+**Important**  <a name="component-patch-update-note"></a>
+<a name="component-patch-update"></a>When you deploy a component, AWS IoT Greengrass installs the latest supported versions of all component dependencies for that component\. Because of this, new patch versions of AWS\-provided public components might be automatically deployed to your core devices if you add new devices to a thing group, or you update the deployment that targets those devices\. Some automatic updates, such as a nucleus update, can cause your devices to restart unexpectedly\.   
+<a name="component-version-pinning"></a>To prevent unintended updates for a component that is running on your device, we recommend that you directly include your preferred version of that component when you [create a deployment](create-deployments.md)\. For more information about update behavior for AWS IoT Greengrass Core software, see [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)\.
+
+
+| **Component** | **Details** | 
+| --- | --- | 
+| Greengrass nucleus | Version 2\.1\.0 of the [Greengrass nucleus](greengrass-nucleus-component.md) is available\. <a name="changelog-nucleus-2.1.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-v2-whats-new.html)  | 
+| Lambda launcher |  Version 2\.0\.4 of the [Lambda launcher component](lambda-launcher-component.md) is available\. <a name="changelog-lambda-launcher-2.0.4"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-v2-whats-new.html)  | 
+| Legacy subscription router |  Version 2\.1\.0 of the [legacy subscription router component](legacy-subscription-router-component.md) is available\. <a name="changelog-legacy-subscription-router-2.1.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-v2-whats-new.html)  | 
+| Local debug console |  Version 2\.1\.0 of the [local debug console component](local-debug-console-component.md) is available\. <a name="changelog-local-debug-console-2.1.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-v2-whats-new.html)  | 
+| Log manager |  Version 2\.1\.0 of the [log manager component](log-manager-component.md) is available\. <a name="changelog-log-manager-2.1.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-v2-whats-new.html)  | 
+| DLR image classification | Version 2\.1\.1 of the [DLR image classification](dlr-image-classification-component.md) component is available\. <a name="changelog-dlr-image-classification-2.1.1"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-v2-whats-new.html)  | 
+| DLR object detection | Version 2\.1\.1 of the [DLR object detection](dlr-object-detection-component.md) component is available\. <a name="changelog-dlr-object-detection-2.1.1"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-v2-whats-new.html)  | 
+| DLR image classification model store | Version 2\.1\.1 of the [DLR image classification model store](dlr-image-classification-model-store-component.md) component is available\. <a name="changelog-dlr-image-classification-model-store-2.1.1"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-v2-whats-new.html)  | 
+| DLR object detection model store | Version 2\.1\.1 of the [DLR object detection model store](dlr-object-detection-model-store-component.md) component is available\. <a name="changelog-dlr-object-detection-model-store-2.1.1"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-v2-whats-new.html)  | 
+| DLR | Version 1\.6\.1 of the [DLR](dlr-component.md) component is available\. <a name="changelog-dlr-1.6.1"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-v2-whats-new.html)  | 
+| TensorFlow Lite image classification | Version 2\.1\.0 of the [TensorFlow Lite image classification](tensorflow-lite-image-classification-component.md) component is available\. This component adds support for sample image classification inference using [TensorFlow Lite](https://www.tensorflow.org/lite)\.  | 
+| TensorFlow Lite object detection | Version 2\.1\.0 of the [TensorFlow Lite object detection](tensorflow-lite-object-detection-component.md) component is available\. This component adds support for sample object detection inference using [TensorFlow Lite](https://www.tensorflow.org/lite)\.  | 
+| TensorFlow Lite image classification model store | Version 2\.1\.0 of the [TensorFlow Lite image classification model store](tensorflow-lite-image-classification-model-store-component.md) component is available\. This component includes a pre\-trained MobileNet v1 quantized model for sample image classification inference\.  | 
+| TensorFlow Lite object detection model store | Version 2\.1\.0 of the [TensorFlow Lite object detection model store](tensorflow-lite-object-detection-model-store-component.md) component is available\. This component includes a pre\-trained Single Shot Detection \(SSD\) MobileNet model trained on the COCO dataset for sample object detection inference\.  | 
+| TensorFlow Lite | Version 2\.5\.0 of the [TensorFlow Lite](tensorflow-lite-component.md) component is available\. This component installs [TensorFlow Lite](https://www.tensorflow.org/lite) v2\.5\.0 and its dependencies in a virtual environment on the Greengrass core device\.  | 
+| Docker application manager |  Version 2\.0\.0 of the new [Docker application manager component](docker-application-manager-component.md) is available\. This component enables AWS IoT Greengrass to download Docker images from public image registries\. It also enables AWS IoT Greengrass to manage credentials to download images from private repositories in Amazon Elastic Container Registry \(Amazon ECR\)\.   | 
 
 ### Release: AWS IoT Greengrass Core software update on March 09, 2021<a name="greengrass-release-2021-03-09"></a>
 

@@ -8,16 +8,55 @@ By default, this component subscribes to the `things/greengrass-core-device/tunn
 
 
 
+**Topics**
++ [Versions](#secure-tunneling-component-versions)
++ [Requirements](#secure-tunneling-component-requirements)
++ [Dependencies](#secure-tunneling-component-dependencies)
++ [Configuration](#secure-tunneling-component-configuration)
++ [Licenses](#secure-tunneling-component-licenses)
++ [See also](#secure-tunneling-component-see-also)
++ [Changelog](#secure-tunneling-component-changelog)
+
+## Versions<a name="secure-tunneling-component-versions"></a>
+
 This component has the following versions:
 + 1\.0\.x
 
 ## Requirements<a name="secure-tunneling-component-requirements"></a>
 
-This component has the following requirements:
+To deploy a component, you must meet the requirements for the component and its [dependencies](#secure-tunneling-component-dependencies)\. This component has the following requirements:
 + [Python](https://www.python.org/) 3\.5 or later installed on the Greengrass core device and added to the PATH environment variable\.
 + `libcrypto.so.1.1` installed on the Greengrass core device and added to the PATH environment variable\.
 + The Greengrass core device must allow outbound traffic on port 443\. 
 + The Greengrass core device must have enabled the service that you want to use to communicate with the device\. For example, to open an SSH connection to the device, the device must have SSH enabled\. 
+
+## Dependencies<a name="secure-tunneling-component-dependencies"></a>
+
+When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. You must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#secure-tunneling-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+
+------
+#### [ >=1\.0\.1 ]
+
+The following table lists the dependencies for version 2\.1\.x of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.0\.0 <2\.2\.0  | Soft | 
+
+------
+#### [ 1\.0\.x ]
+
+The following table lists the dependencies for version 1\.0\.x of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.0\.3 <2\.1\.0  | Soft | 
+
+------
+
+For more information about component dependencies, see the [component recipe reference](component-recipe-reference.md#recipe-reference-component-dependencies)\.
 
 ## Configuration<a name="secure-tunneling-component-configuration"></a>
 
@@ -54,3 +93,13 @@ This component includes the following third\-party software/licensing:
 
 ## See also<a name="secure-tunneling-component-see-also"></a>
 + [AWS IoT secure tunneling](https://docs.aws.amazon.com/iot/latest/developerguide/secure-tunneling.html) in the *AWS IoT Developer Guide*\.
+
+## Changelog<a name="secure-tunneling-component-changelog"></a>
+
+The following table describes the changes in each version of the component\.
+
+
+|  **Version**  |  **Changes**  | 
+| --- | --- | 
+|  1\.0\.1  |  Version updated for Greengrass nucleus version 2\.1\.0 release\.  | 
+|  1\.0\.0  |  Initial version\.  | 

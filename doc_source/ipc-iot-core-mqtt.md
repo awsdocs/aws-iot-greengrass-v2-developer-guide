@@ -24,6 +24,28 @@ Authorization policies for AWS IoT Core MQTT messaging have the following proper
 |  `aws.greengrass#SubscribeToIoTCore`  |  Allows a component to subscribe to messages from AWS IoT Core on the topics that you specify\.  |  A topic string, such as `test/topic`, or `*` to allow access to all topics\. This topic string supports MQTT topic wildcards \(`#` and `+`\)\.  | 
 |  `*`  |  Allows a component to publish and subscribe to AWS IoT Core MQTT messages for the topics that you specify\.  |  A topic string, such as `test/topic`, or `*` to allow access to all topics\. This topic string supports MQTT topic wildcards \(`#` and `+`\)\.  | 
 
+**Example authorization policy**  
+The following example authorization policy allows a component to publish and subscribe to all topics\.  
+
+```
+{
+  "accessControl": {
+    "aws.greengrass.ipc.mqttproxy": {
+      "com.example.MyIoTCorePubSubComponent:pubsub:1": {
+        "policyDescription": "Allows access to publish/subscribe to all topics.",
+        "operations": [
+          "aws.greengrass#PublishToIoTCore",
+          "aws.greengrass#SubscribeToIoTCore"
+        ],
+        "resources": [
+          "*"
+        ]
+      }
+    }
+  }
+}
+```
+
 ## Operations<a name="ipc-iot-core-mqtt-operations"></a>
 
 Use the following operations for AWS IoT Core MQTT messaging\.
@@ -113,6 +135,10 @@ future.result(TIMEOUT)
 
 Subscribe to MQTT messages from AWS IoT Core on a topic or topic filter\. The AWS IoT Greengrass Core software removes subscriptions when the component reaches the end of its lifecycle\.
 
+<a name="ipc-subscribe-operation-note"></a>This operation is a subscription operation where you subscribe to a stream of event messages\. To use this operation, define a stream response handler with functions that handle event messages, errors, and stream closure\. For more information, see [Subscribe to IPC event streams](interprocess-communication.md#ipc-subscribe-operations)\.
+
+**Event message type:** `IoTCoreMessage`
+
 #### Request<a name="ipc-operation-subscribetoiotcore-request"></a>
 
 This operation's request has the following parameters:
@@ -158,19 +184,23 @@ subscribeToIoTCoreRequest.setQos(qos);
 StreamResponseHandler<IoTCoreMessage> streamResponseHandler = new StreamResponseHandler<IoTCoreMessage>() {
     @Override
     public void onStreamEvent(IoTCoreMessage ioTCoreMessage) {
-        String message = new String(ioTCoreMessage.getMessage().getPayload(), StandardCharsets.UTF_8);
-        // Handle message.
+        try {
+            String message = new String(ioTCoreMessage.getMessage().getPayload(), StandardCharsets.UTF_8);
+            // Handle message.
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public boolean onStreamError(Throwable throwable) {
         // Handle error.
-        return false;
+        return false; // Return true to close stream, false to keep stream open.
     }
 
     @Override
     public void onStreamClosed() {
-
+        // Handle close.
     }
 };
 
@@ -217,14 +247,18 @@ class StreamHandler(client.SubscribeToIoTCoreStreamHandler):
         super().__init__()
 
     def on_stream_event(self, event: IoTCoreMessage) -> None:
-        message = str(event.message.payload, "utf-8")
-        # Handle message.
+        try:
+            message = str(event.message.payload, "utf-8")
+            # Handle message.
+        except:
+            traceback.print_exc()
 
     def on_stream_error(self, error: Exception) -> bool:
         # Handle error.
-        return True
+        return True  # Return True to close stream, False to keep stream open.
 
     def on_stream_closed(self) -> None:
+        # Handle close.
         pass
 
 

@@ -1,11 +1,20 @@
 # Use the AWS IoT Device SDK for interprocess communication \(IPC\)<a name="interprocess-communication"></a>
 
-Components running on your core device can use the AWS IoT Greengrass Core IPC library in the AWS IoT Device SDK to communicate with other AWS IoT Greengrass components and processes\. To develop and run custom components that use IPC, you must use the AWS IoT Device SDK to connect to the AWS IoT Greengrass Core IPC service and perform IPC operations\. 
+Components running on your core device can use the AWS IoT Greengrass Core interprocess communication \(IPC\) library in the AWS IoT Device SDK to communicate with other AWS IoT Greengrass components and processes\. To develop and run custom components that use IPC, you must use the AWS IoT Device SDK to connect to the AWS IoT Greengrass Core IPC service and perform IPC operations\.
+
+The IPC interface supports two types of operations:
++ **Request/response**
+
+  Components send a request to the IPC service and receive a response that contains the result of the request\.
++ **Subscription**
+
+  Components send a subscription request to the IPC service and expect a stream of event messages in response\. Components provide a subscription handler that handles event messages, errors, and stream closure\. The AWS IoT Device SDK includes a handler interface with the correct response and event types for each IPC operation\. For more information, see [Subscribe to IPC event streams](#ipc-subscribe-operations)\.
 
 **Topics**
 + [Supported SDKs for interprocess communication](#ipc-requirements)
 + [Connect to the AWS IoT Greengrass Core IPC service](#ipc-service-connect)
 + [Authorize components to perform IPC operations](#ipc-authorization-policies)
++ [Subscribe to IPC event streams](#ipc-subscribe-operations)
 + [Publish/subscribe local messages](ipc-publish-subscribe.md)
 + [Publish/subscribe AWS IoT Core MQTT messages](ipc-iot-core-mqtt.md)
 + [Interact with component lifecycle](ipc-component-lifecycle.md)
@@ -331,3 +340,187 @@ Manifests:
       Run: |-
         java -Dlog.level=INFO -jar {artifacts:path}/HelloWorld.jar
 ```
+
+## Subscribe to IPC event streams<a name="ipc-subscribe-operations"></a>
+
+You can use IPC operations to subscribe to streams of events on a Greengrass core device\. To use a subscribe operation, define a *subscription handler* and create a request to the IPC service\. Then, the IPC client runs the subscription handler's functions each time that the core device streams an event message to your component\.
+
+You can close a subscription to stop processing event messages\. To do so, call `closeStream()` \(Java\) or `close()` \(Python\) on the subscription operation object that you used to open the subscription\.
+
+The AWS IoT Greengrass Core IPC service supports the following subscribe operations:
++ [SubscribeToTopic](ipc-publish-subscribe.md#ipc-operation-subscribetotopic)
++ [SubscribeToIoTCore](ipc-iot-core-mqtt.md#ipc-operation-subscribetoiotcore)
++ [SubscribeToComponentUpdates](ipc-component-lifecycle.md#ipc-operation-subscribetocomponentupdates)
++ [SubscribeToConfigurationUpdate](ipc-component-configuration.md#ipc-operation-subscribetoconfigurationupdate)
++ [SubscribeToValidateConfigurationUpdates](ipc-component-configuration.md#ipc-operation-subscribetovalidateconfigurationupdates)
+
+**Topics**
++ [Define subscription handlers](#ipc-define-subscription-handlers)
++ [Best practices for subscription handlers](#ipc-subscription-handler-best-practices)
++ [Example subscription handlers](#ipc-subscription-handler-examples)
+
+### Define subscription handlers<a name="ipc-define-subscription-handlers"></a>
+
+To define a subscription handler, create a class with callback functions that handle event messages, errors, and stream closure\.
+
+------
+#### [ Java ]
+
+Implement the generic `software.amazon.awssdk.eventstreamrpc.StreamResponseHandler<StreamEventType>` interface\. *StreamEventType* is the type of event message for the subscription operation\. Define the following functions to handle event messages, errors, and stream closure\.
+
+`void onStreamEvent(StreamEventType event)`  
+The callback that the IPC client calls when it receives an event message, such as an MQTT message or a component update notification\.
+
+`boolean onStreamError(Throwable error)`  
+The callback that the IPC client calls when a stream error occurs\.  
+Return `true` to close the subscription stream as a result of the error, or return `false` to keep the stream open\.
+
+`void onStreamClosed()`  
+The callback that the IPC client calls when the stream closes\.
+
+------
+#### [ Python ]
+
+Extend the stream response handler class that corresponds to the subscription operation\. The AWS IoT Device SDK includes a subscription handler class for each subscription operation\. *StreamEventType* is the type of event message for the subscription operation\. Define the following functions to handle event messages, errors, and stream closure\.
+
+`def on_stream_event(self, event: StreamEventType) -> None`  
+The callback that the IPC client calls when it receives an event message, such as an MQTT message or a component update notification\.
+
+`def on_stream_error(self, error: Exception) -> bool`  
+The callback that the IPC client calls when a stream error occurs\.  
+Return `True` to close the subscription stream as a result of the error, or return `False` to keep the stream open\.
+
+`def on_stream_closed(self) -> None`  
+The callback that the IPC client calls when the stream closes\.
+
+------
+
+### Best practices for subscription handlers<a name="ipc-subscription-handler-best-practices"></a>
+
+The IPC client uses a single thread that communicates with the IPC server and calls your subscription handler\. You must consider this synchronous behavior when you write subscription handler functions\. Follow these guidelines when you write subscription handler functions\.
++ **Run blocking code asynchronously**
+
+  The IPC client can't send new requests or process new event messages while the thread is blocked\. You can run blocking code in a separate thread that you run from the handler function\. Blocking code includes `sleep` calls, loops that continuously run, and synchronous I/O requests that take time to complete\.
++ **Send new IPC requests asynchronously**
+
+  The IPC client can't send a new request from within subscription handler functions, because the request blocks the handler function if you wait for a response\. You can send IPC requests in a separate thread that you run from the handler function\.
++ **Handle exceptions**
+
+  The IPC client doesn't handle uncaught exceptions in subscription handler functions\. If your handler function throws an exception, the subscription closes, and the exception doesn't appear in your component logs\. You can catch exceptions in your handler functions to keep the subscription open and log errors that occur in your code\.
+
+### Example subscription handlers<a name="ipc-subscription-handler-examples"></a>
+
+The following example demonstrates how to use the [SubscribeToTopic](ipc-publish-subscribe.md#ipc-operation-subscribetotopic) operation and a subscription handler to subscribe to local publish/subscribe messages\.
+
+------
+#### [ Java ]
+
+**Example: Subscribe to local publish/subscribe messages**  <a name="ipc-operation-subscribetotopic-example-java"></a>
+
+```
+String topic = "my/topic";
+
+SubscribeToTopicRequest subscribeToTopicRequest = new SubscribeToTopicRequest();
+subscribeToTopicRequest.setTopic(topic);
+
+StreamResponseHandler<SubscriptionResponseMessage> streamResponseHandler =
+        new StreamResponseHandler<SubscriptionResponseMessage>() {
+            @Override
+            public void onStreamEvent(SubscriptionResponseMessage subscriptionResponseMessage) {
+                try {
+                    String message = new String(subscriptionResponseMessage.getBinaryMessage()
+                            .getMessage(), StandardCharsets.UTF_8);
+                    // Handle message.
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public boolean onStreamError(Throwable error) {
+                // Handle error.
+                return false; // Return true to close stream, false to keep stream open.
+            }
+
+            @Override
+            public void onStreamClosed() {
+                // Handle close.
+            }
+        };
+
+SubscribeToTopicResponseHandler operationResponseHandler = greengrassCoreIPCClient
+        .subscribeToTopic(subscribeToTopicRequest, Optional.of(streamResponseHandler));
+operationResponseHandler.getResponse().get();
+
+// Keep the main thread alive, or the process will exit.
+try {
+    while (true) {
+        Thread.sleep(10000);
+    }
+} catch (InterruptedException e) {
+    System.out.println("Subscribe interrupted.");
+}
+
+// To stop subscribing, close the stream.
+operationResponseHandler.closeStream();
+```
+
+------
+#### [ Python ]
+
+**Example: Subscribe to local publish/subscribe messages**  <a name="ipc-operation-subscribetotopic-example-python"></a>
+This example assumes that you are using version 1\.5\.4 or later of the AWS IoT Device SDK for Python v2\. If you are using version 1\.5\.3 of the SDK, see [Use AWS IoT Device SDK for Python v2](#ipc-python) for information about connecting to the AWS IoT Greengrass Core IPC service\. 
+
+```
+import time
+import traceback
+
+import awsiot.greengrasscoreipc
+import awsiot.greengrasscoreipc.client as client
+from awsiot.greengrasscoreipc.model import (
+    SubscribeToTopicRequest,
+    SubscriptionResponseMessage
+)
+
+TIMEOUT = 10
+
+ipc_client = awsiot.greengrasscoreipc.connect()
+                    
+class StreamHandler(client.SubscribeToTopicStreamHandler):
+    def __init__(self):
+        super().__init__()
+
+    def on_stream_event(self, event: SubscriptionResponseMessage) -> None:
+        try:
+            message_string = str(event.binary_message.message, "utf-8")
+            # Handle message.
+        except:
+            traceback.print_exc()
+
+    def on_stream_error(self, error: Exception) -> bool:
+        # Handle error.
+        return True  # Return True to close stream, False to keep stream open.
+
+    def on_stream_closed(self) -> None:
+        # Handle close.
+        pass
+
+
+topic = "my/topic"
+
+request = SubscribeToTopicRequest()
+request.topic = topic
+handler = StreamHandler()
+operation = ipc_client.new_subscribe_to_topic(handler) 
+future = operation.activate(request)
+future.result(TIMEOUT)
+
+# Keep the main thread alive, or the process will exit.
+while True:
+    time.sleep(10)
+    
+# To stop subscribing, close the operation stream.
+operation.close()
+```
+
+------

@@ -43,6 +43,10 @@ The nucleus sends update notifications only if the deployment's component update
 **Important**  
 Local deployments don't notify components before updates\.
 
+<a name="ipc-subscribe-operation-note"></a>This operation is a subscription operation where you subscribe to a stream of event messages\. To use this operation, define a stream response handler with functions that handle event messages, errors, and stream closure\. For more information, see [Subscribe to IPC event streams](interprocess-communication.md#ipc-subscribe-operations)\.
+
+**Event message type:** `ComponentUpdatePolicyEvents`
+
 #### Request<a name="ipc-operation-subscribetocomponentupdates-request"></a>
 
 This operation's request doesn't have any parameters\.

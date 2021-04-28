@@ -7,18 +7,29 @@ When the version of the nucleus component changes, or when you change certain co
 <a name="component-patch-update"></a>When you deploy a component, AWS IoT Greengrass installs the latest supported versions of all component dependencies for that component\. Because of this, new patch versions of AWS\-provided public components might be automatically deployed to your core devices if you add new devices to a thing group, or you update the deployment that targets those devices\. Some automatic updates, such as a nucleus update, can cause your devices to restart unexpectedly\.   
 <a name="component-version-pinning"></a>To prevent unintended updates for a component that is running on your device, we recommend that you directly include your preferred version of that component when you [create a deployment](create-deployments.md)\. For more information about update behavior for AWS IoT Greengrass Core software, see [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)\.
 
-This component has the following versions:
-+ 2\.0\.x
-
 **Topics**
++ [Versions](#greengrass-nucleus-component-versions)
 + [Requirements](#greengrass-nucleus-component-requirements)
++ [Dependencies](#greengrass-nucleus-component-dependencies)
 + [Installation](#greengrass-nucleus-component-install)
 + [Configuration](#greengrass-nucleus-component-configuration)
 + [Changelog](#greengrass-nucleus-component-changelog)
 
+## Versions<a name="greengrass-nucleus-component-versions"></a>
+
+This component has the following versions:
++ 2\.1\.x
++ 2\.0\.x
+
 ## Requirements<a name="greengrass-nucleus-component-requirements"></a>
 
 Devices must meet certain requirements to install and run the Greengrass nucleus and the AWS IoT Greengrass Core software\. For more information, see [AWS IoT Greengrass Core software requirements](setting-up.md#greengrass-v2-requirements)\.
+
+## Dependencies<a name="greengrass-nucleus-component-dependencies"></a>
+
+The Greengrass nucleus does not include any component dependencies\. However, several AWS\-provided components include the nucleus as a dependency\. For more information, see [AWS\-provided components](public-components.md)\.
+
+For more information about component dependencies, see the [component recipe reference](component-recipe-reference.md#recipe-reference-component-dependencies)\.
 
 ## Installation<a name="greengrass-nucleus-component-install"></a>
 
@@ -68,6 +79,20 @@ Default: `60000` \(60 seconds\)
 `pingTimeoutMs`  
 \(Optional\) The amount of time in milliseconds that the client waits to receive a `PINGACK` message from the server\. If the wait exceeds the timeout, the core device closes and reopens the MQTT connection\.  
 Default: `30000` \(30 seconds\)  
+`maxInFlightPublishes`  
+\(Optional\) The maximum number of unacknowledged MQTT QoS 1 messages that can be in flight at the same time\.  
+This feature is available for v2\.1\.0 and later of this component\.  
+Default: `5`  
+Valid range: Maximum value of 100  
+`maxMessageSizeInBytes`  
+\(Optional\) The maximum size of an MQTT message\. If a message exceeds this size, the Greengrass nucleus rejects the message with an error\.  
+This feature is available for v2\.1\.0 and later of this component\.  
+Default: `131072` \(128 KB\)  
+Valid range: Maximum value of `2621440` \(2\.5 MB\)  
+`maxPublishRetry`  
+\(Optional\) The maximum number of times to retry a message that fails to publish\. You can specify `-1` to retry unlimited times\.  
+This feature is available for v2\.1\.0 and later of this component\.  
+Default: `100`  
 `spooler`  
 \(Optional\) The MQTT spooler configuration for the Greengrass core device\. This object contains the following information:    
 `maxSizeInBytes`  
@@ -135,7 +160,7 @@ Default: `FILE`
 Default: `1024`  
   `totalLogsSizeKB`   
 \(Optional\) The maximum total size of all log files \(in kilobytes\)\. After the total size of all log files exceeds this maximum total size, the AWS IoT Greengrass Core software deletes the oldest log files\.  
-This parameter is equivalent to the [system logs disk space limit](log-manager-component.md#log-manager-component-configuration-system-logs-limit) parameter of the [log manager component](log-manager-component.md)\. If you specify this parameter on both components, the AWS IoT Greengrass Core software uses the minimum of the two values as the maximum total log size\.  
+This parameter is equivalent to the [system logs disk space limit](log-manager-component.md#log-manager-component-configuration) parameter of the [log manager component](log-manager-component.md)\. If you specify this parameter on both components, the AWS IoT Greengrass Core software uses the minimum of the two values as the maximum total log size\.  
 <a name="nucleus-component-logging-parameter-file-only"></a>This parameter applies only when you specify `FILE` for `outputType`\.  
 Default: `10240`  
 `outputDirectory`  
@@ -143,18 +168,29 @@ Default: `10240`
 <a name="nucleus-component-logging-parameter-file-only"></a>This parameter applies only when you specify `FILE` for `outputType`\.  
 Default: `/greengrass/v2/logs`, where */greengrass/v2* is the AWS IoT Greengrass root folder\.
 
+  `fleetstatusservice`   
+This parameter is available in v2\.1\.0 and later of this component\.  
+\(Optional\) The fleet status configuration for the core device\.  
+This object contains the following information:    
+`periodicStatusPublishIntervalSeconds`  
+\(Optional\) The amount of time \(in seconds\) between which the core device publishes device status to the AWS Cloud\.  
+Minimum: `86400`  
+Default: `86400`
+
   `telemetry`   
 \(Optional\) The system health telemetry configuration for the core device\. For more information about telemetry metrics and how to act on telemetry data, see [Gather system health telemetry data from AWS IoT Greengrass core devices](telemetry.md)\.  
 This object contains the following information:    
 `enabled`  
-\(Optional\) You can enable telemetry\.  
+\(Optional\) You can enable or disable telemetry\.  
 Default: `true`  
 `periodicAggregateMetricsIntervalSeconds`  
 \(Optional\) The interval \(in seconds\) over which the core device aggregates metrics\.  
+If you set this value lower than the minimum supported value, the nucleus uses the default value instead\.  
 Minimum: `3600`  
 Default: `3600`  
 `periodicPublishMetricsIntervalSeconds`  
 \(Optional\) The amount of time \(in seconds\) between which the core device publishes telemetry metrics to the AWS Cloud\.  
+If you set this value lower than the minimum supported value, the nucleus uses the default value instead\.  
 Minimum: `86400`  
 Default: `86400`
 
@@ -175,8 +211,9 @@ You can also use this parameter to override the `os` and `architecture` platform
 The following table describes the changes in each version of the component\.
 
 
-|  Version  |  Changes  | 
+|  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.1\.0  |  <a name="changelog-nucleus-2.1.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
 |  2\.0\.5  |  <a name="changelog-nucleus-2.0.5"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
 |  2\.0\.4  |  <a name="changelog-nucleus-2.0.4"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
 |  2\.0\.3  |  Initial version\.  | 

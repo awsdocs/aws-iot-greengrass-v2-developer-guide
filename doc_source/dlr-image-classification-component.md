@@ -1,273 +1,154 @@
-# DLR Image Classification<a name="dlr-image-classification-component"></a>
+# DLR image classification<a name="dlr-image-classification-component"></a>
 
- You can use the DLR Image Classification component \(`aws.greengrass.DLRImageClassification`\) to perform a sample image classification inference on supported devices\. This component installs DLR and its dependencies and downloads sample ML models to perform this inference\. 
+The DLR image classification component \(`aws.greengrass.DLRImageClassification`\) contains sample inference code to perform image classification inference using [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) and resnet\-50 models\. This component uses the variant [DLR image classification model store](dlr-image-classification-model-store-component.md) and the [DLR](dlr-component.md) components as dependencies to download DLR and the sample models\. 
 
-This sample inference component uses the variant [Image Classification Model Store](variant-image-classification-component.md) and the [DLR Installer](variant-dlr-component.md) components as dependencies to [perform inference](ml-tutorial-image-classification.md)\. To use a different model or runtime to perform image classification, you can [create private versions](ml-customization.md#create-variant-component) of the dependent variant components\. If you want create your own [private inference component](ml-customization.md#create-inference-component), you can use the recipe of this component as a template\. 
+To use this inference component with a custom\-trained DLR model, [create a custom version](ml-customization.md#override-public-model-store) of the dependent model store component\. To use your own custom inference code, you can use the recipe of this component as a template to [create a custom inference component](ml-customization.md#create-inference-component)\.
+
+## Versions<a name="dlr-image-classification-component-versions"></a>
 
 This component has the following versions:
++ 2\.1\.x
 + 2\.0\.x
 
-## Requirements<a name="dlr-image-classification-component-requirements"></a><a name="dlr-supported-platforms"></a>
+## Requirements<a name="dlr-image-classification-component-requirements"></a>
 
-The public machine learning inference components require a Greengrass core device running one of the following supported platforms\. For more information see [Setting up AWS IoT Greengrass core devices](setting-up.md)\.
-+ **32\-bit Armv7l**
+To deploy a component, you must meet the requirements for the component and its [dependencies](#dlr-image-classification-component-dependencies)\. This component has the following requirements:<a name="ml-component-requirements"></a>
++ <a name="ml-req-glibc"></a>On Greengrass core devices running Amazon Linux 2 or Ubuntu 18\.04, [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.27 or later installed on the device\.
++ On Armv7l devices, such as Raspberry Pi, dependencies for OpenCV Python installed on the device\. Run the following command to install the dependencies: 
 
-  [Raspberry Pi](https://www.raspberrypi.org) running Raspberry Pi OS, 2020\-08\-24\.
-+ **64\-bit x86\_64**
+  ```
+  sudo apt-get install libopenjp2-7 libilmbase23 libopenexr-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libgtk-3-0 libwebp-dev
+  ```
 
-  Device running Amazon Linux 2 or Ubuntu 18\.04, with [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.27 or later\.
+## Dependencies<a name="dlr-image-classification-component-dependencies"></a>
 
-## Configuration<a name="ml-image-classification-config"></a>
+When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. You must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#dlr-image-classification-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
-This component provides the following configuration parameters that you can customize when you deploy the component\.<a name="ml-inference-config-params"></a>
+------
+#### [ 2\.1\.x ]
 
-`Accelerator`  
-Do not modify\. Currently, the only supported value for the accelerator is `cpu`, because the models in the dependent model components are compiled only for the CPU accelerator\.
+The following table lists the dependencies for version 2\.1\.x of this component\.
 
-`MLRootPath`  
-\(Optional\) The path of the folder on the device where inference components read images and write inference results\. You can modify this value to any location on your device to which you have read/write access\.  
-Default: `$HOME/greengrass_ml`
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.2\.0 | Soft | 
+| [DLR image classification model store](dlr-image-classification-model-store-component.md) | \~2\.1\.0 | Hard | 
+| [DLR](dlr-component.md) | \~1\.6\.0 | Hard | 
+
+------
+#### [ 2\.0\.x ]
+
+The following table lists the dependencies for version 2\.0\.x of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | \~2\.0\.0 | Soft | 
+| DLR image classification model store | \~2\.0\.0 | Hard | 
+| DLR | \~1\.3\.0 | Soft | 
+
+------
+
+## Configuration<a name="dlr-image-classification-component-config"></a>
+
+This component provides the following configuration parameters that you can customize when you deploy the component\.
+
+------
+#### [ 2\.1\.x ]
+
+`accessControl`  
+<a name="ml-config-accesscontrol-desc"></a>The object that contains the [authorization policy](interprocess-communication.md#ipc-authorization-policies) that allows the component to publish messages to the default notifications topic\.   
+Default:   
+
+```
+aws.greengrass.ipc.mqttproxy:
+  "aws.greengrass.DLRImageClassification:mqttproxy:1":
+    policyDescription: Allows access to publish via topic ml/dlr/image-classification.
+      operations:
+        - "aws.greengrass#PublishToIoTCore"
+      resources:
+        - "ml/dlr/image-classification"
+```
+
+`PublishResultsOnTopic`  
+<a name="ml-config-publishresultsontopic-desc"></a>\(Optional\) The topic on which you want to publish the inference results\. If you modify this value, then you must also modify the value of `resources` in the `accessControl` parameter to match your custom topic name\.  
+Default: `ml/dlr/image-classification`
+
+`Accelerator`  <a name="ml-config-accelerator"></a>
+The accelerator that you want to use\. Supported values are `cpu` and `gpu`\.  
+The sample models in the dependent model component support only CPU acceleration\. To use GPU acceleration with a different custom model, [create a custom model component](ml-customization.md#override-public-model-store) to override the public model component\.  
+Default: `cpu`
+
+`ImageDirectory`  
+<a name="ml-config-imagedirectory-desc"></a>\(Optional\) The path of the folder on the device where inference components read images\. You can modify this value to any location on your device to which you have read/write access\.  
+<a name="ml-config-imagedirectory-img-default"></a>Default: `/greengrass/v2/packages/artifacts-unarchived/component-name/image_classification/sample_images/`  
+If you set the value of `UseCamera` to `true`, then this configuration parameter is ignored\. 
 
 `ImageName`  
-\(Optional\) The image that the inference component uses as an input to a make prediction\. You can modify this value to any image that is located in `MLRootPath/images`\. AWS IoT Greengrass supports the following formats: `jpeg`, `jpg`, `png`, and `npy`\.   
-Default: Static image
+<a name="ml-config-imagename-desc"></a>\(Optional\) The name of the image that the inference component uses as an input to a make prediction\. The component looks for the image in the folder specified in `ImageDirectory`\. By default, the component uses the sample image in the default image directory\. AWS IoT Greengrass supports the following image formats: `jpeg`, `jpg`, `png`, and `npy`\.   
+<a name="ml-config-imagename-img-default"></a>Default: `cat.jpeg`  
+If you set the value of `UseCamera` to `true`, then this configuration parameter is ignored\. 
 
-`InferenceInterval`  
-\(Optional\) The time in seconds between each prediction made by the inference code\. The sample inference code runs indefinitely and repeats its predictions at the specified time interval\. For example, you can change this to a shorter interval if you want to mount images taken by a camera to `MLRootPath/images` and use those images for real\-time prediction\.  
+`InferenceInterval`  <a name="ml-config-inferenceinterval"></a>
+\(Optional\) The time in seconds between each prediction made by the inference code\. The sample inference code runs indefinitely and repeats its predictions at the specified time interval\. For example, you can change this to a shorter interval if you want to use images taken by a camera for real\-time prediction\.  
 Default: `3600`
 
-`ModelResourceKey`  
-Do not modify\. This object specifies the models that are used in the dependent public model component\. 
-
-## Component recipe<a name="dlr-image-classification-component-recipe"></a><a name="view-component-recipe"></a>
-
-To view the component recipe for the latest version of a public component, do one of the following:
-+ **Using the console**
-
-  1. On the **Components** page, on the **Public components** tab, look for and choose the public component\.
-
-  1. On the component page, choose **View recipe**\.
-+ **Using AWS CLI**
-
-  Run the following command to retrieve the component recipe of the public variant component\. This command writes the component recipe to the JSON or YAML recipe file that you provide in your command\. 
-
-------
-#### [ Linux, macOS, or Unix ]
-
-  ```
-  aws greengrassv2 get-component \
-      --arn <arn> \
-      --recipe-output-format <recipe-format> \
-      --query recipe \
-      --output text | base64 --decode > <recipe-file>
-  ```
-
-------
-#### [ Windows command prompt ]
-
-  ```
-  aws greengrassv2 get-component ^
-      --arn <arn> ^
-      --recipe-output-format <recipe-format> ^
-      --query recipe ^
-      --output text > <recipe-file>.base64
-  
-  certutil -decode <recipe-file>.base64 <recipe-file>
-  ```
-
-------
-
-  Replace the values in your command as follows:
-  + `<arn>`\. The Amazon Resource Name \(ARN\) of the public component\. 
-  + `<recipe-format>`\. The format in which you want to create the recipe file\. Supported values are `JSON` and `YAML`\.
-  + `<recipe-file>`\. The name of the recipe in the format `<component-name>-<component-version>`\. 
-
-The following excerpt shows the component recipe for version 2\.0\.0 of the component\. 
-
-------
-#### [ JSON ]
+`ModelResourceKey`  <a name="ml-config-modelresourcekey"></a>
+<a name="ml-config-modelresourcekey-desc"></a>\(Optional\) The models that are used in the dependent public model component\. Modify this parameter only if you override the public model component with a custom component\.   
+Default:  
 
 ```
-{
-  "RecipeFormatVersion": "2020-01-25",
-  "ComponentName": "aws.greengrass.DLRImageClassification",
-  "ComponentVersion": "2.0.0",
-  "ComponentDescription": "Sample Image classification inference using DLR and amazon resnet50 default model.",
-  "ComponentPublisher": "Amazon",
-  "ComponentDependencies": {
-    "variant.DLR": {
-      "VersionRequirement": "~1.3.0",
-      "DependencyType": "HARD"
-    },
-    "variant.ImageClassification.ModelStore": {
-      "VersionRequirement": "~2.0.0",
-      "DependencyType": "HARD"
-    },
-    "aws.greengrass.Nucleus": {
-      "VersionRequirement": "~2.0.0",
-      "DependencyType": "SOFT"
-    }
-  },
-  "ComponentConfiguration": {
-    "DefaultConfiguration": {
-      "Accelerator": "cpu",
-      "MLRootPath": "$HOME/greengrass_ml",
-      "ImageName": "cat.jpeg",
-      "InferenceInterval": 3600,
-      "ModelResourceKey": {
-        "armv7l": "DLR-resnet50-armv7l-cpu-ImageClassification",
-        "x86_64": "DLR-resnet50-x86_64-cpu-ImageClassification"
-      }
-    }
-  },
-  "Manifests": [
-    {
-      "Platform": {
-        "os": "linux",
-        "architecture": "arm"
-      },
-      "Name": "32-bit armv7l - Linux (raspberry pi)",
-      "Artifacts": [
-        {
-          "URI": "s3://$bucketName$/$sampleArtifactsDirectory$/image_classification.zip",
-          "Unarchive": "ZIP"
-        },
-        {
-          "URI": "s3://$bucketName$/$sampleArtifactsDirectory$/init.sh"
-        }
-      ],
-      "Lifecycle": {
-        "Install": {
-          "RequiresPrivilege": true,
-          "script": "bash {artifacts:path}/init.sh {artifacts:decompressedPath}/image_classification/sample_images {configuration:/MLRootPath}\nbash {variant.DLR:artifacts:decompressedPath}/installer/installer.sh -a {configuration:/Accelerator} -p {configuration:/MLRootPath}",
-          "timeout": 900
-        },
-        "Run": {
-          "RequiresPrivilege": true,
-          "script": ". {configuration:/MLRootPath}/greengrass_ml_dlr_venv/bin/activate\npython3 {artifacts:decompressedPath}/image_classification/inference.py -a {configuration:/Accelerator} -m {variant.ImageClassification.ModelStore:artifacts:decompressedPath}/{configuration:/ModelResourceKey/armv7l} -p {configuration:/MLRootPath} -i {configuration:/ImageName} -s {configuration:/InferenceInterval}"
-        },
-        "shutdown": {
-          "RequiresPrivilege": true,
-          "script": "deactivate"
-        }
-      }
-    },
-    {
-      "Platform": {
-        "os": "linux",
-        "architecture": "amd64"
-      },
-      "Name": "64-bit x86_64 - Linux (ubuntu, deeplens, amazon linux 2)",
-      "Artifacts": [
-        {
-          "URI": "s3://$bucketName$/$sampleArtifactsDirectory$/image_classification.zip",
-          "Unarchive": "ZIP"
-        },
-        {
-          "URI": "s3://$bucketName$/$sampleArtifactsDirectory$/init.sh"
-        }
-      ],
-      "Lifecycle": {
-        "Install": {
-          "RequiresPrivilege": true,
-          "script": "bash {artifacts:path}/init.sh {artifacts:decompressedPath}/image_classification/sample_images {configuration:/MLRootPath}\nbash {variant.DLR:artifacts:decompressedPath}/installer/installer.sh -a {configuration:/Accelerator} -p {configuration:/MLRootPath} -e {variant.DLR:artifacts:path}/environment.yaml",
-          "timeout": 900
-        },
-        "Run": {
-          "RequiresPrivilege": true,
-          "script": "export PATH=\"{configuration:/MLRootPath}/greengrass_ml_dlr_conda/bin:$PATH\"\neval \"$({configuration:/MLRootPath}/greengrass_ml_dlr_conda/bin/conda shell.bash hook)\"\nconda activate greengrass_ml_dlr_conda\npython3 {artifacts:decompressedPath}/image_classification/inference.py -a {configuration:/Accelerator} -m {variant.ImageClassification.ModelStore:artifacts:decompressedPath}/{configuration:/ModelResourceKey/x86_64} -p {configuration:/MLRootPath} -i {configuration:/ImageName} -s {configuration:/InferenceInterval}"
-        },
-        "shutdown": {
-          "RequiresPrivilege": true,
-          "script": "export PATH=\"{configuration:/MLRootPath}/greengrass_ml_dlr_conda/bin:$PATH\"\neval \"$({configuration:/MLRootPath}/greengrass_ml_dlr_conda/bin/conda shell.bash hook)\"\nconda deactivate"
-        }
-      }
-    }
-  ]
-}
+armv7l: "DLR-resnet50-armv7l-cpu-ImageClassification"
+x86_64: "DLR-resnet50-x86_64-cpu-ImageClassification"
+aarch64: "DLR-resnet50-aarch64-cpu-ImageClassification"
 ```
+
+`UseCamera`  <a name="ml-config-usecamera"></a>
+\(Optional\) Defines whether to use images from a camera connected to the Greengrass core device\. When you set this value to `true`, the sample inference code accesses the camera on your device and runs inference locally on the captured image\. The values of the `ImageName` and `ImageDirectory` parameters are ignored\. Make sure that the user running this component has read/write access to the location where the camera stores captured images\.  
+Default: `false`
 
 ------
-#### [ YAML ]
+#### [ 2\.0\.x ]
+
+`MLRootPath`  <a name="ml-config-mlrootpath"></a>
+<a name="ml-config-mlrootpath-desc"></a>\(Optional\) The path of the folder on the device where inference components read images and write inference results\. You can modify this value to any location on your device to which the user running this component has read/write access\.  
+Default: `/greengrass/v2/work/<component-name>/greengrass_ml`
+
+`Accelerator`  <a name="ml-config-accelerator"></a>
+The accelerator that you want to use\. Supported values are `cpu` and `gpu`\.  
+The sample models in the dependent model component support only CPU acceleration\. To use GPU acceleration with a different custom model, [create a custom model component](ml-customization.md#override-public-model-store) to override the public model component\.  
+Default: `cpu`
+
+`ImageName`  
+<a name="ml-config-imagename-desc-dlr-1.3.0"></a>\(Optional\) The name of the image that the inference component uses as an input to a make prediction\. The component looks for the image in the folder specified in `ImageDirectory`\. The default location is `MLRootPath/images`\. AWS IoT Greengrass supports the following image formats: `jpeg`, `jpg`, `png`, and `npy`\.   
+<a name="ml-config-imagename-img-default"></a>Default: `cat.jpeg`
+
+`InferenceInterval`  <a name="ml-config-inferenceinterval"></a>
+\(Optional\) The time in seconds between each prediction made by the inference code\. The sample inference code runs indefinitely and repeats its predictions at the specified time interval\. For example, you can change this to a shorter interval if you want to use images taken by a camera for real\-time prediction\.  
+Default: `3600`
+
+`ModelResourceKey`  <a name="ml-config-modelresourcekey"></a>
+<a name="ml-config-modelresourcekey-desc"></a>\(Optional\) The models that are used in the dependent public model component\. Modify this parameter only if you override the public model component with a custom component\.   
+Default:  
 
 ```
-RecipeFormatVersion: "2020-01-25"
-ComponentName: aws.greengrass.DLRImageClassification
-ComponentVersion: "2.0.0"
-ComponentDescription: Sample Image classification inference using DLR and amazon resnet50 default model.
-ComponentPublisher: Amazon
-ComponentDependencies:
-  variant.DLR:
-    VersionRequirement: "~1.3.0"
-    DependencyType: HARD
-  variant.ImageClassification.ModelStore:
-    VersionRequirement: "~2.0.0"
-    DependencyType: HARD
-  aws.greengrass.Nucleus:
-    VersionRequirement: "~2.0.0"
-    DependencyType: SOFT
-ComponentConfiguration:
-  DefaultConfiguration:
-    Accelerator: "cpu"
-    MLRootPath: "$HOME/greengrass_ml"
-    ImageName: "cat.jpeg"
-    InferenceInterval: 3600
-    ModelResourceKey:
-      armv7l: "DLR-resnet50-armv7l-cpu-ImageClassification"
-      x86_64: "DLR-resnet50-x86_64-cpu-ImageClassification"
-Manifests:
-  - Platform:
-      os: linux
-      architecture: arm
-    Name: 32-bit armv7l - Linux (raspberry pi)
-    Artifacts:
-      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/image_classification.zip
-        Unarchive: ZIP
-      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/init.sh
-    Lifecycle:
-      Install:
-        RequiresPrivilege: true
-        script: |-
-          bash {artifacts:path}/init.sh {artifacts:decompressedPath}/image_classification/sample_images {configuration:/MLRootPath}
-          bash {variant.DLR:artifacts:decompressedPath}/installer/installer.sh -a {configuration:/Accelerator} -p {configuration:/MLRootPath}
-        timeout: 900
-      Run:
-        RequiresPrivilege: true
-        script: |-
-          . {configuration:/MLRootPath}/greengrass_ml_dlr_venv/bin/activate
-          python3 {artifacts:decompressedPath}/image_classification/inference.py -a {configuration:/Accelerator} -m {variant.ImageClassification.ModelStore:artifacts:decompressedPath}/{configuration:/ModelResourceKey/armv7l} -p {configuration:/MLRootPath} -i {configuration:/ImageName} -s {configuration:/InferenceInterval}
-      shutdown:
-        RequiresPrivilege: true
-        script: |-
-          deactivate
-  - Platform:
-      os: linux
-      architecture: amd64
-    Name: 64-bit x86_64 - Linux (ubuntu, deeplens, amazon linux 2)
-    Artifacts:
-      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/image_classification.zip
-        Unarchive: ZIP
-      - URI: s3://$bucketName$/$sampleArtifactsDirectory$/init.sh
-    Lifecycle:
-      Install:
-        RequiresPrivilege: true
-        script: |-
-          bash {artifacts:path}/init.sh {artifacts:decompressedPath}/image_classification/sample_images {configuration:/MLRootPath}
-          bash {variant.DLR:artifacts:decompressedPath}/installer/installer.sh -a {configuration:/Accelerator} -p {configuration:/MLRootPath} -e {variant.DLR:artifacts:path}/environment.yaml
-        timeout: 900
-      Run:
-        RequiresPrivilege: true
-        script: |-
-          export PATH="{configuration:/MLRootPath}/greengrass_ml_dlr_conda/bin:$PATH"
-          eval "$({configuration:/MLRootPath}/greengrass_ml_dlr_conda/bin/conda shell.bash hook)"
-          conda activate greengrass_ml_dlr_conda
-          python3 {artifacts:decompressedPath}/image_classification/inference.py -a {configuration:/Accelerator} -m {variant.ImageClassification.ModelStore:artifacts:decompressedPath}/{configuration:/ModelResourceKey/x86_64} -p {configuration:/MLRootPath} -i {configuration:/ImageName} -s {configuration:/InferenceInterval}
-      shutdown:
-        RequiresPrivilege: true
-        script: |-
-          export PATH="{configuration:/MLRootPath}/greengrass_ml_dlr_conda/bin:$PATH"
-          eval "$({configuration:/MLRootPath}/greengrass_ml_dlr_conda/bin/conda shell.bash hook)"
-          conda deactivate
+armv7l: "DLR-resnet50-armv7l-cpu-ImageClassification"
+x86_64: "DLR-resnet50-x86_64-cpu-ImageClassification"
 ```
+
+**Note**  <a name="ml-config-not-visible-note"></a>
+When you view the recipe of this component, the `UseCamera` configuration parameter doesn't appear in the default configuration\. However, you can modify the value of this parameter in a [configuration update](update-component-configurations.md) when you deploy the component\.   
+When you set `UseCamera` to `true`, you must also create a symlink to enable the inference component to access your camera from the virtual environment that is created by the runtime component\. For more information about using a camera with the sample inference components, see [Update component configurations](ml-tutorial-image-classification-camera.md)\.
 
 ------
+
+## Changelog<a name="dlr-image-classification-component-changelog"></a>
+
+The following table describes the changes in each version of the component\.
+
+
+|  **Version**  |  **Changes**  | 
+| --- | --- | 
+|  2\.1\.1  |  <a name="changelog-dlr-image-classification-2.1.1"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/dlr-image-classification-component.html)  | 
+|  2\.0\.4  |  Initial version\.  | 

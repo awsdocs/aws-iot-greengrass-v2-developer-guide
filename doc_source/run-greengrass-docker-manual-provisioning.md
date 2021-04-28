@@ -1,19 +1,26 @@
-# Install AWS IoT Greengrass Core software with manual resource provisioning<a name="manual-installation"></a>
+# Run AWS IoT Greengrass in a Docker container with manual resource provisioning<a name="run-greengrass-docker-manual-provisioning"></a>
 
-The AWS IoT Greengrass Core software includes an installer that sets up your device as a Greengrass core device\. To set up a device manually, you can create the required AWS IoT and IAM resources for the device to use\. If you create these resources manually, you don't need to provide AWS credentials to the installer\.
-
-When you manually install the AWS IoT Greengrass Core software, you can also configure the device to use a network proxy or connect to AWS on port 443\. You might need to specify these configuration options if your device runs behind a firewall or a network proxy, for example\. For more information, see [Connect on port 443 or through a network proxy](configure-greengrass-core-v2.md#configure-alpn-network-proxy)\.
-
-**Important**  <a name="install-greengrass-core-requirements-note"></a>
-Before you download the AWS IoT Greengrass Core software, check that your core device meets the [requirements](setting-up.md#greengrass-v2-requirements) to install and run the AWS IoT Greengrass Core software v2\.0\.
+This tutorial shows you how to install and run AWS IoT Greengrass Core software in Docker container with manually provisioned AWS resources\.
 
 **Topics**
++ [Prerequisites](#docker-manual-provisioning-prereqs)
 + [Create an AWS IoT thing](#create-iot-thing)
++ [Download the Amazon root certification authority](#download-root-ca)
 + [Retrieve AWS IoT endpoints](#retrieve-iot-endpoints)
 + [Create a token exchange role](#create-token-exchange-role)
-+ [Download certificates to the device](#download-thing-certificates)
-+ [Download the AWS IoT Greengrass Core software](#download-greengrass-core-v2)
-+ [Install the AWS IoT Greengrass Core software](#run-greengrass-core-v2-installer-manual)
++ [Create a configuration file](#create-docker-install-configuration-file)
++ [Create an environment file](#create-env-file-manual-provisioning)
++ [Run the AWS IoT Greengrass Core software in a container](#run-greengrass-image-manual-provisioning)
++ [Next steps](#run-greengrass-docker-next-steps)
+
+## Prerequisites<a name="docker-manual-provisioning-prereqs"></a>
+
+To complete this tutorial, you need the following:
++ A Linux\-based host computer with an internet connection\. 
++ An AWS account\. If you don't have one, see [Set up an AWS account](setting-up.md#set-up-aws-account)\. 
++ An AWS IoT Greengrass Docker image\. You can pull an AWS IoT Greengrass Docker image from Docker Hub or Amazon Elastic Container Registry \(Amazon ECR\), or you can [build an image from the AWS IoT Greengrass Dockerfile](build-greengrass-dockerfile.md)\.
++ [Docker Engine](https://docs.docker.com/engine/install/) version 19\.03 or later installed on the host computer\.
++ \(Optional\) [Docker Compose](https://docs.docker.com/compose/install/) version 1\.25\.4 or later installed on the host computer\. Docker Compose is required only if you want to use the Docker Compose CLI to build and run your Docker images\.
 
 ## Create an AWS IoT thing<a name="create-iot-thing"></a>
 
@@ -200,6 +207,16 @@ In this section, you create an AWS IoT thing and download certificates that your
       ```
 
       The command doesn't have any output if the request succeeds\.
+
+## Download the Amazon root certification authority<a name="download-root-ca"></a>
+
+In the previous step, you downloaded the certificates for your AWS IoT thing\. In this step, you download the Amazon root certificate authority \(CA\) certificate\. AWS IoT certificates are associated with Amazon's root CA certificate by default\.
+
+Run the following command to download the root CA certificate\.
+
+```
+curl greengrass-v2-certs/AmazonRootCA1.pem https://www.amazontrust.com/repository/AmazonRootCA1.pem
+```
 
 ## Retrieve AWS IoT endpoints<a name="retrieve-iot-endpoints"></a>
 
@@ -452,195 +469,168 @@ To create a role alias, you must have permission to pass the token exchange IAM 
 
       The command doesn't have any output if the request succeeds\.
 
-## Download certificates to the device<a name="download-thing-certificates"></a>
+## Create a configuration file<a name="create-docker-install-configuration-file"></a>
 
-Earlier, you downloaded your device's certificates to your development computer\. In this section, you copy these certificates to your device set up the device with the certificates that it uses to connect to AWS IoT\.
-
-**To download certificates to the device**
-
-1. Copy the AWS IoT thing certificates from your development computer to the device\. You might be able to use the `scp` command, for example\.
-   + Replace *device\-ip\-address* with the IP of your device\.
+1. Create a folder where you place your configuration file\.
 
    ```
-   scp -r greengrass-v2-certs/ device-ip-address:~
+   mkdir greengrass-v2-config
    ```
 
-1. On the device, download the Amazon root certificate authority \(CA\) certificate\. AWS IoT certificates are associated with Amazon's root CA certificate by default\.
+1. Use a text editor to create a configuration file named `config.yaml` in the `greengrass-v2-config` folder\.
+
+   For example, you can run the following command to use GNU nano to create the `config.yaml`\. 
 
    ```
-   curl -o ~/greengrass-v2-certs/AmazonRootCA1.pem https://www.amazontrust.com/repository/AmazonRootCA1.pem
+   nano greengrass-v2-config/config.yaml
    ```
 
-1. Create the Greengrass root folder on the device\. You install the AWS IoT Greengrass Core software to this folder later\.
-   + Replace */greengrass/v2* with the folder to use\.
-
-   ```
-   sudo mkdir -p /greengrass/v2
-   ```
-
-1. Set the permissions of the parent of the Greengrass root folder\.
-   + Replace */greengrass* with the parent of the root folder\.
-
-   ```
-   sudo chmod 755 /greengrass
-   ```
-
-1. Copy the AWS IoT thing certificates to the Greengrass root folder\.
-   + Replace */greengrass/v2* with the Greengrass root folder\.
-
-   ```
-   sudo cp -R ~/greengrass-v2-certs/* /greengrass/v2
-   ```
-
-## Download the AWS IoT Greengrass Core software<a name="download-greengrass-core-v2"></a>
-
-You can download the latest version of the AWS IoT Greengrass Core software from the following location:
-+ [https://d2s8p88vqu9w66\.cloudfront\.net/releases/greengrass\-nucleus\-latest\.zip](https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-nucleus-latest.zip)
-
-**Note**  
-You can download a specific version of the AWS IoT Greengrass Core software from the following location\. Replace *version* with the version to download\.  
-
-```
-https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-version.zip
-```
-
-**To download the AWS IoT Greengrass Core software \(Linux\)**
-
-1. On your device, download the AWS IoT Greengrass Core software to a file named `greengrass-nucleus-latest-zip`\.
-
-   ```
-   curl -s https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-nucleus-latest.zip > greengrass-nucleus-latest.zip
-   ```
-
-   <a name="core-software-license"></a>By downloading this software, you agree to the [Greengrass Core Software License Agreement](https://greengrass-release-license.s3.us-west-2.amazonaws.com/greengrass-license-v1.pdf)\.
-
-1. Unzip the AWS IoT Greengrass Core software to a folder on your device\. Replace *MyGreengrassCore* with the folder that you want to use\.
-
-   ```
-   unzip greengrass-nucleus-latest.zip -d MyGreengrassCore && rm greengrass-nucleus-latest.zip
-   ```
-**Tip**  
-You can run the following command to see the version of the AWS IoT Greengrass Core software\.  
-
-   ```
-   java -jar ./MyGreengrassCore/lib/Greengrass.jar --version
-   ```
-
-## Install the AWS IoT Greengrass Core software<a name="run-greengrass-core-v2-installer-manual"></a>
-
-Run the installer with arguments that specify the following actions:
-+ Install from a partial configuration file that specifies to use the AWS resources and certificates that you created earlier\. The AWS IoT Greengrass Core software uses a configuration file that specifies the configuration of every Greengrass component on the device\. The installer creates a complete configuration file from the partial configuration file that you provide\.
-+ <a name="install-argument-component-default-user"></a>Use the `ggc_user` system user and `ggc_group` system group to run software components on the core device\. The installer creates this default user and group if they don't exist\.
-+ <a name="install-argument-setup-system-service"></a>Install the software as a system service that runs on boot, if your device has the [systemd](https://en.wikipedia.org/wiki/Systemd) init system\.
-
-For more information about the arguments that you can specify, see [Installer arguments](configure-installer.md)\.
-
-**Note**  
-<a name="jvm-tuning-note"></a>If you are running AWS IoT Greengrass on a device with limited memory, you can control the amount of memory that AWS IoT Greengrass Core software uses\. To control memory allocation, you can set JVM heap size options in the `jvmOptions` configuration parameter in your nucleus component\. For more information, see [Control memory allocation with JVM options](configure-greengrass-core-v2.md#jvm-tuning)\.
-
-**To install the AWS IoT Greengrass Core software \(Linux\)**
-
-1. Check the version of the AWS IoT Greengrass Core software\.
-   + Replace *MyGreengrassCore* with the path to the folder that contains the software\.
-
-   ```
-   java -jar ./MyGreengrassCore/lib/Greengrass.jar --version
-   ```
-
-1. Use a text editor to create a configuration file named `config.yaml` to provide to the installer\.
-
-   For example, on a Linux\-based system, you can run the following command to use GNU nano to create the `config.yaml` in the *MyGreengrassCore* directory\.
-
-   ```
-   nano MyGreengrassCore/config.yaml
-   ```
-
-   Copy the following YAML content into the file\. This partial configuration file specifies system parameters and Greengrass nucleus parameters\.
+1. Copy the following YAML content into the file\. This partial configuration file specifies system parameters and Greengrass nucleus parameters\.
 
    ```
    ---
    system:
      certificateFilePath: "/tmp/certs/device.pem.crt"
-     privateKeyPath: "/greengrass/v2/private.pem.key"
-     rootCaPath: "/greengrass/v2/AmazonRootCA1.pem"
+     privateKeyPath: "/tmp/certs/private.pem.key"
+     rootCaPath: "/tmp/certs/AmazonRootCA1.pem"
      rootpath: "/greengrass/v2"
      thingName: "MyGreengrassCore"
    services:
      aws.greengrass.Nucleus:
        componentType: "NUCLEUS"
-       version: "2.1.0"
+       version: "nucleus-version"
        configuration:
-         awsRegion: "us-west-2"
+         awsRegion: "region"
          iotRoleAlias: "GreengrassCoreTokenExchangeRoleAlias"
-         iotDataEndpoint: "device-data-prefix-ats.iot.us-west-2.amazonaws.com"
-         iotCredEndpoint: "device-credentials-prefix.credentials.iot.us-west-2.amazonaws.com"
+         iotDataEndpoint: "device-data-prefix-ats.iot.region.amazonaws.com"
+         iotCredEndpoint: "device-credentials-prefix.credentials.region.amazonaws.com"
    ```
 
-   Then, do the following:
-   + Replace each instance of */greengrass/v2* with the Greengrass root folder\.
-   + Replace *MyGreengrassCore* with the name of the AWS IoT thing\.
-   + Replace *2\.1\.0* with the version of the AWS IoT Greengrass Core software\.
-   + Replace *us\-west\-2* with the AWS Region where you created the resources\.
-   + Replace *GreengrassCoreTokenExchangeRoleAlias* with the token exchange role alias\.
-   + Replace the `iotDataEndpoint` with your AWS IoT data endpoint\.
-   + Replace the `iotCredEndpoint` with your AWS IoT credentials endpoint\.
+   Then, replace the following values:
+   + */tmp/certs*\. The directory in the Docker container to which you mount the downloaded certificates when you start the container\.
+   + */greengrass/v2*\. The Greengrass root folder that you want to use for installation\. You use the `GGC_ROOT` environment variable to set this value\.
+   + *MyGreengrassCore*\. The name of the AWS IoT thing\.
+   + *nucleus\-version*\. The version of the AWS IoT Greengrass Core software to install\. This value must match the version of the Docker image or Dockerfile that you downloaded\. If you downloaded the Greengrass Docker image with the `latest` tag, use ****docker inspect *image\-id***** to see the image version\.
+   + *region*\. The AWS Region where you created the resources\.
+   + *GreengrassCoreTokenExchangeRoleAlias*\. The token exchange role alias\.
+   + *device\-data\-prefix*\. The prefix for your AWS IoT data endpoint\.
+   + *device\-credentials\-prefix*\. The prefix for your AWS IoT credentials endpoint\.
+
+## Create an environment file<a name="create-env-file-manual-provisioning"></a>
+
+This tutorial uses an environment file to set the environment variables that will be passed to the AWS IoT Greengrass Core software installer inside the Docker container\. You can also use [the `-e` or `--env` argument](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file) in your `docker run` command to set environment variables in the Docker container or you can set the variables in [an `environment` block](https://docs.docker.com/compose/compose-file/compose-file-v3/#environment) in the `docker-compose.yml` file\.
+
+1. Use a text editor to create an environment file named `.env` in the folder that contains your Docker image\.
+
+   For example, on a Linux\-based system, you can run the following command to use GNU nano to create the `.env` in the current directory\.
+
+   ```
+   nano .env
+   ```
+
+1. Copy the following content into the file\.
+
+   ```
+   GGC_ROOT_PATH=/greengrass/v2
+   PROVISION=false
+   COMPONENT_DEFAULT_USER=ggc_user:ggc_group
+   DEPLOY_DEV_TOOLS=true
+   INIT_CONFIG=/tmp/config/config.yaml
+   ```
+
+   Then, replace the following values\.
+   + */greengrass/v2*\. The path to the root folder to use to install the AWS IoT Greengrass Core software\.
+
+     */tmp/config/*\. The directory to which you mount the configuration file when you start the Docker container\.
+
+## Run the AWS IoT Greengrass Core software in a container<a name="run-greengrass-image-manual-provisioning"></a>
+
+You can use the Docker CLI or the Docker Compose CLI to run the AWS IoT Greengrass Core software image in a Docker container\. 
+
+------
+#### [ Docker ]
+
+Run the following command to start the container\. 
+
+```
+docker run --rm --init -it --name aws-iot-greengrass \
+ -v greengrass-v2-config:/tmp/config/:ro \
+ -v greengrass-v2-certs:/tmp/certs:ro \ 
+ --env-file .env \
+ x86_64/aws-iot-greengrass:nucleus-version
+```
+
+This example command uses the following arguments for [docker run](https://docs.docker.com/engine/reference/commandline/run/):
++ [https://docs.docker.com/engine/reference/run/#clean-up---rm](https://docs.docker.com/engine/reference/run/#clean-up---rm)\. Cleans up the container when it exits\.
++ [https://docs.docker.com/engine/reference/run/#specify-an-init-process](https://docs.docker.com/engine/reference/run/#specify-an-init-process)\. Uses an init process in the container\. 
 **Note**  
-In this configuration file, you can customize other nucleus configuration options such as the ports and network proxy to use, as shown in the following example\. For more information, see [Greengrass nucleus configuration](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration)\.  
+The `--init` argument is required to shut down AWS IoT Greengrass Core software when you stop the Docker container\.
++ [https://docs.docker.com/engine/reference/run/#foreground](https://docs.docker.com/engine/reference/run/#foreground)\. \(Optional\) Runs the Docker container in the foreground as an interactive process\. You can replace this with the `-d` argument to run the Docker container in detached mode instead\. For more information, see [Detached vs foreground](https://docs.docker.com/engine/reference/run/#detached-vs-foreground) in the Docker documentation\.
++ [https://docs.docker.com/engine/reference/run/#name---name](https://docs.docker.com/engine/reference/run/#name---name)\. Runs a container named `aws-iot-greengrass` 
++ [https://docs.docker.com/storage/volumes/](https://docs.docker.com/storage/volumes/)\. Mounts a volume into the Docker container to make the configuration file and the certificate files available to AWS IoT Greengrass running inside the container\.
++ [https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file)\. Specifies the environment file to set the environment variables that will be passed to the AWS IoT Greengrass Core software installer inside the Docker container\.
+
+**Note**  <a name="docker-run-cap-drop"></a>
+To run your Docker container with increased security, you can use the `--cap-drop` and `--cap-add` arguments to selectively enable Linux capabilities for your container\. For more information, see [Runtime privilege and Linux capabilities](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities) in the Docker documentation\.
+
+------
+#### [ Docker Compose ]
+
+1. In a text editor, open the Docker Compose file \(`docker-compose.yml`\) that is included in the Dockerfile tarball and add a `volumes` block to the file\. Your Compose file should look similar to the following example\. Replace *nucleus\-version* with the version of the Greengrass nucleus that is installed in your Docker image\. 
 
    ```
-   ---
-   system:
-     certificateFilePath: "/greengrass/v2/device.pem.crt"
-     privateKeyPath: "/greengrass/v2/private.pem.key"
-     rootCaPath: "/greengrass/v2/AmazonRootCA1.pem"
-     rootpath: "/greengrass/v2"
-     thingName: "MyGreengrassCore"
+   version: '3.7'
+    
    services:
-     aws.greengrass.Nucleus:
-       componentType: "NUCLEUS"
-       version: "2.1.0"
-       configuration:
-         awsRegion: "us-west-2"
-         iotCredEndpoint: "device-credentials-prefix.credentials.iot.us-west-2.amazonaws.com"
-         iotDataEndpoint: "device-data-prefix-ats.iot.us-west-2.amazonaws.com"
-         iotRoleAlias: "GreengrassCoreTokenExchangeRoleAlias"
-         mqtt:
-           port: 443
-         greengrassDataPlanePort: 443
-         networkProxy:
-           noProxyAddresses: "http://192.168.0.1,www.example.com"
-           proxy:
-             url: "https://my-proxy-server:1100"
-             username: "Mary_Major"
-             password: "pass@word1357"
+     greengrass:
+       init: true
+       build:
+         context: .
+         dockerfile: dockerfile-name
+       container_name: aws-iot-greengrass
+       image: x86_64/aws-iot-greengrass:nucleus-version
+       volumes:
+         - greengrass-v2-config:/tmp/config/:ro
+         - greengrass-v2-certs:/tmp/certs:ro
    ```
+**Note**  <a name="docker-compose-cap-drop"></a>
+To run your Docker container with increased security, you can use `cap_drop` and `cap_add` in your Compose file to selectively enable Linux capabilities for your container\. For more information, see [Runtime privilege and Linux capabilities](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities) in the Docker documentation\.
 
-1. Run the installer, and specify `--init-config` to provide the configuration file\.
-   + Replace */greengrass/v2* with the Greengrass root folder\.
-   + Replace each instance of *MyGreengrassCore* with the folder where you unpacked the installer\.
+1. Run the following command to start the container\.
 
    ```
-   sudo -E java -Droot="/greengrass/v2" -Dlog.store=FILE \
-     -jar ./MyGreengrassCore/lib/Greengrass.jar \
-     --init-config ./MyGreengrassCore/config.yaml \
-     --component-default-user ggc_user:ggc_group \
-     --setup-system-service true
+   docker-compose --env-file .env -f docker-compose.yml up
    ```
 
-   If you specify `--setup-system-service true`, the installer prints `Successfully set up Nucleus as a system service` if it set up and ran the software as a system service\. Otherwise, the installer doesn't output any message if it installs the software successfully\.
+------
 
-1. View the files in the root folder to verify the installation\.
+## Next steps<a name="run-greengrass-docker-next-steps"></a>
 
-   ```
-   ls /greengrass/v2
-   ```
+<a name="run-greengrass-docker-success"></a>AWS IoT Greengrass Core software is now running in a Docker container\. Run the following command to retrieve the container ID for the currently running container\.
 
-   If the installation succeeded, the root folder contains several folders, such as `config`, `packages`, and `logs`\.
+```
+docker ps
+```
 
-<a name="install-greengrass-core-run-software"></a>If you installed the AWS IoT Greengrass Core software as a system service, the installer runs the software for you\. Otherwise, you must run the software manually\. For more information, see [Run the AWS IoT Greengrass Core software](run-greengrass-core-v2.md)\.
+You can then run the following command to access the container and explore AWS IoT Greengrass Core software running inside the container\.
 
-<a name="install-greengrass-core-next-steps-intro"></a>For more information about how to configure and use the software and AWS IoT Greengrass, see the following:<a name="install-greengrass-core-next-steps-links"></a>
-+ [Configure the AWS IoT Greengrass Core software](configure-greengrass-core-v2.md)
-+ [Manage AWS IoT Greengrass components](manage-components.md)
-+ [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)
-+ [Greengrass Command Line Interface](gg-cli.md)
+```
+docker exec -it container-id /bin/bash
+```
+
+For information about creating a simple component, see [Create your first component](getting-started.md#create-first-component) in [Getting started with AWS IoT Greengrass V2](getting-started.md)
+
+**Note**  <a name="run-greengrass-commands-in-docker-note"></a>
+When you use `docker exec` to run commands inside the Docker container, those commands are not logged in the Docker logs\. To log your commands in the Docker logs, attach an interactive shell to the Docker container\. For more information, see [Attach an interactive shell to the Docker container](docker-troubleshooting.md#debugging-docker-attach-shell)\.
+
+The AWS IoT Greengrass Core log file is called `greengrass.log` and is located in `/greengrass/v2/logs`\. Component log files are also located in the same directory\. To view Greengrass logs on the host, run the following command:
+
+```
+docker cp container-id:/greengrass/v2/logs
+```
+
+If you want to persist logs after a container exits or has been removed, we recommend that you bind\-mount only the `/greengrass/v2/logs` directory to a temporary logs directory on the host instead of mounting the entire Greengrass directory\. For more information, see [Persist Greengrass logs outside of the Docker container](docker-troubleshooting.md#debugging-docker-persist-logs)\.
+
+<a name="greengrass-docker-stop"></a>To stop a running AWS IoT Greengrass Docker container, run `docker stop` or `docker-compose -f docker-compose.yml stop`\. This action sends `SIGTERM` to the Greengrass process and shuts down all associated processes that were started in the container\. The Docker container is initialized with `/dev/init` process as PID 1, which helps in removing any leftover zombie processes\.
+
+<a name="see-docker-troubleshooting"></a>For information about troubleshooting issues with running AWS IoT Greengrass in a Docker container, see [Troubleshooting AWS IoT Greengrass in a Docker container](docker-troubleshooting.md)\.

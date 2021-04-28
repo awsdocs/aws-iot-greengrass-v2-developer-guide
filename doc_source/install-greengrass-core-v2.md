@@ -13,19 +13,21 @@ The AWS IoT Greengrass Core software requires the following AWS IoT and IAM reso
 + An IAM role\. Greengrass core devices use the AWS IoT Core credentials provider to authorize calls to AWS services with an IAM role\. This role allows your device to interact with AWS IoT, send logs to Amazon CloudWatch Logs, and download custom component artifacts from Amazon Simple Storage Service \(Amazon S3\)\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
 + An AWS IoT role alias\. Greengrass core devices use the role alias to identify the IAM role to use\. The role alias enables you to change the IAM role but keep the device configuration the same\. For more information, see [Authorizing direct calls to AWS services](https://docs.aws.amazon.com/iot/latest/developerguide/authorizing-direct-aws.html) in the *AWS IoT Core Developer Guide*\.
 
-Choose one of the following options to install the AWS IoT Greengrass Core software\.
+Choose one of the following options to install the AWS IoT Greengrass Core software on your core device\.
 + **Quick installation**
 
   Choose this option to set up a Greengrass core device in as few steps as possible\. The installer creates the required AWS IoT and IAM resources for you\. This option requires you to provide AWS credentials to the installer to create resources in your AWS account\.
 
-  For more information, see [Quick installation](quick-installation.md)\.
+  For more information, see [Install AWS IoT Greengrass Core software with automatic resource provisioning](quick-installation.md)\.
 + **Manual installation**
 
-  Choose this option to create the required AWS resources manually or to install behind a firewall or network proxy\. By using a manual installation, you don't need to give the installer permission to create resources in your AWS account, because you create the the required AWS IoT and IAM resources\. You can also configure your device to connect on port 443 or through a network proxy\.
+  Choose this option to create the required AWS resources manually or to install behind a firewall or network proxy\. By using a manual installation, you don't need to give the installer permission to create resources in your AWS account, because you create the required AWS IoT and IAM resources\. You can also configure your device to connect on port 443 or through a network proxy\.
 
-  For more information, see [Manual installation](manual-installation.md)\.
+  For more information, see [Install AWS IoT Greengrass Core software with manual resource provisioning](manual-installation.md)\.
+
+AWS IoT Greengrass also provides containerized environments that run the AWS IoT Greengrass Core software\. You can use a Dockerfile to [run AWS IoT Greengrass in a Docker container](run-greengrass-docker.md)\.
 
 **Topics**
-+ [Quick installation](quick-installation.md)
-+ [Manual installation](manual-installation.md)
++ [Install with automatic provisioning](quick-installation.md)
++ [Install with manual provisioning](manual-installation.md)
 + [Installer arguments](configure-installer.md)

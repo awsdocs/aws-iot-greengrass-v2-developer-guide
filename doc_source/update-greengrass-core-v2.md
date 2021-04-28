@@ -1,6 +1,6 @@
 # Update the AWS IoT Greengrass Core software \(OTA\)<a name="update-greengrass-core-v2"></a>
 
-The AWS IoT Greengrass Core software comprises the [Greengrass nucleus component](greengrass-nucleus-component.md) and other optional components that you can deploy to your devices to perform over\-the\-air \(OTA\) updates of the software\. This feature is built in to the AWS IoT Greengrass Core software\.
+The AWS IoT Greengrass Core software comprises the [Greengrass nucleus component](greengrass-nucleus-component.md) and other optional components\. You can deploy the nucleus and other components to your devices to perform over\-the\-air \(OTA\) updates of the software\. This feature is built in to the AWS IoT Greengrass Core software\.
 
 OTA updates make it more efficient to:
 + Fix security vulnerabilities\.
@@ -32,7 +32,7 @@ Before perform an OTA update, be aware of the impact on the core devices that yo
 
 <a name="component-patch-update"></a>When you deploy a component, AWS IoT Greengrass installs the latest supported versions of all component dependencies for that component\. Because of this, new patch versions of AWS\-provided public components might be automatically deployed to your core devices if you add new devices to a thing group, or you update the deployment that targets those devices\. Some automatic updates, such as a nucleus update, can cause your devices to restart unexpectedly\. 
 
-When the version of the [Greengrass nucleus component ]()changes, the AWS IoT Greengrass Core software—which includes the nucleus and all other components on your device—restarts to apply the changes\. Because of the [impact on core devices]() when the nucleus component is updated, you might want to control when a new nucleus patch version is deployed to your devices\. To do so, you must directly include the Greengrass nucleus component in your deployment\. Directly including a component means that you include a specific version of that component in your deployment configuration and do not rely on component dependencies to deploy that component to your devices\. For more information about defining dependencies in your component recipes, see [Recipe format](component-recipe-reference.md#recipe-format)\.
+When the version of the [Greengrass nucleus component](greengrass-nucleus-component.md) changes, the AWS IoT Greengrass Core software—which includes the nucleus and all other components on your device—restarts to apply the changes\. When the nucleus component is updated, it has an [impact on core devices](#ota-update-considerations)\. Because of this, consider controlling when a new nucleus patch version is deployed to your devices\. To do so, you must directly include the Greengrass nucleus component in your deployment\. This means that you are including a specific version of that component in your deployment configuration and are not relying on component dependencies to deploy that component to your devices\. For more information about defining dependencies in your component recipes, see [Recipe format](component-recipe-reference.md#recipe-format)\.
 
 Review the following table to understand the update behavior for the Greengrass nucleus component based on your actions and deployment configurations\.
 
@@ -47,3 +47,7 @@ Review the following table to understand the update behavior for the Greengrass 
 ## Perform an OTA update<a name="create-ota-update"></a>
 
 To perform an OTA update, [create a deployment](create-deployments.md) that includes the [nucleus component](greengrass-nucleus-component.md) and the version to install\.
+
+**Note**  
+Several AWS\-provided public components depend on specific minor versions of the Greengrass nucleus\. Because of this dependency, you must update these public components when you update the Greengrass nucleus to a new minor version\. When you create the deployment, check which public components depend on the nucleus, and update those components to a later version that supports the desired Greengrass nucleus version\.  
+For example, version 2\.0\.7 of the [stream manager component](stream-manager-component.md) supports v2\.0\.3 to v2\.0\.x of the Greengrass nucleus\. Stream manager v2\.0\.8 supports v2\.0\.3 to v2\.1\.x of the Greengrass nucleus\. Because of these version constraints, you must update stream manager to v2\.0\.8 or later when you update the Greengrass nucleus to v2\.1 on core devices that run stream manager v2\.0\.7\.

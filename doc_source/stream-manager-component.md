@@ -4,10 +4,48 @@ The stream manager component \(`aws.greengrass.StreamManager`\) enables you to p
 
 For more information about how to configure and use stream manager in custom components, see [Manage data streams on the AWS IoT Greengrass Core](manage-data-streams.md)\.
 
+**Topics**
++ [Versions](#stream-manager-component-versions)
++ [Dependencies](#stream-manager-component-dependencies)
++ [Configuration](#stream-manager-component-configuration)
++ [Changelog](#stream-manager-component-changelog)
+
+## Versions<a name="stream-manager-component-versions"></a>
+
 This component has the following versions:
 + 2\.0\.x
 
-## Configuration<a name="stream-mananger-component-configuration"></a>
+## Dependencies<a name="stream-manager-component-dependencies"></a>
+
+When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. You must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#stream-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+
+------
+#### [ 2\.0\.8 ]
+
+The following table lists the dependencies for version 2\.0\.8 and later versions of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.0\.0 <2\.2\.0  | Soft | 
+| [Token exchange service](token-exchange-service-component.md) |  >=0\.0\.0  | Hard | 
+
+------
+#### [ 2\.0\.7 ]
+
+The following table lists the dependencies for version 2\.0\.7 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.0\.3 <2\.1\.0  | Soft | 
+| [Token exchange service](token-exchange-service-component.md) |  >=0\.0\.0  | Hard | 
+
+------
+
+For more information about component dependencies, see the [component recipe reference](component-recipe-reference.md#recipe-reference-component-dependencies)\.
+
+## Configuration<a name="stream-manager-component-configuration"></a>
 
 This component provides the following configuration parameters that you can customize when you deploy the component\.
 
@@ -42,3 +80,13 @@ Default: `5242880` \(5 MB\)\. This is also the minimum value\.
 `JVM_ARGS`  
 \(Optional\) The custom Java Virtual Machine arguments to pass to stream manager at startup\. Separate multiple arguments by spaces\.  
 Use this parameter only when you must override the default settings used by the JVM\. For example, you might need to increase the default heap size if you plan to export a large number of streams\.
+
+## Changelog<a name="stream-manager-component-changelog"></a>
+
+The following table describes the changes in each version of the component\.
+
+
+|  **Version**  |  **Changes**  | 
+| --- | --- | 
+|  2\.0\.8  |  Version updated for Greengrass nucleus version 2\.1\.0 release\.  | 
+|  2\.0\.7  |  Initial version\.  | 

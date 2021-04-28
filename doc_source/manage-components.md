@@ -37,8 +37,8 @@ The *component lifecycle* defines the stages that the AWS IoT Greengrass Core so
 
 **Topics**
 + [AWS\-provided components](public-components.md)
-+ [Upload components to deploy to your core devices](upload-components.md)
 + [Create custom AWS IoT Greengrass components](create-components.md)
++ [Upload components to deploy to your core devices](upload-components.md)
 + [Interact with AWS services](interact-with-aws-services.md)
 + [Run a Docker container](run-docker-container.md)
 + [AWS IoT Greengrass component recipe reference](component-recipe-reference.md)

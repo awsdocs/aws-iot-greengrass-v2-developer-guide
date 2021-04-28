@@ -3,13 +3,16 @@
 Use the troubleshooting information and solutions in this section to help resolve issues with your machine learning components\. For the public machine learning inference components, you can see error messages in the following component logs:
 + `/greengrass/v2/logs/aws.greengrass.DLRImageClassification.log`
 + `/greengrass/v2/logs/aws.greengrass.DLRObjectDetection.log`
++ `/greengrass/v2/logs/aws.greengrass.TensorFlowLiteImageClassification.log`
++ `/greengrass/v2/logs/aws.greengrass.TensorFlowLiteObjectDetection.log`
 
 If a component is installed correctly, then the component log contains the location of the library that it uses for inference\.
 
 **Topics**
 + [Failed to fetch library](#rpi-update-error)
 + [Cannot open shared object file](#rpi-import-cv-error)
-+ [Library not found](#troubleshooting-venv-errors)
++ [<library> not found](#troubleshooting-venv-errors-not-found)
++ [No such file or directory](#troubleshooting-venv-errors-no-such-file)
 + [Memory errors](#troubleshooting-memory-errors)
 + [Disk space errors](#troubleshooting-disk-space-errors)
 + [Timeout errors](#troubleshooting-timeout-errors)
@@ -37,19 +40,36 @@ ImportError: libopenjp2.so.7: cannot open shared object file: No such file or di
 Run the following command to manually install the dependencies for `opencv-python`:
 
 ```
-sudo apt-get install libopenjp2-7 libilmbase23 libopenexr-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libgtk-3-0
+sudo apt-get install libopenjp2-7 libilmbase23 libopenexr-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libgtk-3-0 libwebp-dev
 ```
 
-## Library not found<a name="troubleshooting-venv-errors"></a>
+## <library> not found<a name="troubleshooting-venv-errors-not-found"></a>
 
-The following errors are an indication that the DLR Installer component was unable to set up the virtual environment correctly:
-+ `*${*ml_root_path*}*/greengrass_ml_dlr_conda/bin/conda: No such file or directory ` \(on x86\_64 devices\)
-+ `*${*ml_root_path*}*/greengrass_ml_dlr_venv/bin/activate: No such file or directory ` \(on Raspberry Pi devices\)
+The following errors indicate that the runtime component was unable to set up the virtual environment correctly:
 + `cv2 not found `
 + `dlr not found `
 + `numpy not found `
 
-Check the logs to make sure that all dependencies were installed correctly\. For more information about the libraries installed by the installer script, see [DLR Installer](variant-dlr-component.md)\.
+Check the logs to make sure that all runtime dependencies were installed correctly\. For more information about the libraries installed by the installer script, see the following topics:
++ [DLR](dlr-component.md)
++ [TensorFlow Lite](tensorflow-lite-component.md)
+
+## No such file or directory<a name="troubleshooting-venv-errors-no-such-file"></a>
+
+The following errors indicate that the runtime component was unable to set up the virtual environment correctly:
++ `MLRootPath/greengrass_ml_dlr_conda/bin/conda: No such file or directory `
++ `MLRootPath/greengrass_ml_dlr_venv/bin/activate: No such file or directory ` 
++ `MLRootPath/greengrass_ml_tflite_conda/bin/conda: No such file or directory ` 
++ `MLRootPath/greengrass_ml_tflite_venv/bin/activate: No such file or directory `
+
+Check the logs to make sure that all runtime dependencies were installed correctly\. For more information about the libraries installed by the installer script, see the following topics:
++ [DLR](dlr-component.md)
++ [TensorFlow Lite](tensorflow-lite-component.md)
+
+By default *MLRootPath* is set to `/greengrass/v2/work/component-name/greengrass_ml`\. To change this location, include the [DLR](dlr-component.md) or [TensorFlow Lite](tensorflow-lite-component.md) runtime component directly in your deployment, and specify a modified value for the `MLRootPath` parameter in a configuration merge update\. For more information about configuring component, see [Update component configurations](update-component-configurations.md)\.
+
+**Note**  
+For the DLR component v1\.3\.x, you set the `MLRootPath` parameter in the configuration of the inference component, and the default value is `$HOME/greengrass_ml`\.
 
 ## Memory errors<a name="troubleshooting-memory-errors"></a>
 

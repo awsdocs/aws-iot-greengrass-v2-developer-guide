@@ -9,12 +9,24 @@ In your custom component, you might want to implement filtering or formatting lo
 **Note**  
 This component provides similar functionality to the Amazon SNS connector in AWS IoT Greengrass V1\. For more information, see [Amazon SNS connector](https://docs.aws.amazon.com/greengrass/latest/developerguide/sns-connector.html) in the *AWS IoT Greengrass V1 Developer Guide*\.
 
+**Topics**
++ [Versions](#sns-component-versions)
++ [Requirements](#sns-component-requirements)
++ [Dependencies](#sns-component-dependencies)
++ [Configuration](#sns-component-configuration)
++ [Input data](#sns-component-input-data)
++ [Output data](#sns-component-output-data)
++ [Licenses](#sns-component-licenses)
++ [Changelog](#sns-component-changelog)
+
+## Versions<a name="sns-component-versions"></a>
+
 This component has the following versions:
 + 2\.0\.x
 
 ## Requirements<a name="sns-component-requirements"></a>
 
-This component has the following requirements:
+To deploy a component, you must meet the requirements for the component and its [dependencies](#sns-component-dependencies)\. This component has the following requirements:
 + <a name="core-device-lambda-function-requirements"></a>Your core device must meet the requirements to run Lambda functions\. If you want the core device to run containerized Lambda functions, the device must meet the requirements to do so\. For more information, see [Requirements to run Lambda functions](setting-up.md#greengrass-v2-lambda-requirements)\.
 + <a name="public-component-python3-requirement"></a>[Python](https://www.python.org/) version 3\.7 installed on the core device and added to the PATH environment variable\.
 + An Amazon SNS topic\. For more information, see [Creating an Amazon SNS topic](https://docs.aws.amazon.com/sns/latest/dg/sns-create-topic.html) in the *Amazon Simple Notification Service Developer Guide*\.
@@ -38,26 +50,82 @@ This component has the following requirements:
   ```
 
   You can dynamically override the default topic in the input message payload for this component\. If your application uses this feature, the IAM policy must include all target topics as resources\. You can grant granular or conditional access to resources \(for example, by using a wildcard `*` naming scheme\)\.
-+ <a name="connector-component-legacy-subscription-router-dependency"></a>To receive output data from this component, you must merge the following configuration update for the [legacy subscription router component](legacy-subscription-router-component.md) when you deploy this component\. The legacy subscription router component \(`aws.greengrass.LegacySubscriptionRouter`\) is a dependency of this component\. This configuration specifies the topic where this component publishes responses\.<a name="connector-component-legacy-subscription-router-dependency-replace"></a>
-  + Replace *region* with the AWS Region that you use\.
-  + Replace *version* with the version of the Lambda function that this component runs\. To find the Lambda function version, you must view the recipe for the version of this component that you want to deploy\. Open this component's details page in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass), and look for the **Lambda function** key\-value pair\. This key\-value pair contains the name and version of the Lambda function\.
++ <a name="connector-component-legacy-subscription-router-dependency"></a>To receive output data from this component, you must merge the following configuration update for the [legacy subscription router component](legacy-subscription-router-component.md) \(`aws.greengrass.LegacySubscriptionRouter`\) when you deploy this component\. This configuration specifies the topic where this component publishes responses\.
+
+------
+#### [ Legacy subscription router v2\.1\.x ]
 
   ```
   {
     "subscriptions": {
       "aws-greengrass-sns": {
         "id": "aws-greengrass-sns",
-        "source": "aws:aws:lambda:region:aws-greengrass-sns:version",
+        "source": "component:aws.greengrass.SNS",
         "subject": "sns/message/status",
         "target": "cloud"
       }
     }
   }
   ```
+
+------
+#### [ Legacy subscription router v2\.0\.x ]
+
+  ```
+  {
+    "subscriptions": {
+      "aws-greengrass-sns": {
+        "id": "aws-greengrass-sns",
+        "source": "arn:aws:lambda:region:aws:function:aws-greengrass-sns:version",
+        "subject": "sns/message/status",
+        "target": "cloud"
+      }
+    }
+  }
+  ```<a name="connector-component-legacy-subscription-router-dependency-replace"></a>
+  + Replace *region* with the AWS Region that you use\.
+  + Replace *version* with the version of the Lambda function that this component runs\. To find the Lambda function version, you must view the recipe for the version of this component that you want to deploy\. Open this component's details page in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass), and look for the **Lambda function** key\-value pair\. This key\-value pair contains the name and version of the Lambda function\.
+
 **Important**  <a name="connector-component-legacy-subscription-router-dependency-note"></a>
 You must update the Lambda function version on the legacy subscription router every time you deploy this component\. This ensures that you use the correct Lambda function version for the component version that you deploy\.
 
+------
+
   <a name="connector-component-create-deployments"></a>For more information, see [Create deployments](create-deployments.md)\.
+
+## Dependencies<a name="sns-component-dependencies"></a>
+
+When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. You must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#sns-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+
+------
+#### [ >=2\.0\.4 ]
+
+The following table lists the dependencies for version 2\.0\.4 and later versions of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.2\.0  | Hard | 
+| [Lambda launcher](lambda-launcher-component.md) | ^2\.0\.0  | Hard | 
+| [Lambda runtimes](lambda-runtimes-component.md) | ^2\.0\.0  | Soft | 
+| [Token exchange service](token-exchange-service-component.md) | ^2\.0\.0  | Hard | 
+
+------
+#### [ 2\.0\.x ]
+
+The following table lists the dependencies for version 2\.0\.3 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.3 <2\.1\.0  | Hard | 
+| [Lambda launcher](lambda-launcher-component.md) | >=1\.0\.0  | Hard | 
+| [Lambda runtimes](lambda-runtimes-component.md) | >=1\.0\.0  | Soft | 
+| [Token exchange service](token-exchange-service-component.md) | >=1\.0\.0  | Hard | 
+
+------
+
+For more information about component dependencies, see the [component recipe reference](component-recipe-reference.md#recipe-reference-component-dependencies)\.
 
 ## Configuration<a name="sns-component-configuration"></a>
 
@@ -228,3 +296,13 @@ This component includes the following third\-party software/licensing:<a name="b
 + [urllib3](https://pypi.org/project/urllib3/)/MIT License
 
 <a name="component-core-software-license"></a>This component is released under the [Greengrass Core Software License Agreement](https://greengrass-release-license.s3.us-west-2.amazonaws.com/greengrass-license-v1.pdf)\.
+
+## Changelog<a name="sns-component-changelog"></a>
+
+The following table describes the changes in each version of the component\.
+
+
+|  **Version**  |  **Changes**  | 
+| --- | --- | 
+|  2\.0\.4  |  Version updated for Greengrass nucleus version 2\.1\.0 release\.  | 
+|  2\.0\.3  |  Initial version\.  | 

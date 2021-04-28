@@ -25,6 +25,28 @@ Authorization policies for publish/subscribe messaging have the following proper
 |  `aws.greengrass#SubscribeToTopic`  |  Allows a component to subscribe to messages for the topics that you specify\.  |  A topic string, such as `test/topic`, or `*` to allow access to all topics\. This topic string doesn't support MQTT topic wildcards \(`#` and `+`\)\.  | 
 |  `*`  |  Allows a component to publish and subscribe to messages for the topics that you specify\.  |  A topic string, such as `test/topic`, or `*` to allow access to all topics\. This topic string doesn't support MQTT topic wildcards \(`#` and `+`\)\.  | 
 
+**Example authorization policy**  
+The following example authorization policy allows a component to publish and subscribe to all topics\.  
+
+```
+{
+  "accessControl": {
+    "aws.greengrass.ipc.pubsub": {
+      "com.example.MyLocalPubSubComponent:pubsub:1": {
+        "policyDescription": "Allows access to publish/subscribe to all topics.",
+        "operations": [
+          "aws.greengrass#PublishToTopic",
+          "aws.greengrass#SubscribeToTopic"
+        ],
+        "resources": [
+          "*"
+        ]
+      }
+    }
+  }
+}
+```
+
 ## Operations<a name="ipc-publish-subscribe-operations"></a>
 
 Use the following operations for publish/subscribe messaging\.
@@ -121,6 +143,10 @@ future.result(TIMEOUT)
 
 Subscribe to messages at a topic\.
 
+<a name="ipc-subscribe-operation-note"></a>This operation is a subscription operation where you subscribe to a stream of event messages\. To use this operation, define a stream response handler with functions that handle event messages, errors, and stream closure\. For more information, see [Subscribe to IPC event streams](interprocess-communication.md#ipc-subscribe-operations)\.
+
+**Event message type:** `SubscriptionResponseMessage`
+
 #### Request<a name="ipc-operation-subscribetotopic-request"></a>
 
 This operation's request has the following parameters:
@@ -153,7 +179,7 @@ The following examples demonstrate how to call this operation in custom componen
 ------
 #### [ Java ]
 
-**Example: Subscribe to messages**  
+**Example: Subscribe to local publish/subscribe messages**  <a name="ipc-operation-subscribetotopic-example-java"></a>
 
 ```
 String topic = "my/topic";
@@ -165,15 +191,19 @@ StreamResponseHandler<SubscriptionResponseMessage> streamResponseHandler =
         new StreamResponseHandler<SubscriptionResponseMessage>() {
             @Override
             public void onStreamEvent(SubscriptionResponseMessage subscriptionResponseMessage) {
-                String message = new String(subscriptionResponseMessage.getBinaryMessage()
-                        .getMessage(), StandardCharsets.UTF_8);
-                // Handle message.
+                try {
+                    String message = new String(subscriptionResponseMessage.getBinaryMessage()
+                            .getMessage(), StandardCharsets.UTF_8);
+                    // Handle message.
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
             public boolean onStreamError(Throwable error) {
                 // Handle error.
-                return false;
+                return false; // Return true to close stream, false to keep stream open.
             }
 
             @Override
@@ -202,11 +232,12 @@ operationResponseHandler.closeStream();
 ------
 #### [ Python ]
 
-**Example: Subscribe to messages**  
+**Example: Subscribe to local publish/subscribe messages**  <a name="ipc-operation-subscribetotopic-example-python"></a>
 This example assumes that you are using version 1\.5\.4 or later of the AWS IoT Device SDK for Python v2\. If you are using version 1\.5\.3 of the SDK, see [Use AWS IoT Device SDK for Python v2](interprocess-communication.md#ipc-python) for information about connecting to the AWS IoT Greengrass Core IPC service\. 
 
 ```
 import time
+import traceback
 
 import awsiot.greengrasscoreipc
 import awsiot.greengrasscoreipc.client as client
@@ -224,14 +255,18 @@ class StreamHandler(client.SubscribeToTopicStreamHandler):
         super().__init__()
 
     def on_stream_event(self, event: SubscriptionResponseMessage) -> None:
-        message_string = str(event.binary_message.message, "utf-8")
-        # Handle message.
+        try:
+            message_string = str(event.binary_message.message, "utf-8")
+            # Handle message.
+        except:
+            traceback.print_exc()
 
     def on_stream_error(self, error: Exception) -> bool:
         # Handle error.
-        return True
+        return True  # Return True to close stream, False to keep stream open.
 
     def on_stream_closed(self) -> None:
+        # Handle close.
         pass
 
 
@@ -240,7 +275,7 @@ topic = "my/topic"
 request = SubscribeToTopicRequest()
 request.topic = topic
 handler = StreamHandler()
-operation = ipc_client.new_subscribe_to_topic(handler)
+operation = ipc_client.new_subscribe_to_topic(handler) 
 future = operation.activate(request)
 future.result(TIMEOUT)
 
@@ -533,16 +568,20 @@ public class PubSubSubscriber {
 
         @Override
         public void onStreamEvent(SubscriptionResponseMessage subscriptionResponseMessage) {
-            String message = new String(subscriptionResponseMessage.getBinaryMessage()
-                    .getMessage(), StandardCharsets.UTF_8);
-            System.out.println("Received new message: " + message);
+            try {
+                String message = new String(subscriptionResponseMessage.getBinaryMessage()
+                        .getMessage(), StandardCharsets.UTF_8);
+                System.out.println("Received new message: " + message);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
         public boolean onStreamError(Throwable error) {
             System.err.println("Received a stream error.");
             error.printStackTrace();
-            return false;
+            return false; // Return true to close stream, false to keep stream open.
         }
 
         @Override
@@ -769,13 +808,16 @@ class StreamHandler(client.SubscribeToTopicStreamHandler):
         super().__init__()
 
     def on_stream_event(self, event: SubscriptionResponseMessage) -> None:
-        message = str(event.binary_message.message, "utf-8")
-        print("Received new message: " + message)
+        try:
+            message = str(event.binary_message.message, "utf-8")
+            print("Received new message: " + message)
+        except:
+            traceback.print_exc()
 
     def on_stream_error(self, error: Exception) -> bool:
         print("Received a stream error.", file=sys.stderr)
         traceback.print_exc()
-        return False
+        return False  # Return True to close stream, False to keep stream open.
 
     def on_stream_closed(self) -> None:
         print('Subscribe to topic stream closed.')

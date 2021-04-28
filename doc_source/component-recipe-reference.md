@@ -54,7 +54,7 @@ The publisher or author of the component\.
 An object that defines the default configuration for the component\. You define the structure of this object\.  
 <a name="configuration-value-type-note"></a>AWS IoT Greengrass uses JSON for configuration values\. JSON specifies a number type but doesn't differentiate between integers and floats\. As a result, configuration values might convert to floats in AWS IoT Greengrass\. To ensure that your component uses the correct data type, we recommend that you define numeric configuration values as strings\. Then, have your component parse them as integers or floats\. This ensures that your configuration values have the same type in the configuration and on your core device\.
 
-`ComponentDependencies`  
+`ComponentDependencies`  <a name="recipe-reference-component-dependencies"></a>
 \(Optional\) A dictionary of objects that each define a component dependency for the component\. The key for each object identifies the name of the component dependency\. AWS IoT Greengrass installs component dependencies when the component installs\. AWS IoT Greengrass waits for dependencies to start before it starts the component\. Each object contains the following information:    
 `VersionRequirement`  
 The semantic version constraint that defines the component versions for this dependency\. You can specify a version or a range of versions\. For more information, see the [npm semantic version calculator](https://semver.npmjs.com/)\.  

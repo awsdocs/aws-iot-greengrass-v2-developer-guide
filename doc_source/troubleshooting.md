@@ -3,18 +3,20 @@
 Use the troubleshooting information and solutions in this section to help resolve issues with AWS IoT Greengrass Version 2\.
 
 **Topics**
-+ [View AWS IoT Greengrass Core logs](#view-greengrass-core-logs)
++ [View AWS IoT Greengrass Core software logs](#view-greengrass-core-logs)
 + [View component logs](#view-component-logs)
 + [AWS IoT Greengrass Core software issues](#greengrass-core-issues)
 + [AWS IoT Greengrass cloud issues](#greengrass-cloud-issues)
 + [Core device deployment issues](#greengrass-core-deployment-issues)
 + [Core device component issues](#greengrass-core-component-issues)
 
-## View AWS IoT Greengrass Core logs<a name="view-greengrass-core-logs"></a>
+## View AWS IoT Greengrass Core software logs<a name="view-greengrass-core-logs"></a>
 
-The AWS IoT Greengrass Core log file provides real\-time information about the AWS IoT Greengrass Core\. This can help you identify issues with components and deployments\.
+The AWS IoT Greengrass Core software log file provides real\-time information about the core device\. This can help you identify issues with components and deployments\.
 
-**To view the AWS IoT Greengrass Core log file**
+This log file also includes logs for plugin components, such as [log manager](log-manager-component.md) and [secret manager](secret-manager-component.md)\.
+
+**To view the core device log file**
 + Run the following command to view the log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
 
   ```
@@ -24,6 +26,9 @@ The AWS IoT Greengrass Core log file provides real\-time information about the A
 ## View component logs<a name="view-component-logs"></a>
 
 Component log files provide real\-time information about a component that runs on the Greengrass core device\. This can help you identify issues with components\.
+
+**Note**  
+The AWS IoT Greengrass Core software doesn't create component log files for plugin components, such as [log manager](log-manager-component.md) and [secret manager](secret-manager-component.md)\. For more information about how to view plugin component logs, see [View AWS IoT Greengrass Core software logs](#view-greengrass-core-logs)\.
 
 **To view the log file for a component**
 + Run the following command to view the log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder, and replace *com\.example\.HelloWorld* with the name of the component\.
@@ -38,16 +43,17 @@ Use the following information to troubleshoot AWS IoT Greengrass Core software i
 
 **Topics**
 + [Unable to set up core device](#unable-to-set-up-core-device)
-+ [Error: Unable to connect to AWS IoT Core](#core-error-unable-to-connect-to-aws-iot)
++ [Unable to connect to AWS IoT Core](#core-error-unable-to-connect-to-aws-iot)
 + [Out of memory error](#java-out-of-memory)
 + [Unable to install Greengrass CLI](#unable-to-install-greengrass-cli)
++ [User root is not allowed to execute](#user-not-allowed-to-execute)
 + [Failed to map segment from shared object: operation not permitted](#unable-to-start-greengrass)
 
 ### Unable to set up core device<a name="unable-to-set-up-core-device"></a>
 
 If the AWS IoT Greengrass Core software installer fails and you aren't able to set up a core device, you might need to uninstall the software and try again\. For more information, see [Uninstall the AWS IoT Greengrass Core software](uninstall-greengrass-core-v2.md)\.
 
-### Error: Unable to connect to AWS IoT Core<a name="core-error-unable-to-connect-to-aws-iot"></a>
+### Unable to connect to AWS IoT Core<a name="core-error-unable-to-connect-to-aws-iot"></a>
 
 You might see this error when the AWS IoT Greengrass Core software can't connect to AWS IoT Core to retrieve deployment jobs, for example\. Do the following:
 + Check that your core device can connect to the internet and AWS IoT Core\. For more information about the AWS IoT Core endpoint to which your device connects, see [Configure the AWS IoT Greengrass Core software](configure-greengrass-core-v2.md)\.
@@ -67,6 +73,20 @@ Thing group exists, it could have existing deployment and devices, hence NOT cre
 ```
 
 This occurs when the Greengrass CLI component is not installed because your core device is a member of a thing group that has an existing deployment\. If you see this message, you can manually deploy the Greengrass CLI component \(`aws.greengrass.Cli`\) to the device to install the Greengrass CLI\. For more information, see [Install the Greengrass CLI](install-gg-cli.md)\.
+
+### User root is not allowed to execute<a name="user-not-allowed-to-execute"></a>
+
+You might see this error when the user that runs the AWS IoT Greengrass Core software \(typically `root`\) doesn't have permission to run `sudo` with any user and any group\. For the default `ggc_user` system user, this error looks like the following:
+
+```
+Sorry, user root is not allowed to execute <command> as ggc_user:ggc_group.
+```
+
+Check that your `/etc/sudoers` file gives the user permission to run `sudo` as other groups\. The permission for the user in `/etc/sudoers` should look like the following example\.
+
+```
+root    ALL=(ALL:ALL) ALL
+```
 
 ### Failed to map segment from shared object: operation not permitted<a name="unable-to-start-greengrass"></a>
 
@@ -94,8 +114,9 @@ Use the following information to troubleshoot deployment issues on Greengrass co
 
 **Topics**
 + [Error: com\.aws\.greengrass\.componentmanager\.exceptions\.PackageDownloadException: Failed to download artifact](#core-error-failed-to-download-artifact-package-download-exception)
-+ [Error: com\.aws\.greengrass\.componentmanager\.exceptions\.ArtifactChecksumMismatchException: Failed to download artifact](#core-error-failed-to-download-artifact-checksum-mismatch-exception)
++ [Error: com\.aws\.greengrass\.componentmanager\.exceptions\.ArtifactChecksumMismatchException: Integrity check for downloaded artifact failed\. Probably due to file corruption\.](#core-error-failed-to-download-artifact-checksum-mismatch-exception)
 + [Error: com\.aws\.greengrass\.componentmanager\.exceptions\.NoAvailableComponentVersionException: Failed to negotiate component <name> version with cloud and no local applicable version satisfying requirement <requirements>](#core-error-no-available-component-version)
++ [software\.amazon\.awssdk\.services\.secretsmanager\.model\.SecretsManagerException: User: <user> is not authorized to perform: secretsmanager:GetSecretValue on resource: <arn>](#secret-manager-error-not-authorized-to-perform-get-secret-value)
 
 ### Error: com\.aws\.greengrass\.componentmanager\.exceptions\.PackageDownloadException: Failed to download artifact<a name="core-error-failed-to-download-artifact-package-download-exception"></a>
 
@@ -109,13 +130,13 @@ The [PackageDownloadException error](#core-error-failed-to-download-artifact-pac
 + The component artifact isn't available at the Amazon S3 URL that you specify in the component's recipe\. Check that you uploaded the artifact to the S3 bucket and that the artifact URL matches the Amazon S3 URL of the artifact in the bucket\.
 + The [core device role](device-service-role.md) doesn't allow the AWS IoT Greengrass Core software to download the component artifact from the Amazon S3 URL that you specify in the component's recipe\. Check that the device role allows `s3:GetObject` for the Amazon S3 URL where the artifact is available\.
 
-### Error: com\.aws\.greengrass\.componentmanager\.exceptions\.ArtifactChecksumMismatchException: Failed to download artifact<a name="core-error-failed-to-download-artifact-checksum-mismatch-exception"></a>
+### Error: com\.aws\.greengrass\.componentmanager\.exceptions\.ArtifactChecksumMismatchException: Integrity check for downloaded artifact failed\. Probably due to file corruption\.<a name="core-error-failed-to-download-artifact-checksum-mismatch-exception"></a>
 
-You might see this error when the AWS IoT Greengrass Core software fails to download a component artifact when the core device applies a deployment\. The deployment fails as a result of this error\.
+You might see this error when the AWS IoT Greengrass Core software fails to download a component artifact when the core device applies a deployment\. The deployment fails because the downloaded artifact file's checksum doesn't match the checksum that AWS IoT Greengrass calculated when you created the component\.
 
-This error indicates that the downloaded artifact file's checksum doesn't match the checksum that AWS IoT Greengrass calculated when you created the component\. Do the following:
-+ Check if the artifact file changed in the S3 bucket where you host it\. If the file changed since you created the component, restore it to the previous version that the core device expects\. If you can't restore the file to its previous version, create a new version of the component with the artifact file to deploy\.
-+ Check your core device's internet connection\. This error can occur if the artifact file becomes corrupted while it downloads\. Create a new deployment to try again\.
+Do the following:
++ Check if the artifact file changed in the S3 bucket where you host it\. If the file changed since you created the component, restore it to the previous version that the core device expects\. If you can't restore the file to its previous version, or if you want to use the new version of the file, create a new version of the component with the artifact file\.
++ Check your core device's internet connection\. This error can occur if the artifact file becomes corrupted while it downloads\. Create a new deployment and try again\.
 
 ### Error: com\.aws\.greengrass\.componentmanager\.exceptions\.NoAvailableComponentVersionException: Failed to negotiate component <name> version with cloud and no local applicable version satisfying requirement <requirements><a name="core-error-no-available-component-version"></a>
 
@@ -127,6 +148,34 @@ This issue can occur in the following cases:
 + There exists component versions that meet the version requirements, but none are compatible with the core device's platform\.
 
 To resolve this issue, revise the deployments to include compatible component versions or remove incompatible ones\. For more information about how to revise cloud deployments, see [Revise deployments](revise-deployments.md)\. For more information about how to revise local deployments, see the [AWS IoT Greengrass CLI deployment create](gg-cli-deployment.md#deployment-create) command\.
+
+### software\.amazon\.awssdk\.services\.secretsmanager\.model\.SecretsManagerException: User: <user> is not authorized to perform: secretsmanager:GetSecretValue on resource: <arn><a name="secret-manager-error-not-authorized-to-perform-get-secret-value"></a>
+
+This error can occur when you use the [secret manager component](secret-manager-component.md) to deploy an AWS Secrets Manager secret\. If the core device's [token exchange IAM role](device-service-role.md) doesn't grant permission to get the secret, the deployment fails and the Greengrass logs include this error\.
+
+**To authorize a core device to download a secret**
+
+1. Add the `secretsmanager:GetSecretValue` permission to the core device's token exchange role\. The following example policy statement grants permission to get the value of a secret\.
+
+   ```
+   {
+       "Effect": "Allow",
+       "Action": [
+           "secretsmanager:GetSecretValue"
+       ],
+       "Resource": [
+           "arn:aws:secretsmanager:us-west-2:123456789012:secret:MyGreengrassSecret-abcdef"
+       ]
+   }
+   ```
+
+   For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
+
+1. Reapply the deployment to the core device\. Do one of the following:
+   + Revise the deployment without any changes\. The core device tries to download the secret again when it receives the revised deployment\. For more information, see [Revise deployments](revise-deployments.md)\.
+   + Restart the AWS IoT Greengrass Core software to retry the deployment\. For more information, see [Run the AWS IoT Greengrass Core software](run-greengrass-core-v2.md)
+
+   The deployment succeeds if secret manager downloads the secret successfully\.
 
 ## Core device component issues<a name="greengrass-core-component-issues"></a>
 

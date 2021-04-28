@@ -87,6 +87,10 @@ This operation doesn't provide any information in its response\.
 
 Subscribe to receive notifications when a component's configuration updates\. When you subscribe to a key, you receive a notification when any child of that key updates\.
 
+<a name="ipc-subscribe-operation-note"></a>This operation is a subscription operation where you subscribe to a stream of event messages\. To use this operation, define a stream response handler with functions that handle event messages, errors, and stream closure\. For more information, see [Subscribe to IPC event streams](interprocess-communication.md#ipc-subscribe-operations)\.
+
+**Event message type:** `ConfigurationUpdateEvents`
+
 #### Request<a name="ipc-operation-subscribetoconfigurationupdate-request"></a>
 
 This operation's request has the following parameters:
@@ -125,6 +129,10 @@ Subscribe to receive notifications before this component's configuration updates
 
 **Important**  
 Local deployments don't notify components of updates\.
+
+<a name="ipc-subscribe-operation-note"></a>This operation is a subscription operation where you subscribe to a stream of event messages\. To use this operation, define a stream response handler with functions that handle event messages, errors, and stream closure\. For more information, see [Subscribe to IPC event streams](interprocess-communication.md#ipc-subscribe-operations)\.
+
+**Event message type:** `ValidateConfigurationUpdateEvents`
 
 #### Request<a name="ipc-operation-subscribetovalidateconfigurationupdates-request"></a>
 

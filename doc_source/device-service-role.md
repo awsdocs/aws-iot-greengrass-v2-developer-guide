@@ -86,7 +86,7 @@ The default core device role doesn't allow core devices to access S3 buckets\. T
 
    Copy the policy Amazon Resource Name \(ARN\) from the policy metadata in the output\. You use this ARN to attach this policy to the core device role in the next step\.
 
-1. Run the following command to attach the policy to the core device role\. Replace *MyGreengrassV2TokenExchangeRole* with the name of the role that you specified when you ran the AWS IoT Greengrass Core software\. Then, replace the policy ARN with the ARN from the previous step\.
+1. Run the following command to attach the policy to the core device role\. Replace *GreengrassV2TokenExchangeRole* with the name of the role that you specified when you ran the AWS IoT Greengrass Core software\. Then, replace the policy ARN with the ARN from the previous step\.
 
    ```
    aws iam attach-role-policy \
