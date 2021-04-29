@@ -14,9 +14,9 @@ AWS IoT Greengrass can be configured to run in a Docker container\. Docker is a 
 ## Supported platforms and requirements<a name="greengrass-docker-supported-platforms"></a>
 
 Host computers must meet the following minimum requirements to install and run the AWS IoT Greengrass Core software in a Docker container:
-+ A Linux\-based operating system with an internet connection\.
-+ [Docker Engine](https://docs.docker.com/engine/install/) version 18\.09 or later\.
-+ \(Optional\) [Docker Compose](https://docs.docker.com/compose/install/) version 1\.22 or later\. Docker Compose is required only if you want to use the Docker Compose CLI to run your Docker images\.
++ <a name="docker-host-reqs"></a>A Linux\-based operating system with an internet connection\.
++ <a name="docker-engine-reqs"></a>[Docker Engine](https://docs.docker.com/engine/install/) version 18\.09 or later\.
++ <a name="docker-compose-reqs"></a>\(Optional\) [Docker Compose](https://docs.docker.com/compose/install/) version 1\.22 or later\. Docker Compose is required only if you want to use the Docker Compose CLI to run your Docker images\.
 
 To run Lambda function components inside of the Docker container, you must configure the container to meet additional requirements\. For more information, see [Requirements to run Lambda functions](setting-up.md#greengrass-v2-lambda-requirements)\.
 

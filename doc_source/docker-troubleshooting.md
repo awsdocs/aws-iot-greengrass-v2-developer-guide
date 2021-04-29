@@ -38,9 +38,15 @@ To debug issues with a Docker container, you can persist the Greengrass runtime 
 
 ### Persist Greengrass logs outside of the Docker container<a name="debugging-docker-persist-logs"></a>
 
-After you stop a AWS IoT Greengrass container, you can use `docker cp container-id:/greengrass/v2/logs` to access the Greengrass logs inside the Docker container\. To persist logs even after a container exits or is removed, run the AWS IoT Greengrass Docker container after bind\-mounting the `/greengrass/v2/logs` directory\. 
+After you stop a AWS IoT Greengrass container, you can use the following `docker cp ` command to copy the Greengrass logs from the Docker container to a temporary logs directory\. 
 
-To bind\-mount the `/greengrass/v2/logs` directory when you start a Greengrass Docker container, do one of the following when you run a new AWS IoT Greengrass Docker container\.
+```
+docker cp container-id:/greengrass/v2/logs /tmp/logs
+```
+
+To persist logs even after a container exits or is removed, you must run the AWS IoT Greengrass Docker container after bind\-mounting the `/greengrass/v2/logs` directory\. 
+
+To bind\-mount the `/greengrass/v2/logs` directory, do one of the following when you run a new AWS IoT Greengrass Docker container\.
 + Include `-v /tmp/logs:/greengrass/v2/logs:ro` in your `docker run` command\.
 
   Modify the `volumes` block in the Compose file to include the following line before you run your `docker-compose up` command\.

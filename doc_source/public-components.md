@@ -11,6 +11,7 @@ Several public components depend on specific minor versions of the Greengrass nu
 | [Greengrass nucleus](greengrass-nucleus-component.md) | The nucleus of the AWS IoT Greengrass Core software\. Use this component to configure and update the software on your core devices\. | \- | [Yes](https://github.com/aws-greengrass/aws-greengrass-nucleus) | 
 | [CloudWatch metrics](cloudwatch-metrics-component.md) | Publishes custom metrics to Amazon CloudWatch\. | Yes | No | 
 | [Device Defender](device-defender-component.md) | Notifies administrators of changes in the state of the Greengrass core device to identify unusual behavior\. | Yes | No | 
+| [Docker application manager](docker-application-manager-component.md) | Enables AWS IoT Greengrass to download Docker images from Docker Hub and Amazon Elastic Container Registry \(Amazon ECR\)\. | Yes | No | 
 | [Greengrass CLI](greengrass-cli-component.md) | Provides a command\-line interface that you can use to create local deployments and interact with the Greengrass core device and its components\. | Yes | [Yes](https://github.com/aws-greengrass/aws-greengrass-cli) | 
 | [Kinesis Data Firehose](kinesis-firehose-component.md) | Publishes data through Amazon Kinesis Data Firehose delivery streams to destinations in the AWS Cloud\. | Yes | No | 
 | [Lambda launcher](lambda-launcher-component.md) | Handles processes and environment configuration for Lambda functions\. | No | No | 

@@ -16,11 +16,11 @@ This tutorial shows you how to install and run AWS IoT Greengrass Core software 
 ## Prerequisites<a name="docker-manual-provisioning-prereqs"></a>
 
 To complete this tutorial, you need the following:
-+ A Linux\-based host computer with an internet connection\. 
 + An AWS account\. If you don't have one, see [Set up an AWS account](setting-up.md#set-up-aws-account)\. 
 + An AWS IoT Greengrass Docker image\. You can pull an AWS IoT Greengrass Docker image from Docker Hub or Amazon Elastic Container Registry \(Amazon ECR\), or you can [build an image from the AWS IoT Greengrass Dockerfile](build-greengrass-dockerfile.md)\.
-+ [Docker Engine](https://docs.docker.com/engine/install/) version 19\.03 or later installed on the host computer\.
-+ \(Optional\) [Docker Compose](https://docs.docker.com/compose/install/) version 1\.25\.4 or later installed on the host computer\. Docker Compose is required only if you want to use the Docker Compose CLI to build and run your Docker images\.
++ <a name="docker-host-reqs"></a>A Linux\-based operating system with an internet connection\.
++ <a name="docker-engine-reqs"></a>[Docker Engine](https://docs.docker.com/engine/install/) version 18\.09 or later\.
++ <a name="docker-compose-reqs"></a>\(Optional\) [Docker Compose](https://docs.docker.com/compose/install/) version 1\.22 or later\. Docker Compose is required only if you want to use the Docker Compose CLI to run your Docker images\.
 
 ## Create an AWS IoT thing<a name="create-iot-thing"></a>
 
@@ -568,7 +568,7 @@ The `--init` argument is required to shut down AWS IoT Greengrass Core software 
 + [https://docs.docker.com/engine/reference/run/#foreground](https://docs.docker.com/engine/reference/run/#foreground)\. \(Optional\) Runs the Docker container in the foreground as an interactive process\. You can replace this with the `-d` argument to run the Docker container in detached mode instead\. For more information, see [Detached vs foreground](https://docs.docker.com/engine/reference/run/#detached-vs-foreground) in the Docker documentation\.
 + [https://docs.docker.com/engine/reference/run/#name---name](https://docs.docker.com/engine/reference/run/#name---name)\. Runs a container named `aws-iot-greengrass` 
 + [https://docs.docker.com/storage/volumes/](https://docs.docker.com/storage/volumes/)\. Mounts a volume into the Docker container to make the configuration file and the certificate files available to AWS IoT Greengrass running inside the container\.
-+ [https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file)\. Specifies the environment file to set the environment variables that will be passed to the AWS IoT Greengrass Core software installer inside the Docker container\.
++ [https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file)\. Specifies the environment file to set the environment variables that will be passed to the AWS IoT Greengrass Core software installer inside the Docker container\. This argument is required only if you used an environment file to [set environment variables](#create-env-file-manual-provisioning)\.
 
 **Note**  <a name="docker-run-cap-drop"></a>
 To run your Docker container with increased security, you can use the `--cap-drop` and `--cap-add` arguments to selectively enable Linux capabilities for your container\. For more information, see [Runtime privilege and Linux capabilities](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities) in the Docker documentation\.
@@ -602,6 +602,8 @@ To run your Docker container with increased security, you can use `cap_drop` and
    docker-compose --env-file .env -f docker-compose.yml up
    ```
 
+   The `--env-file` argument is required only if you used an environment file to [set environment variables](#create-env-file-manual-provisioning)\.
+
 ------
 
 ## Next steps<a name="run-greengrass-docker-next-steps"></a>
@@ -623,14 +625,14 @@ For information about creating a simple component, see [Create your first compon
 **Note**  <a name="run-greengrass-commands-in-docker-note"></a>
 When you use `docker exec` to run commands inside the Docker container, those commands are not logged in the Docker logs\. To log your commands in the Docker logs, attach an interactive shell to the Docker container\. For more information, see [Attach an interactive shell to the Docker container](docker-troubleshooting.md#debugging-docker-attach-shell)\.
 
-The AWS IoT Greengrass Core log file is called `greengrass.log` and is located in `/greengrass/v2/logs`\. Component log files are also located in the same directory\. To view Greengrass logs on the host, run the following command:
+The AWS IoT Greengrass Core log file is called `greengrass.log` and is located in `/greengrass/v2/logs`\. Component log files are also located in the same directory\. To copy Greengrass logs to a temporary directory on the host, run the following command:
 
 ```
-docker cp container-id:/greengrass/v2/logs
+docker cp container-id:/greengrass/v2/logs /tmp/logs
 ```
 
-If you want to persist logs after a container exits or has been removed, we recommend that you bind\-mount only the `/greengrass/v2/logs` directory to a temporary logs directory on the host instead of mounting the entire Greengrass directory\. For more information, see [Persist Greengrass logs outside of the Docker container](docker-troubleshooting.md#debugging-docker-persist-logs)\.
+If you want to persist logs after a container exits or has been removed, we recommend that you bind\-mount only the `/greengrass/v2/logs` directory to the temporary logs directory on the host instead of mounting the entire Greengrass directory\. For more information, see [Persist Greengrass logs outside of the Docker container](docker-troubleshooting.md#debugging-docker-persist-logs)\.
 
-<a name="greengrass-docker-stop"></a>To stop a running AWS IoT Greengrass Docker container, run `docker stop` or `docker-compose -f docker-compose.yml stop`\. This action sends `SIGTERM` to the Greengrass process and shuts down all associated processes that were started in the container\. The Docker container is initialized with `/dev/init` process as PID 1, which helps in removing any leftover zombie processes\.
+<a name="greengrass-docker-stop"></a>To stop a running AWS IoT Greengrass Docker container, run `docker stop` or `docker-compose -f docker-compose.yml stop`\. This action sends `SIGTERM` to the Greengrass process and shuts down all associated processes that were started in the container\. The Docker container is initialized with the `docker-init` executable as process PID 1, which helps in removing any leftover zombie processes\. For more information, see the [Docker documentation](https://docs.docker.com/engine/reference/run/#specify-an-init-process)\.
 
 <a name="see-docker-troubleshooting"></a>For information about troubleshooting issues with running AWS IoT Greengrass in a Docker container, see [Troubleshooting AWS IoT Greengrass in a Docker container](docker-troubleshooting.md)\.
