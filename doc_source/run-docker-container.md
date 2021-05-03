@@ -221,7 +221,7 @@ This section describes how you can create a custom component that runs a Docker 
          },
          "Artifacts": [
            {
-             "URI": "account-id.dkr.ecr.region.amazonaws.com/repository[:tag|@digest]"
+             "URI": "docker:account-id.dkr.ecr.region.amazonaws.com/repository[:tag|@digest]"
            }
          ]
        }
@@ -250,7 +250,7 @@ This section describes how you can create a custom component that runs a Docker 
        Lifecycle:
            Run: account-id.dkr.ecr.region.amazonaws.com/repository[:tag|@digest]
        Artifacts:
-         - URI: "account-id.dkr.ecr.region.amazonaws.com/repository[:tag|@digest]"
+         - URI: "docker:account-id.dkr.ecr.region.amazonaws.com/repository[:tag|@digest]"
    ```
 
 ------
@@ -466,7 +466,7 @@ The following example component recipe has the following properties:
       },
       "Artifacts": [
         {
-          "URI": "account-id.dkr.ecr.region.amazonaws.com/repository[:tag|@digest]"
+          "URI": "docker:account-id.dkr.ecr.region.amazonaws.com/repository[:tag|@digest]"
         }
       ]
     }
