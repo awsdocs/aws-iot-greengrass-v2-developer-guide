@@ -5,6 +5,8 @@ AWS IoT Greengrass provides and maintains public components that you can deploy 
 **Note**  
 Several public components depend on specific minor versions of the Greengrass nucleus\. Because of this dependency, you need to update these public components when you update the Greengrass nucleus to a new minor version\. For information about the specific versions of the nucleus that each component depends on, see the corresponding component topic\. For more information about updating the nucleus, see [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)\.
 
+The license for each open source component can be [found in the respective GitHub repository](https://github.com/search?q=org%3Aaws-greengrass++filename%3ALICENSE&type=Repositories&ref=advsearch&l=&l=), all other components are subject to the [AWS Greengrass Core Software License](https://s3-us-west-2.amazonaws.com/greengrass-release-license/greengrass-license-v1.pdf
+
 
 | Component | Description | Depends on nucleus | Open source | 
 | --- | --- | --- | --- | 
