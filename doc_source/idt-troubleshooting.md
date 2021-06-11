@@ -1,15 +1,26 @@
 # Troubleshooting IDT for AWS IoT Greengrass<a name="idt-troubleshooting"></a>
 
-IDT for AWS IoT Greengrass writes these errors to various locations based on the type of errors\. Errors are written to the console, log files, and test reports\.
+IDT for AWS IoT Greengrass writes errors to various locations based on the type of errors\. IDT writes errors to the console, log files, and test reports\. 
+
+## Where to look for errors<a name="where-to-look"></a>
+
+High\-level errors display on the console while the test is running, and a summary of the failed tests displays when all tests are complete\. `awsiotdevicetester_report.xml` contains a summary of all the errors that caused a test to fail\. IDT stores the log files for each test run in a directory named with a UUID for the test execution, displayed on the console during the test run\.
+
+The IDT test logs directory is `<device-tester-extract-location>/results/<execution-id>/logs/`\. This directory contains the following files, which are useful for debugging\.
+
+
+| File | Description | 
+| --- | --- | 
+| test\_manager\.log |  The logs written to the console while the test was running\. The summary of the results at the end of this file includes a list of which tests failed\. The warning and error logs in this file can give you some information about the failures\.   | 
+| <test\-group\-id>\_\_<test\-name>\.log | Detailed logs for the specific test\. | 
 
 ## Resolving IDT for AWS IoT Greengrass errors<a name="idt-gg-resolve-errors"></a>
 
-When you use IDT, you must get the correct configuration files in place before you run IDT for AWS IoT Greengrass\. If you are getting parsing and configuration errors, your first step is to locate and use a configuration template appropriate for your environment\.
+Before you run IDT for AWS IoT Greengrass, get the correct configuration files in place\. If you receive parsing and configuration errors, your first step is to locate and use a configuration template appropriate for your environment\.
 
 If you are still having issues, see the following debugging process\.
 
 **Topics**
-+ [Where do I look for errors?](#where-to-look)
 + [Command not found errors while testing](#cmd-not-found)
 + [Conflict errors](#conflict-error)
 + [Could not start test error](#could-not-start-test)
@@ -19,18 +30,7 @@ If you are still having issues, see the following debugging process\.
 + [Security exception on macOS](#macos-notarization-exception)
 + [SSH connection errors](#ssh-connect-errors)
 + [Timeout errors](#test-timeout)
-
-### Where do I look for errors?<a name="where-to-look"></a>
-
-High\-level errors display on the console while the test is running, and a summary of the failed tests displays when all tests are complete\. `awsiotdevicetester_report.xml` contains a summary of all the errors that caused a test to fail\. The log files for each test run are stored in a directory named with an UUID for the test execution that was displayed on the console during the test run\.
-
-The test logs directory is located in `<device-tester-extract-location>/results/<execution-id>/logs/`\. This directory contains the following files, which are useful for debugging\.
-
-
-| File | Description | 
-| --- | --- | 
-| test\_manager\.log |  All of the logs that were written to the console while the test was running\. A summary of the results is located at the end of this file, which includes a list of which tests failed\. The warning and error logs in this file can give you some information about the failures\.   | 
-| <test\-group\-id>\_\_<test\-name>\.log | Detailed logs for the specific test\. | 
++ [Qualification report generation error](#qualification-report-policy-error)
 
 ### Command not found errors while testing<a name="cmd-not-found"></a>
 
@@ -52,23 +52,23 @@ For example, on a Raspberry Pi, run the following commands to install the requir
 
 ### Conflict errors<a name="conflict-error"></a>
 
-Occasionally, you might see the following error when you run the AWS IoT Greengrass qualification suite concurrently on more than one device\.
+You might see the following error when you run the AWS IoT Greengrass qualification suite concurrently on more than one device\.
 
 ```
 ConflictException: Component [com.example.IDTHelloWorld : 1.0.0] for account [account-id] already exists with state: [DEPLOYABLE] { RespMetadata: { StatusCode: 409, RequestID: “id” }, Message_: “Component [com.example.IDTHelloWorld : 1.0.0] for account [account-id] already exists with state: [DEPLOYABLE]” }
 ```
 
-Concurrent test execution is not yet supported for the AWS IoT Greengrass qualification suite\. Run the qualification suite sequentially for each device\.
+Concurrent test execution isn't yet supported for the AWS IoT Greengrass qualification suite\. Run the qualification suite sequentially for each device\.
 
 ### Could not start test error<a name="could-not-start-test"></a>
 
 You might encounter errors that point to failures that occurred when the test was attempting to start\. There are several possible causes, so do the following:
-+ Make sure that the pool name you included in your execution command actually exists\. The pool name is referenced directly from your `device.json` file\.
++ Make sure that the pool name in your execution command actually exists\. IDT references the pool name directly from your `device.json` file\.
 + Make sure that the devices in your pool have correct configuration parameters\.
 
 ### Parsing errors<a name="parse-error"></a>
 
-Occasionally, a typo in a JSON configuration can lead to parsing errors\. Most of the time, the issue is a result of omitting a bracket, comma, or quotation mark from your JSON file\. IDT performs JSON validation and prints debugging information\. It prints the line where the error occurred, the line number, and the column number of the syntax error\. This information should be enough to help you fix the error, but if you still cannot locate the error, you can perform validation manually in your IDE, a text editor such as Atom or Sublime, or through an online tool like JSONLint\.
+Typos in a JSON configuration can lead to parsing errors\. Most of the time, the issue is a result of omitting a bracket, comma, or quotation mark from your JSON file\. IDT performs JSON validation and prints debugging information\. It prints the line where the error occurred, the line number, and the column number of the syntax error\. This information should be enough to help you fix the error, but if you still can't locate the error, you can perform validation manually in your IDE, a text editor such as Atom or Sublime, or through an online tool like JSONLint\.
 
 ### Permission denied errors<a name="pwd-sudo"></a>
 
@@ -89,17 +89,17 @@ As a best practice, we recommend that you use sudo visudo when you edit `/etc/su
 
 ### Required parameter missing error<a name="param-missing"></a>
 
-Because new features are being added to IDT, changes to the configuration files might be introduced\. Using an old configuration file might break your configuration\. If this happens, the `<test_case_id>.log` file under `/results/<execution-id>/logs` explicitly lists all missing parameters\. IDT also validates your JSON configuration file schemas to ensure that the latest supported version has been used\.
+When IDT adds new features, it might introduce changes to the configuration files\. Using an old configuration file might break your configuration\. If this happens, the `<test_case_id>.log` file under `/results/<execution-id>/logs` explicitly lists all missing parameters\. IDT also validates your JSON configuration file schemas to verify that you are using the latest supported version\.
 
 ### Security exception on macOS<a name="macos-notarization-exception"></a>
 
-When you run IDT on host machine that uses macOS 10\.15, the notarization ticket for IDT is not correctly detected and IDT is blocked from being run\. To run IDT, you will need to grant a security exception to the `devicetester_mac_x86-64` executable\. Do one of the following:
+When you run IDT on a host computer that uses macOS 10\.15, the notarization ticket for IDT isn't detected, which blocks IDT from being run\. To run IDT, grant a security exception to the `devicetester_mac_x86-64` executable\. Do one of the following:
 
 **To grant a security exception to IDT executables**
 
 1. Launch **System Preferences** from the Apple menu\.
 
-1. Choose **Security & Privacy**, then on the **General** tab, click the lock icon to make changes to security settings\.
+1. Choose **Security & Privacy**, then on the **General** tab, choose the lock icon to make changes to security settings\.
 
 1. Look for the message `"devicetester_mac_x86-64" was blocked from use because it is not from an identified developer.` and choose **Allow Anyway**\.
 
@@ -107,13 +107,13 @@ When you run IDT on host machine that uses macOS 10\.15, the notarization ticket
 
 ### SSH connection errors<a name="ssh-connect-errors"></a>
 
-When IDT cannot connect to a device under test, connection failures are logged in `/results/<execution-id>/logs/<test-case-id>.log`\. SSH failure messages appear at the top of this log file because connecting to a device under test is one of the first operations that IDT performs\.
+When IDT can't connect to a device under test, it logs connection failures in `/results/<execution-id>/logs/<test-case-id>.log`\. SSH messages appear at the top of this log file because connecting to a device under test is one of the first operations that IDT performs\.
 
-Most Windows configurations use the PuTTy terminal application to connect to Linux hosts\. This application requires that standard PEM private key files are converted into a proprietary Windows format called PPK\. When IDT is configured in your `device.json` file, use PEM files only\. If you use a PPK file, IDT cannot create an SSH connection with the AWS IoT Greengrass device and cannot run tests\.
+Most Windows configurations use the PuTTy terminal application to connect to Linux hosts\. This application requires that you convert standard PEM private key files into a proprietary Windows format called PPK\. If you configure SSH in your `device.json` file, use PEM files\. If you use a PPK file, IDT can't create an SSH connection with the AWS IoT Greengrass device and can't run tests\.
 
 ### Timeout errors<a name="test-timeout"></a>
 
-You can increase the timeout for each test by specifying a timeout multiplier, which is applied to the default value of each test's timeout\. Any value configured for this flag must be greater than or equal to 1\.0\.
+You can increase the timeout for each test by specifying a timeout multiplier applied to the default value of each test's timeout\. Any value configured for this flag must be greater than or equal to 1\.0\.
 
 To use the timeout multiplier, use the flag `--timeout-multiplier` when running the tests\. For example:
 
@@ -122,3 +122,9 @@ To use the timeout multiplier, use the flag `--timeout-multiplier` when running 
 ```
 
 For more information, run `run-suite --help`\.
+
+### Qualification report generation error<a name="qualification-report-policy-error"></a>
+
+IDT supports the four latest `major.minor` versions of the AWS IoT Greengrass V2 qualification suite \(GGV2Q\) to generate qualification reports that you can submit to AWS Partner Network to include your devices in the AWS Partner Device Catalog\. Earlier versions of the qualification suite don’t generate qualification reports\.
+
+If you have questions about the support policy, contact AWS Support at [https://aws.amazon.com/contact-us/](https://aws.amazon.com/contact-us/)\.

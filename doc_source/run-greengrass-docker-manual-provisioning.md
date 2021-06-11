@@ -17,7 +17,7 @@ This tutorial shows you how to install and run AWS IoT Greengrass Core software 
 
 To complete this tutorial, you need the following:
 + An AWS account\. If you don't have one, see [Set up an AWS account](setting-up.md#set-up-aws-account)\. 
-+ An AWS IoT Greengrass Docker image\. You can pull an AWS IoT Greengrass Docker image from Docker Hub or Amazon Elastic Container Registry \(Amazon ECR\), or you can [build an image from the AWS IoT Greengrass Dockerfile](build-greengrass-dockerfile.md)\.
++ An AWS IoT Greengrass Docker image\. This tutorial shows you how to pull the AWS IoT Greengrass Docker image from Docker Hub\. You can also [pull the AWS IoT Greengrass Docker image](run-greengrass-docker.md#pull-greengrass-docker-image) from Amazon Elastic Container Registry \(Amazon ECR\), or you can [build an image from the AWS IoT Greengrass Dockerfile](build-greengrass-dockerfile.md)\.
 + <a name="docker-host-reqs"></a>A Linux\-based operating system with an internet connection\.
 + <a name="docker-engine-reqs"></a>[Docker Engine](https://docs.docker.com/engine/install/) version 18\.09 or later\.
 + <a name="docker-compose-reqs"></a>\(Optional\) [Docker Compose](https://docs.docker.com/compose/install/) version 1\.22 or later\. Docker Compose is required only if you want to use the Docker Compose CLI to run your Docker images\.
@@ -32,6 +32,8 @@ In this section, you create an AWS IoT thing and download certificates that your
 
 1. Create an AWS IoT thing for your device\. On your development computer, run the following command\.
    + Replace *MyGreengrassCore* with the thing name to use\. This name is also the name of your Greengrass core device\.
+**Note**  <a name="install-argument-thing-name-constraint"></a>
+The thing name can't contain colon \(`:`\) characters\.
 
    ```
    aws iot create-thing --thing-name MyGreengrassCore
@@ -183,6 +185,8 @@ In this section, you create an AWS IoT thing and download certificates that your
 
    1. \(Optional\) Create an AWS IoT thing group\.
       + Replace *MyGreengrassCoreGroup* with the name of the thing group to create\.
+**Note**  <a name="install-argument-thing-group-name-constraint"></a>
+The thing group name can't contain colon \(`:`\) characters\.
 
       ```
       aws iot create-thing-group --thing-group-name MyGreengrassCoreGroup
@@ -215,7 +219,7 @@ In the previous step, you downloaded the certificates for your AWS IoT thing\. I
 Run the following command to download the root CA certificate\.
 
 ```
-curl greengrass-v2-certs/AmazonRootCA1.pem https://www.amazontrust.com/repository/AmazonRootCA1.pem
+curl ./greengrass-v2-certs/AmazonRootCA1.pem https://www.amazontrust.com/repository/AmazonRootCA1.pem
 ```
 
 ## Retrieve AWS IoT endpoints<a name="retrieve-iot-endpoints"></a>
@@ -474,15 +478,15 @@ To create a role alias, you must have permission to pass the token exchange IAM 
 1. Create a folder where you place your configuration file\.
 
    ```
-   mkdir greengrass-v2-config
+   mkdir ./greengrass-v2-config
    ```
 
-1. Use a text editor to create a configuration file named `config.yaml` in the `greengrass-v2-config` folder\.
+1. Use a text editor to create a configuration file named `config.yaml` in the `./greengrass-v2-config` folder\.
 
    For example, you can run the following command to use GNU nano to create the `config.yaml`\. 
 
    ```
-   nano greengrass-v2-config/config.yaml
+   nano ./greengrass-v2-config/config.yaml
    ```
 
 1. Copy the following YAML content into the file\. This partial configuration file specifies system parameters and Greengrass nucleus parameters\.
@@ -511,7 +515,7 @@ To create a role alias, you must have permission to pass the token exchange IAM 
    + */greengrass/v2*\. The Greengrass root folder that you want to use for installation\. You use the `GGC_ROOT` environment variable to set this value\.
    + *MyGreengrassCore*\. The name of the AWS IoT thing\.
    + *nucleus\-version*\. The version of the AWS IoT Greengrass Core software to install\. This value must match the version of the Docker image or Dockerfile that you downloaded\. If you downloaded the Greengrass Docker image with the `latest` tag, use ****docker inspect *image\-id***** to see the image version\.
-   + *region*\. The AWS Region where you created the resources\.
+   + *region*\. The AWS Region where you created your AWS IoT resources\. You must also specify the same value for the `AWS_REGION` environment variable in your [environment file](#create-env-file-manual-provisioning)\.
    + *GreengrassCoreTokenExchangeRoleAlias*\. The token exchange role alias\.
    + *device\-data\-prefix*\. The prefix for your AWS IoT data endpoint\.
    + *device\-credentials\-prefix*\. The prefix for your AWS IoT credentials endpoint\.
@@ -520,7 +524,7 @@ To create a role alias, you must have permission to pass the token exchange IAM 
 
 This tutorial uses an environment file to set the environment variables that will be passed to the AWS IoT Greengrass Core software installer inside the Docker container\. You can also use [the `-e` or `--env` argument](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file) in your `docker run` command to set environment variables in the Docker container or you can set the variables in [an `environment` block](https://docs.docker.com/compose/compose-file/compose-file-v3/#environment) in the `docker-compose.yml` file\.
 
-1. Use a text editor to create an environment file named `.env` in the folder that contains your Docker image\.
+1. Use a text editor to create an environment file named `.env`\.
 
    For example, on a Linux\-based system, you can run the following command to use GNU nano to create the `.env` in the current directory\.
 
@@ -532,6 +536,7 @@ This tutorial uses an environment file to set the environment variables that wil
 
    ```
    GGC_ROOT_PATH=/greengrass/v2
+   AWS_REGION=region
    PROVISION=false
    COMPONENT_DEFAULT_USER=ggc_user:ggc_group
    DEPLOY_DEV_TOOLS=true
@@ -540,43 +545,58 @@ This tutorial uses an environment file to set the environment variables that wil
 
    Then, replace the following values\.
    + */greengrass/v2*\. The path to the root folder to use to install the AWS IoT Greengrass Core software\.
-
-     */tmp/config/*\. The directory to which you mount the configuration file when you start the Docker container\.
+   + *region*\. The AWS Region where you created your AWS IoT resources\. You must specify the same value for the `awsRegion` configuration parameter in your [configuration file](#create-docker-install-configuration-file)\.
+   + */tmp/config/*\. The directory to which you mount the configuration file when you start the Docker container\.
 
 ## Run the AWS IoT Greengrass Core software in a container<a name="run-greengrass-image-manual-provisioning"></a>
 
-You can use the Docker CLI or the Docker Compose CLI to run the AWS IoT Greengrass Core software image in a Docker container\. 
+This tutorial shows you how to pull the latest AWS IoT Greengrass Docker image from Docker Hub and start the Docker container\. You can use the Docker CLI or the Docker Compose CLI to run the AWS IoT Greengrass Core software image in a Docker container\. 
 
 ------
 #### [ Docker ]
 
-Run the following command to start the container\. 
+1. Run the following command to pull the latest AWS IoT Greengrass Docker image from Docker Hub\.
 
-```
-docker run --rm --init -it --name aws-iot-greengrass \
- -v greengrass-v2-config:/tmp/config/:ro \
- -v greengrass-v2-certs:/tmp/certs:ro \ 
- --env-file .env \
- x86_64/aws-iot-greengrass:nucleus-version
-```
+   ```
+   docker pull amazon/aws-iot-greengrass:latest
+   ```
 
-This example command uses the following arguments for [docker run](https://docs.docker.com/engine/reference/commandline/run/):
-+ [https://docs.docker.com/engine/reference/run/#clean-up---rm](https://docs.docker.com/engine/reference/run/#clean-up---rm)\. Cleans up the container when it exits\.
-+ [https://docs.docker.com/engine/reference/run/#specify-an-init-process](https://docs.docker.com/engine/reference/run/#specify-an-init-process)\. Uses an init process in the container\. 
+1. Run the following command to start the Docker container\. This command runs the Greengrass Docker image that you downloaded from Docker Hub\. If you use a Docker image from a different source, replace *amazon/aws\-iot\-greengrass:latest* with the name of your Docker image\. 
+
+   ```
+   docker run --rm --init -it --name aws-iot-greengrass \
+    -v ./greengrass-v2-config:/tmp/config/:ro \
+    -v ./greengrass-v2-certs:/tmp/certs:ro \ 
+    --env-file .env \
+    amazon/aws-iot-greengrass:latest
+   ```
+
+   This example command uses the following arguments for [docker run](https://docs.docker.com/engine/reference/commandline/run/):
+   + [https://docs.docker.com/engine/reference/run/#clean-up---rm](https://docs.docker.com/engine/reference/run/#clean-up---rm)\. Cleans up the container when it exits\.
+   + [https://docs.docker.com/engine/reference/run/#specify-an-init-process](https://docs.docker.com/engine/reference/run/#specify-an-init-process)\. Uses an init process in the container\. 
 **Note**  
 The `--init` argument is required to shut down AWS IoT Greengrass Core software when you stop the Docker container\.
-+ [https://docs.docker.com/engine/reference/run/#foreground](https://docs.docker.com/engine/reference/run/#foreground)\. \(Optional\) Runs the Docker container in the foreground as an interactive process\. You can replace this with the `-d` argument to run the Docker container in detached mode instead\. For more information, see [Detached vs foreground](https://docs.docker.com/engine/reference/run/#detached-vs-foreground) in the Docker documentation\.
-+ [https://docs.docker.com/engine/reference/run/#name---name](https://docs.docker.com/engine/reference/run/#name---name)\. Runs a container named `aws-iot-greengrass` 
-+ [https://docs.docker.com/storage/volumes/](https://docs.docker.com/storage/volumes/)\. Mounts a volume into the Docker container to make the configuration file and the certificate files available to AWS IoT Greengrass running inside the container\.
-+ [https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file)\. Specifies the environment file to set the environment variables that will be passed to the AWS IoT Greengrass Core software installer inside the Docker container\. This argument is required only if you used an environment file to [set environment variables](#create-env-file-manual-provisioning)\.
-
+   + [https://docs.docker.com/engine/reference/run/#foreground](https://docs.docker.com/engine/reference/run/#foreground)\. \(Optional\) Runs the Docker container in the foreground as an interactive process\. You can replace this with the `-d` argument to run the Docker container in detached mode instead\. For more information, see [Detached vs foreground](https://docs.docker.com/engine/reference/run/#detached-vs-foreground) in the Docker documentation\.
+   + [https://docs.docker.com/engine/reference/run/#name---name](https://docs.docker.com/engine/reference/run/#name---name)\. Runs a container named `aws-iot-greengrass` 
+   + [https://docs.docker.com/storage/volumes/](https://docs.docker.com/storage/volumes/)\. Mounts a volume into the Docker container to make the configuration file and the certificate files available to AWS IoT Greengrass running inside the container\.
+   + [https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file)\. Specifies the environment file to set the environment variables that will be passed to the AWS IoT Greengrass Core software installer inside the Docker container\. This argument is required only if you used an environment file to [set environment variables](#create-env-file-manual-provisioning)\.
 **Note**  <a name="docker-run-cap-drop"></a>
 To run your Docker container with increased security, you can use the `--cap-drop` and `--cap-add` arguments to selectively enable Linux capabilities for your container\. For more information, see [Runtime privilege and Linux capabilities](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities) in the Docker documentation\.
 
 ------
 #### [ Docker Compose ]
 
-1. In a text editor, open the Docker Compose file \(`docker-compose.yml`\) that is included in the Dockerfile tarball and add a `volumes` block to the file\. Your Compose file should look similar to the following example\. Replace *nucleus\-version* with the version of the Greengrass nucleus that is installed in your Docker image\. 
+1. Use a text editor to create a Docker Compose file named `docker-compose.yml`\.
+
+   For example, on a Linux\-based system, you can run the following command to use GNU nano to create the `docker-compose.yml` in the current directory\.
+
+   ```
+   nano docker-compose.yml
+   ```
+**Note**  
+You can also download and use the latest version of the AWS\-provided Compose file from [GitHub](https://github.com/aws-greengrass/aws-greengrass-docker/releases/)\.
+
+1. Add the following content to the Compose file\. Your file should look similar to the following example\. This example specifies the Greengrass Docker image that you downloaded from Docker Hub\. If you use a Docker image from a different source, replace *amazon/aws\-iot\-greengrass:latest* with the name of your Docker image\. 
 
    ```
    version: '3.7'
@@ -586,12 +606,11 @@ To run your Docker container with increased security, you can use the `--cap-dro
        init: true
        build:
          context: .
-         dockerfile: dockerfile-name
        container_name: aws-iot-greengrass
-       image: x86_64/aws-iot-greengrass:nucleus-version
+       image: amazon/aws-iot-greengrass:latest
        volumes:
-         - greengrass-v2-config:/tmp/config/:ro
-         - greengrass-v2-certs:/tmp/certs:ro
+         - ./greengrass-v2-config:/tmp/config/:ro
+         - ./greengrass-v2-certs:/tmp/certs:ro
    ```
 **Note**  <a name="docker-compose-cap-drop"></a>
 To run your Docker container with increased security, you can use `cap_drop` and `cap_add` in your Compose file to selectively enable Linux capabilities for your container\. For more information, see [Runtime privilege and Linux capabilities](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities) in the Docker documentation\.

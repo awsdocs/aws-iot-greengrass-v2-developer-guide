@@ -1,6 +1,6 @@
 # CloudWatch metrics<a name="cloudwatch-metrics-component"></a>
 
-The Amazon CloudWatch metrics component \(`aws.greengrass.CloudWatch`\) publishes custom metrics from Greengrass core devices to Amazon CloudWatch\. The component enables components to publish CloudWatch metrics, which you can use to monitor and analyze the Greengrass core device's environment\. For more information, see [Using Amazon CloudWatch metrics](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/working_with_metrics.html) in the *Amazon CloudWatch User Guide*\.
+The Amazon CloudWatch metrics component \(`aws.greengrass.Cloudwatch`\) publishes custom metrics from Greengrass core devices to Amazon CloudWatch\. The component enables components to publish CloudWatch metrics, which you can use to monitor and analyze the Greengrass core device's environment\. For more information, see [Using Amazon CloudWatch metrics](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/working_with_metrics.html) in the *Amazon CloudWatch User Guide*\.
 
 To publish a CloudWatch metric with this component, publish a message to a topic where this component subscribes\. By default, this component subscribes to the `cloudwatch/metric/put` [local publish/subscribe](ipc-publish-subscribe.md) topic\. You can specify other topics, including AWS IoT Core MQTT topics, when you deploy this component\.
 
@@ -11,6 +11,7 @@ This component provides similar functionality to the CloudWatch metrics connecto
 
 **Topics**
 + [Versions](#cloudwatch-metrics-component-versions)
++ [Type](#cloudwatch-metrics-component-type)
 + [Requirements](#cloudwatch-metrics-component-requirements)
 + [Dependencies](#cloudwatch-metrics-component-dependencies)
 + [Configuration](#cloudwatch-metrics-component-configuration)
@@ -26,6 +27,12 @@ This component has the following versions:
 + 2\.0\.x
 
 For information about changes in each version of the component, see the [changelog](#cloudwatch-metrics-component-changelog)\.
+
+## Type<a name="cloudwatch-metrics-component-type"></a>
+
+<a name="public-component-type-lambda"></a>This component is a Lambda component \(`aws.greengrass.lambda`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component's Lambda function using the [Lambda launcher component](lambda-launcher-component.md)\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Requirements<a name="cloudwatch-metrics-component-requirements"></a>
 
@@ -60,7 +67,7 @@ To deploy a component, you must meet the requirements for the component and its 
     "subscriptions": {
       "aws-greengrass-cloudwatch": {
         "id": "aws-greengrass-cloudwatch",
-        "source": "component:aws.greengrass.CloudWatch",
+        "source": "component:aws.greengrass.Cloudwatch",
         "subject": "cloudwatch/metric/put/status",
         "target": "cloud"
       }
@@ -232,7 +239,7 @@ Type: `string`
 \(Optional\) The dimension value\.  
 Type: `string`  
  `timestamp`   
-\(Optional\) The time at which the metric data was received, expressed in milliseconds in Unix epoch time\.  
+\(Optional\) The time at which the metric data was received, expressed in seconds in Unix epoch time\.  
 Defaults to the time at which the component receives the message\.  
 Type: `integer`  
 When you send multiple metrics within a single Lambda function, we recommend that you retrieve the timestamp separately for each metric\. Don't use a variable to store the timestamp\.  

@@ -8,8 +8,8 @@ This tutorial shows you how to install and run AWS IoT Greengrass Core software 
 
 To complete this tutorial, you need the following\.
 + An AWS account\. If you don't have one, see [Set up an AWS account](setting-up.md#set-up-aws-account)\. 
-+ An AWS IAM user\. For information about the minimal IAM policy that the installer requires to automatically provision resources, see [Minimal IAM policy for installer to provision resources](provision-minimal-iam-policy.md)\.
-+ An AWS IoT Greengrass Docker image\. You can pull an AWS IoT Greengrass Docker image from Docker Hub or Amazon Elastic Container Registry \(Amazon ECR\), or you can [build an image from the AWS IoT Greengrass Dockerfile](build-greengrass-dockerfile.md)\.
++ An AWS IAM user with permissions to provision the AWS IoT and IAM resources for a Greengrass core device\. The AWS IoT Greengrass Core software installer uses your AWS credentials to automatically provision these resources\. For information about the minimal IAM policy to automatically provision resources, see [Minimal IAM policy for installer to provision resources](provision-minimal-iam-policy.md)\.
++ An AWS IoT Greengrass Docker image\. This tutorial shows you how to pull the AWS IoT Greengrass Docker image from Docker Hub\. You can also [pull the AWS IoT Greengrass Docker image](run-greengrass-docker.md#pull-greengrass-docker-image) from Amazon Elastic Container Registry \(Amazon ECR\), or you can [build an image from the AWS IoT Greengrass Dockerfile](build-greengrass-dockerfile.md)\.
 + <a name="docker-host-reqs"></a>A Linux\-based operating system with an internet connection\.
 + <a name="docker-engine-reqs"></a>[Docker Engine](https://docs.docker.com/engine/install/) version 18\.09 or later\.
 + <a name="docker-compose-reqs"></a>\(Optional\) [Docker Compose](https://docs.docker.com/compose/install/) version 1\.22 or later\. Docker Compose is required only if you want to use the Docker Compose CLI to run your Docker images\.
@@ -25,15 +25,15 @@ In this step, you create a credential file on the host computer that contains yo
 1. Create a folder where you place your credential file\.
 
    ```
-   mkdir greengrass-v2-credentials
+   mkdir ./greengrass-v2-credentials
    ```
 
-1. Use a text editor to create a configuration file named `credentials` in the `greengrass-v2-credentials` folder\.
+1. Use a text editor to create a configuration file named `credentials` in the `./greengrass-v2-credentials` folder\.
 
    For example, you can run the following command to use GNU nano to create the `credentials` file\. 
 
    ```
-   nano greengrass-v2-credentials/credentials
+   nano ./greengrass-v2-credentials/credentials
    ```
 
 1. Add your AWS credentials to the `credentials` file in the following format\.
@@ -45,6 +45,8 @@ In this step, you create a credential file on the host computer that contains yo
    aws_session_token = AQoEXAMPLEH4aoAH0gNCAPy...truncated...zrkuWJOgQs8IZZaIv2BXIa2R4Olgk
    ```
 
+   Include `aws_session_token` for temporary credentials only\.
+
 **Note**  
 Remove the credential file from the host computer after you start the AWS IoT Greengrass container\. If you don't remove the credential file, then your AWS credentials will remain mounted inside the container\. For more information, see [Run the AWS IoT Greengrass Core software in a container](#run-greengrass-image-automatic-provisioning)\.
 
@@ -52,7 +54,7 @@ Remove the credential file from the host computer after you start the AWS IoT Gr
 
 This tutorial uses an environment file to set the environment variables that will be passed to the AWS IoT Greengrass Core software installer inside the Docker container\. You can also use [the `-e` or `--env` argument](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file) in your `docker run` command to set environment variables in the Docker container or you can set the variables in [an `environment` block](https://docs.docker.com/compose/compose-file/compose-file-v3/#environment) in the `docker-compose.yml` file\.
 
-1. Use a text editor to create an environment file named `.env` in the folder that contains your Docker image\.
+1. Use a text editor to create an environment file named `.env`\.
 
    For example, on a Linux\-based system, you can run the following command to use GNU nano to create the `.env` in the current directory\.
 
@@ -86,18 +88,24 @@ Setting the `DEPLOY_DEV_TOOLS` environment variable to `true` deploys local deve
 
 ## Run the AWS IoT Greengrass Core software in a container<a name="run-greengrass-image-automatic-provisioning"></a>
 
-You can use the Docker CLI or the Docker Compose CLI to run the AWS IoT Greengrass Core software image as a Docker container\.
+This tutorial shows you how to pull the latest AWS IoT Greengrass Docker image from Docker Hub and start the Docker container\. You can use the Docker CLI or the Docker Compose CLI to run the AWS IoT Greengrass Core software image in a Docker container\. 
 
 ------
 #### [ Docker ]
 
-1. Run the following command to start the Docker container\.
+1. Run the following command to pull the latest AWS IoT Greengrass Docker image from Docker Hub\.
+
+   ```
+   docker pull amazon/aws-iot-greengrass:latest
+   ```
+
+1. Run the following command to start the Docker container\. This command runs the Greengrass Docker image that you downloaded from Docker Hub\. If you use a Docker image from a different source, replace *amazon/aws\-iot\-greengrass:latest* with the name of your Docker image\. 
 
    ```
    docker run --rm --init -it --name aws-iot-greengrass \
-    -v /path/to/credential/file/directory:/root/.aws/:ro \
+    -v ./greengrass-v2-credentials:/root/.aws/:ro \
     --env-file .env \
-    x86_64/aws-iot-greengrass:nucleus-version
+    amazon/aws-iot-greengrass:latest
    ```
 
    This example command uses the following arguments for [docker run](https://docs.docker.com/engine/reference/commandline/run/):
@@ -112,12 +120,22 @@ The `--init` argument is required to shut down AWS IoT Greengrass Core software 
 **Note**  <a name="docker-run-cap-drop"></a>
 To run your Docker container with increased security, you can use the `--cap-drop` and `--cap-add` arguments to selectively enable Linux capabilities for your container\. For more information, see [Runtime privilege and Linux capabilities](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities) in the Docker documentation\.
 
-1. Remove the credential file from `/path/to/credential/file/directory`\.
+1. Remove the credential file from `./greengrass-v2-credentials`\.
 
 ------
 #### [ Docker Compose ]
 
-1. In a text editor, open the Docker Compose file \(`docker-compose.yml`\) that is included in the Dockerfile tarball and add a `volumes` block to the file\. Your Compose file should look similar to the following example\. Replace *nucleus\-version* with the version of the Greengrass nucleus that is installed in your Docker image\.
+1. Use a text editor to create a Docker Compose file named `docker-compose.yml`\.
+
+   For example, on a Linux\-based system, you can run the following command to use GNU nano to create the `docker-compose.yml` in the current directory\.
+
+   ```
+   nano docker-compose.yml
+   ```
+**Note**  
+You can also download and use the latest version of the AWS\-provided Compose file from [GitHub](https://github.com/aws-greengrass/aws-greengrass-docker/releases/)\.
+
+1. Add the following content to the Compose file\. Your file should look similar to the following example\. This example specifies the Greengrass Docker image that you downloaded from Docker Hub\. If you use a Docker image from a different source, replace *amazon/aws\-iot\-greengrass:latest* with the name of your Docker image\. 
 
    ```
    version: '3.7'
@@ -127,11 +145,10 @@ To run your Docker container with increased security, you can use the `--cap-dro
        init: true
        build:
          context: .
-         dockerfile: dockerfile-name
        container_name: aws-iot-greengrass
-       image: x86_64/aws-iot-greengrass:nucleus-version
+       image: amazon/aws-iot-greengrass:latest
        volumes:
-         - /path/to/credential/file/directory:/root/.aws/:ro
+         - ./greengrass-v2-credentials:/root/.aws/:ro
    ```
 **Note**  <a name="docker-compose-cap-drop"></a>
 To run your Docker container with increased security, you can use `cap_drop` and `cap_add` in your Compose file to selectively enable Linux capabilities for your container\. For more information, see [Runtime privilege and Linux capabilities](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities) in the Docker documentation\.
@@ -144,7 +161,7 @@ To run your Docker container with increased security, you can use `cap_drop` and
 
    The `--env-file` argument is required only if you used an environment file to [set environment variables](#create-env-file-automatic-provisioning)\.
 
-1. Remove the credential file from `/path/to/credential/file/directory`\.
+1. Remove the credential file from `./greengrass-v2-credentials`\.
 
 ------
 

@@ -7,6 +7,7 @@ When you deploy a Lambda function component to a core device, the deployment als
 
 **Topics**
 + [Versions](#lambda-launcher-component-versions)
++ [Type](#lambda-launcher-component-type)
 + [Requirements](#lambda-launcher-component-requirements)
 + [Dependencies](#lambda-launcher-component-dependencies)
 + [Configuration](#lambda-launcher-component-configuration)
@@ -16,6 +17,12 @@ When you deploy a Lambda function component to a core device, the deployment als
 
 This component has the following versions:
 + 2\.0\.x
+
+## Type<a name="lambda-launcher-component-type"></a>
+
+<a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Requirements<a name="lambda-launcher-component-requirements"></a>
 
@@ -27,7 +34,7 @@ To deploy a component, you must meet the requirements for the component and its 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. You must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#lambda-launcher-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ 2\.0\.4 ]
+#### [ >=2\.0\.4 ]
 
 The following table lists the dependencies for version 2\.0\.4 and later versions of this component\.
 
@@ -61,5 +68,6 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.0\.5  |  General performance improvements and bug fixes\.  | 
 |  2\.0\.4  |  <a name="changelog-lambda-launcher-2.0.4"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/lambda-launcher-component.html)  | 
 |  2\.0\.3  |  Initial version\.  | 

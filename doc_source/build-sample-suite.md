@@ -183,7 +183,7 @@ Tests Skipped:          0
 Test Groups:
     sample_group:       PASSED
 ----------------------------------
-Path to AWS IoT Device Tester Report: /path/to/devicetester/results/87e673c6-1226-11eb-9269-8c8590419f30/awsiotdevicetester_report.xml
+Path to IoT Device Tester Report: /path/to/devicetester/results/87e673c6-1226-11eb-9269-8c8590419f30/awsiotdevicetester_report.xml
 Path to Test Execution Logs: /path/to/devicetester/results/87e673c6-1226-11eb-9269-8c8590419f30/logs
 Path to Aggregated JUnit Report: /path/to/devicetester/results/87e673c6-1226-11eb-9269-8c8590419f30/IDTSampleSuitePython_Report.xml
 ```

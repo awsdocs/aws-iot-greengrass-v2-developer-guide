@@ -6,6 +6,7 @@ This component encrypts secrets on the core device to keep your credentials and 
 
 **Topics**
 + [Versions](#secret-manager-component-versions)
++ [Type](#secret-manager-component-type)
 + [Requirements](#secret-manager-component-requirements)
 + [Dependencies](#secret-manager-component-dependencies)
 + [Configuration](#secret-mananger-component-configuration)
@@ -15,6 +16,14 @@ This component encrypts secrets on the core device to keep your credentials and 
 
 This component has the following versions:
 + 2\.0\.x
+
+## Type<a name="secret-manager-component-type"></a>
+
+<a name="public-component-type-plugin-para1"></a>This component is a plugin component \(`aws.greengrass.plugin`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component in the same Java Virtual Machine \(JVM\) as the nucleus\. The nucleus restarts when you install or restart this component\.
+
+<a name="public-component-type-plugin-para2"></a>This component uses the same log file as the Greengrass nucleus\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Requirements<a name="secret-manager-component-requirements"></a>
 
@@ -57,10 +66,7 @@ The following table lists the dependencies for version 2\.0\.6 and later version
 
 | Dependency | Compatible versions | Dependency type | 
 | --- | --- | --- | 
-| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.2\.0  | Hard | 
-| [Lambda launcher](lambda-launcher-component.md) | ^2\.0\.0  | Hard | 
-| [Lambda runtimes](lambda-runtimes-component.md) | ^2\.0\.0  | Soft | 
-| [Token exchange service](token-exchange-service-component.md) | ^2\.0\.0  | Hard | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.0\.0 <2\.2\.0  | Soft | 
 
 ------
 #### [ >=2\.0\.4 <2\.0\.5 ]
@@ -70,10 +76,7 @@ The following table lists the dependencies for version 2\.0\.4 and 2\.0\.5 of th
 
 | Dependency | Compatible versions | Dependency type | 
 | --- | --- | --- | 
-| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.3 <2\.1\.0  | Hard | 
-| [Lambda launcher](lambda-launcher-component.md) | >=1\.0\.0  | Hard | 
-| [Lambda runtimes](lambda-runtimes-component.md) | >=1\.0\.0  | Soft | 
-| [Token exchange service](token-exchange-service-component.md) | >=1\.0\.0  | Hard | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.0\.3 <2\.1\.0  | Soft | 
 
 ------
 

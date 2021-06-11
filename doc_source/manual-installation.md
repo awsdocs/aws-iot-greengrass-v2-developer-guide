@@ -25,6 +25,8 @@ In this section, you create an AWS IoT thing and download certificates that your
 
 1. Create an AWS IoT thing for your device\. On your development computer, run the following command\.
    + Replace *MyGreengrassCore* with the thing name to use\. This name is also the name of your Greengrass core device\.
+**Note**  <a name="install-argument-thing-name-constraint"></a>
+The thing name can't contain colon \(`:`\) characters\.
 
    ```
    aws iot create-thing --thing-name MyGreengrassCore
@@ -176,6 +178,8 @@ In this section, you create an AWS IoT thing and download certificates that your
 
    1. \(Optional\) Create an AWS IoT thing group\.
       + Replace *MyGreengrassCoreGroup* with the name of the thing group to create\.
+**Note**  <a name="install-argument-thing-group-name-constraint"></a>
+The thing group name can't contain colon \(`:`\) characters\.
 
       ```
       aws iot create-thing-group --thing-group-name MyGreengrassCoreGroup
@@ -514,16 +518,16 @@ https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-version.zip
 
    <a name="core-software-license"></a>By downloading this software, you agree to the [Greengrass Core Software License Agreement](https://greengrass-release-license.s3.us-west-2.amazonaws.com/greengrass-license-v1.pdf)\.
 
-1. Unzip the AWS IoT Greengrass Core software to a folder on your device\. Replace *MyGreengrassCore* with the folder that you want to use\.
+1. Unzip the AWS IoT Greengrass Core software to a folder on your device\. Replace *GreengrassCore* with the folder that you want to use\.
 
    ```
-   unzip greengrass-nucleus-latest.zip -d MyGreengrassCore && rm greengrass-nucleus-latest.zip
+   unzip greengrass-nucleus-latest.zip -d GreengrassCore && rm greengrass-nucleus-latest.zip
    ```
 **Tip**  
 You can run the following command to see the version of the AWS IoT Greengrass Core software\.  
 
    ```
-   java -jar ./MyGreengrassCore/lib/Greengrass.jar --version
+   java -jar ./GreengrassCore/lib/Greengrass.jar --version
    ```
 
 ## Install the AWS IoT Greengrass Core software<a name="run-greengrass-core-v2-installer-manual"></a>
@@ -541,18 +545,18 @@ For more information about the arguments that you can specify, see [Installer ar
 **To install the AWS IoT Greengrass Core software \(Linux\)**
 
 1. Check the version of the AWS IoT Greengrass Core software\.
-   + Replace *MyGreengrassCore* with the path to the folder that contains the software\.
+   + Replace *GreengrassCore* with the path to the folder that contains the software\.
 
    ```
-   java -jar ./MyGreengrassCore/lib/Greengrass.jar --version
+   java -jar ./GreengrassCore/lib/Greengrass.jar --version
    ```
 
 1. Use a text editor to create a configuration file named `config.yaml` to provide to the installer\.
 
-   For example, on a Linux\-based system, you can run the following command to use GNU nano to create the `config.yaml` in the *MyGreengrassCore* directory\.
+   For example, on a Linux\-based system, you can run the following command to use GNU nano to create the `config.yaml` in the *GreengrassCore* directory\.
 
    ```
-   nano MyGreengrassCore/config.yaml
+   nano GreengrassCore/config.yaml
    ```
 
    Copy the following YAML content into the file\. This partial configuration file specifies system parameters and Greengrass nucleus parameters\.
@@ -560,7 +564,7 @@ For more information about the arguments that you can specify, see [Installer ar
    ```
    ---
    system:
-     certificateFilePath: "/tmp/certs/device.pem.crt"
+     certificateFilePath: "/greengrass/v2/device.pem.crt"
      privateKeyPath: "/greengrass/v2/private.pem.key"
      rootCaPath: "/greengrass/v2/AmazonRootCA1.pem"
      rootpath: "/greengrass/v2"
@@ -617,17 +621,19 @@ In this configuration file, you can customize other nucleus configuration option
 
 1. Run the installer, and specify `--init-config` to provide the configuration file\.
    + Replace */greengrass/v2* with the Greengrass root folder\.
-   + Replace each instance of *MyGreengrassCore* with the folder where you unpacked the installer\.
+   + Replace each instance of *GreengrassCore* with the folder where you unpacked the installer\.
 
    ```
    sudo -E java -Droot="/greengrass/v2" -Dlog.store=FILE \
-     -jar ./MyGreengrassCore/lib/Greengrass.jar \
-     --init-config ./MyGreengrassCore/config.yaml \
+     -jar ./GreengrassCore/lib/Greengrass.jar \
+     --init-config ./GreengrassCore/config.yaml \
      --component-default-user ggc_user:ggc_group \
      --setup-system-service true
    ```
 
    If you specify `--setup-system-service true`, the installer prints `Successfully set up Nucleus as a system service` if it set up and ran the software as a system service\. Otherwise, the installer doesn't output any message if it installs the software successfully\.
+**Note**  
+You can't use the `deploy-dev-tools` argument to deploy local development tools when you run the installer without the `--provision true` argument\. For information about deploying the Greengrass CLI directly on your device, see [Greengrass Command Line Interface](gg-cli.md)\.
 
 1. View the files in the root folder to verify the installation\.
 

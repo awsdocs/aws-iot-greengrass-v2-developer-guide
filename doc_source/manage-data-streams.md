@@ -61,7 +61,7 @@ You use the [STREAM\_MANAGER\_AUTHENTICATE\_CLIENT](configure-stream-manager.md#
 
 ****  
 
-|   | Enabled | Disabled | 
+|   | Enabled | Disabled | 
 | --- | --- | --- | 
 | Parameter value | `true` \(default and recommended\) | `false` | 
 | Allowed clients | Greengrass components on the core device | Greengrass components on the core device Other processes running on the Greengrass core device | 

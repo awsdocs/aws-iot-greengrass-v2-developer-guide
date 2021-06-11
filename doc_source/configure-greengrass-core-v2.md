@@ -83,7 +83,7 @@ The following example defines a deployment that configures `ggc_user` as the def
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "0.0.0",
+      "version": "2.1.0",
       "configurationUpdate": {
         "merge": "{\"runWithDefault\":{\"posixUser\":\"ggc_user:ggc_group\"}}"
       }

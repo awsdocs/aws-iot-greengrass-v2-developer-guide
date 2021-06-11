@@ -22,19 +22,23 @@ Default: `false`
 
 `-tn`, `--thing-name`  
 \(Optional\) The name of the AWS IoT thing that you register as this core device\. If the thing with the name doesn't exist in your AWS account, the AWS IoT Greengrass Core software creates it\.  
+The thing name can't contain colon \(`:`\) characters\.
 You must specify `--provision true` to apply this argument\.  
 Default: `GreengrassV2IotThing_` plus a random UUID\.
 
 `-tgn`, `--thing-group-name`  
 \(Optional\) The name of the AWS IoT thing group where you add this core device's AWS IoT thing\. If a deployment targets this thing group, this core device receives that deployment when it connects to AWS IoT Greengrass\. If the thing group with this name doesn't exist in your AWS account, the AWS IoT Greengrass Core creates it\.  
+The thing group name can't contain colon \(`:`\) characters\.
 You must specify `--provision true` to apply this argument\.
 
 `-trn`, `--tes-role-name`  
 \(Optional\) The name of the IAM role to use to acquire AWS credentials that let the core device interact with AWS services\. If the role with this name doesn't exist in your AWS account, the AWS IoT Greengrass Core software creates it with the `GreengrassV2TokenExchangeRoleAccess` policy\. This role doesn't have access to your S3 buckets where you host component artifacts\. So, you must add permissions to your artifacts' S3 buckets and objects when you create a component\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.  
+You must specify `--provision true` to apply this argument\.  
 Default: `GreengrassV2TokenExchangeRole`
 
 `-tra`, `--tes-role-alias-name`  
 \(Optional\) The name of the AWS IoT role alias that points to the IAM role that provides AWS credentials for this core device\. If the role alias with this name doesn't exist in your AWS account, the AWS IoT Greengrass Core software creates it and points it to the IAM role that you specify\.  
+You must specify `--provision true` to apply this argument\.  
 Default: `GreengrassV2TokenExchangeRoleAlias`
 
 `-ss`, `--setup-system-service`  
@@ -52,6 +56,7 @@ For more information, see [Configure the user and group that run components](con
 `-d`, `--deploy-dev-tools`  
 \(Optional\) You can download and deploy the [Greengrass CLI](greengrass-cli-component.md) component to this core device\. You can use this tool to develop and debug components on this core device\.  
 The local development tools are intended for use only in development environments\. Don't specify this option on production devices\.
+You must specify `--provision true` to apply this argument\.  
 Default: `false`
 
 `-init`, `--init-config`  

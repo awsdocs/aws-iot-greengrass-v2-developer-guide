@@ -7,7 +7,10 @@ You can complete this getting started tutorial to learn about the basic features
 + Deploy that component from the AWS Cloud to your Greengrass core device\.
 
 **Note**  
-This tutorial describes how to set up a development environment and explore the features of AWS IoT Greengrass\. For more information about how to set up and configure production devices, see [Setting up AWS IoT Greengrass core devices](setting-up.md)\.
+This tutorial describes how to set up a development environment and explore the features of AWS IoT Greengrass\. For more information about how to set up and configure production devices, see the following:  
+[Setting up AWS IoT Greengrass core devices](setting-up.md)
+[Install AWS IoT Greengrass Core software with automatic resource provisioning](quick-installation.md)
+[Install AWS IoT Greengrass Core software with manual resource provisioning](manual-installation.md)
 
 You can expect to spend 20\-30 minutes on this tutorial\.
 
@@ -17,7 +20,7 @@ To complete this getting started tutorial, you need the following:
 + An AWS account\. If you don't have one, see [Set up an AWS account](setting-up.md#set-up-aws-account)\.
 + An AWS Identity and Access Management \(IAM\) user with administrator permissions\.
 + A Windows, Mac, or Unix\-like development computer with an internet connection\.
-+ A device with a Linux operating system and an internet connection to the same network as your development computer\. We recommend that you use a Raspberry Pi with [Raspberry Pi OS](https://www.raspberrypi.org/downloads/) \(previously called Raspbian\)\.
++ A device with a Linux operating system and an internet connection to the same network as your development computer\. We recommend that you use a Raspberry Pi with [Raspberry Pi OS](https://www.raspberrypi.org/downloads/) \(previously called Raspbian\)\. For more information, see [Requirements to install and run the AWS IoT Greengrass Core software v2\.0](setting-up.md#greengrass-v2-requirements)\.
 + [Python](https://www.python.org/downloads/) 3\.5 or later installed on the device\.
 + AWS Command Line Interface \(AWS CLI\) installed and configured with credentials on your development computer and on your device\. For more information, see [Installing the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and [Configuring the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)\.
   + Minimum AWS CLI V1 version: v1\.18\.197
@@ -94,10 +97,10 @@ Follow the steps in this section to set up your Raspberry Pi as a AWS IoT Greeng
 
    <a name="core-software-license"></a>By downloading this software, you agree to the [Greengrass Core Software License Agreement](https://greengrass-release-license.s3.us-west-2.amazonaws.com/greengrass-license-v1.pdf)\.
 
-1. Run the following command to unzip the software and remove the ZIP file\. Replace *MyGreengrassCore* with the name of the destination folder\.
+1. Run the following command to unzip the software and remove the ZIP file\. Replace *GreengrassCore* with the name of the destination folder\.
 
    ```
-   unzip greengrass-nucleus-latest.zip -d MyGreengrassCore && rm greengrass-nucleus-latest.zip
+   unzip greengrass-nucleus-latest.zip -d GreengrassCore && rm greengrass-nucleus-latest.zip
    ```
 
 1. Provide your AWS credentials so that the installer can provision the AWS IoT and IAM resources for your core device\. To increase security, you can get credentials for an IAM role that allows only the minimum permissions necessary to provision\. For more information, see [Minimal IAM policy for installer to provision resources](provision-minimal-iam-policy.md)\.
@@ -131,13 +134,17 @@ Follow the steps in this section to set up your Raspberry Pi as a AWS IoT Greeng
 
    1. */greengrass/v2*: The path to the root folder to use to install the AWS IoT Greengrass Core software\.
 
-   1. *MyGreengrassCore*\. The path to the folder where you unpacked the AWS IoT Greengrass Core software installer\.
+   1. *GreengrassCore*\. The path to the folder where you unpacked the AWS IoT Greengrass Core software installer\.
 
    1. *region*\. The AWS Region in which to find or create resources\.
 
-   1. *MyGreengrassCore*\. The name of the AWS IoT thing for your Greengrass core device\. If the thing doesn't exist, the installer creates it\. The installer downloads the certificates to authenticate as the AWS IoT thing\. 
+   1. *MyGreengrassCore*\. The name of the AWS IoT thing for your Greengrass core device\. If the thing doesn't exist, the installer creates it\. The installer downloads the certificates to authenticate as the AWS IoT thing\. For more information, see [Device authentication and authorization for AWS IoT Greengrass](device-auth.md)\.
+**Note**  <a name="install-argument-thing-name-constraint"></a>
+The thing name can't contain colon \(`:`\) characters\.
 
    1. *MyGreengrassCoreGroup*\. The name of AWS IoT thing group for your Greengrass core device\. If the thing group doesn't exist, the installer creates it and adds the thing to it\. If the thing group exists and has an active deployment, the core device downloads and runs the software that the deployment specifies\.
+**Note**  <a name="install-argument-thing-group-name-constraint"></a>
+The thing group name can't contain colon \(`:`\) characters\.
 
    1. *GreengrassV2TokenExchangeRole*\. The name of the IAM role that allows the Greengrass core device to get temporary AWS credentials\. If the role doesn't exist, the installer creates it and creates and attaches a policy named `GreengrassV2TokenExchangeRoleAccess`\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
 
@@ -145,7 +152,7 @@ Follow the steps in this section to set up your Raspberry Pi as a AWS IoT Greeng
 
    ```
    sudo -E java -Droot="/greengrass/v2" -Dlog.store=FILE \
-     -jar ./MyGreengrassCore/lib/Greengrass.jar \
+     -jar ./GreengrassCore/lib/Greengrass.jar \
      --aws-region region \
      --thing-name MyGreengrassCore \
      --thing-group-name MyGreengrassCoreGroup \
@@ -271,10 +278,10 @@ In this section, you learn how to create and run a basic Hello World component\.
 
 **To create a Hello World component**
 
-1. On your Greengrass core device, run the following command to change to the AWS IoT Greengrass installation folder to use for local development\. Replace *\~/MyGreengrassCore* with the path to the installation folder\.
+1. On your Greengrass core device, run the following command to change to the AWS IoT Greengrass installation folder to use for local development\. Replace *\~/GreengrassCore* with the path to the installation folder\.
 
    ```
-   cd ~/MyGreengrassCore
+   cd ~/GreengrassCore
    ```
 
 1. AWS IoT Greengrass expects that component recipes and artifacts are in separate folders\.
@@ -382,7 +389,7 @@ You must use the following format for the artifact folder path\. Include the com
    import sys
    import datetime
    
-   message = f"Hello, {sys.argv[1]}! Current time: {str(datetime.datetime.now())}."
+   message = "Hello, %s! Current time: %s." % (sys.argv[1], datetime.datetime.now())
    
    # Print the message to stdout.
    print(message)
@@ -396,12 +403,12 @@ You must use the following format for the artifact folder path\. Include the com
 
 1. Use the local AWS IoT Greengrass CLI to manage components on your Greengrass core device\.
 
-   Run the following command to deploy the component to the AWS IoT Greengrass core\. Replace */greengrass/v2* with your AWS IoT Greengrass V2 root folder, and replace *\~/MyGreengrassCore* with your AWS IoT Greengrass V2 installation folder\.
+   Run the following command to deploy the component to the AWS IoT Greengrass core\. Replace */greengrass/v2* with your AWS IoT Greengrass V2 root folder, and replace *\~/GreengrassCore* with your AWS IoT Greengrass V2 installation folder\.
 
    ```
    sudo /greengrass/v2/bin/greengrass-cli deployment create \
-     --recipeDir ~/MyGreengrassCore/recipes \
-     --artifactDir ~/MyGreengrassCore/artifacts \
+     --recipeDir ~/GreengrassCore/recipes \
+     --artifactDir ~/GreengrassCore/artifacts \
      --merge "com.example.HelloWorld=1.0.0"
    ```
 
@@ -451,7 +458,7 @@ For more information, see [Troubleshooting](troubleshooting.md)\.
    import sys
    import datetime
    
-   message = f"Hello, {sys.argv[1]}! Current time: {str(datetime.datetime.now())}."
+   message = "Hello, %s! Current time: %s." % (sys.argv[1], datetime.datetime.now())
    message += " Greetings from your first Greengrass component."
    # Print the message to stdout.
    print(message)
@@ -465,8 +472,8 @@ For more information, see [Troubleshooting](troubleshooting.md)\.
 
    ```
    sudo /greengrass/v2/bin/greengrass-cli deployment create \
-     --recipeDir ~/MyGreengrassCore/recipes \
-     --artifactDir ~/MyGreengrassCore/artifacts \
+     --recipeDir ~/GreengrassCore/recipes \
+     --artifactDir ~/GreengrassCore/artifacts \
      --merge "com.example.HelloWorld=1.0.0"
    ```
 

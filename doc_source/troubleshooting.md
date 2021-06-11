@@ -14,7 +14,7 @@ Use the troubleshooting information and solutions in this section to help resolv
 
 The AWS IoT Greengrass Core software log file provides real\-time information about the core device\. This can help you identify issues with components and deployments\.
 
-This log file also includes logs for plugin components, such as [log manager](log-manager-component.md) and [secret manager](secret-manager-component.md)\.
+This log file also includes logs for plugin components, such as [log manager](log-manager-component.md) and [secret manager](secret-manager-component.md)\. For more information, see [Component types](manage-components.md#component-types)\.
 
 **To view the core device log file**
 + Run the following command to view the log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
@@ -28,7 +28,7 @@ This log file also includes logs for plugin components, such as [log manager](lo
 Component log files provide real\-time information about a component that runs on the Greengrass core device\. This can help you identify issues with components\.
 
 **Note**  
-The AWS IoT Greengrass Core software doesn't create component log files for plugin components, such as [log manager](log-manager-component.md) and [secret manager](secret-manager-component.md)\. For more information about how to view plugin component logs, see [View AWS IoT Greengrass Core software logs](#view-greengrass-core-logs)\.
+The AWS IoT Greengrass Core software doesn't create component log files for plugin components, such as [log manager](log-manager-component.md) and [secret manager](secret-manager-component.md)\. For more information, see [Component types](manage-components.md#component-types)\. For more information about how to view plugin component logs, see [View AWS IoT Greengrass Core software logs](#view-greengrass-core-logs)\.
 
 **To view the log file for a component**
 + Run the following command to view the log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder, and replace *com\.example\.HelloWorld* with the name of the component\.

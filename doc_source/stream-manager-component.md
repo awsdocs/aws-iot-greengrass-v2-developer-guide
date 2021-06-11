@@ -6,6 +6,7 @@ For more information about how to configure and use stream manager in custom com
 
 **Topics**
 + [Versions](#stream-manager-component-versions)
++ [Type](#stream-manager-component-type)
 + [Dependencies](#stream-manager-component-dependencies)
 + [Configuration](#stream-manager-component-configuration)
 + [Changelog](#stream-manager-component-changelog)
@@ -14,6 +15,14 @@ For more information about how to configure and use stream manager in custom com
 
 This component has the following versions:
 + 2\.0\.x
+
+## Type<a name="stream-manager-component-type"></a>
+
+<a name="public-component-type-plugin-para1"></a>This component is a plugin component \(`aws.greengrass.plugin`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component in the same Java Virtual Machine \(JVM\) as the nucleus\. The nucleus restarts when you install or restart this component\.
+
+<a name="public-component-type-plugin-para2"></a>This component uses the same log file as the Greengrass nucleus\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Dependencies<a name="stream-manager-component-dependencies"></a>
 
@@ -54,6 +63,7 @@ This component provides the following configuration parameters that you can cust
 
 `STREAM_MANAGER_SERVER_PORT`  
 \(Optional\) The local port number to use to communicate with stream manager\.  
+You can specify `0` to use a random available port\.  
 Default: `8088`
 
 `STREAM_MANAGER_AUTHENTICATE_CLIENT`  

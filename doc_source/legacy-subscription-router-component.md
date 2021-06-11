@@ -11,6 +11,7 @@ This component is required only if your Lambda function uses the `publish()` fun
 
 **Topics**
 + [Versions](#legacy-subscription-router-component-versions)
++ [Type](#legacy-subscription-router-component-type)
 + [Dependencies](#legacy-subscription-router-component-dependencies)
 + [Configuration](#legacy-subscription-router-component-configuration)
 + [Changelog](#legacy-subscription-router-component-changelog)
@@ -20,6 +21,12 @@ This component is required only if your Lambda function uses the `publish()` fun
 This component has the following versions:
 + 2\.1\.x
 + 2\.0\.x
+
+## Type<a name="legacy-subscription-router-component-type"></a>
+
+<a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Dependencies<a name="legacy-subscription-router-component-dependencies"></a>
 
@@ -33,10 +40,7 @@ The following table lists the dependencies for version 2\.1\.x and later version
 
 | Dependency | Compatible versions | Dependency type | 
 | --- | --- | --- | 
-| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.2\.0  | Hard | 
-| [Lambda launcher](lambda-launcher-component.md) | ^2\.0\.0  | Hard | 
-| [Lambda runtimes](lambda-runtimes-component.md) | ^2\.0\.0  | Soft | 
-| [Token exchange service](token-exchange-service-component.md) | ^2\.0\.0  | Hard | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.0\.0 <2\.2\.0  | Soft | 
 
 ------
 #### [ 2\.0\.3 ]
@@ -46,10 +50,7 @@ The following table lists the dependencies for version 2\.0\.3 of this component
 
 | Dependency | Compatible versions | Dependency type | 
 | --- | --- | --- | 
-| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.3 <2\.1\.0  | Hard | 
-| [Lambda launcher](lambda-launcher-component.md) | >=1\.0\.0  | Hard | 
-| [Lambda runtimes](lambda-runtimes-component.md) | >=1\.0\.0  | Soft | 
-| [Token exchange service](token-exchange-service-component.md) | >=1\.0\.0  | Hard | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.0\.3 <2\.1\.0  | Soft | 
 
 ------
 

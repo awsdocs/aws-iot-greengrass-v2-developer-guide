@@ -66,7 +66,7 @@ Failed Tests:
         Test Name: TestB1
             Reason: Something bad happened
 ----------------------------------
-Path to AWS IoT Device Tester Report: /path/to/awsiotdevicetester_report.xml
+Path to IoT Device Tester Report: /path/to/awsiotdevicetester_report.xml
 Path to Test Execution Logs: /path/to/logs
 Path to Aggregated JUnit Report: /path/to/MyTestSuite_Report.xml
 ```

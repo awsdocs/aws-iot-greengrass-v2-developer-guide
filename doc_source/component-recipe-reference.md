@@ -64,6 +64,29 @@ The semantic version constraint that defines the component versions for this dep
 + `HARD` – The component restarts if the dependency changes state\.
 Defaults to `HARD`\.
 
+`ComponentType`  
+\(Optional\) The type of component\.  
+We don't recommend that you specify the component type in a recipe\. AWS IoT Greengrass sets the type for you when you create a component\.
+The type can be one the following types:  
++ `aws.greengrass.generic` – The component runs commands or provides artifacts\.
++ `aws.greengrass.lambda` – The component runs a Lambda function using the [Lambda launcher component](lambda-launcher-component.md)\. The `ComponentSource` parameter specifies the ARN of the Lambda function that this component runs\.
+
+  We don't recommend that you use this option, because it's set by AWS IoT Greengrass when you create a component from a Lambda function\. For more information, see [Run AWS Lambda functions](run-lambda-functions.md)\.
++ `aws.greengrass.plugin` – The component runs in the same Java Virtual Machine \(JVM\) as the Greengrass nucleus\. If you deploy or restart a plugin component, the Greengrass nucleus restarts\.
+
+  Plugin components use the same log file as the Greengrass nucleus\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)\.
+
+  We don't recommend that you use this option in component recipes, because it's intended for AWS\-provided components written in Java that directly interface with the Greengrass nucleus\. For more information about which public components are plugins, see [AWS\-provided components](public-components.md)\.
++ `aws.greengrass.nucleus` – The nucleus component\. For more information, see [Greengrass nucleus](greengrass-nucleus-component.md)\.
+
+  We don't recommend that you use this option in component recipes\. It is intended for the Greengrass nucleus component, which provides the minimum functionality of the AWS IoT Greengrass Core software\.
+Defaults to `aws.greengrass.generic` when you create a component from a recipe, or `aws.greengrass.lambda` when you create a component from a Lambda function\.  
+For more information, see [Component types](manage-components.md#component-types)\.
+
+`ComponentSource`  
+\(Optional\) The ARN of the Lambda function that a component runs\.  
+We don't recommend that you specify the component source in a recipe\. AWS IoT Greengrass sets this parameter for you when you create a component from a Lambda function\. For more information, see [Run AWS Lambda functions](run-lambda-functions.md)\.
+
   `Manifests`   
 A list of objects that each define the component's lifecycle, parameters, and requirements for a platform\. If a core device matches multiple manifests' platform requirements, AWS IoT Greengrass uses the first manifest that the core device matches\. To ensure that core devices use the correct manifest, define the manifests with stricter platform requirements first\. A manifest that applies to all platforms must be the last manifest in the list\.  
 A core device must match least one manifest's platform requirements to install the component\. If no manifest matches the core device, then the AWS IoT Greengrass Core software doesn't install the component and the deployment fails\.
@@ -247,7 +270,13 @@ Choose from the following options:
 + `NONE` – The file isn't runnable\.
 + `OWNER` – The file is runnable by the system user that you configure to run the component\.
 + `ALL` – The file is runnable by all users\.
-Defaults to `NONE`\.
+Defaults to `NONE`\.  
+`Digest`  
+\(Read\-only\) The cryptographic digest hash of the artifact\. When you create a component, AWS IoT Greengrass uses a hash algorithm to calculate a hash of the artifact file\. Then, when you deploy the component, the Greengrass nucleus calculates the hash of the downloaded artifact and compares the hash with this digest to verify the artifact before installation\. If the hash doesn't match the digest, the deployment fails\.  
+If you set this parameter, AWS IoT Greengrass replaces the value that you set when you create the component\.  
+`Algorithm`  
+\(Read\-only\) The hash algorithm that AWS IoT Greengrass uses to calculate the digest hash of the artifact\.  
+If you set this parameter, AWS IoT Greengrass replaces the value that you set when you create the component\.
 
   `Lifecycle`   
 An object that defines how to install and run the component\. The core device uses the global lifecycle only if the [manifest](#manifest-definition) to use doesn't specify a lifecycle\.  

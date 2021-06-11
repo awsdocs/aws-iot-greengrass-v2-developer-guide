@@ -44,7 +44,7 @@ After a stream is created, your Greengrass components can [append messages](#str
 ### Requirements<a name="streammanagerclient-create-message-stream-reqs"></a>
 
 This operation has the following requirements:
-+ <a name="streammanagerclient-min-sm-sdk"></a>Minimum Stream Manager SDK version: Python: 1\.1\.0  \|  Java: 1\.1\.0  \|  Node\.js: 1\.1\.0
++ <a name="streammanagerclient-min-sm-sdk"></a>Minimum Stream Manager SDK version: Python: 1\.1\.0 \| Java: 1\.1\.0 \| Node\.js: 1\.1\.0
 
 ### Examples<a name="streammanagerclient-create-message-stream-examples"></a>
 
@@ -159,7 +159,7 @@ To send data to stream manager for export, your Greengrass components append the
 ### Requirements<a name="streammanagerclient-append-message-reqs"></a>
 
 This operation has the following requirements:
-+ <a name="streammanagerclient-min-sm-sdk"></a>Minimum Stream Manager SDK version: Python: 1\.1\.0  \|  Java: 1\.1\.0  \|  Node\.js: 1\.1\.0
++ <a name="streammanagerclient-min-sm-sdk"></a>Minimum Stream Manager SDK version: Python: 1\.1\.0 \| Java: 1\.1\.0 \| Node\.js: 1\.1\.0
 
 ### Examples<a name="streammanagerclient-append-message-examples"></a>
 
@@ -168,7 +168,7 @@ This operation has the following requirements:
 The following snippet appends a message to the stream named `StreamName`\. For AWS IoT Analytics or Kinesis Data Streams destinations, your Greengrass components append a blob of data\.
 
 This snippet has the following requirements:
-+ <a name="streammanagerclient-min-sm-sdk"></a>Minimum Stream Manager SDK version: Python: 1\.1\.0  \|  Java: 1\.1\.0  \|  Node\.js: 1\.1\.0
++ <a name="streammanagerclient-min-sm-sdk"></a>Minimum Stream Manager SDK version: Python: 1\.1\.0 \| Java: 1\.1\.0 \| Node\.js: 1\.1\.0
 
 ------
 #### [ Python ]
@@ -231,7 +231,7 @@ The following snippet appends a message to the stream named `StreamName`\. For A
 <a name="BatchPutAssetPropertyValue-data-reqs"></a>When you send data to AWS IoT SiteWise, your data must meet the requirements of the `BatchPutAssetPropertyValue` action\. For more information, see [BatchPutAssetPropertyValue](https://docs.aws.amazon.com/iot-sitewise/latest/APIReference/API_BatchPutAssetPropertyValue.html) in the *AWS IoT SiteWise API Reference*\.
 
 This snippet has the following requirements:
-+ <a name="streammanagerclient-min-sm-sdk"></a>Minimum Stream Manager SDK version: Python: 1\.1\.0  \|  Java: 1\.1\.0  \|  Node\.js: 1\.1\.0
++ <a name="streammanagerclient-min-sm-sdk"></a>Minimum Stream Manager SDK version: Python: 1\.1\.0 \| Java: 1\.1\.0 \| Node\.js: 1\.1\.0
 
 ------
 #### [ Python ]
@@ -343,7 +343,7 @@ Node\.js SDK reference: [appendMessage](https://aws-greengrass.github.io/aws-gre
 The following snippet appends an export task to the stream named `StreamName`\. For Amazon S3 destinations, your Greengrass components append a serialized `S3ExportTaskDefinition` object that contains information about the source input file and target Amazon S3 object\. If the specified object doesn't exist, Stream Manager creates it for you\. For more information, see [Exporting to Amazon S3](stream-export-configurations.md#export-streams-to-s3)\.
 
 This snippet has the following requirements:
-+ <a name="streammanagerclient-min-sm-sdk"></a>Minimum Stream Manager SDK version: Python: 1\.1\.0  \|  Java: 1\.1\.0  \|  Node\.js: 1\.1\.0
++ <a name="streammanagerclient-min-sm-sdk"></a>Minimum Stream Manager SDK version: Python: 1\.1\.0 \| Java: 1\.1\.0 \| Node\.js: 1\.1\.0
 
 ------
 #### [ Python ]
@@ -417,7 +417,7 @@ Read messages from a stream\.
 ### Requirements<a name="streammanagerclient-read-messages-reqs"></a>
 
 This operation has the following requirements:
-+ <a name="streammanagerclient-min-sm-sdk"></a>Minimum Stream Manager SDK version: Python: 1\.1\.0  \|  Java: 1\.1\.0  \|  Node\.js: 1\.1\.0
++ <a name="streammanagerclient-min-sm-sdk"></a>Minimum Stream Manager SDK version: Python: 1\.1\.0 \| Java: 1\.1\.0 \| Node\.js: 1\.1\.0
 
 ### Examples<a name="streammanagerclient-read-messages-examples"></a>
 
@@ -517,7 +517,7 @@ Get the list of streams in stream manager\.
 ### Requirements<a name="streammanagerclient-list-streams-reqs"></a>
 
 This operation has the following requirements:
-+ <a name="streammanagerclient-min-sm-sdk"></a>Minimum Stream Manager SDK version: Python: 1\.1\.0  \|  Java: 1\.1\.0  \|  Node\.js: 1\.1\.0
++ <a name="streammanagerclient-min-sm-sdk"></a>Minimum Stream Manager SDK version: Python: 1\.1\.0 \| Java: 1\.1\.0 \| Node\.js: 1\.1\.0
 
 ### Examples<a name="streammanagerclient-list-streams-examples"></a>
 
@@ -583,7 +583,7 @@ Get metadata about a stream, including the stream definition, size, and export s
 ### Requirements<a name="streammanagerclient-describe-message-stream-reqs"></a>
 
 This operation has the following requirements:
-+ <a name="streammanagerclient-min-sm-sdk"></a>Minimum Stream Manager SDK version: Python: 1\.1\.0  \|  Java: 1\.1\.0  \|  Node\.js: 1\.1\.0
++ <a name="streammanagerclient-min-sm-sdk"></a>Minimum Stream Manager SDK version: Python: 1\.1\.0 \| Java: 1\.1\.0 \| Node\.js: 1\.1\.0
 
 ### Examples<a name="streammanagerclient-describe-message-stream-examples"></a>
 
@@ -693,7 +693,7 @@ Your Greengrass components follow this high\-level process to update a stream:
 ### Requirements<a name="streammanagerclient-update-message-streamreqs"></a>
 
 This operation has the following requirements:
-+ <a name="streammanagerclient-min-sm-sdk"></a>Minimum Stream Manager SDK version: Python: 1\.1\.0  \|  Java: 1\.1\.0  \|  Node\.js: 1\.1\.0
++ <a name="streammanagerclient-min-sm-sdk"></a>Minimum Stream Manager SDK version: Python: 1\.1\.0 \| Java: 1\.1\.0 \| Node\.js: 1\.1\.0
 
 ### Examples<a name="streammanagerclient-update-message-stream-examples"></a>
 
@@ -823,7 +823,7 @@ Deletes a stream\. When you delete a stream, all of the stored data for the stre
 ### Requirements<a name="streammanagerclient-delete-message-stream-reqs"></a>
 
 This operation has the following requirements:
-+ <a name="streammanagerclient-min-sm-sdk"></a>Minimum Stream Manager SDK version: Python: 1\.1\.0  \|  Java: 1\.1\.0  \|  Node\.js: 1\.1\.0
++ <a name="streammanagerclient-min-sm-sdk"></a>Minimum Stream Manager SDK version: Python: 1\.1\.0 \| Java: 1\.1\.0 \| Node\.js: 1\.1\.0
 
 ### Examples<a name="streammanagerclient-delete-message-stream-examples"></a>
 

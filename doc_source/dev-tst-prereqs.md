@@ -56,7 +56,7 @@ If you do not have an AWS account, complete the following steps to create one\.
 
 1. Sign in to the [IAM console](https://console.aws.amazon.com/iam/) as the account owner by choosing **Root user** and entering your AWS account email address\. On the next page, enter your password\.
 **Note**  
-We strongly recommend that you adhere to the best practice of using the **Administrator** IAM user below and securely lock away the root user credentials\. Sign in as the root user only to perform a few [account and service management tasks](https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.html)\.
+We strongly recommend that you adhere to the best practice of using the **Administrator** IAM user that follows and securely lock away the root user credentials\. Sign in as the root user only to perform a few [account and service management tasks](https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.html)\.
 
 1. In the navigation pane, choose **Users** and then choose **Add user**\.
 
@@ -74,7 +74,7 @@ We strongly recommend that you adhere to the best practice of using the **Admini
 
 1. In the **Create group** dialog box, for **Group name** enter **Administrators**\.
 
-1. Choose **Filter policies**, and then select **AWS managed \-job function** to filter the table contents\.
+1. Choose **Filter policies**, and then select **AWS managed \- job function** to filter the table contents\.
 
 1. In the policy list, select the check box for **AdministratorAccess**\. Then choose **Create group**\.
 **Note**  
@@ -128,8 +128,10 @@ In this step, configure the permissions that IDT for AWS IoT Greengrass uses to 
             "Effect": "Allow",
             "Action": [
               "lambda:CreateFunction",
+              "lambda:PublishVersion",
               "iot:DeleteCertificate",
               "lambda:DeleteFunction",
+              "lambda:GetFunction",
               "execute-api:Invoke",
               "iot:UpdateCertificate"
             ],
@@ -221,6 +223,7 @@ In this step, configure the permissions that IDT for AWS IoT Greengrass uses to 
               "iot:CreateKeysAndCertificate",
               "iot:ListThings",
               "iot:UpdateThingShadow",
+              "iot:Publish",
               "iot:CreateCertificateFromCsr",
               "iot-device-tester:SendMetrics",
               "iot-device-tester:SupportedVersion",
@@ -251,7 +254,8 @@ In this step, configure the permissions that IDT for AWS IoT Greengrass uses to 
               "s3:ListBucketVersions",
               "s3:CreateBucket",
               "s3:DeleteObject",
-              "s3:DeleteBucket"
+              "s3:DeleteBucket",
+              "s3:GetObject"
             ],
             "Resource": "arn:aws:s3:::idt*"
           },
@@ -280,14 +284,6 @@ In this step, configure the permissions that IDT for AWS IoT Greengrass uses to 
               "iot:DescribeRoleAlias"
             ],
             "Resource": "arn:aws:iot:*:*:rolealias/*"
-          },
-          {
-            "Sid": "VisualEditor12",
-            "Effect": "Allow",
-            "Action": [
-              "iot:CreateDeployment"
-            ],
-            "Resource": "*"
           }
         ]
       }
@@ -353,8 +349,10 @@ The AWS CLI is an open source tool that you can use to interact with AWS service
             "Effect": "Allow",
             "Action": [
               "lambda:CreateFunction",
+              "lambda:PublishVersion",
               "iot:DeleteCertificate",
               "lambda:DeleteFunction",
+              "lambda:GetFunction",
               "execute-api:Invoke",
               "iot:UpdateCertificate"
             ],
@@ -446,6 +444,7 @@ The AWS CLI is an open source tool that you can use to interact with AWS service
               "iot:CreateKeysAndCertificate",
               "iot:ListThings",
               "iot:UpdateThingShadow",
+              "iot:Publish",
               "iot:CreateCertificateFromCsr",
               "iot-device-tester:SendMetrics",
               "iot-device-tester:SupportedVersion",
@@ -476,7 +475,8 @@ The AWS CLI is an open source tool that you can use to interact with AWS service
               "s3:ListBucketVersions",
               "s3:CreateBucket",
               "s3:DeleteObject",
-              "s3:DeleteBucket"
+              "s3:DeleteBucket",
+              "s3:GetObject"
             ],
             "Resource": "arn:aws:s3:::idt*"
           },
@@ -505,14 +505,6 @@ The AWS CLI is an open source tool that you can use to interact with AWS service
               "iot:DescribeRoleAlias"
             ],
             "Resource": "arn:aws:iot:*:*:rolealias/*"
-          },
-          {
-            "Sid": "VisualEditor12",
-            "Effect": "Allow",
-            "Action": [
-              "iot:CreateDeployment"
-            ],
-            "Resource": "*"
           }
         ]
       }

@@ -37,7 +37,7 @@ On the **Create component** page, under **Lambda function configuration**, confi
    Under **Event sources**, do the following to add an event source:
 
    1. For each event source that you add, specify the following options: 
-      + **MQTT topic** – The name of the topic to subscribe for messages\.
+      + **Topic** – The name of the topic to subscribe for messages\.
       + **Type** – The type of event source\.
 
    1. To add another event source, choose **Add event source** and repeat the previous step\. To remove an event source, choose **Remove** next to the event source that you want to remove\.

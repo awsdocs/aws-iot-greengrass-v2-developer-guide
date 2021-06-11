@@ -326,7 +326,7 @@ Tests Skipped:          0
 Test Groups:
     myTestGroup:        PASSED
 ----------------------------------
-Path to AWS IoT Device Tester Report: /path/to/devicetester/results/9a52f362-1227-11eb-86c9-8c8590419f30/awsiotdevicetester_report.xml
+Path to IoT Device Tester Report: /path/to/devicetester/results/9a52f362-1227-11eb-86c9-8c8590419f30/awsiotdevicetester_report.xml
 Path to Test Execution Logs: /path/to/devicetester/results/9a52f362-1227-11eb-86c9-8c8590419f30/logs
 Path to Aggregated JUnit Report: /path/to/devicetester/results/9a52f362-1227-11eb-86c9-8c8590419f30/MyTestSuite_Report.xml
 ```

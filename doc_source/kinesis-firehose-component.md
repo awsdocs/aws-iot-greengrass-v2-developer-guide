@@ -9,6 +9,7 @@ This component provides similar functionality to the Kinesis Data Firehose conne
 
 **Topics**
 + [Versions](#kinesis-firehose-component-versions)
++ [Type](#kinesis-firehose-component-type)
 + [Requirements](#kinesis-firehose-component-requirements)
 + [Dependencies](#kinesis-firehose-component-dependencies)
 + [Configuration](#kinesis-firehose-component-configuration)
@@ -22,6 +23,12 @@ This component provides similar functionality to the Kinesis Data Firehose conne
 
 This component has the following versions:
 + 2\.0\.x
+
+## Type<a name="kinesis-firehose-component-type"></a>
+
+<a name="public-component-type-lambda"></a>This component is a Lambda component \(`aws.greengrass.lambda`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component's Lambda function using the [Lambda launcher component](lambda-launcher-component.md)\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Requirements<a name="kinesis-firehose-component-requirements"></a>
 

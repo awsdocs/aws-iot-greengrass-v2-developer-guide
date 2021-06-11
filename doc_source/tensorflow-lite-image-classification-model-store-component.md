@@ -4,10 +4,23 @@ The TensorFlow Lite image classification model store \(`variant.TensorFlowLite.I
 
 The [TensorFlow Lite image classification](tensorflow-lite-image-classification-component.md) inference component uses this component as a dependency for the model source\. To use a custom\-trained TensorFlow Lite model, [create a custom version](ml-customization.md#override-public-model-store) of this model component, and include your custom model as a component artifact\. You can use the recipe of this component as a template to create custom model components\. 
 
-## <a name="tensorflow-lite-image-classification-model-store-component-versions"></a>
+**Topics**
++ [Versions](#tensorflow-lite-image-classification-model-store-component-versions)
++ [Type](#tensorflow-lite-image-classification-model-store-component-type)
++ [Requirements](#tensorflow-lite-image-classification-model-store-component-requirements)
++ [Dependencies](#tensorflow-lite-image-classification-model-store-component-dependencies)
++ [Changelog](#tensorflow-lite-image-classification-model-store-component-changelog)
+
+## Versions<a name="tensorflow-lite-image-classification-model-store-component-versions"></a>
 
 This component has the following versions:
 + 2\.1\.x
+
+## Type<a name="tensorflow-lite-image-classification-model-store-component-type"></a>
+
+<a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Requirements<a name="tensorflow-lite-image-classification-model-store-component-requirements"></a>
 

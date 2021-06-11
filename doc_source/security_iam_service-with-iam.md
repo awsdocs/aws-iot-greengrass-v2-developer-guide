@@ -29,7 +29,7 @@ Include actions in a policy to grant permissions to perform the associated opera
 
 Policy actions for AWS IoT Greengrass use the `greengrass:` prefix before the action\. For example, to allow someone to use the `ListCoreDevices` API operation to list the core devices in their AWS account, you include the `greengrass:ListCoreDevices` action in their policy\. Policy statements must include either an `Action` or `NotAction` element\. AWS IoT Greengrass defines its own set of actions that describe tasks that you can perform with this service\.
 
-To specify multiple actions in a single statement, list them between brackets \(`[` `]`\) and separate them with commas, as follows:
+To specify multiple actions in a single statement, list them between brackets \(`[` `]`\) and separate them with commas, as follows:
 
 ```
 "Action": [
@@ -70,7 +70,7 @@ Some AWS IoT Greengrass actions \(for example, some list operations\), cannot be
 "Resource": "*"
 ```
 
-To specify multiple resource ARNs in a statement, list them between brackets \(`[` `]`\) and separate them with commas, as follows:
+To specify multiple resource ARNs in a statement, list them between brackets \(`[` `]`\) and separate them with commas, as follows:
 
 ```
 "Resource": [

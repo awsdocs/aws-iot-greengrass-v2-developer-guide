@@ -4,11 +4,26 @@ The DLR component \(`variant.DLR`\) contains a script that installs [Deep Learni
 
 To use a different runtime, you can use the recipe of this component as a template to [create a custom runtime component](ml-customization.md)\. 
 
+**Topics**
++ [Versions](#dlr-component-versions)
++ [Type](#dlr-component-type)
++ [Requirements](#dlr-component-requirements)
++ [Dependencies](#dlr-component-dependencies)
++ [Configuration](#dlr-component-config)
++ [Usage](#dlr-component-usage)
++ [Changelog](#dlr-component-changelog)
+
 ## Versions<a name="dlr-component-versions"></a>
 
 This component has the following versions:
 + 1\.6\.x
 + 1\.3\.x
+
+## Type<a name="dlr-component-type"></a>
+
+<a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Requirements<a name="dlr-component-requirements"></a>
 

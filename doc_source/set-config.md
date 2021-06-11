@@ -191,7 +191,7 @@ All fields that contain values are required as described here:
 The full path to a temporary folder on the device under test in which to store test artifacts\. Make sure that sudo permissions are not required to write to this directory\.   
 The contents of this folder are deleted when IDT finishes running a test\.
 
-`InstallationRootOnDevice`  
+`InstallationDirRootOnDevice`  
 The full path to a folder on the device in which to install AWS IoT Greengrass\.
 
 `GreengrassNucleusZip`  

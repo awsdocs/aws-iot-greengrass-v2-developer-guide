@@ -24,7 +24,7 @@ To run a Docker container in a component, you need the following:
 + Files accessed by the Docker container component [mounted as a volume](https://docs.docker.com/storage/volumes/) in the Docker container\.
 
 In addition to these requirements, you must also meet the following requirements if they apply to your environment:
-+ To use [Docker Compose](https://docs.docker.com/compose/) to create and start your Docker containers, install Docker Compose on your Greengrass core device, and upload your Docker Compose file to an S3 bucket\. You must store your Compose file in an S3 bucket in the same AWS account and AWS Region as the component\. For an example that uses the `docker-compose up` command in a custom component, see [](#run-docker-container-public-ecr-dockerhub)\.
++ To use [Docker Compose](https://docs.docker.com/compose/) to create and start your Docker containers, install Docker Compose on your Greengrass core device, and upload your Docker Compose file to an S3 bucket\. You must store your Compose file in an S3 bucket in the same AWS account and AWS Region as the component\. For an example that uses the `docker-compose up` command in a custom component, see [Run a Docker container from a public image in Amazon ECR or Docker Hub](#run-docker-container-public-ecr-dockerhub)\.
 + If you run AWS IoT Greengrass behind a network proxy, configure the Docker daemon to use a [proxy server](https://docs.docker.com/network/proxy/)\. 
 + If your Docker images are stored in Amazon ECR or Docker Hub, include the [Docker component manager](docker-application-manager-component.md) component as a dependency in your Docker container component\. You must start the Docker daemon on the core device before you deploy your component\. 
 
@@ -92,7 +92,7 @@ This section describes how you can create a custom component that uses Docker Co
      cloudwatchagent:
        image: "public.ecr.aws/cloudwatch-agent/cloudwatch-agent:latest"
      mysql:
-       image: "docker:mysql:8.0"
+       image: "mysql:8.0"
    ```
 
 1. [Create a custom component](create-components.md#develop-component) on your AWS IoT Greengrass core device\. The example recipe shown in the following example has the following properties:
@@ -462,7 +462,7 @@ The following example component recipe has the following properties:
         "os": "all"
       },
       "Lifecycle": {
-        "Run": "docker run --rm account-id.dkr.ecr.region.amazonaws.com/repository[:tag|@digest] -v /greengrass/v2:/greengrass/v2 -e AWS_REGION=$AWS_REGION -e SVCUID=$SVCUID -e AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT=$AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT -e AWS_CONTAINER_AUTHORIZATION_TOKEN=$AWS_CONTAINER_AUTHORIZATION_TOKEN -e AWS_CONTAINER_CREDENTIALS_FULL_URI=$AWS_CONTAINER_CREDENTIALS_FULL_URI"
+        "Run": "docker run --rm -v /greengrass/v2:/greengrass/v2 -e AWS_REGION=$AWS_REGION -e SVCUID=$SVCUID -e AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT=$AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT -e AWS_CONTAINER_AUTHORIZATION_TOKEN=$AWS_CONTAINER_AUTHORIZATION_TOKEN -e AWS_CONTAINER_CREDENTIALS_FULL_URI=$AWS_CONTAINER_CREDENTIALS_FULL_URI account-id.dkr.ecr.region.amazonaws.com/repository[:tag|@digest]"
       },
       "Artifacts": [
         {
@@ -496,9 +496,9 @@ Manifests:
   - Platform:
       os: all
     Lifecycle:
-      Run: 'docker run --rm account-id.dkr.ecr.region.amazonaws.com/repository[:tag|@digest] -v /greengrass/v2:/greengrass/v2 -e AWS_REGION=$AWS_REGION -e SVCUID=$SVCUID -e AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT=$AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT -e AWS_CONTAINER_AUTHORIZATION_TOKEN=$AWS_CONTAINER_AUTHORIZATION_TOKEN -e AWS_CONTAINER_CREDENTIALS_FULL_URI=$AWS_CONTAINER_CREDENTIALS_FULL_URI'
+      Run: 'docker run --rm -v /greengrass/v2:/greengrass/v2 -e AWS_REGION=$AWS_REGION -e SVCUID=$SVCUID -e AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT=$AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT -e AWS_CONTAINER_AUTHORIZATION_TOKEN=$AWS_CONTAINER_AUTHORIZATION_TOKEN -e AWS_CONTAINER_CREDENTIALS_FULL_URI=$AWS_CONTAINER_CREDENTIALS_FULL_URI account-id.dkr.ecr.region.amazonaws.com/repository[:tag|@digest]'
     Artifacts:
-      - URI: 'account-id.dkr.ecr.region.amazonaws.com/repository[:tag|@digest]'
+      - URI: 'docker:account-id.dkr.ecr.region.amazonaws.com/repository[:tag|@digest]'
 ```
 
 ------

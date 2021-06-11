@@ -4,11 +4,25 @@ The DLR object detection component \(`aws.greengrass.DLRObjectDetection`\) conta
 
 To use this inference component with a custom\-trained DLR model, [create a custom version](ml-customization.md#override-public-model-store) of the dependent model store component\. To use your own custom inference code, you can use the recipe of this component as a template to [create a custom inference component](ml-customization.md#create-inference-component)\.
 
+**Topics**
++ [Versions](#dlr-object-detection-component-versions)
++ [Type](#dlr-object-detection-component-type)
++ [Requirements](#dlr-object-detection-component-requirements)
++ [Dependencies](#dlr-object-detection-component-dependencies)
++ [Configuration](#dlr-object-detection-component-config)
++ [Changelog](#dlr-object-detection-component-changelog)
+
 ## Versions<a name="dlr-object-detection-component-versions"></a>
 
 This component has the following versions:
 + 2\.1\.x
 + 2\.0\.x
+
+## Type<a name="dlr-object-detection-component-type"></a>
+
+<a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Requirements<a name="dlr-object-detection-component-requirements"></a>
 

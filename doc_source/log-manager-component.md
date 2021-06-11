@@ -6,6 +6,7 @@ For information about the log groups and log streams to which this component upl
 
 **Topics**
 + [Versions](#log-manager-component-versions)
++ [Type](#log-manager-component-type)
 + [Requirements](#log-manager-component-requirements)
 + [Dependencies](#log-manager-component-dependencies)
 + [Configuration](#log-manager-component-configuration)
@@ -17,6 +18,14 @@ For information about the log groups and log streams to which this component upl
 This component has the following versions:
 + 2\.1\.x
 + 2\.0\.x
+
+## Type<a name="log-manager-component-type"></a>
+
+<a name="public-component-type-plugin-para1"></a>This component is a plugin component \(`aws.greengrass.plugin`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component in the same Java Virtual Machine \(JVM\) as the nucleus\. The nucleus restarts when you install or restart this component\.
+
+<a name="public-component-type-plugin-para2"></a>This component uses the same log file as the Greengrass nucleus\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Requirements<a name="log-manager-component-requirements"></a>
 
@@ -57,7 +66,7 @@ The following table lists the dependencies for version 2\.1\.x of this component
 
 | Dependency | Compatible versions | Dependency type | 
 | --- | --- | --- | 
-| [Greengrass nucleus](greengrass-nucleus-component.md) |  \~2\.1\.0  | Soft | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.1\.0 <2\.2\.0  | Soft | 
 
 ------
 #### [ 2\.0\.x ]

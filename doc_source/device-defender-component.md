@@ -9,6 +9,7 @@ This component provides similar functionality to the Device Defender connector i
 
 **Topics**
 + [Versions](#device-defender-component-versions)
++ [Type](#device-defender-component-type)
 + [Requirements](#device-defender-component-requirements)
 + [Dependencies](#device-defender-component-dependencies)
 + [Configuration](#device-defender-component-configuration)
@@ -21,6 +22,12 @@ This component provides similar functionality to the Device Defender connector i
 
 This component has the following versions:
 + 2\.0\.x
+
+## Type<a name="device-defender-component-type"></a>
+
+<a name="public-component-type-lambda"></a>This component is a Lambda component \(`aws.greengrass.lambda`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component's Lambda function using the [Lambda launcher component](lambda-launcher-component.md)\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Requirements<a name="device-defender-component-requirements"></a>
 

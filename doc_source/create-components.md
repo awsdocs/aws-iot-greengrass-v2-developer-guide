@@ -98,7 +98,7 @@ To develop a new component or a new version of a component, create a recipe and 
    import sys
    import datetime
    
-   message = f"Hello, {sys.argv[1]}! Current time: {str(datetime.datetime.now())}."
+   message = "Hello, %s! Current time: %s." % (sys.argv[1], datetime.datetime.now())
    
    # Print the message to stdout.
    print(message)

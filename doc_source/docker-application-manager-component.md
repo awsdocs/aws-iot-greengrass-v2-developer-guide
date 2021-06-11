@@ -6,6 +6,7 @@ When you develop a custom component that runs a Docker container, include the Do
 
 **Topics**
 + [Versions](#docker-application-manager-component-versions)
++ [Type](#docker-application-manager-component-type)
 + [Requirements](#docker-application-manager-component-requirements)
 + [Dependencies](#docker-application-manager-component-dependencies)
 + [Changelog](#docker-application-manager-component-changelog)
@@ -15,6 +16,12 @@ When you develop a custom component that runs a Docker container, include the Do
 
 This component has the following versions:
 + 2\.0\.x
+
+## Type<a name="docker-application-manager-component-type"></a>
+
+<a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Requirements<a name="docker-application-manager-component-requirements"></a>
 
@@ -65,7 +72,7 @@ The following table lists the dependencies for version 2\.0\.x of this component
 
 | Dependency | Compatible versions | Dependency type | 
 | --- | --- | --- | 
-| [Greengrass nucleus](greengrass-nucleus-component.md) | \~2\.1\.0 | Soft | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.1\.0 <2\.2\.0 | Soft | 
 
 For more information about component dependencies, see the [component recipe reference](component-recipe-reference.md#recipe-reference-component-dependencies)\.
 

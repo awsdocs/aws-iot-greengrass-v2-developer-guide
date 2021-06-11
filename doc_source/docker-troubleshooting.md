@@ -11,16 +11,17 @@ Use the following information to help you troubleshoot issues with running AWS I
 Use the following information to help troubleshoot issues with running AWS IoT Greengrass in a Docker container\.
 
 **Topics**
-+ [Error: Cannot perform an interactive login from a non TTY device\.](#docker-troubleshootin-ecr-get-login-password)
-+ [Error: Unknown options: \-no\-include\-email\.](#docker-troubleshooting-cli-version)
++ [Error: Cannot perform an interactive login from a non TTY device](#docker-troubleshootin-ecr-get-login-password)
++ [Error: Unknown options: \-no\-include\-email](#docker-troubleshooting-cli-version)
 + [Error: A firewall is blocking file Sharing between windows and the containers\.](#docker-troubleshooting-firewall)
 + [Error: An error occurred \(AccessDeniedException\) when calling the GetAuthorizationToken operation: User: arn:aws:iam::*account\-id*:user/<user\-name> is not authorized to perform: ecr:GetAuthorizationToken on resource: \*](#docker-troubleshooting-ecr-perms)
++ [Error: You have reached your pull rate limit](#docker-troubleshooting-too-many-requests)
 
-### Error: Cannot perform an interactive login from a non TTY device\.<a name="docker-troubleshootin-ecr-get-login-password"></a>
+### Error: Cannot perform an interactive login from a non TTY device<a name="docker-troubleshootin-ecr-get-login-password"></a>
 
 This error can occur when you run the `aws ecr get-login-password` command\. Make sure that you installed the latest AWS CLI version 2 or version 1\. We recommend that you use the AWS CLI version 2\. For more information, see [Installing the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) in the *AWS Command Line Interface User Guide*\.
 
-### Error: Unknown options: \-no\-include\-email\.<a name="docker-troubleshooting-cli-version"></a>
+### Error: Unknown options: \-no\-include\-email<a name="docker-troubleshooting-cli-version"></a>
 
 This error can occur when you run the `aws ecr get-login` command\. Make sure that you have the latest AWS CLI version installed \(for example, run: `pip install awscli --upgrade --user`\)\. For more information, see [Installing the AWS Command Line Interface on Microsoft Windows](https://docs.aws.amazon.com/cli/latest/userguide/awscli-install-windows.html) in the *AWS Command Line Interface User Guide*\.
 
@@ -31,6 +32,24 @@ You might receive this error or a `Firewall Detected` message when running Docke
 ### Error: An error occurred \(AccessDeniedException\) when calling the GetAuthorizationToken operation: User: arn:aws:iam::*account\-id*:user/<user\-name> is not authorized to perform: ecr:GetAuthorizationToken on resource: \*<a name="docker-troubleshooting-ecr-perms"></a>
 
 You might receive this error when running the `aws ecr get-login-password` command if you don't have sufficient permissions to access an Amazon ECR repository\. For more information, see [Amazon ECR Repository Policy Examples](https://docs.aws.amazon.com/AmazonECR/latest/userguide/repository-policy-examples.html) and [Accessing One Amazon ECR Repository](https://docs.aws.amazon.com/AmazonECR/latest/userguide/security_iam_id-based-policy-examples.html) in the *Amazon ECR User Guide*\.
+
+### Error: You have reached your pull rate limit<a name="docker-troubleshooting-too-many-requests"></a>
+
+Docker Hub limits the number of pull requests that anonymous and Free Docker Hub users can make\. If you exceed the rate limits for anonymous or free user pull requests, then you receive one of the following errors: 
+
+  
+
+```
+ERROR: toomanyrequests: Too Many Requests.
+```
+
+  
+
+```
+You have reached your pull rate limit.
+```
+
+To resolve these errors, you can wait for a few hours before you try another pull request\. If you plan on consistently submitting a large number of pull requests, see the [Docker Hub website](https://www.docker.com/increase-rate-limits) for information about rate limits, and options for authenticating and upgrading your Docker account\. 
 
 ## Debugging AWS IoT Greengrass in a Docker container<a name="debugging-greengrass-in-docker"></a>
 

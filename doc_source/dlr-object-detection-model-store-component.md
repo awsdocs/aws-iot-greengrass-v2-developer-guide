@@ -1,17 +1,30 @@
 # DLR object detection model store<a name="dlr-object-detection-model-store-component"></a>
 
-The DLR object detection model store is a machine learning model component that contains pre\-trained YOLOv3 models as Greengrass artifacts\. The sample models used in this component are fetched from the [GluonCV Model Zoo](https://cv.gluon.ai/model_zoo/index.html) and compiled using Amazon SageMaker Neo [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr)\.
+The DLR object detection model store is a machine learning model component that contains pre\-trained YOLOv3 models as Greengrass artifacts\. The sample models used in this component are fetched from the [GluonCV Model Zoo](https://cv.gluon.ai/model_zoo/index.html) and compiled using SageMaker Neo [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr)\.
 
 The [DLR object detection](dlr-object-detection-component.md) inference component uses this component as a dependency for the model source\. To use a custom\-trained DLR model, [create a custom version](ml-customization.md#override-public-model-store) of this model component, and include your custom model as a component artifact\. You can use the recipe of this component as a template to create custom model components\. 
 
 **Note**  
 The name of the DLR object detection model store component varies depending on its version\. The component name for version 2\.1\.x and later versions is `variant.DLR.ObjectDetection.ModelStore`\. The component name for version 2\.0\.x is `variant.ObjectDetection.ModelStore`\.
 
-## <a name="dlr-object-detection-model-store-component-versions"></a>
+**Topics**
++ [Versions](#dlr-object-detection-model-store-component-versions)
++ [Type](#dlr-object-detection-model-store-component-type)
++ [Requirements](#dlr-object-detection-model-store-component-requirements)
++ [Dependencies](#dlr-object-detection-model-store-component-dependencies)
++ [Changelog](#dlr-object-detection-model-store-component-changelog)
+
+## Versions<a name="dlr-object-detection-model-store-component-versions"></a>
 
 This component has the following versions:
 + 2\.1\.x 
 + 2\.0\.x
+
+## Type<a name="dlr-object-detection-model-store-component-type"></a>
+
+<a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Requirements<a name="dlr-object-detection-model-store-component-requirements"></a>
 

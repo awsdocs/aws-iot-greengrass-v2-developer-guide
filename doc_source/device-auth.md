@@ -35,6 +35,9 @@ An AWS IoT policy is a JSON document that's similar to an IAM policy\. It contai
 
 For more information, see [AWS IoT policies](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) and [AWS IoT policy actions](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policy-actions.html) in the *AWS IoT Core Developer Guide*\.
 
+**Note**  
+AWS IoT Core enables you to attach AWS IoT policies to thing groups to define permissions for groups of devices\. Thing group policies don't allow access to AWS IoT Greengrass data plane operations\. To allow a thing access to an AWS IoT Greengrass data plane operation, add the permission to an AWS IoT policy that you attach to the thing's certificate\.
+
 ### AWS IoT Greengrass V2 policy actions<a name="greengrass-policy-actions"></a>
 
 AWS IoT Greengrass V2 defines the following policy actions that Greengrass core devices can use in AWS IoT policies:
@@ -51,13 +54,17 @@ This permission is checked when a core device receives a deployment that specifi
 
 The following example policy includes the minimum set of actions required to support basic Greengrass functionality for your core device\.
 + The policy lists the MQTT topics and topic filters that the core device can publish messages to, subscribe to, and receive messages on, including topics used for shadow state\. To support message exchange between AWS IoT Core and Greengrass components, specify the topics and topic filters that you want to allow\. For more information, see [Publish/Subscribe policy examples](https://docs.aws.amazon.com/iot/latest/developerguide/pub-sub-policy.html) in the *AWS IoT Core Developer Guide*\.
-+ The policy grants permission to publish to a topic for telemetry data\. You can remove this permission for core devices where you disable telemetry\. For more information, see [Gather system health telemetry data from AWS IoT Greengrass core devices](telemetry.md)\.
++ The policy grants permission to publish to the following topic for telemetry data\.
+
+  ```
+  $aws/things/core-device-thing-name*/greengrass/health/json
+  ```
+
+  You can remove this permission for core devices where you disable telemetry\. For more information, see [Gather system health telemetry data from AWS IoT Greengrass core devices](telemetry.md)\.
 + The policy grants permission to assume an IAM role through an AWS IoT role alias\. The core device uses this role, called the token exchange role, to acquire AWS credentials that it can use to authenticate AWS requests\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
 
   When you install the AWS IoT Greengrass Core software, you create and attach a second AWS IoT policy that includes only this permission\. If you include this permission in your core device's primary AWS IoT policy, you can detach and delete the other AWS IoT policy\.
-+ <a name="thing-policy-variable-not-supported"></a>The use of [thing policy variables](https://docs.aws.amazon.com/iot/latest/developerguide/thing-policy-variables.html) \(`iot:Connection.Thing.*`\) in the AWS IoT policy for a core device is not supported\. The core uses the same device certificate to make multiple connections to AWS IoT Core but the client ID in a connection might not be an exact match of the core thing name\.
-
-  <a name="thing-policy-variable-not-supported"></a>[Thing policy variables](https://docs.aws.amazon.com/iot/latest/developerguide/thing-policy-variables.html) \(`iot:Connection.Thing.*`\) aren't supported in AWS IoT policies for core devices\. The core device uses the same device certificate to make multiple connections to AWS IoT Core but the client ID in a connection might not be an exact match of the core device thing name\.
++ <a name="thing-policy-variable-not-supported"></a>[Thing policy variables](https://docs.aws.amazon.com/iot/latest/developerguide/thing-policy-variables.html) \(`iot:Connection.Thing.*`\) aren't supported in AWS IoT policies for core devices\. The core device uses the same device certificate to make multiple connections to AWS IoT Core but the client ID in a connection might not be an exact match of the core device thing name\.
 
 ```
 {
@@ -68,7 +75,7 @@ The following example policy includes the minimum set of actions required to sup
             "Action": [
                 "iot:Connect"
             ],
-            "Resource": "*"
+            "Resource": "arn:aws:iot:region:account-id:client/core-device-thing-name*"
         },
         {
             "Effect": "Allow",
@@ -77,6 +84,7 @@ The following example policy includes the minimum set of actions required to sup
                 "iot:Publish"
             ],
             "Resource": [
+                "arn:aws:iot:region:account-id:topic/$aws/things/core-device-thing-name*/greengrass/health/json",
                 "arn:aws:iot:region:account-id:topic/$aws/things/core-device-thing-name*/greengrassv2/health/json",
                 "arn:aws:iot:region:account-id:topic/$aws/things/core-device-thing-name*/jobs/*",
                 "arn:aws:iot:region:account-id:topic/$aws/things/core-device-thing-name*/shadow/*"

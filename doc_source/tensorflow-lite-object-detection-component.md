@@ -4,10 +4,24 @@ The TensorFlow Lite object detection component \(`aws.greengrass.TensorFlowLiteO
 
 To use this inference component with a custom\-trained TensorFlow Lite model, you can [create a custom version](ml-customization.md#override-public-model-store) of the dependent model store component\. To use your own custom inference code, use the recipe of this component as a template to [create a custom inference component](ml-customization.md#create-inference-component)\.
 
+**Topics**
++ [Versions](#tensorflow-lite-object-detection-component-versions)
++ [Type](#tensorflow-lite-object-detection-component-type)
++ [Requirements](#tensorflow-lite-object-detection-component-requirements)
++ [Dependencies](#tensorflow-lite-object-detection-component-dependencies)
++ [Configuration](#tensorflow-lite-object-detection-component-configuration)
++ [Changelog](#tensorflow-lite-object-detection-component-changelog)
+
 ## Versions<a name="tensorflow-lite-object-detection-component-versions"></a>
 
 This component has the following versions:
 + 2\.1\.x
+
+## Type<a name="tensorflow-lite-object-detection-component-type"></a>
+
+<a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Requirements<a name="tensorflow-lite-object-detection-component-requirements"></a>
 

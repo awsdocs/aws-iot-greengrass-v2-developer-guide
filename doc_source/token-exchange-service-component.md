@@ -9,6 +9,7 @@ Support to acquire AWS credentials in this way was added to the AWS SDKs on July
 
 **Topics**
 + [Versions](#token-exchange-service-component-versions)
++ [Type](#token-exchange-service-component-type)
 + [Dependencies](#token-exchange-service-component-dependencies)
 + [Configuration](#token-exchange-service-component-configuration)
 + [Changelog](#token-exchange-service-component-changelog)
@@ -17,6 +18,12 @@ Support to acquire AWS credentials in this way was added to the AWS SDKs on July
 
 This component has the following versions:
 + 2\.0\.x
+
+## Type<a name="token-exchange-service-component-type"></a>
+
+<a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Dependencies<a name="token-exchange-service-component-dependencies"></a>
 

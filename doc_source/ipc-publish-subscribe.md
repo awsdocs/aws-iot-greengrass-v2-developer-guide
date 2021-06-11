@@ -626,6 +626,7 @@ The following example recipe allows the component to publish to all topics\.
   "Manifests": [
     {
       "Lifecycle": {
+        "Install": "python3 -m pip install --user awsiotsdk",
         "Run": "python3 -u {artifacts:path}/pubsub_publisher.py"
       }
     }
@@ -655,6 +656,7 @@ ComponentConfiguration:
             - "*"
 Manifests:
   - Lifecycle:
+      Install: python3 -m pip install --user awsiotsdk
       Run: python3 -u {artifacts:path}/pubsub_publisher.py
 ```
 
@@ -749,6 +751,7 @@ The following example recipe allows the component to subscribe to all topics\.
   "Manifests": [
     {
       "Lifecycle": {
+        "Install": "python3 -m pip install --user awsiotsdk",
         "Run": "python3 -u {artifacts:path}/pubsub_subscriber.py"
       }
     }
@@ -778,6 +781,7 @@ ComponentConfiguration:
             - "*"
 Manifests:
   - Lifecycle:
+      Install: python3 -m pip install --user awsiotsdk
       Run: python3 -u {artifacts:path}/pubsub_subscriber.py
 ```
 

@@ -8,10 +8,12 @@ AWS IoT Greengrass simplifies the steps required to perform inference\. You can 
 + [How AWS IoT Greengrass ML inference works](#how-ml-inference-works)
 + [What's different in Version 2?](#ml-differences)
 + [Requirements](#ml-requirements)
++ [Supported model sources](#ml-model-sources)
 + [Supported machine learning runtimes](#ml-runtime-libraries)
 + [Sample machine learning components](#ml-components)
 + [Tutorial: Perform sample image classification inference using TensorFlow Lite](ml-tutorial-image-classification.md)
 + [Perform sample image classification inference on images from a camera using TensorFlow Lite](ml-tutorial-image-classification-camera.md)
++ [Use Amazon SageMaker Edge Manager on Greengrass core devices](use-sagemaker-edge-manager.md)
 + [Customize your machine learning components](ml-customization.md)
 + [Troubleshooting machine learning inference](ml-troubleshooting.md)
 
@@ -49,11 +51,16 @@ The AWS\-provided machine learning components provide you with the flexibility t
 The following requirements apply for creating and using machine learning components:
 + A Greengrass core device\. If you don't have one, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
 + Minimum 500 MB local storage space to use AWS\-provided sample machine learning components\.
-+ Machine learning models stored in S3 buckets\. The following requirements apply to the S3 buckets that contain your models:
-  + S3 buckets must not be encrypted using SSE\-C\. For buckets that use server\-side encryption, AWS IoT Greengrass machine learning inference currently supports the SSE\-S3 or SSE\-KMS encryption options only\. For more information about server\-side encryption options, see [Protecting data using server\-side encryption](https://docs.aws.amazon.com/AmazonS3/latest/dev/serv-side-encryption.html) in the *Amazon Simple Storage Service Developer Guide*\.
-  + The names of S3 buckets must not include periods \(`.`\)\. For more information, see the rule about using virtual hosted\-style buckets with SSL in [Rules for bucket naming](https://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html#bucketnamingrules) in the *Amazon Simple Storage Service Developer Guide*\.
-  + <a name="sr-artifacts-req"></a>The S3 buckets must be in the same AWS account and AWS Region as your machine learning components\.
-  + AWS IoT Greengrass must have `read` permission to the model source\. To enable AWS IoT Greengrass to access the S3 buckets, the [Greengrass device role](device-service-role.md) must allow the `s3:GetObject` action\. For more information about the device role, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
+
+## Supported model sources<a name="ml-model-sources"></a>
+
+AWS IoT Greengrass supports using custom\-trained machine learning models that are stored in Amazon S3\. You can also use Amazon SageMaker edge packaging jobs to directly create model components for your SageMaker Neo\-compiled models\. For information about using SageMaker Edge Manager with AWS IoT Greengrass, see [Use Amazon SageMaker Edge Manager on Greengrass core devices](use-sagemaker-edge-manager.md)\.
+
+The following requirements apply to the S3 buckets that contain your models:
++ S3 buckets must not be encrypted using SSE\-C\. For buckets that use server\-side encryption, AWS IoT Greengrass machine learning inference currently supports the SSE\-S3 or SSE\-KMS encryption options only\. For more information about server\-side encryption options, see [Protecting data using server\-side encryption](https://docs.aws.amazon.com/AmazonS3/latest/dev/serv-side-encryption.html) in the *Amazon Simple Storage Service Developer Guide*\.
++ The names of S3 buckets must not include periods \(`.`\)\. For more information, see the rule about using virtual hosted\-style buckets with SSL in [Rules for bucket naming](https://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html#bucketnamingrules) in the *Amazon Simple Storage Service Developer Guide*\.
++ <a name="sr-artifacts-req"></a>The S3 buckets that store your model sources must be in the same AWS account and AWS Region as your machine learning components\.
++ AWS IoT Greengrass must have `read` permission to the model source\. To enable AWS IoT Greengrass to access the S3 buckets, the [Greengrass device role](device-service-role.md) must allow the `s3:GetObject` action\. For more information about the device role, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
 
 ## Supported machine learning runtimes<a name="ml-runtime-libraries"></a>
 
@@ -76,23 +83,23 @@ The AWS\-provided machine learning components described in this section enable y
 AWS IoT Greengrass provides the following public components to support machine learning inference using [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) \(DLR\)\. 
 
 
-| Component | Description | Depends on nucleus | Component name | 
-| --- | --- | --- | --- | 
-| [DLR image classification](dlr-image-classification-component.md) | Inference component that uses the DLR image classification model store and the DLR runtime component as dependencies to install DLR, download sample image classification models, and perform image classification inference on supported devices\. | Yes | aws\.greengrass\.DLRImageClassification | 
-| [DLR object detection](dlr-object-detection-component.md) | Inference component that uses the DLR object detection model store and the DLR runtime component as dependencies to install DLR, download sample object detection models, and perform object detection inference on supported devices\. | Yes | aws\.greengrass\.DLRObjectDetection | 
-| [DLR image classification model store](dlr-image-classification-model-store-component.md) | Model component that contains sample ResNet\-50 image classification models as Greengrass artifacts\. | Yes | variant\.DLR\.ImageClassification\.ModelStore \(v2\.1\.0 and later\), variant\.ImageClassification\.ModelStore \(v2\.0\.3\) | 
-| [DLR object detection model store](dlr-object-detection-model-store-component.md) | Model component that contains sample YOLOv3 object detection models as Greengrass artifacts\. | Yes | variant\.DLR\.ObjectDetection\.ModelStore \(v2\.1\.0 and later\), variant\.ObjectDetection\.ModelStore \(v2\.0\.3\) | 
-| [DLR](dlr-component.md) | Runtime component that contains an installation script that is used to install DLR and its dependencies on the Greengrass core device\. | Yes | variant\.DLR | 
+| Component | Description | Depends on nucleus | [Component type](manage-components.md#component-types) | Open source | 
+| --- | --- | --- | --- | --- | 
+| [DLR image classification](dlr-image-classification-component.md) | Inference component that uses the DLR image classification model store and the DLR runtime component as dependencies to install DLR, download sample image classification models, and perform image classification inference on supported devices\. | Yes | Generic | No | 
+| [DLR object detection](dlr-object-detection-component.md) | Inference component that uses the DLR object detection model store and the DLR runtime component as dependencies to install DLR, download sample object detection models, and perform object detection inference on supported devices\. | Yes | Generic | No | 
+| [DLR image classification model store](dlr-image-classification-model-store-component.md) | Model component that contains sample ResNet\-50 image classification models as Greengrass artifacts\. | Yes | Generic | No | 
+| [DLR object detection model store](dlr-object-detection-model-store-component.md) | Model component that contains sample YOLOv3 object detection models as Greengrass artifacts\. | Yes | Generic | No | 
+| [DLR](dlr-component.md) | Runtime component that contains an installation script that is used to install DLR and its dependencies on the Greengrass core device\. | Yes | Generic | No | 
 
 ### Machine learning components for TensorFlow Lite<a name="ml-components-tensorflow-lite"></a>
 
 AWS IoT Greengrass provides the following public components to support machine learning inference using [TensorFlow Lite](https://www.tensorflow.org/lite)\.
 
 
-| Component | Description | Depends on nucleus | Component name | 
-| --- | --- | --- | --- | 
-| [TensorFlow Lite image classification](tensorflow-lite-image-classification-component.md) | Inference component that uses the TensorFlow Lite image classification model store and the TensorFlow Lite runtime component as dependencies to install TensorFlow Lite, download sample image classification models, and perform image classification inference on supported devices\. | Yes | aws\.greengrass\.TensorFlowLiteImageClassification | 
-| [TensorFlow Lite object detection](tensorflow-lite-object-detection-component.md) | Inference component that uses the TensorFlow Lite object detection model store and the TensorFlow Lite runtime component as dependencies to install TensorFlow Lite, download sample object detection models, and perform object detection inference on supported devices\. | Yes | aws\.greengrass\.TensorFlowLiteObjectDetection | 
-| [TensorFlow Lite image classification model store](tensorflow-lite-image-classification-model-store-component.md) | Model component that contains a sample MobileNet v1 model as a Greengrass artifact\. | Yes | variant\.TensorFlowLite\.ImageClassification\.ModelStore | 
-| [TensorFlow Lite object detection model store](tensorflow-lite-object-detection-model-store-component.md) | Model component that contains a sample Single Shot Detection \(SSD\) MobileNet model as a Greengrass artifact\. | Yes | variant\.TensorFlowLite\.ObjectDetection\.ModelStore | 
-| [TensorFlow Lite](tensorflow-lite-component.md) | Runtime component that contains an installation script that is used to install TensorFlow Lite and its dependencies on the Greengrass core device\. | Yes | variant\.TensorFlowLite | 
+| Component | Description | Depends on nucleus | [Component type](manage-components.md#component-types) | Open source | 
+| --- | --- | --- | --- | --- | 
+| [TensorFlow Lite image classification](tensorflow-lite-image-classification-component.md) | Inference component that uses the TensorFlow Lite image classification model store and the TensorFlow Lite runtime component as dependencies to install TensorFlow Lite, download sample image classification models, and perform image classification inference on supported devices\. | Yes | Generic | No | 
+| [TensorFlow Lite object detection](tensorflow-lite-object-detection-component.md) | Inference component that uses the TensorFlow Lite object detection model store and the TensorFlow Lite runtime component as dependencies to install TensorFlow Lite, download sample object detection models, and perform object detection inference on supported devices\. | Yes | Generic | No | 
+| [TensorFlow Lite image classification model store](tensorflow-lite-image-classification-model-store-component.md) | Model component that contains a sample MobileNet v1 model as a Greengrass artifact\. | Yes | Generic | No | 
+| [TensorFlow Lite object detection model store](tensorflow-lite-object-detection-model-store-component.md) | Model component that contains a sample Single Shot Detection \(SSD\) MobileNet model as a Greengrass artifact\. | Yes | Generic | No | 
+| [TensorFlow Lite](tensorflow-lite-component.md) | Runtime component that contains an installation script that is used to install TensorFlow Lite and its dependencies on the Greengrass core device\. | Yes | Generic | No | 

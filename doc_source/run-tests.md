@@ -14,7 +14,7 @@ devicetester_[linux | mac | win]_x86-64 run-suite  \
     --userdata userdata.json
 ```
 
-The options for the `run-suite` command are optional\. For example, you can omit `pool-id` if you have only one device pool, which is a set of identical devices, defined in your `device.json` file\. Or, you can omit `suite-id` if you want to run the latest test suite version in the `tests` folder\.
+The `--userdata` option is the only required option for the `run-suite` command; all other options are optional\. For example, you can omit `pool-id` if you have only one device pool, which is a set of identical devices, defined in your `device.json` file\. Or, you can omit `suite-id` if you want to run the latest test suite version in the `tests` folder\.
 
 **Note**  
 IDT prompts you if a newer test suite version is available online\. For more information, see [Test suite versions](idt-greengrass-qualification.md#idt-test-suite-versions)\.
@@ -97,7 +97,7 @@ Runs a suite of tests on a pool of devices\. The following are some supported op
 + `pool-id`\. The device pool to test\. You must specify a pool if you have multiple device pools defined in your `device.json` file\.
 + `stop-on-first-failure`\. Configures IDT to stop running on the first failure\. Use this option with `group-id` when you want to debug the specified test groups\. Do not use this option when running a full test\-suite to generate a qualification report\.
 + `update-idt`\. Sets the response for the prompt to update IDT\. The `Y` response stops the test execution if IDT detects there is a newer version\. The `N` response continues the test execution\.
-+ `userdata`\. The full path to the `userdata.json` file that contains informaation about test artifact paths\. The `userdata.json` file must be located in the *devicetester\_extract\_location*/devicetester\_ggv2\_*\[win\|mac\|linux\]*/configs/ directory\.
++ `userdata`\. The full path to the `userdata.json` file that contains information about test artifact paths\. This option is required for the `run-suite` command\. The `userdata.json` file must be located in the *devicetester\_extract\_location*/devicetester\_ggv2\_*\[win\|mac\|linux\]*/configs/ directory\.
 For more information about `run-suite` options, use the `help` option:  
 
 ```

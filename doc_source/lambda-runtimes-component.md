@@ -7,6 +7,7 @@ When you deploy a Lambda function component to a core device, the deployment als
 
 **Topics**
 + [Versions](#lambda-runtimes-component-versions)
++ [Type](#lambda-runtimes-component-type)
 + [Requirements](#lambda-runtimes-component-requirements)
 + [Dependencies](#lambda-runtimes-component-dependencies)
 + [Configuration](#lambda-runtimes-component-configuration)
@@ -16,6 +17,12 @@ When you deploy a Lambda function component to a core device, the deployment als
 
 This component has the following versions:
 + 2\.0\.x
+
+## Type<a name="lambda-runtimes-component-type"></a>
+
+<a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Requirements<a name="lambda-runtimes-component-requirements"></a>
 
@@ -37,5 +44,6 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.0\.5  |  Version updated\.  | 
 |  2\.0\.4  |  Version updated for Greengrass nucleus version 2\.1\.0 release\.  | 
 |  2\.0\.3  |  Initial version\.  | 

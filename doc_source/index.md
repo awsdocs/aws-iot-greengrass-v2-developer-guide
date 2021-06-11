@@ -1,7 +1,7 @@
 # AWS IoT Greengrass Developer Guide, Version 2
 
 -----
-*****Copyright &copy;  Amazon Web Services, Inc. and/or its affiliates. All rights reserved.*****
+*****Copyright &copy; Amazon Web Services, Inc. and/or its affiliates. All rights reserved.*****
 
 -----
 Amazon's trademarks and trade dress may not be used in 
@@ -62,6 +62,7 @@ Amazon's trademarks and trade dress may not be used in
          + [TensorFlow Lite object detection model store](tensorflow-lite-object-detection-model-store-component.md)
          + [TensorFlow Lite](tensorflow-lite-component.md)
       + [Modbus-RTU protocol adapter](modbus-rtu-protocol-adapter-component.md)
+      + [SageMaker Edge Manager](sagemaker-edge-manager-component.md)
       + [Secret manager](secret-manager-component.md)
       + [Secure tunneling](secure-tunneling-component.md)
       + [Amazon SNS](sns-component.md)
@@ -96,6 +97,8 @@ Amazon's trademarks and trade dress may not be used in
 + [Perform machine learning inference](perform-machine-learning-inference.md)
    + [Tutorial: Perform sample image classification inference using TensorFlow Lite](ml-tutorial-image-classification.md)
    + [Perform sample image classification inference on images from a camera using TensorFlow Lite](ml-tutorial-image-classification-camera.md)
+   + [Use Amazon SageMaker Edge Manager on Greengrass core devices](use-sagemaker-edge-manager.md)
+      + [Get started with SageMaker Edge Manager](get-started-with-edge-manager-on-greengrass.md)
    + [Customize your machine learning components](ml-customization.md)
    + [Troubleshooting machine learning inference](ml-troubleshooting.md)
 + [Greengrass Command Line Interface](gg-cli.md)
@@ -150,6 +153,6 @@ Amazon's trademarks and trade dress may not be used in
    + [Support policy for AWS IoT Device Tester for AWS IoT Greengrass](idt-support-policy.md)
 + [Troubleshooting](troubleshooting.md)
 + [Tag your AWS IoT Greengrass Version 2 resources](tag-resources.md)
-+ [Open source AWS IoT Greengrass client software](open-source.md)
++ [Open source AWS IoT Greengrass Core software](open-source.md)
 + [Document history for the AWS IoT Greengrass V2 Developer Guide](document-history.md)
 + [AWS glossary](glossary.md)

@@ -65,16 +65,16 @@ https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-version.zip
 
    <a name="core-software-license"></a>By downloading this software, you agree to the [Greengrass Core Software License Agreement](https://greengrass-release-license.s3.us-west-2.amazonaws.com/greengrass-license-v1.pdf)\.
 
-1. Unzip the AWS IoT Greengrass Core software to a folder on your device\. Replace *MyGreengrassCore* with the folder that you want to use\.
+1. Unzip the AWS IoT Greengrass Core software to a folder on your device\. Replace *GreengrassCore* with the folder that you want to use\.
 
    ```
-   unzip greengrass-nucleus-latest.zip -d MyGreengrassCore && rm greengrass-nucleus-latest.zip
+   unzip greengrass-nucleus-latest.zip -d GreengrassCore && rm greengrass-nucleus-latest.zip
    ```
 **Tip**  
 You can run the following command to see the version of the AWS IoT Greengrass Core software\.  
 
    ```
-   java -jar ./MyGreengrassCore/lib/Greengrass.jar --version
+   java -jar ./GreengrassCore/lib/Greengrass.jar --version
    ```
 
 ## Install the AWS IoT Greengrass Core software<a name="run-greengrass-core-v2-installer"></a>
@@ -97,13 +97,17 @@ For more information about the arguments that you can specify, see [Installer ar
 
    1. */greengrass/v2*: The path to the root folder to use to install the AWS IoT Greengrass Core software\.
 
-   1. *MyGreengrassCore*\. The path to the folder where you unpacked the AWS IoT Greengrass Core software installer\.
+   1. *GreengrassCore*\. The path to the folder where you unpacked the AWS IoT Greengrass Core software installer\.
 
    1. *region*\. The AWS Region in which to find or create resources\.
 
-   1. *MyGreengrassCore*\. The name of the AWS IoT thing for your Greengrass core device\. If the thing doesn't exist, the installer creates it\. The installer downloads the certificates to authenticate as the AWS IoT thing\. 
+   1. *MyGreengrassCore*\. The name of the AWS IoT thing for your Greengrass core device\. If the thing doesn't exist, the installer creates it\. The installer downloads the certificates to authenticate as the AWS IoT thing\. For more information, see [Device authentication and authorization for AWS IoT Greengrass](device-auth.md)\.
+**Note**  <a name="install-argument-thing-name-constraint"></a>
+The thing name can't contain colon \(`:`\) characters\.
 
    1. *MyGreengrassCoreGroup*\. The name of AWS IoT thing group for your Greengrass core device\. If the thing group doesn't exist, the installer creates it and adds the thing to it\. If the thing group exists and has an active deployment, the core device downloads and runs the software that the deployment specifies\.
+**Note**  <a name="install-argument-thing-group-name-constraint"></a>
+The thing group name can't contain colon \(`:`\) characters\.
 
    1. *GreengrassV2TokenExchangeRole*\. The name of the IAM role that allows the Greengrass core device to get temporary AWS credentials\. If the role doesn't exist, the installer creates it and creates and attaches a policy named `GreengrassV2TokenExchangeRoleAccess`\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
 
@@ -111,7 +115,7 @@ For more information about the arguments that you can specify, see [Installer ar
 
    ```
    sudo -E java -Droot="/greengrass/v2" -Dlog.store=FILE \
-     -jar ./MyGreengrassCore/lib/Greengrass.jar \
+     -jar ./GreengrassCore/lib/Greengrass.jar \
      --aws-region region \
      --thing-name MyGreengrassCore \
      --thing-group-name MyGreengrassCoreGroup \

@@ -9,6 +9,7 @@ This component provides similar functionality to the Modbus RTU protocol adapter
 
 **Topics**
 + [Versions](#modbus-rtu-protocol-adapter-component-versions)
++ [Type](#modbus-rtu-protocol-adapter-component-type)
 + [Requirements](#modbus-rtu-protocol-adapter-component-requirements)
 + [Dependencies](#modbus-rtu-protocol-adapter-component-dependencies)
 + [Configuration](#modbus-rtu-protocol-adapter-component-configuration)
@@ -22,6 +23,12 @@ This component provides similar functionality to the Modbus RTU protocol adapter
 
 This component has the following versions:
 + 2\.0\.x
+
+## Type<a name="modbus-rtu-protocol-adapter-component-type"></a>
+
+<a name="public-component-type-lambda"></a>This component is a Lambda component \(`aws.greengrass.lambda`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component's Lambda function using the [Lambda launcher component](lambda-launcher-component.md)\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Requirements<a name="modbus-rtu-protocol-adapter-component-requirements"></a>
 

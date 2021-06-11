@@ -119,14 +119,14 @@ Follow the steps in this section to create a deployment to a target for the firs
         + `SKIP_NOTIFY_COMPONENTS` – The deployment doesn't notify components or wait for them to be safe to update\.
 
         Defaults to `NOTIFY_COMPONENTS`\.
-      + `timeout` The amount of time in seconds that each component has to respond to an update notification with the [DeferComponentUpdate](ipc-component-lifecycle.md#ipc-operation-defercomponentupdate) IPC operation\. If the component doesn't respond within this amount of time, then the deployment proceeds on the core device\.
+      + `timeoutInSeconds` The amount of time in seconds that each component has to respond to an update notification with the [DeferComponentUpdate](ipc-component-lifecycle.md#ipc-operation-defercomponentupdate) IPC operation\. If the component doesn't respond within this amount of time, then the deployment proceeds on the core device\.
 
         Defaults to 60 seconds\.
 
    1. \(Optional\) Specify the configuration validation policy \(`configurationValidationPolicy`\)\. This policy defines how long each component has to validate a configuration update from a deployment\. Components can use the [SubscribeToValidateConfigurationUpdates](ipc-component-configuration.md#ipc-operation-subscribetovalidateconfigurationupdates) IPC operation to subscribe to notifications for their own configuration updates\. Then, components can use the [SendConfigurationValidityReport](ipc-component-configuration.md#ipc-operation-sendconfigurationvalidityreport) IPC operation to tell the AWS IoT Greengrass Core software if the configuration update is valid\. If the configuration update isn't valid, the deployment fails\.
 
       This policy is an object with the following parameter:
-      + `timeout` \(Optional\) The amount of time in seconds that each component has to validate a configuration update\. If the component doesn't respond within this amount of time, then the deployment proceeds on the core device\.
+      + `timeoutInSeconds` \(Optional\) The amount of time in seconds that each component has to validate a configuration update\. If the component doesn't respond within this amount of time, then the deployment proceeds on the core device\.
 
         Defaults to 30 seconds\.
 
@@ -155,10 +155,10 @@ Follow the steps in this section to create a deployment to a target for the firs
      "deploymentPolicies": {
        "componentUpdatePolicy": {
          "action": "NOTIFY_COMPONENTS",
-         "timeout": 30
+         "timeoutInSeconds": 30
        },
        "configurationValidationPolicy": {
-         "timeout": 60
+         "timeoutInSeconds": 60
        },
        "failureHandlingPolicy": "ROLLBACK"
      }
@@ -188,10 +188,10 @@ Follow the steps in this section to create a deployment to a target for the firs
      "deploymentPolicies": {
        "componentUpdatePolicy": {
          "action": "NOTIFY_COMPONENTS",
-         "timeout": 30
+         "timeoutInSeconds": 30
        },
        "configurationValidationPolicy": {
-         "timeout": 60
+         "timeoutInSeconds": 60
        },
        "failureHandlingPolicy": "ROLLBACK"
      },

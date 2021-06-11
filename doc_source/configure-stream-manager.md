@@ -13,7 +13,8 @@ For information about securing stream data, see [Local data security](manage-dat
 
 **Server port**  
 Parameter name: `STREAM_MANAGER_SERVER_PORT`  
-The local port number used to communicate with stream manager\. The default is `8088`\.
+The local port number used to communicate with stream manager\. The default is `8088`\.  
+You can specify `0` to use a random available port\.
 
 **Authenticate client**  <a name="STREAM_MANAGER_AUTHENTICATE_CLIENT"></a>
 Parameter name: `STREAM_MANAGER_AUTHENTICATE_CLIENT`  

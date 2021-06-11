@@ -212,6 +212,7 @@ In production, we recommend that you reduce the scope of the authorization polic
   "Manifests": [
     {
       "Lifecycle": {
+        "Install": "python3 -m pip install --user awsiotsdk",
         "Run": "python3 -u {artifacts:path}/print_secret.py '{configuration:/SecretArn}'"
       }
     }
@@ -246,6 +247,7 @@ ComponentConfiguration:
             - "*"
 Manifests:
   - Lifecycle:
+      Install: python3 -m pip install --user awsiotsdk
       Run: python3 -u {artifacts:path}/print_secret.py '{configuration:/SecretArn}'
 ```
 

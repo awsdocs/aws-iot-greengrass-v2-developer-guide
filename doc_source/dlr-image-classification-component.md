@@ -4,11 +4,25 @@ The DLR image classification component \(`aws.greengrass.DLRImageClassification`
 
 To use this inference component with a custom\-trained DLR model, [create a custom version](ml-customization.md#override-public-model-store) of the dependent model store component\. To use your own custom inference code, you can use the recipe of this component as a template to [create a custom inference component](ml-customization.md#create-inference-component)\.
 
+**Topics**
++ [Versions](#dlr-image-classification-component-versions)
++ [Type](#dlr-image-classification-component-type)
++ [Requirements](#dlr-image-classification-component-requirements)
++ [Dependencies](#dlr-image-classification-component-dependencies)
++ [Configuration](#dlr-image-classification-component-config)
++ [Changelog](#dlr-image-classification-component-changelog)
+
 ## Versions<a name="dlr-image-classification-component-versions"></a>
 
 This component has the following versions:
 + 2\.1\.x
 + 2\.0\.x
+
+## Type<a name="dlr-image-classification-component-type"></a>
+
+<a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Requirements<a name="dlr-image-classification-component-requirements"></a>
 

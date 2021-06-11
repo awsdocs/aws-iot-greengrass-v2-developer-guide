@@ -4,8 +4,25 @@ The TensorFlow Lite component \(`variant.TensorFlowLite`\) contains a script tha
 
 To use a different runtime, you can use the recipe of this component as a template to [create a custom runtime component](ml-customization.md)\. 
 
+**Topics**
++ [Versions](#tensorflow-lite-component-versions)
++ [Type](#tensorflow-lite-component-type)
++ [Requirements](#tensorflow-lite-component-requirements)
++ [Dependencies](#tensorflow-lite-component-dependencies)
++ [Configuration](#tensorflow-lite-component-config)
++ [Usage](#tensorflow-lite-component-usage)
++ [Changelog](#tensorflow-lite-component-changelog)
+
+## Versions<a name="tensorflow-lite-component-versions"></a>
+
 This component has the following versions:
 + 2\.5\.0
+
+## Type<a name="tensorflow-lite-component-type"></a>
+
+<a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Requirements<a name="tensorflow-lite-component-requirements"></a>
 

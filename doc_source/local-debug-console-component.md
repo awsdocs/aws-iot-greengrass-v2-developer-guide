@@ -7,6 +7,7 @@ Don't use this component in production environments\. This component is intended
 
 **Topics**
 + [Versions](#local-debug-console-component-versions)
++ [Type](#local-debug-console-component-type)
 + [Requirements](#local-debug-console-component-requirements)
 + [Dependencies](#local-debug-console-component-dependencies)
 + [Configuration](#local-debug-console-component-configuration)
@@ -18,6 +19,14 @@ Don't use this component in production environments\. This component is intended
 This component has the following versions:
 + 2\.1\.x
 + 2\.0\.x
+
+## Type<a name="local-debug-console-component-type"></a>
+
+<a name="public-component-type-plugin-para1"></a>This component is a plugin component \(`aws.greengrass.plugin`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component in the same Java Virtual Machine \(JVM\) as the nucleus\. The nucleus restarts when you install or restart this component\.
+
+<a name="public-component-type-plugin-para2"></a>This component uses the same log file as the Greengrass nucleus\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Requirements<a name="local-debug-console-component-requirements"></a>
 
@@ -36,8 +45,8 @@ The following table lists the dependencies for version 2\.1\.x of this component
 
 | Dependency | Compatible versions | Dependency type | 
 | --- | --- | --- | 
-| [Greengrass nucleus](greengrass-nucleus-component.md) | \~2\.1\.0  | Hard | 
-| [Greengrass CLI](greengrass-cli-component.md) | \~2\.1\.0 | Hard | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.1\.0 <2\.2\.0  | Hard | 
+| [Greengrass CLI](greengrass-cli-component.md) | >=2\.1\.0 <2\.2\.0 | Hard | 
 
 ------
 #### [ 2\.0\.x ]

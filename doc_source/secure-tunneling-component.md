@@ -10,6 +10,7 @@ By default, this component subscribes to the `things/greengrass-core-device/tunn
 
 **Topics**
 + [Versions](#secure-tunneling-component-versions)
++ [Type](#secure-tunneling-component-type)
 + [Requirements](#secure-tunneling-component-requirements)
 + [Dependencies](#secure-tunneling-component-dependencies)
 + [Configuration](#secure-tunneling-component-configuration)
@@ -21,6 +22,12 @@ By default, this component subscribes to the `things/greengrass-core-device/tunn
 
 This component has the following versions:
 + 1\.0\.x
+
+## Type<a name="secure-tunneling-component-type"></a>
+
+<a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Requirements<a name="secure-tunneling-component-requirements"></a>
 
