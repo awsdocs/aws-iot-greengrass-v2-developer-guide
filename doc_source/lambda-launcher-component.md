@@ -68,6 +68,5 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
-|  2\.0\.5  |  General performance improvements and bug fixes\.  | 
 |  2\.0\.4  |  <a name="changelog-lambda-launcher-2.0.4"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/lambda-launcher-component.html)  | 
 |  2\.0\.3  |  Initial version\.  | 
