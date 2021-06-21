@@ -30,6 +30,8 @@ For more information, see [Greengrass Command Line Interface](gg-cli.md)\.
 ## Versions<a name="greengrass-cli-component-versions"></a>
 
 This component has the following versions:
++ 2\.2\.x
++ 2\.1\.x
 + 2\.0\.x
 
 ## Type<a name="greengrass-cli-component-type"></a>
@@ -50,12 +52,22 @@ This component has the following requirements:
 
 ## Dependencies<a name="greengrass-cli-component-dependencies"></a>
 
-When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. You must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#greengrass-cli-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#greengrass-cli-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ 2\.1\.x ]
+#### [ 2\.2\.0 ]
 
-The following table lists the dependencies for version 2\.1\.x of this component\.
+The following table lists the dependencies for version 2\.2\.0 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.1\.0 <2\.3\.0 | Soft | 
+
+------
+#### [ 2\.1\.0 ]
+
+The following table lists the dependencies for version 2\.1\.0 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -87,6 +99,15 @@ This component provides the following configuration parameters that you can cust
 \(Optional\) A string that contains a comma\-separated list of system groups\. You authorize these system groups to use the Greengrass CLI to interact with the AWS IoT Greengrass Core software\. You can specify group names or group IDs\. For example, `group1,1002,group3` authorizes three system groups \(`group1`, `1002`, and `group3`\) to use the Greengrass CLI\.  
 If you don't specify any groups to authorize, you can use the Greengrass CLI as the root user \(`sudo`\) or as the system user that runs the AWS IoT Greengrass Core software\.
 
+**Example: Configuration merge update**  
+The following example configuration specifies to authorize three system groups \(`group1`, `1002`, and `group3`\) to use the Greengrass CLI\.  
+
+```
+{
+  "AuthorizedPosixGroups": "group1,1002,group3"
+}
+```
+
 ## Changelog<a name="greengrass-cli-component-changelog"></a>
 
 The following table describes the changes in each version of the component\.
@@ -94,6 +115,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.2\.0  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 
 |  2\.1\.0  |  Version updated for Greengrass nucleus version 2\.1\.0 release\.  | 
 |  2\.0\.5  | Version updated for Greengrass nucleus version 2\.0\.5 release\. | 
 |  2\.0\.4  | Version updated for Greengrass nucleus version 2\.0\.4 release\. | 

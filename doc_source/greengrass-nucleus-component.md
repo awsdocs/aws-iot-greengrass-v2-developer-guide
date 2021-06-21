@@ -18,6 +18,7 @@ When the version of the nucleus component changes, or when you change certain co
 ## Versions<a name="greengrass-nucleus-component-versions"></a>
 
 This component has the following versions:
++ 2\.2\.x
 + 2\.1\.x
 + 2\.0\.x
 
@@ -206,6 +207,30 @@ Default: `10000000000` \(10 GB\)
 \(Optional\) A dictionary of attributes that identify the core device's platform\. Use this to define custom platform attributes that component recipes can use to identify the correct lifecycle and artifacts for the component\. For example, you might define a hardware capability attribute to deploy only the minimal set of artifacts for a component to run\. For more information, see the [manifest platform parameter](component-recipe-reference.md#component-platform-definition) in the component recipe\.  
 You can also use this parameter to override the `os` and `architecture` platform attributes of the core device\.
 
+**Example: Configuration merge update**  
+
+```
+{
+  "iotRoleAlias": "GreengrassCoreTokenExchangeRoleAlias",
+  "networkProxy": {
+    "noProxyAddresses": "http://192.168.0.1,www.example.com",
+    "proxy": {
+      "url": "https://my-proxy-server:1100",
+      "username": "Mary_Major",
+      "password": "pass@word1357"
+    }
+  },
+  "mqtt": {
+    "port": 443
+  },
+  "greengrassDataPlanePort": 443,
+  "jvmOptions": "-Xmx64m",
+  "runWithDefault": {
+    "posixUser": "ggc_user:ggc_group"
+  }
+}
+```
+
 ## Changelog<a name="greengrass-nucleus-component-changelog"></a>
 
 The following table describes the changes in each version of the component\.
@@ -213,6 +238,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.2\.0  |  <a name="changelog-nucleus-2.2.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
 |  2\.1\.0  |  <a name="changelog-nucleus-2.1.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
 |  2\.0\.5  |  <a name="changelog-nucleus-2.0.5"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
 |  2\.0\.4  |  <a name="changelog-nucleus-2.0.4"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 

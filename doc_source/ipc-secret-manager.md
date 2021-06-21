@@ -4,7 +4,7 @@ Use the secret manager IPC service to retrieve secret values from secrets on the
 
 **Topics**
 + [Authorization](#ipc-secret-manager-authorization)
-+ [Operations](#ipc-secret-manager-operations)
++ [GetSecretValue](#ipc-operation-getsecretvalue)
 + [Examples](#ipc-secret-manager-examples)
 
 ## Authorization<a name="ipc-secret-manager-authorization"></a>
@@ -22,7 +22,7 @@ Authorization policies for secret manager have the following properties\.
 
 **Example authorization policy**  
 The following example authorization policy allows a component to get the value of any secret on the core device\.  
-In production, we recommend that you reduce the scope of the authorization policy, so the component can retrieve only the secrets that it uses\. You can change the `*` wildcard to a list of secret ARNs when you deploy the component\.
+In production environments, we recommend that you reduce the scope of the authorization policy, so the component can retrieve only the secrets that it uses\. You can change the `*` wildcard to a list of secret ARNs when you deploy the component\.
 
 ```
 {
@@ -42,20 +42,13 @@ In production, we recommend that you reduce the scope of the authorization polic
 }
 ```
 
-## Operations<a name="ipc-secret-manager-operations"></a>
-
-Use the following operation to get the values of secrets\.
-
-**Topics**
-+ [GetSecretValue](#ipc-operation-getsecretvalue)
-
-### GetSecretValue<a name="ipc-operation-getsecretvalue"></a>
+## GetSecretValue<a name="ipc-operation-getsecretvalue"></a>
 
 Gets the value of a secret that you store on the core device\.
 
 This operation is similar to the Secrets Manager operation that you can use to get the value of a secret in the AWS Cloud\. For more information, see [GetSecretValue](https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html) in the *AWS Secrets Manager API Reference*\.
 
-#### Request<a name="ipc-operation-getsecretvalue-request"></a>
+### Request<a name="ipc-operation-getsecretvalue-request"></a>
 
 This operation's request has the following parameters:
 
@@ -72,7 +65,7 @@ If you don't specify `versionId` or `versionStage`, this operation defaults to t
 You can specify either `versionId` or `versionStage`\.  
 If you don't specify `versionId` or `versionStage`, this operation defaults to the version with the `AWSCURRENT` label\.
 
-#### Response<a name="ipc-operation-getsecretvalue-response"></a>
+### Response<a name="ipc-operation-getsecretvalue-response"></a>
 
 This operation's response has the following information:
 
@@ -93,7 +86,7 @@ The decrypted part of the protected secret information that you provided to Secr
 \(Optional\) The decrypted part of the protected secret information that you provided to Secrets Manager as binary data in the form of a byte array\. This property contains the binary data as a base64\-encoded string\.  
 This property isn't used if you created the secret in the Secrets Manager console\.
 
-#### Examples<a name="ipc-operation-getsecretvalue-examples"></a>
+### Examples<a name="ipc-operation-getsecretvalue-examples"></a>
 
 The following examples demonstrate how to call this operation in custom component code\.
 
@@ -173,7 +166,7 @@ This example component prints the value of a secret, so use it only with secrets
 The following example recipe defines a secret ARN configuration parameter and allows the component to get the value of any secret on the core device\.
 
 **Note**  <a name="ipc-secret-manager-authorization-policy-resource-wildcard"></a>
-In production, we recommend that you reduce the scope of the authorization policy, so the component can retrieve only the secrets that it uses\. You can change the `*` wildcard to a list of secret ARNs when you deploy the component\.
+In production environments, we recommend that you reduce the scope of the authorization policy, so the component can retrieve only the secrets that it uses\. You can change the `*` wildcard to a list of secret ARNs when you deploy the component\.
 
 ------
 #### [ JSON ]

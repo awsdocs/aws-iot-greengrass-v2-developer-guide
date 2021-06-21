@@ -31,7 +31,7 @@ You can run `list-supported-products` to list the versions of AWS IoT Greengrass
 ## Test group descriptions<a name="dt-test-groups"></a>
 
 ------
-#### [ IDT v4\.0\.2 ]
+#### [ IDT v4\.0\.2 and later ]
 
 **Required Test Groups for Core Qualification**  
 These test groups are required to qualify your AWS IoT Greengrass V2 device for the AWS Partner Device Catalog\.    

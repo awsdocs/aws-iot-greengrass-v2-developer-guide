@@ -6,24 +6,17 @@ The component configuration IPC service lets you do the following:
 + Validate component configuration updates before the nucleus applies them
 
 **Topics**
-+ [Operations](#ipc-component-configuration-operations)
-
-## Operations<a name="ipc-component-configuration-operations"></a>
-
-Use the following operations to manage component configurations\.
-
-**Topics**
 + [GetConfiguration](#ipc-operation-getconfiguration)
 + [UpdateConfiguration](#ipc-operation-updateconfiguration)
 + [SubscribeToConfigurationUpdate](#ipc-operation-subscribetoconfigurationupdate)
 + [SubscribeToValidateConfigurationUpdates](#ipc-operation-subscribetovalidateconfigurationupdates)
 + [SendConfigurationValidityReport](#ipc-operation-sendconfigurationvalidityreport)
 
-### GetConfiguration<a name="ipc-operation-getconfiguration"></a>
+## GetConfiguration<a name="ipc-operation-getconfiguration"></a>
 
 Gets a configuration value for a component on the core device\. You specify the key path for which to get a configuration value\.
 
-#### Request<a name="ipc-operation-getconfiguration-request"></a>
+### Request<a name="ipc-operation-getconfiguration-request"></a>
 
 This operation's request has the following parameters:
 
@@ -42,7 +35,7 @@ The key path to the configuration value\. Specify a list where each entry is the
 }
 ```
 
-#### Response<a name="ipc-operation-getconfiguration-response"></a>
+### Response<a name="ipc-operation-getconfiguration-response"></a>
 
 This operation's response has the following information:
 
@@ -52,11 +45,11 @@ The name of the component\.
 `value`  
 The requested configuration as an object\.
 
-### UpdateConfiguration<a name="ipc-operation-updateconfiguration"></a>
+## UpdateConfiguration<a name="ipc-operation-updateconfiguration"></a>
 
 Updates a configuration value for a component on the core device\.
 
-#### Request<a name="ipc-operation-updateconfiguration-request"></a>
+### Request<a name="ipc-operation-updateconfiguration-request"></a>
 
 This operation's request has the following parameters:
 
@@ -79,11 +72,11 @@ The current Unix epoch time in milliseconds\. This operation uses this timestamp
 `valueToMerge`  
 The configuration object to merge at the location that you specify in `keyPath`\. For more information, see [Update component configurations](update-component-configurations.md)\.
 
-#### Response<a name="ipc-operation-updateconfiguration-response"></a>
+### Response<a name="ipc-operation-updateconfiguration-response"></a>
 
 This operation doesn't provide any information in its response\.
 
-### SubscribeToConfigurationUpdate<a name="ipc-operation-subscribetoconfigurationupdate"></a>
+## SubscribeToConfigurationUpdate<a name="ipc-operation-subscribetoconfigurationupdate"></a>
 
 Subscribe to receive notifications when a component's configuration updates\. When you subscribe to a key, you receive a notification when any child of that key updates\.
 
@@ -91,7 +84,7 @@ Subscribe to receive notifications when a component's configuration updates\. Wh
 
 **Event message type:** `ConfigurationUpdateEvents`
 
-#### Request<a name="ipc-operation-subscribetoconfigurationupdate-request"></a>
+### Request<a name="ipc-operation-subscribetoconfigurationupdate-request"></a>
 
 This operation's request has the following parameters:
 
@@ -110,7 +103,7 @@ The key path to the configuration value for which to subscribe\. Specify a list 
 }
 ```
 
-#### Response<a name="ipc-operation-subscribetoconfigurationupdate-response"></a>
+### Response<a name="ipc-operation-subscribetoconfigurationupdate-response"></a>
 
 This operation's response has the following information:
 
@@ -123,7 +116,7 @@ The name of the component\.
 `keyPath`  
 The key path to the configuration value that updated\.
 
-### SubscribeToValidateConfigurationUpdates<a name="ipc-operation-subscribetovalidateconfigurationupdates"></a>
+## SubscribeToValidateConfigurationUpdates<a name="ipc-operation-subscribetovalidateconfigurationupdates"></a>
 
 Subscribe to receive notifications before this component's configuration updates\. This lets components validate updates to their own configuration\. Use the [SendConfigurationValidityReport](#ipc-operation-sendconfigurationvalidityreport) operation to tell the nucleus whether or not the configuration is valid\.
 
@@ -134,11 +127,11 @@ Local deployments don't notify components of updates\.
 
 **Event message type:** `ValidateConfigurationUpdateEvents`
 
-#### Request<a name="ipc-operation-subscribetovalidateconfigurationupdates-request"></a>
+### Request<a name="ipc-operation-subscribetovalidateconfigurationupdates-request"></a>
 
 This operation's request doesn't have any parameters\.
 
-#### Response<a name="ipc-operation-subscribetovalidateconfigurationupdates-response"></a>
+### Response<a name="ipc-operation-subscribetovalidateconfigurationupdates-response"></a>
 
 This operation's response has the following information:
 
@@ -151,13 +144,13 @@ The ID of the AWS IoT Greengrass deployment that updates the component\.
 `configuration`  
 The object that contains the new configuration\.
 
-### SendConfigurationValidityReport<a name="ipc-operation-sendconfigurationvalidityreport"></a>
+## SendConfigurationValidityReport<a name="ipc-operation-sendconfigurationvalidityreport"></a>
 
 Tell the nucleus whether or not a configuration update to this component is valid\. The deployment fails if you tell the nucleus that the new configuration isn't valid\. Use the [SubscribeToValidateConfigurationUpdates](#ipc-operation-subscribetovalidateconfigurationupdates) operation to subscribe to validate configuration updates\.
 
 If a component doesn't respond to a validate configuration update notification, the nucleus waits the amount of time that you specify in the deployment's configuration validation policy\. After that timeout, the nucleus proceeds with the deployment\. The default component validation timeout is 20 seconds\. For more information, see [Create deployments](create-deployments.md) and the [ConfigurationValidationPolicy](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_ConfigurationValidationPolicy.html) object that you can provide when you call the [CreateDeployment](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_CreateDeployment.html) operation\.
 
-#### Request<a name="ipc-operation-sendconfigurationvalidityreport-request"></a>
+### Request<a name="ipc-operation-sendconfigurationvalidityreport-request"></a>
 
 This operation's request has the following parameters:
 
@@ -172,6 +165,6 @@ The ID of the AWS IoT Greengrass deployment that requested the configuration upd
 `message`  
 \(Optional\) A message that reports why the configuration isn't valid\.
 
-#### Response<a name="ipc-operation-sendconfigurationvalidityreport-response"></a>
+### Response<a name="ipc-operation-sendconfigurationvalidityreport-response"></a>
 
 This operation doesn't provide any information in its response\.

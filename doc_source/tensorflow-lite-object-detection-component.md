@@ -25,7 +25,7 @@ This component has the following versions:
 
 ## Requirements<a name="tensorflow-lite-object-detection-component-requirements"></a>
 
-To deploy a component, you must meet the requirements for the component and its [dependencies](#tensorflow-lite-object-detection-component-dependencies)\. This component has the following requirements:<a name="ml-component-requirements"></a>
+This component has the following requirements:<a name="ml-component-requirements"></a>
 + <a name="ml-req-glibc"></a>On Greengrass core devices running Amazon Linux 2 or Ubuntu 18\.04, [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.27 or later installed on the device\.
 + On Armv7l devices, such as Raspberry Pi, dependencies for OpenCV Python installed on the device\. Run the following command to install the dependencies: 
 
@@ -35,33 +35,56 @@ To deploy a component, you must meet the requirements for the component and its 
 
 ## Dependencies<a name="tensorflow-lite-object-detection-component-dependencies"></a>
 
-When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. You must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#tensorflow-lite-object-detection-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#tensorflow-lite-object-detection-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
-The following table lists the dependencies for version 2\.1\.x of this component\.
+------
+#### [ 2\.1\.1 ]
+
+The following table lists the dependencies for version 2\.1\.1 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.3\.0 | Soft | 
+| [TensorFlow Lite image classification model store](tensorflow-lite-image-classification-model-store-component.md) | >=2\.1\.0 <2\.2\.0 | Hard | 
+| [TensorFlow Lite](tensorflow-lite-component.md) | >=2\.5\.0 <2\.6\.0 | Hard | 
+
+------
+#### [ 2\.1\.0 ]
+
+The following table lists the dependencies for version 2\.1\.0 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
 | --- | --- | --- | 
 | [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.2\.0 | Soft | 
-| [TensorFlow Lite object detection model store](tensorflow-lite-object-detection-model-store-component.md) | \~2\.1\.0 | Hard | 
-| [TensorFlow Lite](tensorflow-lite-component.md) | \~2\.5\.0 | Soft | 
+| [TensorFlow Lite image classification model store](tensorflow-lite-image-classification-model-store-component.md) | >=2\.1\.0 <2\.2\.0 | Hard | 
+| [TensorFlow Lite](tensorflow-lite-component.md) | >=2\.5\.0 <2\.6\.0 | Hard | 
+
+------
 
 ## Configuration<a name="tensorflow-lite-object-detection-component-configuration"></a>
 
 This component provides the following configuration parameters that you can customize when you deploy the component\.
 
 `accessControl`  
-<a name="ml-config-accesscontrol-desc"></a>The object that contains the [authorization policy](interprocess-communication.md#ipc-authorization-policies) that allows the component to publish messages to the default notifications topic\.   
+<a name="ml-config-accesscontrol-desc"></a>\(Optional\) The object that contains the [authorization policy](interprocess-communication.md#ipc-authorization-policies) that allows the component to publish messages to the default notifications topic\.   
 Default:   
 
 ```
-aws.greengrass.ipc.mqttproxy:
-  "aws.greengrass.TensorFlowLiteObjectDetection:mqttproxy:1":
-    policyDescription: Allows access to publish via topic ml/tflite/object-detection.
-      operations:
-        - "aws.greengrass#PublishToIoTCore"
-      resources:
-        - "ml/tflite/object-detection"
+{
+   "aws.greengrass.ipc.mqttproxy": {
+      "aws.greengrass.TensorFlowLiteObjectDetection:mqttproxy:1": {
+         "policyDescription": "Allows access to publish via topic ml/tflite/object-detection.",
+         "operations": [
+            "aws.greengrass#PublishToIoTCore"
+         ],
+         "resources": [
+            "ml/tflite/object-detection"
+         ]
+      }
+   }
+}
 ```
 
 `PublishResultsOnTopic`  
@@ -106,4 +129,5 @@ The following table describes the changes in each version of the component\.
 
 |  Version  |  Changes  | 
 | --- | --- | 
+|  2\.1\.1  |  <a name="changelog-tensorflow-lite-object-detection-2.1.1"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/tensorflow-lite-object-detection-component.html)  | 
 |  2\.1\.0  |  Initial version\.  | 

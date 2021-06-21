@@ -203,7 +203,7 @@ If your system doesn't have systemd, the installer won't set up the software as 
      --target-arn "arn:aws:iot:region:account-id:thing/MyGreengrassCore" \
      --components '{
        "aws.greengrass.Cli": {
-         "componentVersion": "2.1.0"
+         "componentVersion": "2.2.0"
        }
      }'
    ```
@@ -214,7 +214,7 @@ If your system doesn't have systemd, the installer won't set up the software as 
    ```
    aws greengrassv2 create-deployment ^
      --target-arn "arn:aws:iot:region:account-id:thing/MyGreengrassCore" ^
-     --components "{\"aws.greengrass.Cli\":{\"componentVersion\":\"2.1.0\"}}"
+     --components "{\"aws.greengrass.Cli\":{\"componentVersion\":\"2.2.0\"}}"
    ```
 
 ------
@@ -223,7 +223,7 @@ If your system doesn't have systemd, the installer won't set up the software as 
    ```
    aws greengrassv2 create-deployment `
      --target-arn "arn:aws:iot:region:account-id:thing/MyGreengrassCore" `
-     --components '{\"aws.greengrass.Cli\":{\"componentVersion\":\"2.1.0\"}}'
+     --components '{\"aws.greengrass.Cli\":{\"componentVersion\":\"2.2.0\"}}'
    ```
 
 ------

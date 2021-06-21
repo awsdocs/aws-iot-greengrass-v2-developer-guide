@@ -7,7 +7,8 @@ You can't use this publish/subscribe IPC service to publish or subscribe to AWS 
 
 **Topics**
 + [Authorization](#ipc-publish-subscribe-authorization)
-+ [Operations](#ipc-publish-subscribe-operations)
++ [PublishToTopic](#ipc-operation-publishtotopic)
++ [SubscribeToTopic](#ipc-operation-subscribetotopic)
 + [Examples](#ipc-publish-subscribe-examples)
 
 ## Authorization<a name="ipc-publish-subscribe-authorization"></a>
@@ -47,19 +48,11 @@ The following example authorization policy allows a component to publish and sub
 }
 ```
 
-## Operations<a name="ipc-publish-subscribe-operations"></a>
-
-Use the following operations for publish/subscribe messaging\.
-
-**Topics**
-+ [PublishToTopic](#ipc-operation-publishtotopic)
-+ [SubscribeToTopic](#ipc-operation-subscribetotopic)
-
-### PublishToTopic<a name="ipc-operation-publishtotopic"></a>
+## PublishToTopic<a name="ipc-operation-publishtotopic"></a>
 
 Publish a message to a topic\.
 
-#### Request<a name="ipc-operation-publishtotopic-request"></a>
+### Request<a name="ipc-operation-publishtotopic-request"></a>
 
 This operation's request has the following parameters:
 
@@ -77,11 +70,11 @@ The JSON message as an object\.
 `message`  
 The binary message as a blob\.
 
-#### <a name="ipc-operation-publishtotopic-response"></a>
+### <a name="ipc-operation-publishtotopic-response"></a>
 
 This operation doesn't provide any information in its response\.
 
-#### Examples<a name="ipc-operation-publishtotopic-examples"></a>
+### Examples<a name="ipc-operation-publishtotopic-examples"></a>
 
 The following examples demonstrate how to call this operation in custom component code\.
 
@@ -139,7 +132,7 @@ future.result(TIMEOUT)
 
 ------
 
-### SubscribeToTopic<a name="ipc-operation-subscribetotopic"></a>
+## SubscribeToTopic<a name="ipc-operation-subscribetotopic"></a>
 
 Subscribe to messages at a topic\.
 
@@ -147,14 +140,15 @@ Subscribe to messages at a topic\.
 
 **Event message type:** `SubscriptionResponseMessage`
 
-#### Request<a name="ipc-operation-subscribetotopic-request"></a>
+### Request<a name="ipc-operation-subscribetotopic-request"></a>
 
 This operation's request has the following parameters:
 
 `topic`  
-The topic to which to subscribe\.
+The topic to which to subscribe\.  
+This topic doesn't support MQTT topic wildcards \(`#` and `+`\)\.
 
-#### Response<a name="ipc-operation-subscribetotopic-response"></a>
+### Response<a name="ipc-operation-subscribetotopic-response"></a>
 
 This operation's response has the following information:
 
@@ -172,7 +166,7 @@ The JSON message as an object\.
 `message`  
 The binary message as a blob\.
 
-#### Examples<a name="ipc-operation-subscribetotopic-examples"></a>
+### Examples<a name="ipc-operation-subscribetotopic-examples"></a>
 
 The following examples demonstrate how to call this operation in custom component code\.
 

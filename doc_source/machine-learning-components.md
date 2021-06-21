@@ -16,7 +16,7 @@ The public machine learning components use sample inference code and pre\-traine
 AWS IoT Greengrass provides the following public components for performing sample machine learning inference using [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) \(DLR\)\. 
 
 
-| Component | Description | Depends on nucleus | [Component type](manage-components.md#component-types) | Open source | 
+| Component | Description | Depends on nucleus | [Component type](manage-components.md#component-types) | [Open source](open-source.md) | 
 | --- | --- | --- | --- | --- | 
 | [DLR image classification](dlr-image-classification-component.md) | Inference component that uses the DLR image classification model store and the DLR runtime component as dependencies to install DLR, download sample image classification models, and perform image classification inference on supported devices\. | Yes | Generic | No | 
 | [DLR object detection](dlr-object-detection-component.md) | Inference component that uses the DLR object detection model store and the DLR runtime component as dependencies to install DLR, download sample object detection models, and perform object detection inference on supported devices\. | Yes | Generic | No | 
@@ -29,7 +29,7 @@ AWS IoT Greengrass provides the following public components for performing sampl
 AWS IoT Greengrass provides the following public components for performing sample machine learning inference using [TensorFlow Lite](https://www.tensorflow.org/lite)\.
 
 
-| Component | Description | Depends on nucleus | [Component type](manage-components.md#component-types) | Open source | 
+| Component | Description | Depends on nucleus | [Component type](manage-components.md#component-types) | [Open source](open-source.md) | 
 | --- | --- | --- | --- | --- | 
 | [TensorFlow Lite image classification](tensorflow-lite-image-classification-component.md) | Inference component that uses the TensorFlow Lite image classification model store and the TensorFlow Lite runtime component as dependencies to install TensorFlow Lite, download sample image classification models, and perform image classification inference on supported devices\. | Yes | Generic | No | 
 | [TensorFlow Lite object detection](tensorflow-lite-object-detection-component.md) | Inference component that uses the TensorFlow Lite object detection model store and the TensorFlow Lite runtime component as dependencies to install TensorFlow Lite, download sample object detection models, and perform object detection inference on supported devices\. | Yes | Generic | No | 

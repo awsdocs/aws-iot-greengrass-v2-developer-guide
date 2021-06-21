@@ -130,4 +130,6 @@ AWS IoT Greengrass does not support [service\-linked roles](https://docs.aws.ama
 
 This feature allows a service to assume a [service role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_terms-and-concepts.html#iam-term-service-role) on your behalf\. This role allows the service to access resources in other services to complete an action on your behalf\. Service roles appear in your IAM account and are owned by the account\. This means that an IAM administrator can change the permissions for this role\. However, doing so might break the functionality of the service\.
 
-AWS IoT Greengrass core devices use a service role to access some of your AWS resources on your behalf\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
+AWS IoT Greengrass core devices use a service role to allow Greengrass components and Lambda functions to access some of your AWS resources on your behalf\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
+
+AWS IoT Greengrass uses a service role to access some of your AWS resources on your behalf\. For more information, see [Greengrass service role](greengrass-service-role.md)\.

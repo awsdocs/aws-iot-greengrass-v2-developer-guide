@@ -36,7 +36,7 @@ For information about changes in each version of the component, see the [changel
 
 ## Requirements<a name="cloudwatch-metrics-component-requirements"></a>
 
-To deploy a component, you must meet the requirements for the component and its [dependencies](#cloudwatch-metrics-component-dependencies)\. This component has the following requirements:
+This component has the following requirements:
 + <a name="core-device-lambda-function-requirements"></a>Your core device must meet the requirements to run Lambda functions\. If you want the core device to run containerized Lambda functions, the device must meet the requirements to do so\. For more information, see [Requirements to run Lambda functions](setting-up.md#greengrass-v2-lambda-requirements)\.
 + <a name="public-component-python3-requirement"></a>[Python](https://www.python.org/) version 3\.7 installed on the core device and added to the PATH environment variable\.
 + The [Greengrass device role](device-service-role.md) must allow the `cloudwatch:PutMetricData` action, as shown in the following example IAM policy\.
@@ -57,7 +57,7 @@ To deploy a component, you must meet the requirements for the component and its 
   ```
 
   For more information, see [Amazon CloudWatch permissions reference](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/permissions-reference-cw.html) in the *Amazon CloudWatch User Guide*\.
-+ <a name="connector-component-legacy-subscription-router-dependency"></a>To receive output data from this component, you must merge the following configuration update for the [legacy subscription router component](legacy-subscription-router-component.md) \(`aws.greengrass.LegacySubscriptionRouter`\) when you deploy this component\. This configuration specifies the topic where this component publishes responses\.
++ <a name="connector-component-legacy-subscription-router-dependency"></a>To receive output data from this component, you must merge the following configuration update for the [legacy subscription router component](legacy-subscription-router-component.md) when you deploy this component\. The legacy subscription router component \(`aws.greengrass.LegacySubscriptionRouter`\) is a dependency of this component\. This configuration specifies the topic where this component publishes responses\.
 
 ------
 #### [ Legacy subscription router v2\.1\.x ]
@@ -102,12 +102,25 @@ You must update the Lambda function version on the legacy subscription router ev
 
 ## Dependencies<a name="cloudwatch-metrics-component-dependencies"></a>
 
-When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. You must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#cloudwatch-metrics-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#cloudwatch-metrics-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ >=2\.0\.4 ]
+#### [ 2\.0\.5 ]
 
-The following table lists the dependencies for version 2\.0\.4 and later versions of this component\.
+The following table lists the dependencies for version 2\.0\.5 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.3\.0  | Hard | 
+| [Lambda launcher](lambda-launcher-component.md) | ^2\.0\.0  | Hard | 
+| [Lambda runtimes](lambda-runtimes-component.md) | ^2\.0\.0  | Soft | 
+| [Token exchange service](token-exchange-service-component.md) | ^2\.0\.0  | Hard | 
+
+------
+#### [ 2\.0\.4 ]
+
+The following table lists the dependencies for version 2\.0\.4 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -333,6 +346,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.0\.5  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 
 |  2\.0\.4  |  Version updated for Greengrass nucleus version 2\.1\.0 release\.  | 
 |  2\.0\.3  |  Initial version\.  | 
 

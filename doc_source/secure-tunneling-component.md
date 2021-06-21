@@ -31,7 +31,7 @@ This component has the following versions:
 
 ## Requirements<a name="secure-tunneling-component-requirements"></a>
 
-To deploy a component, you must meet the requirements for the component and its [dependencies](#secure-tunneling-component-dependencies)\. This component has the following requirements:
+This component has the following requirements:
 + [Python](https://www.python.org/) 3\.5 or later installed on the Greengrass core device and added to the PATH environment variable\.
 + `libcrypto.so.1.1` installed on the Greengrass core device and added to the PATH environment variable\.
 + The Greengrass core device must allow outbound traffic on port 443\. 
@@ -39,12 +39,22 @@ To deploy a component, you must meet the requirements for the component and its 
 
 ## Dependencies<a name="secure-tunneling-component-dependencies"></a>
 
-When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. You must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#secure-tunneling-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#secure-tunneling-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ >=1\.0\.1 ]
+#### [ 1\.0\.2 ]
 
-The following table lists the dependencies for version 2\.1\.x of this component\.
+The following table lists the dependencies for version 1\.0\.2 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.0\.0 <2\.3\.0  | Soft | 
+
+------
+#### [ 1\.0\.1 ]
+
+The following table lists the dependencies for version 1\.0\.1 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -52,9 +62,9 @@ The following table lists the dependencies for version 2\.1\.x of this component
 | [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.0\.0 <2\.2\.0  | Soft | 
 
 ------
-#### [ 1\.0\.x ]
+#### [ 1\.0\.0 ]
 
-The following table lists the dependencies for version 1\.0\.x of this component\.
+The following table lists the dependencies for version 1\.0\.0 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -75,25 +85,53 @@ This value can be one of the following: `auto`, `ubuntu`, `amzn2`, `raspberrypi`
 Default: `auto`
 
 `accessControl`  
-The object that contains the [authorization policy](interprocess-communication.md#ipc-authorization-policies) that allows the component to subscribe to the secure tunneling notifications topic\.   
+\(Optional\) The object that contains the [authorization policy](interprocess-communication.md#ipc-authorization-policies) that allows the component to subscribe to the secure tunneling notifications topic\.   
 Do not modify this configuration parameter if your deployment targets a thing group\. If your deployment targets an individual core device, and you want to restrict this component's subscription to the topic for that device, then in the `resources` value in the authorization policy, replace the MQTT topic wildcard \(`+`\) with the thing name for that core device\. 
 Default:   
 
 ```
-aws.greengrass.ipc.mqttproxy:
-  aws.iot.SecureTunneling:mqttproxy:1:
-    policyDescription: "Access to tunnel notification pubsub topic"
-      operations:
-        - "aws.greengrass#SubscribeToIoTCore"
-      resources:
-        - "$aws/things/+/tunnels/notify"
+{
+  "aws.greengrass.ipc.mqttproxy": {
+    "aws.iot.SecureTunneling:mqttproxy:1": {
+      "policyDescription": "Access to tunnel notification pubsub topic",
+      "operations": [
+        "aws.greengrass#SubscribeToIoTCore"
+      ],
+      "resources": [
+        "$aws/things/+/tunnels/notify"
+      ]
+    }
+  }
+}
+```
+
+**Example: Configuration merge update**  
+The following example configuration specifies to allow this component to open secure tunnels on a core device named **MyGreengrassCore** that runs Ubuntu\.  
+
+```
+{
+  "OS_DIST": "ubuntu",
+  "accessControl": {
+    "aws.greengrass.ipc.mqttproxy": {
+      "aws.iot.SecureTunneling:mqttproxy:1": {
+        "policyDescription": "Access to tunnel notification pubsub topic",
+        "operations": [
+          "aws.greengrass#SubscribeToIoTCore"
+        ],
+        "resources": [
+          "$aws/things/MyGreengrassCore/tunnels/notify"
+        ]
+      }
+    }
+  }
+}
 ```
 
 ## Licenses<a name="secure-tunneling-component-licenses"></a>
 
 This component includes the following third\-party software/licensing:
-+ [AWS IoT Device Client](https://github.com/awslabs/aws-iot-device-client)/Apache License 2/0
-+ [AWS IoT Device SDK for Java](https://github.com/aws/aws-greengrass-core-sdk-java/)//Apache License 2\.0
++ [AWS IoT Device Client](https://github.com/awslabs/aws-iot-device-client)/Apache License 2\.0
++ [AWS IoT Device SDK for Java](https://github.com/aws/aws-greengrass-core-sdk-java/)/Apache License 2\.0
 + [gson](https://github.com/google/gson)/Apache License 2\.0
 + [log4j](https://logging.apache.org/log4j/2.x/)/Apache License 2\.0
 + [slf4j](http://www.slf4j.org/)/Apache License 2\.0
@@ -108,5 +146,6 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  1\.0\.2  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 
 |  1\.0\.1  |  Version updated for Greengrass nucleus version 2\.1\.0 release\.  | 
 |  1\.0\.0  |  Initial version\.  | 

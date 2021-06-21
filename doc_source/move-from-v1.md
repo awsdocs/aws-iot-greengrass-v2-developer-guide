@@ -1,6 +1,6 @@
 # Move from AWS IoT Greengrass Version 1<a name="move-from-v1"></a>
 
-AWS IoT Greengrass Version 2 is a new major version release of the AWS IoT Greengrass Core software, APIs, and console\. You can't use the AWS IoT Greengrass Core software v1\.x with the V2 APIs, and you can't use the AWS IoT Greengrass Core software v2\.0 with the V1 APIs\. However, by using some modifications, you can run your V1 applications on AWS IoT Greengrass V2\.
+AWS IoT Greengrass Version 2 is a new major version release of the AWS IoT Greengrass Core software, APIs, and console\. You can't use the AWS IoT Greengrass Core software v1\.x with the V2 APIs\. Likewise, you can't use the AWS IoT Greengrass Core software v2\.0 with the V1 APIs\. However, by using some modifications, you can run your V1 applications on AWS IoT Greengrass V2\.
 
 **Topics**
 + [Differences between V1 and V2](#greengrass-v1-concept-differences)
@@ -16,8 +16,6 @@ AWS IoT Greengrass V2 introduces new fundamental concepts for devices, fleets, a
   In AWS IoT Greengrass V2, you use *deployments* to define the software components and configurations that run on core devices\. Each deployment targets a single core device or an AWS IoT thing group that can contain multiple core devices\. Deployments to thing groups are continuous, so when you add a core device to a thing group, it receives the software configuration for that fleet\. For more information, see [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)\.
 
   You can also create local deployments to develop and test custom software components\. For more information, see [Create custom AWS IoT Greengrass components](create-components.md)\.
-**Note**  
-AWS IoT Greengrass V2 currently doesn't support connected devices, also called Greengrass devices\.
 + **AWS IoT Greengrass Core software and connectors**
 
   In AWS IoT Greengrass V1, the AWS IoT Greengrass Core software is a single package that contains the software and all of its features\. AWS IoT Greengrass connectors are modules that you deploy to AWS IoT Greengrass V1 core devices\.
@@ -27,7 +25,7 @@ AWS IoT Greengrass V2 currently doesn't support connected devices, also called G
 
   In AWS IoT Greengrass V1, Lambda functions define the software that runs on core devices\. In each Greengrass group, you define subscriptions and local resources that the function uses\. You also define the container parameters for functions that the AWS IoT Greengrass Core software runs in a containerized Lambda runtime environment\.
 
-  In AWS IoT Greengrass V2, *components* are the software that run on core devices\. Components can consist of any software, and each component has a *recipe* that defines the component's metadata, parameters, dependencies, and scripts to run at each step in the component lifecycle\. The recipe also defines the component's *artifacts*, which are binary files such as scripts, compiled code, and static resources\. When you deploy a component to a core device, the core device downloads the component recipe and artifacts to run the component\. For more information, see [Manage AWS IoT Greengrass components](manage-components.md)\.
+  In AWS IoT Greengrass V2, *components* are the software that run on core devices\. Components can consist of any software applications, and each component has a *recipe* that defines the component's metadata, parameters, dependencies, and scripts to run at each step in the component lifecycle\. The recipe also defines the component's *artifacts*, which are binary files such as scripts, compiled code, and static resources\. When you deploy a component to a core device, the core device downloads the component recipe and artifacts to run the component\. For more information, see [Manage AWS IoT Greengrass components](manage-components.md)\.
 
   You can import Lambda functions as components that run in a Lambda runtime environment in AWS IoT Greengrass V2\. When you import the Lambda function, you specify the subscriptions, local resources, and container parameters for the function\. For more information, see [Run AWS IoT Greengrass V1 applications on AWS IoT Greengrass V2](#run-v1-applications)\.\.
 + **Subscriptions**
@@ -42,6 +40,20 @@ AWS IoT Greengrass V2 currently doesn't support connected devices, also called G
   In AWS IoT Greengrass V2, components run outside containers, so you don't need to specify which local resources the component can access\. You can develop components that work directly with local resources on core devices\. You can also develop components that run Docker containers\. For more information, see [Run a Docker container](run-docker-container.md)\.
 **Note**  
 When you import a containerized Lambda function as a component, you specify the local resources that the function uses\.
++ **Greengrass devices \(connected devices\)**
+
+  In AWS IoT Greengrass V1, Greengrass devices are AWS IoT things that you add to a Greengrass group to connect to the core device in that group and communicate over MQTT\. You must deploy that group each time that you add or remove a connected device\. You use subscriptions to relay messages between connected devices, AWS IoT Core, and applications on the core device\.
+
+  In AWS IoT Greengrass V2, connected devices are called Greengrass client devices, and you associate client devices to core devices to connect them and communicate over MQTT\. You can define authorization policies that apply to groups of client devices, so you don't need to create a deployment to add or remove a client device\. To relay messages between client devices, AWS IoT Core, and Greengrass components, you can configure an optional MQTT bridge component\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.
+
+  In both AWS IoT Greengrass V1 and AWS IoT Greengrass V2, devices can run [FreeRTOS](https://docs.aws.amazon.com/freertos/latest/userguide/freertos-lib-gg-connectivity.html) or use the [AWS IoT Device SDK](https://docs.aws.amazon.com/iot/latest/developerguide/iot-sdks.html) or [Greengrass discovery API](greengrass-discover-api.md) to get information about core devices to which they can connect\.
++ **Local shadow service**
+
+  In AWS IoT Greengrass V1, the local shadow service is enabled by default, and supports only unnamed classic shadows\. You use the Greengrass Core SDK in your Lambda functions to interact with shadows on your devices\.
+
+  In AWS IoT Greengrass V2, you enable the local shadow service by deploying the shadow manager component\. You can then use the AWS IoT Device SDK V2 in Lambda functions, or in custom components, to interact with shadows on your devices\. 
+
+  In both AWS IoT Greengrass V1 and AWS IoT Greengrass V2, you can sync local shadow states with cloud shadows in AWS IoT Core\. For more information, see [Interact with device shadows](interact-with-shadows.md)\.
 
 ## Run AWS IoT Greengrass V1 applications on AWS IoT Greengrass V2<a name="run-v1-applications"></a>
 
@@ -52,12 +64,11 @@ You can run most AWS IoT Greengrass V1 applications on AWS IoT Greengrass V2\. Y
 + [Run V1 Lambda functions](#run-v1-lambda-functions)
 + [Run AWS IoT Greengrass connectors](#run-v1-connectors)
 + [Run machine learning inference](#run-v1-machine-learning)
++ [Connect V1 Greengrass devices](#connect-v1-greengrass-devices)
 
 ### Can I run my Greengrass v1\.x applications on Greengrass v2\.0?<a name="greengrass-v1-feature-differences"></a>
 
 AWS IoT Greengrass provides features that you can use to run your AWS IoT Greengrass Core software v1\.x applications on the AWS IoT Greengrass Core software v2\.0\. However, if your v1\.x applications use any of the following listed features, you won't be able to run them on the v2\.0 software yet\.
-+ Connected devices \(also called Greengrass aware devices\) and MQTT over the local network
-+ Device shadows and shadow synchronization
 + Hardware security integration
 + Stream manager telemetry metrics
 + The following languages in the AWS IoT Greengrass Core SDK:
@@ -82,12 +93,15 @@ If your Lambda function uses features such as stream manager or local secrets, y
 
   If your Lambda function publishes messages to the local publish/subscribe broker or to AWS IoT Core, specify `aws.greengrass.LegacySubscriptionRouter` as a component dependency when you import the function\. When you deploy the legacy subscription router component, specify the subscriptions that the Lambda function uses\. For more information, see [Legacy subscription router](legacy-subscription-router-component.md)\.
 **Note**  <a name="legacy-subscription-router-requirement-note"></a>
-This component is required only if your Lambda function uses the `publish()` function in the AWS IoT Greengrass Core SDK\. If you update your Lambda function code to use the interprocess communication \(IPC\)s interface in the AWS IoT Device SDK, you don't need to deploy the legacy subscription router component\. For more information, see the following [interprocess communication](interprocess-communication.md) services:  
+This component is required only if your Lambda function uses the `publish()` function in the AWS IoT Greengrass Core SDK\. If you update your Lambda function code to use the interprocess communication \(IPC\)s interface in the V2 AWS IoT Device SDK, you don't need to deploy the legacy subscription router component\. For more information, see the following [interprocess communication](interprocess-communication.md) services:  
 [Publish/subscribe local messages](ipc-publish-subscribe.md)
 [Publish/subscribe AWS IoT Core MQTT messages](ipc-iot-core-mqtt.md)
 + **Local volumes and devices**
 
   If your containerized Lambda function accesses local volumes or devices, specify those volumes and devices when you import the Lambda function\. This feature doesn't require a component dependency\.
++ **Local shadows**
+
+  If your Lambda function interacts with local shadows, you must update the Lambda function code to use the AWS IoT Device SDK V2\. You must also specify `aws.greengrass.ShadowManager` as a component dependency when you import the function\.
 + **Access other AWS services**
 
   If your Lambda function uses AWS credentials to make requests to other AWS services, specify `aws.greengrass.TokenExchangeService` as a component dependency when you import the function\. The core device's role alias must point to an IAM role that allows the core device to perform the AWS operations that the Lambda function uses\. For more information, see [Token exchange service](token-exchange-service-component.md) and [Authorize core devices to interact with AWS services](device-service-role.md)\.
@@ -108,3 +122,7 @@ AWS IoT Greengrass V2 doesn't provide a component to replace the Docker applicat
 ### Run machine learning inference<a name="run-v1-machine-learning"></a>
 
 AWS IoT Greengrass V2 provides sample Amazon SageMaker Neo DLR machine learning components and models\. You can use these features for image classification and object detection\. To use other machine learning frameworks, such as MXNet and TensorFlow, you can develop your own custom components that use these frameworks\.
+
+### Connect V1 Greengrass devices<a name="connect-v1-greengrass-devices"></a>
+
+In AWS IoT Greengrass V2, Greengrass devices \(or connected devices\) are called client devices\. AWS IoT Greengrass V2 support for client devices is backward\-compatible with AWS IoT Greengrass V1, so you can connect V1 core devices to V2 core devices without changing their application code\. To enable client devices to connect a V2 core device, deploy Greengrass components that enable client device support, and associate the client devices to the core device\. To relay messages between client devices, the AWS IoT Core cloud service, and Greengrass components \(including Lambda functions\), deploy and configure the [MQTT bridge component](mqtt-bridge-component.md)\. You can deploy the [IP detector component](ip-detector-component.md) to automatically detect connectivity information, or you can manually manage endpoints\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.

@@ -52,7 +52,7 @@ Complete the following steps to deploy the Greengrass CLI component to your core
      "targetArn":"targetArn",
      "components": {
        "aws.greengrass.Cli": {
-         "componentVersion": "2.1.0",
+         "componentVersion": "2.2.0",
          "configurationUpdate": {
            "AuthorizedPosixGroups": "<group1>,<group2>,...,<groupN>"
          }

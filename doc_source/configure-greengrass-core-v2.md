@@ -83,7 +83,7 @@ The following example defines a deployment that configures `ggc_user` as the def
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.1.0",
+      "version": "2.2.0",
       "configurationUpdate": {
         "merge": "{\"runWithDefault\":{\"posixUser\":\"ggc_user:ggc_group\"}}"
       }
@@ -134,7 +134,7 @@ The following example defines a deployment that configures MQTT over port 443\. 
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.1.0",
+      "version": "2.2.0",
       "configurationUpdate": {
         "merge": "{\"mqtt\":{\"port\":443}}"
       }
@@ -163,7 +163,7 @@ The following example defines a deployment that configures HTTPS over port 443\.
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.1.0",
+      "version": "2.2.0",
       "configurationUpdate": {
         "merge": "{\"greengrassDataPlanePort\":443}"
       }
@@ -208,7 +208,7 @@ The following example defines a deployment that configures a network proxy\. The
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.1.0",
+      "version": "2.2.0",
       "configurationUpdate": {
         "merge": "{\"networkProxy\":{\"noProxyAddresses\":\"http://192.168.0.1,www.example.com\",\"proxy\":{\"url\":\"https://my-proxy-server:1100\",\"username\":\"Mary_Major\",\"password\":\"pass@word1357\"}}}"
       }
@@ -241,20 +241,23 @@ The URL of the proxy server in the format `scheme://userinfo@host:port`\.
 
 ### Allowing endpoints<a name="allow-endpoints-proxy"></a>
 
-Communication between Greengrass core devices and AWS IoT Core or AWS IoT Greengrass must be authenticated\. This authentication is based on registered X\.509 device certificates and cryptographic keys\. To allow authenticated requests to pass through proxies without additional encryption, allow the following endpoints\.
+Communication between Greengrass core devices and AWS IoT Core or AWS IoT Greengrass must be authenticated\. The required authentication is based on registered X\.509 device certificates and cryptographic keys\. To allow authenticated requests to pass through proxies without additional encryption, allow the following endpoints\.
 
 
 | Endpoint | Port | Description | 
 | --- | --- | --- | 
-|  `greengrass.region.amazonaws.com`  | 443 |  Used for control plane operations\.  | 
-|  `prefix-ats.iot.region.amazonaws.com` or `prefix.iot.region.amazonaws.com`  |  MQTT: 8883 or 443 HTTPS: 8443 or 443  |  Used for data plane operations for device management, such as shadow sync\. Allow the use of one or both endpoints, depending on whether your core and connected devices use Amazon Trust Services \(preferred\) root CA certificates, legacy root CA certificates, or both\.  | 
-|  `greengrass-ats.iot.region.amazonaws.com` or `greengrass.iot.region.amazonaws.com`  | 8443 or 443 |   Used for data plane operations\. Allow the use of one or both endpoints, depending on whether your core and connected devices use Amazon Trust Services \(preferred\) root CA certificates, legacy root CA certificates, or both\.\.  Clients that connect on port 443 must implement the [Application Layer Protocol Negotiation \(ALPN\)](https://tools.ietf.org/html/rfc7301) TLS extension and pass `x-amzn-http-ca` as the `ProtocolName` in the `ProtocolNameList`\. For more information, see [Protocols](https://docs.aws.amazon.com/iot/latest/developerguide/protocols.html) in the *AWS IoT Developer Guide*\.   | 
+|  `greengrass-ats.iot.region.amazonaws.com` or `greengrass.iot.region.amazonaws.com`  | 8443 or 443 |  Used for data plane operations, such as installing deployments or working with client devices\. You must allow the use of one or both endpoints, depending on whether your core device and client devices use Amazon Trust Services \(preferred\) root CA certificates, legacy root CA certificates, or both\. For more information, see [Use service endpoints that match the root CA certificate type](#certificate-endpoints)\.  Clients that connect on port 443 must implement the [Application Layer Protocol Negotiation \(ALPN\)](https://tools.ietf.org/html/rfc7301) TLS extension and pass `x-amzn-http-ca` as the `ProtocolName` in the `ProtocolNameList`\. For more information, see [Protocols](https://docs.aws.amazon.com/iot/latest/developerguide/protocols.html) in the *AWS IoT Developer Guide*\.   | 
+|  `prefix-ats.iot.region.amazonaws.com` or `prefix.iot.region.amazonaws.com`  |  MQTT: 8883 or 443 HTTPS: 8443 or 443  |  Used for data plane operations for device management, such as MQTT communication and shadow sync with AWS IoT Core\. You must allow the use of one or both endpoints, depending on whether your core device and client devices use Amazon Trust Services \(preferred\) root CA certificates, legacy root CA certificates, or both\. For more information, see [Use service endpoints that match the root CA certificate type](#certificate-endpoints)\.  | 
+|  `prefix.credentials.iot.region.amazonaws.com`  | 443 |  Used to acquire AWS credentials, which the core device uses to download component artifacts from Amazon S3 and perform other operations\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.  | 
 |  `*.s3.amazonaws.com`  | 443 |  Used for deployments\. This format includes the `*` character, because endpoint prefixes are controlled internally and might change at any time\.  | 
 |  `logs.region.amazonaws.com`  | 443 |  Required if the Greengrass core device is configured to write logs to CloudWatch\.  | 
+|  `data.iot.region.amazonaws.com`  | 443 |  Required if the core device is configured to use a network proxy\. The core device uses this endpoint for MQTT communication with AWS IoT Core when behind a proxy\. For more information, see [Configure a network proxy](#configure-network-proxy)\.  | 
 
 ## Configure MQTT timeouts and cache settings<a name="configure-mqtt"></a>
 
 In the AWS IoT Greengrass environment, components can use MQTT to communicate with AWS IoT Core\. The AWS IoT Greengrass Core software manages MQTT messages for components\. When the core device loses connection to the AWS Cloud, the software caches MQTT messages to retry later when the connection restores\. You can configure settings such as message timeouts and the size of the cache\. For more information, see the `mqtt` and `mqtt.spooler` configuration parameters of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.
+
+AWS IoT Core imposes service quotas on its MQTT message broker\. These quotas might apply to messages that you send between core devices and AWS IoT Core\. For more information, see [AWS IoT Core message broker service quotas](https://docs.aws.amazon.com/general/latest/gr/iot-core.html#message-broker-limits) in the *AWS General Reference*\.
 
 ## Configure AWS IoT Greengrass as a system service<a name="configure-system-service"></a>
 

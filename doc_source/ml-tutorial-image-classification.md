@@ -103,7 +103,7 @@ The deployment can take several minutes to complete\. In the next step, check th
 
 ## Step 3: View inference results<a name="ml-image-classification-results"></a>
 
-After you deploy the component, you can view the inference results in the component log on your Greengrass core device and in the AWS IoT MQTT client in the AWS IoT console\. To subscribe to the topic on which the component publishes inference results, see [](#ml-image-classification-subscribe)\.
+After you deploy the component, you can view the inference results in the component log on your Greengrass core device and in the AWS IoT MQTT client in the AWS IoT console\. To subscribe to the topic on which the component publishes inference results, see [Step 1: Subscribe to the default notifications topic](#ml-image-classification-subscribe)\.
 + **AWS IoT MQTT client**—To view the results that the inference component publishes on the [default notifications topic](#ml-image-classification-subscribe), complete the following steps:
 
   1. In the [AWS IoT console](https://console.aws.amazon.com/iot/) navigation menu, choose **Test, MQTT test client**\.

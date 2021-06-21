@@ -22,7 +22,7 @@ The `GGV2Q_Result.xml` report is in [JUnit XML format](https://llg.cubic.org/doc
 
 The report section in `awsiotdevicetester_report.xml` or `awsiotdevicetester_report.xml` lists the tests that were run and the results\.
 
-The first XML tag `<testsuites>` contains the summary of the test execution\. For example:
+The first XML tag `<testsuites>` contains the summary of the test run\. For example:
 
 ```
 <testsuites name="GGQ results" time="2299" tests="28" failures="0" errors="0" disabled="0">
@@ -92,7 +92,7 @@ When a test fails or an error occurs, `<failure>` or `<error>` tags are added to
 
 ## Viewing logs<a name="view-logs-gg"></a>
 
-IDT generates logs from test execution in `<devicetester-extract-location>/results/<execution-id>/logs`\. Two sets of logs are generated:
+IDT generates logs from test runs in `<devicetester-extract-location>/results/<execution-id>/logs`\. Two sets of logs are generated:
 
 `test_manager.log`  
 Logs generated from the Test Manager component of AWS IoT Device Tester \(for example, logs related to configuration, test sequencing, and report generation\)\.

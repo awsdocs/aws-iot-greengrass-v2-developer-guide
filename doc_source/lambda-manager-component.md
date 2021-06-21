@@ -29,17 +29,17 @@ This component has the following versions:
 
 ## Requirements<a name="lambda-manager-component-requirements"></a>
 
-To deploy a component, you must meet the requirements for the component and its [dependencies](#lambda-manager-component-dependencies)\. This component has the following requirements:
+This component has the following requirements:
 + <a name="core-device-lambda-function-requirements"></a>Your core device must meet the requirements to run Lambda functions\. If you want the core device to run containerized Lambda functions, the device must meet the requirements to do so\. For more information, see [Requirements to run Lambda functions](setting-up.md#greengrass-v2-lambda-requirements)\.
 
 ## Dependencies<a name="lambda-manager-component-dependencies"></a>
 
-When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. You must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#lambda-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#lambda-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ >=2\.1\.1 ]
+#### [ 2\.1\.1 ]
 
-The following table lists the dependencies for version 2\.1\.1 and later versions of this component\.
+The following table lists the dependencies for version 2\.1\.1 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -85,6 +85,6 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
-|  2\.1\.1  |  Version updated\.  | 
+|  2\.1\.1  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 
 |  2\.1\.0  |  Version updated for Greengrass nucleus version 2\.1\.0 release\.  | 
 |  2\.0\.3  |  Initial version\.  | 

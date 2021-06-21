@@ -9,6 +9,7 @@ When you develop a custom component that runs a Docker container, include the Do
 + [Type](#docker-application-manager-component-type)
 + [Requirements](#docker-application-manager-component-requirements)
 + [Dependencies](#docker-application-manager-component-dependencies)
++ [Configuration](#docker-application-manager-component-configuration)
 + [Changelog](#docker-application-manager-component-changelog)
 + [See also](#docker-application-manager-component-see-also)
 
@@ -25,7 +26,7 @@ This component has the following versions:
 
 ## Requirements<a name="docker-application-manager-component-requirements"></a>
 
-To deploy a component, you must meet the requirements for the component and its [dependencies](#docker-application-manager-component-dependencies)\. This component has the following requirements:
+This component has the following requirements:
 + [Docker Engine](https://docs.docker.com/engine/) 1\.9\.1 or later installed and running on your Greengrass core device\. Version 20\.10 is the latest version that is verified to work with the connector\. You must install Docker directly on the core device before you deploy custom components that run Docker containers\. 
 + The Docker daemon started and running on the core device before you deploy this component\. 
 + Docker images stored in one of the following supported image sources:
@@ -65,16 +66,35 @@ If you don't specify the image tag or image digest in the artifact URI for an im
 
 ## Dependencies<a name="docker-application-manager-component-dependencies"></a>
 
-When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. You must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#docker-application-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#docker-application-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
-The following table lists the dependencies for version 2\.0\.x of this component\.
+------
+#### [ 2\.0\.1 ]
+
+The following table lists the dependencies for version 2\.0\.1 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.1\.0 <2\.3\.0 | Soft | 
+
+------
+#### [ 2\.0\.0 ]
+
+The following table lists the dependencies for version 2\.0\.0 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
 | --- | --- | --- | 
 | [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.1\.0 <2\.2\.0 | Soft | 
 
+------
+
 For more information about component dependencies, see the [component recipe reference](component-recipe-reference.md#recipe-reference-component-dependencies)\.
+
+## Configuration<a name="docker-application-manager-component-configuration"></a>
+
+This component doesn't have any configuration parameters\.
 
 ## Changelog<a name="docker-application-manager-component-changelog"></a>
 
@@ -83,6 +103,7 @@ The following table describes the changes in each version of the component\.
 
 |   **Version**   |   **Changes**   | 
 | --- | --- | 
+|  2\.0\.1  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 
 |  2\.0\.0  |  Initial version\.  | 
 
 ## See also<a name="docker-application-manager-component-see-also"></a>

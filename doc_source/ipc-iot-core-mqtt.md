@@ -7,7 +7,8 @@ This MQTT messaging IPC service lets you exchange messages with AWS IoT Core\. F
 
 **Topics**
 + [Authorization](#ipc-iot-core-mqtt-authorization)
-+ [Operations](#ipc-iot-core-mqtt-operations)
++ [PublishToIoTCore](#ipc-operation-publishtoiotcore)
++ [SubscribeToIoTCore](#ipc-operation-subscribetoiotcore)
 
 ## Authorization<a name="ipc-iot-core-mqtt-authorization"></a>
 
@@ -31,7 +32,7 @@ The following example authorization policy allows a component to publish and sub
 {
   "accessControl": {
     "aws.greengrass.ipc.mqttproxy": {
-      "com.example.MyIoTCorePubSubComponent:pubsub:1": {
+      "com.example.MyIoTCorePubSubComponent:mqttproxy:1": {
         "policyDescription": "Allows access to publish/subscribe to all topics.",
         "operations": [
           "aws.greengrass#PublishToIoTCore",
@@ -46,19 +47,11 @@ The following example authorization policy allows a component to publish and sub
 }
 ```
 
-## Operations<a name="ipc-iot-core-mqtt-operations"></a>
-
-Use the following operations for AWS IoT Core MQTT messaging\.
-
-**Topics**
-+ [PublishToIoTCore](#ipc-operation-publishtoiotcore)
-+ [SubscribeToIoTCore](#ipc-operation-subscribetoiotcore)
-
-### PublishToIoTCore<a name="ipc-operation-publishtoiotcore"></a>
+## PublishToIoTCore<a name="ipc-operation-publishtoiotcore"></a>
 
 Publishes an MQTT message to AWS IoT Core on a topic\.
 
-#### Request<a name="ipc-operation-publishtoiotcore-request"></a>
+### Request<a name="ipc-operation-publishtoiotcore-request"></a>
 
 This operation's request has the following parameters:
 
@@ -73,11 +66,11 @@ The MQTT QoS to use\. This enum, `QOS`, has the following values:
 `payload`  
 \(Optional\) The message payload as a blob\.
 
-#### Response<a name="ipc-operation-publishtoiotcore-response"></a>
+### Response<a name="ipc-operation-publishtoiotcore-response"></a>
 
 This operation doesn't provide any information in its response\.
 
-#### Examples<a name="ipc-operation-publishtoiotcore-examples"></a>
+### Examples<a name="ipc-operation-publishtoiotcore-examples"></a>
 
 The following examples demonstrate how to call this operation in custom component code\.
 
@@ -131,7 +124,7 @@ future.result(TIMEOUT)
 
 ------
 
-### SubscribeToIoTCore<a name="ipc-operation-subscribetoiotcore"></a>
+## SubscribeToIoTCore<a name="ipc-operation-subscribetoiotcore"></a>
 
 Subscribe to MQTT messages from AWS IoT Core on a topic or topic filter\. The AWS IoT Greengrass Core software removes subscriptions when the component reaches the end of its lifecycle\.
 
@@ -139,7 +132,7 @@ Subscribe to MQTT messages from AWS IoT Core on a topic or topic filter\. The AW
 
 **Event message type:** `IoTCoreMessage`
 
-#### Request<a name="ipc-operation-subscribetoiotcore-request"></a>
+### Request<a name="ipc-operation-subscribetoiotcore-request"></a>
 
 This operation's request has the following parameters:
 
@@ -151,7 +144,7 @@ The MQTT QoS to use\. This enum, `QOS`, has the following values:
 + `AT_MOST_ONCE` – QoS 0\. The MQTT message is delivered at most once\.
 + `AT_LEAST_ONCE` – QoS 1\. The MQTT message is delivered at least once\.
 
-#### Response<a name="ipc-operation-subscribetoiotcore-response"></a>
+### Response<a name="ipc-operation-subscribetoiotcore-response"></a>
 
 This operation's response has the following information:
 
@@ -164,7 +157,7 @@ The topic to which the message was published\.
 `payload`  
 \(Optional\) The message payload as a blob\.
 
-#### Examples<a name="ipc-operation-subscribetoiotcore-examples"></a>
+### Examples<a name="ipc-operation-subscribetoiotcore-examples"></a>
 
 The following examples demonstrate how to call this operation in custom component code\.
 

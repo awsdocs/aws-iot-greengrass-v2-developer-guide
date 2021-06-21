@@ -113,7 +113,7 @@ This section describes how you can create a custom component that uses Docker Co
      "ComponentDescription": "A component that uses Docker Compose to run images from public Amazon ECR and Docker Hub.",
      "ComponentPublisher": "Amazon",
      "ComponentDependencies": {
-       "aws.greengrass.DockerComponentManager": {
+       "aws.greengrass.DockerApplicationManager": {
          "VersionRequirement": "~2.0.0"
        }
      },
@@ -152,7 +152,7 @@ This section describes how you can create a custom component that uses Docker Co
    ComponentDescription: 'A component that uses Docker Compose to run images from public Amazon ECR and Docker Hub.'
    ComponentPublisher: Amazon
    ComponentDependencies:
-     aws.greengrass.DockerComponentManager:
+     aws.greengrass.DockerApplicationManager:
        VersionRequirement: ~2.0.0
    Manifests:
      - Platform:

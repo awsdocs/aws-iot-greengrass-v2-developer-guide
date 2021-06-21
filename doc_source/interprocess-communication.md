@@ -20,6 +20,7 @@ The IPC interface supports two types of operations:
 + [Interact with component lifecycle](ipc-component-lifecycle.md)
 + [Interact with component configuration](ipc-component-configuration.md)
 + [Retrieve secret values](ipc-secret-manager.md)
++ [Interact with local shadows](ipc-local-shadows.md)
 
 ## Supported SDKs for interprocess communication<a name="ipc-requirements"></a>
 
@@ -39,7 +40,7 @@ To use interprocess communication in your custom component, you must create a co
 
 **To use the AWS IoT Device SDK for Java v2**
 
-1. Download the [AWS IoT Device SDK for Java](https://github.com/aws/aws-iot-device-sdk-java-v2) \(v1\.2\.10 or later\)\.
+1. Download the [AWS IoT Device SDK for Java v2](https://github.com/aws/aws-iot-device-sdk-java-v2) \(v1\.2\.10 or later\)\.
 
 1. Do one of the following to run your custom code in your component:
    + Build your component as a JAR file that includes the AWS IoT Device SDK, and run this JAR file in your component recipe\.

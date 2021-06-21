@@ -26,12 +26,23 @@ This component has the following versions:
 
 ## Dependencies<a name="stream-manager-component-dependencies"></a>
 
-When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. You must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#stream-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#stream-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+
+------
+#### [ 2\.0\.9 ]
+
+The following table lists the dependencies for version 2\.0\.9 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.0\.0 <2\.3\.0  | Soft | 
+| [Token exchange service](token-exchange-service-component.md) |  >=0\.0\.0  | Hard | 
 
 ------
 #### [ 2\.0\.8 ]
 
-The following table lists the dependencies for version 2\.0\.8 and later versions of this component\.
+The following table lists the dependencies for version 2\.0\.8 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -91,6 +102,15 @@ Default: `5242880` \(5 MB\)\. This is also the minimum value\.
 \(Optional\) The custom Java Virtual Machine arguments to pass to stream manager at startup\. Separate multiple arguments by spaces\.  
 Use this parameter only when you must override the default settings used by the JVM\. For example, you might need to increase the default heap size if you plan to export a large number of streams\.
 
+**Example: Configuration merge update**  
+The following example configuration specifies to use a non\-default port\.  
+
+```
+{
+  "STREAM_MANAGER_SERVER_PORT": "18088"
+}
+```
+
 ## Changelog<a name="stream-manager-component-changelog"></a>
 
 The following table describes the changes in each version of the component\.
@@ -98,5 +118,6 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.0\.9  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 
 |  2\.0\.8  |  Version updated for Greengrass nucleus version 2\.1\.0 release\.  | 
 |  2\.0\.7  |  Initial version\.  | 

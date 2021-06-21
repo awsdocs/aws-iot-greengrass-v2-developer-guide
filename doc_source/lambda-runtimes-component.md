@@ -26,7 +26,7 @@ This component has the following versions:
 
 ## Requirements<a name="lambda-runtimes-component-requirements"></a>
 
-To deploy a component, you must meet the requirements for the component and its [dependencies](#lambda-runtimes-component-dependencies)\. This component has the following requirements:
+This component has the following requirements:
 + <a name="core-device-lambda-function-requirements"></a>Your core device must meet the requirements to run Lambda functions\. If you want the core device to run containerized Lambda functions, the device must meet the requirements to do so\. For more information, see [Requirements to run Lambda functions](setting-up.md#greengrass-v2-lambda-requirements)\.
 
 ## Dependencies<a name="lambda-runtimes-component-dependencies"></a>
@@ -44,6 +44,6 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
-|  2\.0\.5  |  Version updated\.  | 
+|  2\.0\.5  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 
 |  2\.0\.4  |  Version updated for Greengrass nucleus version 2\.1\.0 release\.  | 
 |  2\.0\.3  |  Initial version\.  | 

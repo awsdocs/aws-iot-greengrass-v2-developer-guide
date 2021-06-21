@@ -114,7 +114,7 @@ You must provide this information using the `device.json` template located in ` 
 Specify `privKeyPath` only if `method` is set to `pki`\.  
 Specify `password` only if `method` is set to `password`\.
 
-All fields that contain values are required, as described here:
+All properties that contain values are required, as described here:
 
 `id`  
 A user\-defined alphanumeric ID that uniquely identifies a collection of devices called a *device pool*\. Devices that belong to a pool must have identical hardware\. When you run a suite of tests, devices in the pool are used to parallelize the workload\. Multiple devices are used to run different tests\.
@@ -179,13 +179,11 @@ You must provide this information using the `userdata.json` template located in 
 {
     "TempResourcesDirOnDevice": "/path/to/temp/folder",
     "InstallationDirRootOnDevice": "/path/to/installation/folder",
-    "GreengrassNucleusZip": "/path/to/aws.greengrass.nucleus.zip",
-    "GreengrassNucleusVersion": "nucleus-version",
-    "GreengrassCliVersion": "cli-version"
+    "GreengrassNucleusZip": "/path/to/aws.greengrass.nucleus.zip"
 }
 ```
 
-All fields that contain values are required as described here:
+All properties that contain values are required as described here:
 
 `TempResourcesDirOnDevice`  
 The full path to a temporary folder on the device under test in which to store test artifacts\. Make sure that sudo permissions are not required to write to this directory\.   
@@ -196,16 +194,6 @@ The full path to a folder on the device in which to install AWS IoT Greengrass\.
 
 `GreengrassNucleusZip`  
 The full path to the Greengrass nucleus ZIP \(`greengrass-nucleus-latest.zip`\) file on your host computer\.
-
-`GreengrassNucleusVersion`  
-The version of the downloaded Greengrass nucleus component\. To check the version of the nucleus in the `greengrass-nucleus-latest.zip` file that you downloaded, extract the ZIP file and run the following command\.  
-
-```
-java -jar /path/to/extracted/nucleus/zip/Greengrass.jar —version
-```
-
-`GreengrassCliVersion`  
-The version of the Greengrass CLI component that IDT uses for device qualification\. Use the same value as `GreengrassNucleusVersion`\. 
 
 **Note**  
 For information about the supported versions of the Greengrass nucleus and Greengrass CLI for IDT for AWS IoT Greengrass, see [Latest IDT version for AWS IoT Greengrass](dev-test-versions.md#idt-latest-version)\.

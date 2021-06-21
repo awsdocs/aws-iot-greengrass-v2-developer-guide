@@ -20,9 +20,15 @@ Asia Pacific \(Tokyo\)
 This component has the following versions:
 + 1\.0\.x
 
+## Type<a name="sagemaker-edge-manager-component-type"></a>
+
+<a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
+
 ## Requirements<a name="sagemaker-edge-manager-component-requirements"></a>
 
-To deploy a component, you must meet the requirements for the component and its [dependencies](#sagemaker-edge-manager-component-dependencies)\. This component has the following requirements:
+This component has the following requirements:
 + A SageMaker Edge device fleet that uses the same AWS IoT role alias as your Greengrass core device\.
 + The [Greengrass device role](device-service-role.md) configured with the following: 
   + The [AmazonSageMakerEdgeDeviceFleetPolicy](https://console.aws.amazon.com/iam/home#/policies/arn:aws:iam::aws:policy/service-role/AmazonSageMakerEdgeDeviceFleetPolicy) IAM managed policy\.
@@ -70,7 +76,7 @@ To deploy a component, you must meet the requirements for the component and its 
 
 ## Dependencies<a name="sagemaker-edge-manager-component-dependencies"></a>
 
-When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. You must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#sagemaker-edge-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#sagemaker-edge-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 The following table lists the dependencies for version 1\.0\.x of this component\.
 

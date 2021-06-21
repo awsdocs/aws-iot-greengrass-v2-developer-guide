@@ -17,6 +17,7 @@ Don't use this component in production environments\. This component is intended
 ## Versions<a name="local-debug-console-component-versions"></a>
 
 This component has the following versions:
++ 2\.2\.x
 + 2\.1\.x
 + 2\.0\.x
 
@@ -35,17 +36,28 @@ This component has the following requirements:
 
 ## Dependencies<a name="local-debug-console-component-dependencies"></a>
 
-When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. You must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#local-debug-console-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#local-debug-console-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ 2\.1\.x ]
+#### [ 2\.2\.0 ]
 
-The following table lists the dependencies for version 2\.1\.x of this component\.
+The following table lists the dependencies for version 2\.2\.0 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
 | --- | --- | --- | 
-| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.1\.0 <2\.2\.0  | Hard | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.1\.0 <2\.3\.0 | Hard | 
+| [Greengrass CLI](greengrass-cli-component.md) | >=2\.1\.0 <2\.3\.0 | Hard | 
+
+------
+#### [ 2\.1\.0 ]
+
+The following table lists the dependencies for version 2\.1\.0 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.1\.0 <2\.2\.0 | Hard | 
 | [Greengrass CLI](greengrass-cli-component.md) | >=2\.1\.0 <2\.2\.0 | Hard | 
 
 ------
@@ -68,10 +80,10 @@ For more information about component dependencies, see the [component recipe ref
 This component provides the following configuration parameters that you can customize when you deploy the component\.
 
 ------
-#### [ v2\.1\.x ]
+#### [ v2\.1\.x \- v2\.2\.x ]
 
 `httpsEnabled`  
-\(Optional\) You can enable HTTPS communication for the local debug console\. If you enable HTTPS communication, the local debug console creates a self\-signed certificate\. Web browsers show security warnings for website that use self\-signed certificates, so you must manually verify the certificate and bypass the warning\. For more information, see [Usage](#local-debug-console-component-usage)\.  
+\(Optional\) You can enable HTTPS communication for the local debug console\. If you enable HTTPS communication, the local debug console creates a self\-signed certificate\. Web browsers show security warnings for websites that use self\-signed certificates, so you must manually verify the certificate\. Then, you can bypass the warning\. For more information, see [Usage](#local-debug-console-component-usage)\.  
 Default: `true`
 
 `port`  <a name="local-debug-console-component-configuration-port"></a>
@@ -81,6 +93,17 @@ Default: `1441`
 `websocketPort`  <a name="local-debug-console-component-configuration-websocket-port"></a>
 \(Optional\) The websocket port to use for the local debug console\.  
 Default: `1442`
+
+**Example: Configuration merge update**  
+The following example configuration specifies to open the local debug console on non\-default ports and disable HTTPS\.  
+
+```
+{
+  "httpsEnabled": false,
+  "port": "10441",
+  "websocketPort": "10442"
+}
+```
 
 ------
 #### [ v2\.0\.x ]
@@ -93,6 +116,16 @@ Default: `1441`
 \(Optional\) The websocket port to use for the local debug console\.  
 Default: `1442`
 
+**Example: Configuration merge update**  
+The following example configuration specifies to open the local debug console on non\-default ports\.  
+
+```
+{
+  "port": "10441",
+  "websocketPort": "10442"
+}
+```
+
 ------
 
 ## Usage<a name="local-debug-console-component-usage"></a>
@@ -102,9 +135,9 @@ To use the local debug console, create a session from the Greengrass CLI\. When 
 Follow these instructions to open the local debug console on your core device or on your development computer\.
 
 ------
-#### [ v2\.1\.x ]
+#### [ v2\.1\.x \- v2\.2\.x ]
 
-In version 2\.1\.x, the local debug console uses HTTPS by default\. When HTTPS is enabled, the local debug console creates a self\-signed certificate to secure the connection\. Your web browser shows a security warning when you open the local debug console because of this self\-signed certificate\. When you create a session with the Greengrass CLI, the output includes the certificate's fingerprints, so you can verify that the certificate is legitimate and the connection is secure\.
+In versions 2\.1\.0 and later, the local debug console uses HTTPS by default\. When HTTPS is enabled, the local debug console creates a self\-signed certificate to secure the connection\. Your web browser shows a security warning when you open the local debug console because of this self\-signed certificate\. When you create a session with the Greengrass CLI, the output includes the certificate's fingerprints, so you can verify that the certificate is legitimate and the connection is secure\.
 
 You can disable HTTPS\. For more information, see [Local debug console configuration](#local-debug-console-component-configuration)\.
 
@@ -212,5 +245,6 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.2\.0  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 
 |  2\.1\.0  |  <a name="changelog-local-debug-console-2.1.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/local-debug-console-component.html)  | 
 |  2\.0\.3  |  Initial version\.  | 
