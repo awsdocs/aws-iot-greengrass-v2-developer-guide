@@ -61,7 +61,7 @@ Local shadow topics use the same format as the AWS IoT device shadow MQTT topics
          "com.example.MyShadowReactivenComponent:pubsub:1": {
            "policyDescription": "Allows access to shadow pubsub topics",
            "operations": [
-             "aws.greengrass#SubsribeToTopic"
+             "aws.greengrass#SubscribeToTopic"
            ],
            "resources": [
              "$aws/things/MyThingName/shadow/update/delta",
