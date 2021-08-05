@@ -97,5 +97,5 @@ IDT generates logs from test runs in `<devicetester-extract-location>/results/<e
 `test_manager.log`  
 Logs generated from the Test Manager component of AWS IoT Device Tester \(for example, logs related to configuration, test sequencing, and report generation\)\.
 
-`<test_case_id>.log (for example, ota.log)`  
-Logs of the test group, including logs from the device under test\. When a test fails, a tar\.gz file that contains the logs of the device under test for the test is created \(for example, `ota_prod_test_1_ggc_logs.tar.gz`\)\.
+`<test-case-id>.log (for example, lambdaDeploymentTest.log)`  
+Logs of the test case within the test group, including logs from the device under test\. Starting with IDT v4\.2\.0, IDT groups the test logs for each test case in a separate *<test\-case\-id>* folder within the `<devicetester-extract-location>/results/<execution-id>/logs/<test-group-id>/` directory\.

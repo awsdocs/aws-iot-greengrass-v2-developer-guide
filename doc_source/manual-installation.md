@@ -100,7 +100,7 @@ The thing name can't contain colon \(`:`\) characters\.
 
    Do the following:
 
-   1. \(Optional\) Create a file that contains the AWS IoT policy document that Greengrass core devices require\.
+   1. Create a file that contains the AWS IoT policy document that Greengrass core devices require\.
 
       ```
       nano greengrass-v2-iot-policy.json
@@ -129,7 +129,7 @@ The thing name can't contain colon \(`:`\) characters\.
       }
       ```
 
-   1. \(Optional\) Create an AWS IoT policy from the policy document\.
+   1. Create an AWS IoT policy from the policy document\.
       + Replace *GreengrassV2IoTThingPolicy* with the name of the policy to create\.
 
       ```
@@ -239,15 +239,15 @@ Get the AWS IoT endpoints for your AWS account, and save them to use later\. You
 
 ## Create a token exchange role<a name="create-token-exchange-role"></a>
 
-Greengrass core devices use an IAM service role, called the *token exchange role*, to authorize calls to AWS services\. The device uses the AWS IoT credentials provider to get temporary AWS credentials for this role, which allows the device to interact with AWS IoT, send logs to Amazon CloudWatch Logs, and download custom component artifacts from Amazon S3\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
+<a name="installation-create-token-exchange-role-intro"></a>Greengrass core devices use an IAM service role, called the *token exchange role*, to authorize calls to AWS services\. The device uses the AWS IoT credentials provider to get temporary AWS credentials for this role, which allows the device to interact with AWS IoT, send logs to Amazon CloudWatch Logs, and download custom component artifacts from Amazon S3\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
 
-You use an AWS IoT *role alias* to configure the token exchange role for a Greengrass core device\. Role aliases enable you to change the token exchange role for a device but keep the device configuration the same\. For more information, see [Authorizing direct calls to AWS services](https://docs.aws.amazon.com/iot/latest/developerguide/authorizing-direct-aws.html) in the *AWS IoT Core Developer Guide*\.
+<a name="installation-create-token-exchange-role-alias-intro"></a>You use an AWS IoT *role alias* to configure the token exchange role for Greengrass core devices\. Role aliases enable you to change the token exchange role for a device but keep the device configuration the same\. For more information, see [Authorizing direct calls to AWS services](https://docs.aws.amazon.com/iot/latest/developerguide/authorizing-direct-aws.html) in the *AWS IoT Core Developer Guide*\.
 
 In this section, you create a token exchange IAM role and an AWS IoT role alias that points to the role\. If you have already set up a Greengrass core device, you can use its token exchange role and role alias instead of creating new ones\. Then, you configure your device's AWS IoT thing to use that role and alias\.
 
 **To create a token exchange IAM role**
 
-1. \(Optional\) Create an IAM role that your device can use as a token exchange role\. Do the following:
+1. <a name="create-token-exchange-role-create-iam-role"></a>Create an IAM role that your device can use as a token exchange role\. Do the following:
 
    1. Create a file that contains the trust policy document that the token exchange role requires\.
 
@@ -302,7 +302,6 @@ In this section, you create a token exchange IAM role and an AWS IoT role alias 
             ]
           }
         }
-      }
       ```
 
    1. Create a file that contains the access policy document that the token exchange role requires\.
@@ -376,7 +375,7 @@ If you don't yet have an S3 bucket for component artifacts, you can add these pe
 
       The command doesn't have any output if the request succeeds\.
 
-1. \(Optional\) Create an AWS IoT role alias that points to the token exchange role\.
+1. <a name="create-token-exchange-role-create-iot-role-alias"></a>Create an AWS IoT role alias that points to the token exchange role\.
    + Replace *GreengrassCoreTokenExchangeRoleAlias* with the name of the role alias to create\.
    + Replace the role ARN with the ARN of the IAM role that you created in the previous step\.
 
@@ -393,7 +392,7 @@ If you don't yet have an S3 bucket for component artifacts, you can add these pe
    }
    ```
 **Note**  
-To create a role alias, you must have permission to pass the token exchange IAM role to AWS IoT\. If you receive an error when you try to create a role alias, check that your AWS user has this permission\. For more information, see [Granting a user permissions to pass a role to an AWS service](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_passrole.html) in the *AWS Identity and Access Management User Guide*\.
+To create a role alias, you must have permission to pass the token exchange IAM role to AWS IoT\. If you receive an error message when you try to create a role alias, check that your AWS user has this permission\. For more information, see [Granting a user permissions to pass a role to an AWS service](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_passrole.html) in the *AWS Identity and Access Management User Guide*\.
 
 1. Create and attach an AWS IoT policy that allows your Greengrass core device to use the role alias to assume the token exchange role\. If you have set up a Greengrass core device before, you can attach its role alias AWS IoT policy instead of creating a new one\. Do the following:
 
@@ -419,7 +418,7 @@ To create a role alias, you must have permission to pass the token exchange IAM 
       }
       ```
 
-   1. \(Optional\) Create an AWS IoT policy from the policy document\.
+   1. Create an AWS IoT policy from the policy document\.
       + Replace *GreengrassCoreTokenExchangeRoleAliasPolicy* with the name of the AWS IoT policy to create\.
 
       ```
@@ -469,20 +468,14 @@ Earlier, you downloaded your device's certificates to your development computer\
    scp -r greengrass-v2-certs/ device-ip-address:~
    ```
 
-1. On the device, download the Amazon root certificate authority \(CA\) certificate\. AWS IoT certificates are associated with Amazon's root CA certificate by default\.
-
-   ```
-   curl -o ~/greengrass-v2-certs/AmazonRootCA1.pem https://www.amazontrust.com/repository/AmazonRootCA1.pem
-   ```
-
-1. Create the Greengrass root folder on the device\. You install the AWS IoT Greengrass Core software to this folder later\.
+1. <a name="installation-create-greengrass-root-folder"></a>Create the Greengrass root folder on the device\. You'll later install the AWS IoT Greengrass Core software to this folder\.
    + Replace */greengrass/v2* with the folder to use\.
 
    ```
    sudo mkdir -p /greengrass/v2
    ```
 
-1. Set the permissions of the parent of the Greengrass root folder\.
+1. <a name="installation-set-greengrass-root-folder-permissions"></a>Set the permissions of the parent of the Greengrass root folder\.
    + Replace */greengrass* with the parent of the root folder\.
 
    ```
@@ -494,6 +487,12 @@ Earlier, you downloaded your device's certificates to your development computer\
 
    ```
    sudo cp -R ~/greengrass-v2-certs/* /greengrass/v2
+   ```
+
+1. <a name="installation-download-root-ca-certificate"></a>Download the Amazon root certificate authority \(CA\) certificate\. AWS IoT certificates are associated with Amazon's root CA certificate by default\.
+
+   ```
+   sudo curl -o /greengrass/v2/AmazonRootCA1.pem https://www.amazontrust.com/repository/AmazonRootCA1.pem
    ```
 
 ## Download the AWS IoT Greengrass Core software<a name="download-greengrass-core-v2"></a>
@@ -510,7 +509,7 @@ https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-version.zip
 
 **To download the AWS IoT Greengrass Core software \(Linux\)**
 
-1. On your device, download the AWS IoT Greengrass Core software to a file named `greengrass-nucleus-latest-zip`\.
+1. On your device, download the AWS IoT Greengrass Core software to a file named `greengrass-nucleus-latest.zip`\.
 
    ```
    curl -s https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-nucleus-latest.zip > greengrass-nucleus-latest.zip
@@ -523,8 +522,11 @@ https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-version.zip
    ```
    unzip greengrass-nucleus-latest.zip -d GreengrassCore && rm greengrass-nucleus-latest.zip
    ```
-**Tip**  
-You can run the following command to see the version of the AWS IoT Greengrass Core software\.  
+**Important**  
+If you install a version of the Greengrass nucleus earlier than v2\.4\.0, don't remove this folder after you install the AWS IoT Greengrass Core software\. The AWS IoT Greengrass Core software uses the files in this folder to run\.  
+If you downloaded the latest version of the software, you install v2\.4\.0 or later, and you can remove this folder after you install the AWS IoT Greengrass Core software\.
+
+1. \(Optional\) Run the following command to see the version of the AWS IoT Greengrass Core software\.
 
    ```
    java -jar ./GreengrassCore/lib/Greengrass.jar --version
@@ -544,7 +546,7 @@ For more information about the arguments that you can specify, see [Installer ar
 
 **To install the AWS IoT Greengrass Core software \(Linux\)**
 
-1. Check the version of the AWS IoT Greengrass Core software\.
+1. <a name="installer-check-greengrass-core-software-version"></a>Check the version of the AWS IoT Greengrass Core software\.
    + Replace *GreengrassCore* with the path to the folder that contains the software\.
 
    ```
@@ -553,7 +555,7 @@ For more information about the arguments that you can specify, see [Installer ar
 
 1. Use a text editor to create a configuration file named `config.yaml` to provide to the installer\.
 
-   For example, on a Linux\-based system, you can run the following command to use GNU nano to create the `config.yaml` in the *GreengrassCore* directory\.
+   For example, on a Linux\-based system, you can run the following command to use GNU nano to create `config.yaml` in the *GreengrassCore* folder\.
 
    ```
    nano GreengrassCore/config.yaml
@@ -572,7 +574,7 @@ For more information about the arguments that you can specify, see [Installer ar
    services:
      aws.greengrass.Nucleus:
        componentType: "NUCLEUS"
-       version: "2.2.0"
+       version: "2.4.0"
        configuration:
          awsRegion: "us-west-2"
          iotRoleAlias: "GreengrassCoreTokenExchangeRoleAlias"
@@ -583,9 +585,9 @@ For more information about the arguments that you can specify, see [Installer ar
    Then, do the following:
    + Replace each instance of */greengrass/v2* with the Greengrass root folder\.
    + Replace *MyGreengrassCore* with the name of the AWS IoT thing\.
-   + Replace *2\.2\.0* with the version of the AWS IoT Greengrass Core software\.
+   + Replace *2\.4\.0* with the version of the AWS IoT Greengrass Core software\.
    + Replace *us\-west\-2* with the AWS Region where you created the resources\.
-   + Replace *GreengrassCoreTokenExchangeRoleAlias* with the token exchange role alias\.
+   + Replace *GreengrassCoreTokenExchangeRoleAlias* with the name of the token exchange role alias\.
    + Replace the `iotDataEndpoint` with your AWS IoT data endpoint\.
    + Replace the `iotCredEndpoint` with your AWS IoT credentials endpoint\.
 **Note**  
@@ -602,7 +604,7 @@ In this configuration file, you can customize other nucleus configuration option
    services:
      aws.greengrass.Nucleus:
        componentType: "NUCLEUS"
-       version: "2.2.0"
+       version: "2.4.0"
        configuration:
          awsRegion: "us-west-2"
          iotCredEndpoint: "device-credentials-prefix.credentials.iot.us-west-2.amazonaws.com"
@@ -631,11 +633,11 @@ In this configuration file, you can customize other nucleus configuration option
      --setup-system-service true
    ```
 
-   If you specify `--setup-system-service true`, the installer prints `Successfully set up Nucleus as a system service` if it set up and ran the software as a system service\. Otherwise, the installer doesn't output any message if it installs the software successfully\.
-**Note**  
+   <a name="installer-setup-system-service-output-message"></a>If you specify `--setup-system-service true`, the installer prints `Successfully set up Nucleus as a system service` if it set up and ran the software as a system service\. Otherwise, the installer doesn't output any message if it installs the software successfully\.
+**Note**  <a name="installer-deploy-dev-tools-without-provision"></a>
 You can't use the `deploy-dev-tools` argument to deploy local development tools when you run the installer without the `--provision true` argument\. For information about deploying the Greengrass CLI directly on your device, see [Greengrass Command Line Interface](gg-cli.md)\.
 
-1. View the files in the root folder to verify the installation\.
+1. <a name="installer-verify-installation"></a>Verify the installation by viewing the files in the root folder\.
 
    ```
    ls /greengrass/v2

@@ -22,7 +22,9 @@ To complete this getting started tutorial, you need the following:
 + A Windows, Mac, or Unix\-like development computer with an internet connection\.
 + A device with a Linux operating system and an internet connection to the same network as your development computer\. We recommend that you use a Raspberry Pi with [Raspberry Pi OS](https://www.raspberrypi.org/downloads/) \(previously called Raspbian\)\. For more information, see [Requirements to install and run the AWS IoT Greengrass Core software v2\.0](setting-up.md#greengrass-v2-requirements)\.
 + [Python](https://www.python.org/downloads/) 3\.5 or later installed on the device\.
-+ AWS Command Line Interface \(AWS CLI\) installed and configured with credentials on your development computer and on your device\. For more information, see [Installing the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and [Configuring the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)\.
++ AWS Command Line Interface \(AWS CLI\) installed and configured with credentials on your development computer and on your device\. Make sure you use the same AWS Region to configure the AWS CLI on your development computer and on your device\.
+
+  For more information, see [Installing the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and [Configuring the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)\.
   + Minimum AWS CLI V1 version: v1\.18\.197
   + Minimum AWS CLI V2 version: v2\.1\.11
 **Note**  
@@ -146,6 +148,8 @@ The thing name can't contain colon \(`:`\) characters\.
 **Note**  <a name="install-argument-thing-group-name-constraint"></a>
 The thing group name can't contain colon \(`:`\) characters\.
 
+   1. *GreengrassV2IoTThingPolicy*\. The name of the AWS IoT policy that allows the Greengrass core devices to communicate with AWS IoT and AWS IoT Greengrass\. If the AWS IoT policy doesn't exist, the installer creates a permissive AWS IoT policy with this name\. You can restrict this policy's permissions for you use case\. For more information, see [Minimal AWS IoT policy for AWS IoT Greengrass V2 core devices](device-auth.md#greengrass-core-minimal-iot-policy)\.
+
    1. *GreengrassV2TokenExchangeRole*\. The name of the IAM role that allows the Greengrass core device to get temporary AWS credentials\. If the role doesn't exist, the installer creates it and creates and attaches a policy named `GreengrassV2TokenExchangeRoleAccess`\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
 
    1. *GreengrassCoreTokenExchangeRoleAlias*\. The alias to the IAM role that allows the Greengrass core device to get temporary credentials later\. If the role alias doesn't exist, the installer creates it and points it to the IAM role that you specify\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
@@ -156,6 +160,7 @@ The thing group name can't contain colon \(`:`\) characters\.
      --aws-region region \
      --thing-name MyGreengrassCore \
      --thing-group-name MyGreengrassCoreGroup \
+     --thing-policy-name GreengrassV2IoTThingPolicy \
      --tes-role-name GreengrassV2TokenExchangeRole \
      --tes-role-alias-name GreengrassCoreTokenExchangeRoleAlias \
      --component-default-user ggc_user:ggc_group \
@@ -191,7 +196,7 @@ If your system doesn't have systemd, the installer won't set up the software as 
    The command outputs help information for the Greengrass CLI\. If the `greengrass-cli` isn't found, the deployment might have failed to install the Greengrass CLI\. For more information, see [Troubleshooting](troubleshooting.md)\.
 
    You can also run the following command to manually deploy the AWS IoT Greengrass CLI to your device\.
-   + Replace *region* with the Region that you use\.
+   + Replace *region* with the AWS Region that you use\. Make sure that you use the same AWS Region that you used to configure the AWS CLI on your device\.
    + Replace *account\-id* with your AWS account ID\.
    + Replace *MyGreengrassCore* with the name of your core device\.
 
@@ -203,7 +208,7 @@ If your system doesn't have systemd, the installer won't set up the software as 
      --target-arn "arn:aws:iot:region:account-id:thing/MyGreengrassCore" \
      --components '{
        "aws.greengrass.Cli": {
-         "componentVersion": "2.2.0"
+         "componentVersion": "2.4.0"
        }
      }'
    ```
@@ -214,7 +219,7 @@ If your system doesn't have systemd, the installer won't set up the software as 
    ```
    aws greengrassv2 create-deployment ^
      --target-arn "arn:aws:iot:region:account-id:thing/MyGreengrassCore" ^
-     --components "{\"aws.greengrass.Cli\":{\"componentVersion\":\"2.2.0\"}}"
+     --components "{\"aws.greengrass.Cli\":{\"componentVersion\":\"2.4.0\"}}"
    ```
 
 ------
@@ -223,7 +228,7 @@ If your system doesn't have systemd, the installer won't set up the software as 
    ```
    aws greengrassv2 create-deployment `
      --target-arn "arn:aws:iot:region:account-id:thing/MyGreengrassCore" `
-     --components '{\"aws.greengrass.Cli\":{\"componentVersion\":\"2.2.0\"}}'
+     --components '{\"aws.greengrass.Cli\":{\"componentVersion\":\"2.4.0\"}}'
    ```
 
 ------
@@ -345,7 +350,7 @@ In this section, you learn how to create and run a basic Hello World component\.
 
    ```
    ---
-   RecipeFormatVersion: 2020-01-25
+   RecipeFormatVersion: '2020-01-25'
    ComponentName: com.example.HelloWorld
    ComponentVersion: '1.0.0'
    ComponentDescription: My first AWS IoT Greengrass component.
@@ -540,10 +545,18 @@ For more information, see [Troubleshooting](troubleshooting.md)\.
       Hello, friend! Current time: 2020-11-30 17:48:59.153933. Greetings from your first Greengrass component.
       ```
 
-1. After you finish testing your component, remove it from your core device\. This is required for you to deploy the component back to the core device after you upload it to AWS IoT Greengrass\. Otherwise, the deployment fails with a version compatibility error because the local deployment specifies a different version of the component\. Run the following command\.
+1. After you finish testing your component, remove it from your core device\. Run the following command\.
 
    ```
    sudo /greengrass/v2/bin/greengrass-cli deployment create --remove="com.example.HelloWorld"
+   ```
+**Important**  
+This step is required for you to deploy the component back to the core device after you upload it to AWS IoT Greengrass\. Otherwise, the deployment fails with a version compatibility error because the local deployment specifies a different version of the component\.
+
+   Run the following command and verify that the `com.example.HelloWorld` component doesn't appear in the list of components on your device\. 
+
+   ```
+   sudo /greengrass/v2/bin/greengrass-cli component list
    ```
 
 Your Hello World component is complete, and you can now upload it to the AWS IoT Greengrass service\. Then, you can deploy the component to AWS IoT Greengrass core devices\.
@@ -699,7 +712,7 @@ In this section, you complete these steps on your AWS IoT Greengrass core device
 
    ```
    ---
-   RecipeFormatVersion: 2020-01-25
+   RecipeFormatVersion: '2020-01-25'
    ComponentName: com.example.HelloWorld
    ComponentVersion: '1.0.0'
    ComponentDescription: My first AWS IoT Greengrass component.

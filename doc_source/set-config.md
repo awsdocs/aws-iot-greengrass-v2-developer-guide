@@ -4,7 +4,7 @@ Before you run tests, you must configure settings for AWS credentials and device
 
 ## Configure AWS credentials in config\.json<a name="cfg-aws-gg"></a>
 
-You must configure your IAM user credentials in the `<device_tester_extract_location>/configs/config.json` file\. Use the credentials for the IDT for AWS IoT Greengrass user created in [Create and configure an AWS account](dev-tst-prereqs.md#config-aws-account-for-idt)\. You can specify your credentials in one of two ways:
+You must configure your IAM user credentials in the `<device_tester_extract_location>/configs/config.json` file\. Use the credentials for the IDT for AWS IoT Greengrass V2 user created in [Create and configure an AWS account](dev-tst-prereqs.md#config-aws-account-for-idt)\. You can specify your credentials in one of two ways:
 + In a credentials file
 + As environment variables
 
@@ -24,7 +24,7 @@ aws_access_key_id = <your_access_key_id>
 aws_secret_access_key = <your_secret_access_key>
 ```
 
-To configure IDT for AWS IoT Greengrass to use AWS credentials from your `credentials` file, edit your `config.json` file as follows:
+To configure IDT for AWS IoT Greengrass V2 to use AWS credentials from your `credentials` file, edit your `config.json` file as follows:
 
 ```
 {
@@ -43,7 +43,7 @@ If you do not use the `default` AWS profile, be sure to change the profile name 
 
 ### Configure AWS credentials with environment variables<a name="config-env-vars"></a>
 
-Environment variables are variables maintained by the operating system and used by system commands\. They are not saved if you close the SSH session\. IDT for AWS IoT Greengrass can use the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables to store your AWS credentials\.
+Environment variables are variables maintained by the operating system and used by system commands\. They are not saved if you close the SSH session\. IDT for AWS IoT Greengrass V2 can use the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables to store your AWS credentials\.
 
 To set these variables on Linux, macOS, or Unix, use export:
 
@@ -72,7 +72,7 @@ To configure IDT to use the environment variables, edit the `auth` section in yo
 
 ## Configure device\.json<a name="device-config"></a>
 
-In addition to AWS credentials, IDT for AWS IoT Greengrass needs information about the devices that tests are run on\. Example information would be IP address, login information, operating system, and CPU architecture\.
+In addition to AWS credentials, IDT for AWS IoT Greengrass V2 needs information about the devices that tests are run on\. Example information would be IP address, login information, operating system, and CPU architecture\.
 
 You must provide this information using the `device.json` template located in ` <device_tester_extract_location>/configs/device.json`:
 
@@ -85,6 +85,18 @@ You must provide this information using the `device.json` template located in ` 
       {
         "name": "arch",
         "value": "x86_64 | armv6l | armv7l | aarch64"
+      },
+      {
+        "name": "ml",
+        "value": "dlr | tensorflowlite | dlr,tensorflowlite | no"
+      },
+      {
+        "name": "docker",
+        "value": "yes | no"
+      },
+      {
+        "name": "streamManagement",
+        "value": "yes | no"
       }
     ],
     "devices": [
@@ -126,11 +138,23 @@ If you want to list your device in the AWS Partner Device Catalog, the SKU you s
 `features`  
 An array that contains the device's supported features\. All features are required\.    
 `arch`  
-Supported operating system architectures:  
+The supported operating system architectures that the test run validates\. Valid values are:  
 + `x86_64`
 + `armv6l`
 + `armv7l`
-+ `aarch64`
++ `aarch64`  
+`ml`  
+<a name="description-ml"></a>Validates that the device meets all of the required technical dependencies to use the AWS\-provided machine learning \(ML\) components\.  
+Enabling this feature also validates <a name="description-ml-inference-phrase"></a>that the device can perform ML inference using the [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) and [TensorFlow Lite](https://www.tensorflow.org/lite) ML frameworks\.  
+Valid values are any combination of `dlr` and `tensorflowlite`, or `no`\.  
+`docker`  
+<a name="description-docker"></a>Validates that the device meets all required technical dependencies to use the AWS\-provided Docker application manager \(`aws.greengrass.DockerApplicationManager`\) component\.  
+Enabling this feature also validates <a name="description-docker-app-manager-qual-phrase"></a>that the device can download a Docker container image from [Amazon Elastic Container Registry \(Amazon ECR\)](https://aws.amazon.com/ecr/)\.  
+Valid values are any combination of `yes` or `no`\.  
+`streamManagement`  
+<a name="description-sm"></a>Validates that the device can download, install, and run the [AWS IoT Greengrass stream manager](manage-data-streams.md)\.  
+Valid values are any combination of `yes` or `no`\.
+IDT v4\.2\.0 and later versions support testing the `ml`, `docker`, and `streamManagement` features\. If you don't want to test these features, set the corresponding value to `no`\. 
 
 `devices.id`  
 A user\-defined unique identifier for the device being tested\.
@@ -171,7 +195,7 @@ The user name for signing in to the device being tested\.
 
 ## Configure userdata\.json<a name="userdata-config"></a>
 
-IDT for AWS IoT Greengrass also needs additional information about the location of test artifacts and AWS IoT Greengrass software versions\.
+IDT for AWS IoT Greengrass V2 also needs additional information about the location of test artifacts and AWS IoT Greengrass software versions\.
 
 You must provide this information using the `userdata.json` template located in ` <device_tester_extract_location>/configs/userdata.json`:
 
@@ -196,4 +220,4 @@ The full path to a folder on the device in which to install AWS IoT Greengrass\.
 The full path to the Greengrass nucleus ZIP \(`greengrass-nucleus-latest.zip`\) file on your host computer\.
 
 **Note**  
-For information about the supported versions of the Greengrass nucleus and Greengrass CLI for IDT for AWS IoT Greengrass, see [Latest IDT version for AWS IoT Greengrass](dev-test-versions.md#idt-latest-version)\.
+For information about the supported versions of the Greengrass nucleus and Greengrass CLI for IDT for AWS IoT Greengrass, see [Latest IDT version for AWS IoT Greengrass V2](dev-test-versions.md#idt-latest-version)\.

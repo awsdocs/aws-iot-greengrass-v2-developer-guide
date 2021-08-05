@@ -2,6 +2,12 @@
 
 To enable IDT to run tests for device qualification, you must configure your host computer to access your device, and configure user permissions on your device\.
 
+## Install Java on the host computer<a name="install-java-for-idt"></a>
+
+Starting with IDT v4\.2\.0, the optional qualification tests for AWS IoT Greengrass require Java to run\.
+
+You can use Java version 8 or greater\. We recommend [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.
+
 ## Configure your host computer to access your device under test<a name="configure-host"></a>
 
 IDT runs on your host computer and must be able to use SSH to connect to your device\. There are two options to allow IDT to gain SSH access to your devices under test:
@@ -70,7 +76,7 @@ Windows does not have an installed SSH client\. For information about installing
 
 ## Configure user permissions on your device<a name="root-access"></a>
 
-IDT performs operations on various directories and files in a device under test\. Some of these operations require elevated permissions \(using sudo\)\. To automate these operations, IDT for AWS IoT Greengrass must be able to run commands with sudo without being prompted for a password\.
+IDT performs operations on various directories and files in a device under test\. Some of these operations require elevated permissions \(using sudo\)\. To automate these operations, IDT for AWS IoT Greengrass V2 must be able to run commands with sudo without being prompted for a password\.
 
 Follow these steps on the device under test to allow sudo access without being prompted for a password\. 
 
@@ -88,3 +94,32 @@ Follow these steps on the device under test to allow sudo access without being p
 1. Open the `/etc/sudoers` file and add the following line to the end of the file:
 
    `<ssh-username> ALL=(ALL) NOPASSWD: ALL`
+
+## Configure your device to test optional features<a name="optional-feature-config"></a>
+
+This section describes the device requirements to run IDT tests for optional Docker and machine learning \(ML\) features\. You must make sure your device meets these requirements only if you want to test these features\. Otherwise, continue to [Configure IDT settings to run the AWS IoT Greengrass qualification suite](set-config.md)\.
+
+**Topics**
++ [Docker qualification requirements](#idt-config-docker-components)
++ [ML qualification requirements](#idt-config-ml-components)
+
+### Docker qualification requirements<a name="idt-config-docker-components"></a>
+
+IDT for AWS IoT Greengrass V2 provides Docker qualification tests to validate that your devices can use the AWS\-provided [Docker application manager](docker-application-manager-component.md) component to download Docker container images that you can run using custom Docker container components\. For information about creating custom Docker components, see [Run a Docker container](run-docker-container.md)\.
+
+To run Docker qualification tests, your devices under test must meet the following requirements to deploy the Docker application manager component\.
++ <a name="docker-application-manager-component-requirements-docker-engine"></a>[Docker Engine](https://docs.docker.com/engine/) 1\.9\.1 or later installed and running on your Greengrass core device\. Version 20\.10 is the latest version that is verified to work with the connector\. You must install Docker directly on the core device before you deploy custom components that run Docker containers\. 
++ <a name="docker-application-manager-component-requirements-docker-daemon"></a>The Docker daemon started and running on the core device before you deploy this component\. 
++ <a name="docker-application-manager-component-requirements-root-user"></a>Root user permissions or Docker configured for you to run it as a [non\-root user](https://docs.docker.com/engine/install/linux-postinstall/)\. Adding a user to the `docker` group enables you to call `docker` commands without `sudo`\. To add `ggc_user`, or the non\-root user that you use to run AWS IoT Greengrass, to the `docker` group that you configure, run **sudo usermod \-aG docker *user\-name***\.
+
+### ML qualification requirements<a name="idt-config-ml-components"></a>
+
+IDT for AWS IoT Greengrass V2 provides ML qualification tests to validate that your devices can use the AWS\-provided [machine learning components](machine-learning-components.md) to perform ML inference locally using the [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) or [TensorFlow Lite](https://www.tensorflow.org/lite) ML frameworks\. For more information about running ML inference on Greengrass devices, see [Perform machine learning inference](perform-machine-learning-inference.md)\.
+
+To run ML qualification tests, your devices under test must meet the following requirements to deploy the machine learning components\.<a name="ml-component-requirements"></a>
++ <a name="ml-req-glibc"></a>On Greengrass core devices running Amazon Linux 2 or Ubuntu 18\.04, [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.27 or later installed on the device\.
++ On Armv7l devices, such as Raspberry Pi, dependencies for OpenCV Python installed on the device\. Run the following command to install the dependencies: 
+
+  ```
+  sudo apt-get install libopenjp2-7 libilmbase23 libopenexr-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libgtk-3-0 libwebp-dev
+  ```

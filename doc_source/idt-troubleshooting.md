@@ -1,6 +1,6 @@
-# Troubleshooting IDT for AWS IoT Greengrass<a name="idt-troubleshooting"></a>
+# Troubleshooting IDT for AWS IoT Greengrass V2<a name="idt-troubleshooting"></a>
 
-IDT for AWS IoT Greengrass writes errors to various locations based on the type of errors\. IDT writes errors to the console, log files, and test reports\. 
+IDT for AWS IoT Greengrass V2 writes errors to various locations based on the type of errors\. IDT writes errors to the console, log files, and test reports\. 
 
 ## Where to look for errors<a name="where-to-look"></a>
 
@@ -12,9 +12,11 @@ The IDT test logs directory is `<device-tester-extract-location>/results/<execut
 | File | Description | 
 | --- | --- | 
 | test\_manager\.log |  The logs written to the console while the test was running\. The summary of the results at the end of this file includes a list of which tests failed\. The warning and error logs in this file can give you some information about the failures\.   | 
-| <test\-group\-id>\_\_<test\-name>\.log | Detailed logs for the specific test\. | 
+| test\-group\-id/test\-case\-id/test\-name\.log | Detailed logs for the specific test in a test group\. For tests that deploy Greengrass components, the test case log file is called greengrass\-test\-run\.log\. | 
+| test\-group\-id/test\-case\-id/greengrass\.log | Detailed logs for AWS IoT Greengrass Core software\. IDT copies this file from the device under test when it runs tests that install AWS IoT Greengrass Core software on the device\. For more information about the messages in this log file, see [Troubleshooting](troubleshooting.md)\. | 
+| test\-group\-id/test\-case\-id/component\-name\.log | Detailed logs for Greengrass components that are deployed during test runs\. IDT copies component log files from the device under test when it runs tests that deploys specific components\. The name of each component log file corresponds to the name of the deployed component\. For more information about the messages in this log file, see [Troubleshooting](troubleshooting.md)\. | 
 
-## Resolving IDT for AWS IoT Greengrass errors<a name="idt-gg-resolve-errors"></a>
+## Resolving IDT for AWS IoT Greengrass V2 errors<a name="idt-gg-resolve-errors"></a>
 
 Before you run IDT for AWS IoT Greengrass, get the correct configuration files in place\. If you receive parsing and configuration errors, your first step is to locate and use a configuration template appropriate for your environment\.
 
@@ -24,13 +26,18 @@ If you are still having issues, see the following debugging process\.
 + [Command not found errors while testing](#cmd-not-found)
 + [Conflict errors](#conflict-error)
 + [Could not start test error](#could-not-start-test)
++ [Docker qualification image exists errors](#docker-qualification-image-exists)
++ [Machine learning qualification errors](#machine-learning-qualification-failure)
 + [Parsing errors](#parse-error)
-+ [Permission denied errors](#pwd-sudo)
-+ [Required parameter missing error](#param-missing)
-+ [Security exception on macOS](#macos-notarization-exception)
-+ [SSH connection errors](#ssh-connect-errors)
-+ [Timeout errors](#test-timeout)
++ [Permission denied errors](#permission-denied-pwd-sudo)
 + [Qualification report generation error](#qualification-report-policy-error)
++ [Required parameter missing error](#required-param-missing)
++ [Security exception on macOS](#security-exception-macos)
++ [SSH connection errors](#ssh-connect-errors)
++ [Stream manager qualification errors](#stream-manager-qualification-failure)
++ [Throttling errors during Docker qualification](#throttling-docker-qualification)
++ [Timeout errors](#test-timeout)
++ [Version check errors](#version-compatibility-check-failure)
 
 ### Command not found errors while testing<a name="cmd-not-found"></a>
 
@@ -66,11 +73,30 @@ You might encounter errors that point to failures that occurred when the test wa
 + Make sure that the pool name in your execution command actually exists\. IDT references the pool name directly from your `device.json` file\.
 + Make sure that the devices in your pool have correct configuration parameters\.
 
+### Docker qualification image exists errors<a name="docker-qualification-image-exists"></a>
+
+The Docker application manager qualification tests use the `amazon/amazon-ec2-metadata-mock` container image in Docker Hub to qualify the device under test\.
+
+You might receive the following error if the image is already present in a Docker container on the device under test\.
+
+```
+The Docker image amazon/amazon-ec2-metadata-mock:version already exists on the device.
+```
+
+If you previously downloaded this image and ran the `amazon/amazon-ec2-metadata-mock` container on your device, make sure you remove this image from the device under test before you run the qualification tests\.
+
+### Machine learning qualification errors<a name="machine-learning-qualification-failure"></a>
+
+When you run machine learning \(ML\) qualification tests, you might encounter qualification failures if your device doesn't meet the requirements to deploy the AWS\-provided ML components\. To troubleshoot ML qualification errors, do the following: 
++ Look for error details in the component logs for the components that were deployed during the test run\. Component logs are located in the `<device-tester-extract-location>/results/<execution-id>/logs/<test-group-id>` directory\.
++ Add the `-Dgg.persist=installed.software` argument to the `test.json` file for the failing test case\. The `test.json` file is located in the `<device-tester-extract-location>/tests/GGV2Q_version directory. `
++ 
+
 ### Parsing errors<a name="parse-error"></a>
 
 Typos in a JSON configuration can lead to parsing errors\. Most of the time, the issue is a result of omitting a bracket, comma, or quotation mark from your JSON file\. IDT performs JSON validation and prints debugging information\. It prints the line where the error occurred, the line number, and the column number of the syntax error\. This information should be enough to help you fix the error, but if you still can't locate the error, you can perform validation manually in your IDE, a text editor such as Atom or Sublime, or through an online tool like JSONLint\.
 
-### Permission denied errors<a name="pwd-sudo"></a>
+### Permission denied errors<a name="permission-denied-pwd-sudo"></a>
 
 IDT performs operations on various directories and files in a device under test\. Some of these operations require root access\. To automate these operations, IDT must be able to run commands with sudo without typing a password\. 
 
@@ -87,11 +113,17 @@ Follow these steps to allow sudo access without typing a password\.
 **Note**  
 As a best practice, we recommend that you use sudo visudo when you edit `/etc/sudoers`\.
 
-### Required parameter missing error<a name="param-missing"></a>
+### Qualification report generation error<a name="qualification-report-policy-error"></a>
+
+IDT supports the four latest `major.minor` versions of the AWS IoT Greengrass V2 qualification suite \(GGV2Q\) to generate qualification reports that you can submit to AWS Partner Network to include your devices in the AWS Partner Device Catalog\. Earlier versions of the qualification suite don’t generate qualification reports\.
+
+If you have questions about the support policy, contact AWS Support at [https://aws.amazon.com/contact-us/](https://aws.amazon.com/contact-us/)\.
+
+### Required parameter missing error<a name="required-param-missing"></a>
 
 When IDT adds new features, it might introduce changes to the configuration files\. Using an old configuration file might break your configuration\. If this happens, the `<test_case_id>.log` file under `/results/<execution-id>/logs` explicitly lists all missing parameters\. IDT also validates your JSON configuration file schemas to verify that you are using the latest supported version\.
 
-### Security exception on macOS<a name="macos-notarization-exception"></a>
+### Security exception on macOS<a name="security-exception-macos"></a>
 
 When you run IDT on a host computer that uses macOS 10\.15, the notarization ticket for IDT isn't detected, which blocks IDT from being run\. To run IDT, grant a security exception to the `devicetester_mac_x86-64` executable\. Do one of the following:
 
@@ -111,6 +143,30 @@ When IDT can't connect to a device under test, it logs connection failures in `/
 
 Most Windows configurations use the PuTTy terminal application to connect to Linux hosts\. This application requires that you convert standard PEM private key files into a proprietary Windows format called PPK\. If you configure SSH in your `device.json` file, use PEM files\. If you use a PPK file, IDT can't create an SSH connection with the AWS IoT Greengrass device and can't run tests\.
 
+### Stream manager qualification errors<a name="stream-manager-qualification-failure"></a>
+
+When you run stream manager qualification tests, you might see the following error in the `com.aws.StreamManagerExport.log` file\.
+
+```
+Failed to upload data to S3
+```
+
+This error can occur when stream manager uses the AWS credentials in the `~/root/.aws/credentials` file on your device instead of using the environment credentials that IDT exports to the device under test\. To prevent this issue, delete the `credentials` file on your device, and re\-run the qualification test\.
+
+### Throttling errors during Docker qualification<a name="throttling-docker-qualification"></a>
+
+Docker Hub limits the number of pull requests that anonymous and Free Docker Hub users can make\. When you run IDT tests for Docker qualification, you might receive one of the following errors if you exceed the rate limits for anonymous or free user pull requests:
+
+```
+ERROR: toomanyrequests: Too Many Requests.
+```
+
+```
+You have reached your pull rate limit.
+```
+
+To resolve these errors, you can wait for a few hours before you run the qualification test\. If you plan on consistently running a large number of tests, which can result in submitting a large number of pull requests, see the [Docker Hub website](https://www.docker.com/increase-rate-limits) for information about rate limits, and options for authenticating and upgrading your Docker account\. 
+
 ### Timeout errors<a name="test-timeout"></a>
 
 You can increase the timeout for each test by specifying a timeout multiplier applied to the default value of each test's timeout\. Any value configured for this flag must be greater than or equal to 1\.0\.
@@ -123,8 +179,12 @@ To use the timeout multiplier, use the flag `--timeout-multiplier` when running 
 
 For more information, run `run-suite --help`\.
 
-### Qualification report generation error<a name="qualification-report-policy-error"></a>
+### Version check errors<a name="version-compatibility-check-failure"></a>
 
-IDT supports the four latest `major.minor` versions of the AWS IoT Greengrass V2 qualification suite \(GGV2Q\) to generate qualification reports that you can submit to AWS Partner Network to include your devices in the AWS Partner Device Catalog\. Earlier versions of the qualification suite don’t generate qualification reports\.
+IDT issues the following error when the AWS user credentials for the IDT user don't have the required IAM permissions\. 
 
-If you have questions about the support policy, contact AWS Support at [https://aws.amazon.com/contact-us/](https://aws.amazon.com/contact-us/)\.
+```
+Failed to check version compatibility
+```
+
+The AWS user that doesn't have the required IAM permissions\. 

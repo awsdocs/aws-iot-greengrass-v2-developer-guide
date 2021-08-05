@@ -30,6 +30,8 @@ For more information, see [Greengrass Command Line Interface](gg-cli.md)\.
 ## Versions<a name="greengrass-cli-component-versions"></a>
 
 This component has the following versions:
++ 2\.4\.x
++ 2\.3\.x
 + 2\.2\.x
 + 2\.1\.x
 + 2\.0\.x
@@ -53,6 +55,26 @@ This component has the following requirements:
 ## Dependencies<a name="greengrass-cli-component-dependencies"></a>
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#greengrass-cli-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+
+------
+#### [ 2\.4\.0 ]
+
+The following table lists the dependencies for version 2\.4\.0 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.1\.0 <2\.5\.0 | Soft | 
+
+------
+#### [ 2\.3\.0 ]
+
+The following table lists the dependencies for version 2\.3\.0 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.1\.0 <2\.4\.0 | Soft | 
 
 ------
 #### [ 2\.2\.0 ]
@@ -115,6 +137,8 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.4\.0  |  <a name="changelog-greengrass-cli-2.4.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-cli-component.html)  | 
+|  2\.3\.0  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  2\.2\.0  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 
 |  2\.1\.0  |  Version updated for Greengrass nucleus version 2\.1\.0 release\.  | 
 |  2\.0\.5  | Version updated for Greengrass nucleus version 2\.0\.5 release\. | 

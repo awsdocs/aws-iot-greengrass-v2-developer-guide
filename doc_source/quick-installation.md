@@ -57,7 +57,7 @@ https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-version.zip
 
 **To download the AWS IoT Greengrass Core software \(Linux\)**
 
-1. On your device, download the AWS IoT Greengrass Core software to a file named `greengrass-nucleus-latest-zip`\.
+1. On your device, download the AWS IoT Greengrass Core software to a file named `greengrass-nucleus-latest.zip`\.
 
    ```
    curl -s https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-nucleus-latest.zip > greengrass-nucleus-latest.zip
@@ -70,8 +70,11 @@ https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-version.zip
    ```
    unzip greengrass-nucleus-latest.zip -d GreengrassCore && rm greengrass-nucleus-latest.zip
    ```
-**Tip**  
-You can run the following command to see the version of the AWS IoT Greengrass Core software\.  
+**Important**  
+If you install a version of the Greengrass nucleus earlier than v2\.4\.0, don't remove this folder after you install the AWS IoT Greengrass Core software\. The AWS IoT Greengrass Core software uses the files in this folder to run\.  
+If you downloaded the latest version of the software, you install v2\.4\.0 or later, and you can remove this folder after you install the AWS IoT Greengrass Core software\.
+
+1. \(Optional\) Run the following command to see the version of the AWS IoT Greengrass Core software\.
 
    ```
    java -jar ./GreengrassCore/lib/Greengrass.jar --version
@@ -109,6 +112,8 @@ The thing name can't contain colon \(`:`\) characters\.
 **Note**  <a name="install-argument-thing-group-name-constraint"></a>
 The thing group name can't contain colon \(`:`\) characters\.
 
+   1. *GreengrassV2IoTThingPolicy*\. The name of the AWS IoT policy that allows the Greengrass core devices to communicate with AWS IoT and AWS IoT Greengrass\. If the AWS IoT policy doesn't exist, the installer creates a permissive AWS IoT policy with this name\. You can restrict this policy's permissions for you use case\. For more information, see [Minimal AWS IoT policy for AWS IoT Greengrass V2 core devices](device-auth.md#greengrass-core-minimal-iot-policy)\.
+
    1. *GreengrassV2TokenExchangeRole*\. The name of the IAM role that allows the Greengrass core device to get temporary AWS credentials\. If the role doesn't exist, the installer creates it and creates and attaches a policy named `GreengrassV2TokenExchangeRoleAccess`\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
 
    1. *GreengrassCoreTokenExchangeRoleAlias*\. The alias to the IAM role that allows the Greengrass core device to get temporary credentials later\. If the role alias doesn't exist, the installer creates it and points it to the IAM role that you specify\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
@@ -119,6 +124,7 @@ The thing group name can't contain colon \(`:`\) characters\.
      --aws-region region \
      --thing-name MyGreengrassCore \
      --thing-group-name MyGreengrassCoreGroup \
+     --thing-policy-name GreengrassV2IoTThingPolicy \
      --tes-role-name GreengrassV2TokenExchangeRole \
      --tes-role-alias-name GreengrassCoreTokenExchangeRoleAlias \
      --component-default-user ggc_user:ggc_group \

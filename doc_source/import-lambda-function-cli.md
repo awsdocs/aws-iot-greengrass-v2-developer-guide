@@ -127,7 +127,7 @@ To import a Lambda function that you created to run on AWS IoT Greengrass V1, yo
       ```
 
    1. Add each component dependency to the map\. Specify the component name as the key and specify an object with the following parameters:
-      + `versionRequirement` – The semantic version constraint that identifies the compatible versions of the component dependency\. You can specify a single version or a range of versions\. For more information about semantic version constraints, see the [npm semver calculator](https://semver.npmjs.com/)\.
+      + `versionRequirement` – The npm\-style semantic version constraint that identifies the compatible versions of the component dependency\. You can specify a single version or a range of versions\. For more information about semantic version constraints, see the [npm semver calculator](https://semver.npmjs.com/)\.
       + `dependencyType` – \(Optional\) The type of the dependency\. Choose from the following:
         + `SOFT` – The Lambda function component doesn't restart if the dependency changes state\.
         + `HARD` – The Lambda function component restarts if the dependency changes state\.
@@ -163,11 +163,9 @@ To import a Lambda function that you created to run on AWS IoT Greengrass V1, yo
             }
           ],
           "componentDependencies": {
-            {
-              "aws.greengrass.StreamManager": {
-                "versionRequirement": "^1.0.0",
-                "dependencyType": "HARD"
-              }
+            "aws.greengrass.StreamManager": {
+              "versionRequirement": "^1.0.0",
+              "dependencyType": "HARD"
             }
           }
         }

@@ -14,7 +14,7 @@ Collect, filter, and visualize Greengrass log files\. This command supports only
 **Synopsis**  
 
 ```
-$ greengrass-cli logs get
+$ sudo greengrass-cli logs get
     [--log-dir path/to/a/log/folder]
     [--log-file path/to/a/log/file]
     [--follow true | false ]
@@ -66,7 +66,7 @@ $ greengrass-cli logs get
 The following example shows the output produced when you run this command\.  
 
 ```
-$ greengrass-cli logs get --verbose \
+$ sudo greengrass-cli logs get --verbose \
     --log-file /greengrass/v2/logs/greengrass.log \
     --filter deployment,serviceName=DeploymentService \
     --filter level=INFO \
@@ -83,7 +83,7 @@ Show suggested keywords that you can use to filter log files\.
 **Synopsis**  
 
 ```
-$ greengrass-cli logs list-keywords [arguments]
+$ sudo greengrass-cli logs list-keywords [arguments]
 ```
 
 **Arguments**  
@@ -93,7 +93,7 @@ None
 The following examples show the output produced when you run this command\.  
 
 ```
-$ greengrass-cli logs list-keywords
+$ sudo greengrass-cli logs list-keywords
 
 Here is a list of suggested keywords for Greengrass log:
 level=$str
@@ -105,7 +105,7 @@ error=$str
 ```
 
 ```
-$ greengrass-cli logs list-keywords --syslog
+$ sudo greengrass-cli logs list-keywords --syslog
 
 Here is a list of suggested keywords for syslog:
 priority=$int
@@ -121,7 +121,7 @@ Show log files located in a specified directory\.
 **Synopsis**  
 
 ```
-$ greengrass-cli logs list-log-files [arguments]
+$ sudo greengrass-cli logs list-log-files [arguments]
 ```
 
 **Arguments**  
@@ -131,7 +131,7 @@ $ greengrass-cli logs list-log-files [arguments]
 The following examples show the output produced when you run this command\.  
 
 ```
-$ greengrass-cli logs list-log-files -ld /greengrass/v2/logs/
+$ sudo greengrass-cli logs list-log-files -ld /greengrass/v2/logs/
 
 /greengrass/v2/logs/aws.greengrass.Nucleus.log
 /greengrass/v2/logs/main.log
@@ -140,7 +140,7 @@ Total 3 files found.
 ```
 
 ```
-$ greengrass-cli logs list-log-files
+$ sudo greengrass-cli logs list-log-files
 
 No log file found.
 ```

@@ -22,7 +22,7 @@ Authorization policies for secret manager have the following properties\.
 
 **Example authorization policy**  
 The following example authorization policy allows a component to get the value of any secret on the core device\.  
-In production environments, we recommend that you reduce the scope of the authorization policy, so the component can retrieve only the secrets that it uses\. You can change the `*` wildcard to a list of secret ARNs when you deploy the component\.
+We recommend that in a production environment, you reduce the scope of the authorization policy, so that the component retrieves only the secrets that it uses\. You can change the `*` wildcard to a list of secret ARNs when you deploy the component\.
 
 ```
 {
@@ -166,7 +166,7 @@ This example component prints the value of a secret, so use it only with secrets
 The following example recipe defines a secret ARN configuration parameter and allows the component to get the value of any secret on the core device\.
 
 **Note**  <a name="ipc-secret-manager-authorization-policy-resource-wildcard"></a>
-In production environments, we recommend that you reduce the scope of the authorization policy, so the component can retrieve only the secrets that it uses\. You can change the `*` wildcard to a list of secret ARNs when you deploy the component\.
+We recommend that in a production environment, you reduce the scope of the authorization policy, so that the component retrieves only the secrets that it uses\. You can change the `*` wildcard to a list of secret ARNs when you deploy the component\.
 
 ------
 #### [ JSON ]

@@ -46,10 +46,12 @@ The core device CA certificate doesn't expire or rotate\.
 
 Use AWS IoT policies to authorize access to the AWS IoT Core and AWS IoT Greengrass data planes\. The AWS IoT Core data plane provides operations for devices, users, and applications\. These operations include the ability to connect to AWS IoT Core and subscribe to topics\. The AWS IoT Greengrass data plane provides operations for Greengrass devices\. These operations include the ability to resolve component dependencies and download public component artifacts\.
 
-An AWS IoT policy is a JSON document that's similar to an IAM policy\. It contains one or more policy statements that specify the following properties:
+An AWS IoT policy is a JSON document that's similar to an [IAM policy](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html#policies-grammar-json)\. It contains one or more policy statements that specify the following properties:
 + `Effect`\. The access mode, which can be `Allow` or `Deny`\.
 + `Action`\. The list of actions that are allowed or denied by the policy\.
 + `Resource`\. The list of resources on which the action is allowed or denied\.
+
+AWS IoT policies support `*` as a wildcard character, and treat MQTT wildcard characters \(`+` and `#`\) as literal strings\. For more information about the `*` wildcard, see [Using wildcard in resource ARNs](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_resource.html#reference_policies_elements_resource_wildcards) in the *AWS Identity and Access Management User Guide*\.
 
 For more information, see [AWS IoT policies](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) and [AWS IoT policy actions](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policy-actions.html) in the *AWS IoT Core Developer Guide*\.
 
@@ -65,37 +67,73 @@ AWS IoT Greengrass V2 defines the following policy actions that Greengrass core 
 
 `greengrass:GetComponentVersionArtifact`  
 Grants permission to get a presigned URL to download a public component artifact\.  
-This permission is checked when a core device receives a deployment that specifies a public component that has artifacts\. If the core device already has the artifact, it doesn't download the artifact again\.
+This permission is evaluated when a core device receives a deployment that specifies a public component that has artifacts\. If the core device already has the artifact, it doesn't download the artifact again\.
 
 `greengrass:ResolveComponentCandidates`  
 Grants permission to identify a list of components that meet the component, version, and platform requirements for a deployment\. If the requirements conflict, or no components exist that meet the requirements, this operation returns an error and the deployment fails on the device\.  
-This permission is checked when a core device receives a deployment that specifies components\.
+This permission is evaluated when a core device receives a deployment that specifies components\.
+
+`greengrass:GetDeploymentConfiguration`  
+Grants permission to get a presigned URL to download a large deployment document\.  
+This permission is evaluated when a core device receives a deployment that specifies a deployment document larger than 7 KB \(if the deployment targets a thing\) or 31 KB \(if the deployment targets a thing group\)\. The deployment document includes component configurations, deployment policies, and deployment metadata\. For more information, see [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)\.  
+This feature is available for v2\.3\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.
 
 `greengrass:VerifyClientDeviceIdentity`  
 Grants permission to verify the identity of a client device that connects to a core device\.  
-This permission is checked when a core device receives an MQTT connection from a client device\. The client device presents its AWS IoT device certificate\. Then, the core device sends the device certificate to the AWS IoT Greengrass cloud service to verify the client device's identity\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.
+This permission is evaluated when a core device receives an MQTT connection from a client device\. The client device presents its AWS IoT device certificate\. Then, the core device sends the device certificate to the AWS IoT Greengrass cloud service to verify the client device's identity\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.
 
 `greengrass:VerifyClientDeviceIoTCertificateAssociation`  
 Grants permission to verify whether a client device is associated with an AWS IoT certificate\.  
-This permission is checked when a core device authorizes a client device to connect over MQTT\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.  
+This permission is evaluated when a core device authorizes a client device to connect over MQTT\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.  
 For a core device to use this operation, the [Greengrass service role](greengrass-service-role.md) must be associated to your AWS account and allow the `iot:DescribeCertificate` permission\.
 
 `greengrass:PutCertificateAuthorities`  <a name="greengrass-put-certificate-authorities-action"></a>
 Grants permission to upload certificate authority \(CA\) certificates that client devices can download to verify the core device\.  
-This permission is checked when a core device installs and runs the [client device auth component](client-device-auth-component.md)\. This component creates a local certificate authority and uses this operation to upload its CA certificates\. Client devices download these CA certificates when they use the [Discover](#greengrass-discover-action) operation to find core devices where they can connect\. When client devices connect to an MQTT broker on a core device, they use these CA certificates to verify the identity of the core device\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.
+This permission is evaluated when a core device installs and runs the [client device auth component](client-device-auth-component.md)\. This component creates a local certificate authority and uses this operation to upload its CA certificates\. Client devices download these CA certificates when they use the [Discover](#greengrass-discover-action) operation to find core devices where they can connect\. When client devices connect to an MQTT broker on a core device, they use these CA certificates to verify the identity of the core device\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.
 
 `greengrass:GetConnectivityInfo`  
 Grants permission to get connectivity information for a core device\. This information describes how client devices can connect to the core device\.  
-This permission is checked when a core device installs and runs the [client device auth component](client-device-auth-component.md)\. This component uses the connectivity information to generate valid CA certificates to upload to the AWS IoT Greengrass cloud service with the [PutCertificateAuthories](#greengrass-put-certificate-authorities-action) operation\. Client devices use these CA certificates to verify the identity of the core device\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.  
+This permission is evaluated when a core device installs and runs the [client device auth component](client-device-auth-component.md)\. This component uses the connectivity information to generate valid CA certificates to upload to the AWS IoT Greengrass cloud service with the [PutCertificateAuthories](#greengrass-put-certificate-authorities-action) operation\. Client devices use these CA certificates to verify the identity of the core device\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.  
 You can also use this operation on the AWS IoT Greengrass control plane to view connectivity information for a core device\. For more information, see [GetConnectivityInfo](https://docs.aws.amazon.com/greengrass/v1/apireference/getconnectivityinfo-get.html) in the *AWS IoT Greengrass V1 API Reference*\.
 
 `greengrass:UpdateConnectivityInfo`  
 Grants permission to update connectivity information for a core device\. This information describes how client devices can connect to the core device\.  
-This permission is checked when a core device runs the [IP detector component](ip-detector-component.md)\. This component identifies the information that client devices require to connect to the core device on the local network\. Then, this component uses this operation to upload the connectivity information to the AWS IoT Greengrass cloud service, so client devices can retrieve this information with the [Discover](#greengrass-discover-action) operation\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.  
+This permission is evaluated when a core device runs the [IP detector component](ip-detector-component.md)\. This component identifies the information that client devices require to connect to the core device on the local network\. Then, this component uses this operation to upload the connectivity information to the AWS IoT Greengrass cloud service, so client devices can retrieve this information with the [Discover](#greengrass-discover-action) operation\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.  
 You can also use this operation on the AWS IoT Greengrass control plane to manually update connectivity information for a core device\. For more information, see [UpdateConnectivityInfo](https://docs.aws.amazon.com/greengrass/v1/apireference/updateconnectivityinfo-put.html) in the *AWS IoT Greengrass V1 API Reference*\.Client device actions
 
 `greengrass:Discover`  <a name="greengrass-discover-action"></a>
 Grants permission to discover connectivity information for core devices where a client device can connect\. This information describes how the client device can connect to the core devices\. A client device can discover only the core devices that you have associated it with by using the [BatchAssociateClientDeviceWithCoreDevice](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_BatchAssociateClientDeviceWithCoreDevice.html) operation\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.
+
+## Update a core device's AWS IoT policy<a name="update-core-device-iot-policy"></a>
+
+You can use the AWS IoT Greengrass and AWS IoT consoles to view and update a core device's AWS IoT policy\.
+
+**Note**  
+If you used the [AWS IoT Greengrass Core software installer to provision resources](quick-installation.md), your core device has an AWS IoT policy that allows access to all AWS IoT Greengrass actions \(`greengrass:*`\)\. You can follow these steps to restrict access to only the actions that a core device uses\.
+
+**To review and update a core device's AWS IoT policy**
+
+1. <a name="update-iot-policy-open-greengrass-console"></a>In the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass) navigation menu, choose **Core devices**\.
+
+1. <a name="update-iot-policy-choose-core-device"></a>On the **Core devices** page, choose the core device to update\.
+
+1. <a name="update-iot-policy-choose-core-device-thing"></a>On the core device details page, choose the link to the core device's **Thing**\. This link opens the thing details page in the AWS IoT console\.
+
+1. <a name="update-iot-policy-choose-thing-security"></a>On the thing details page, choose **Certificates**\.
+
+1. <a name="update-iot-policy-choose-thing-certificate"></a>In the **Certificates** tab, choose the thing's active certificate\.
+
+1. <a name="update-iot-policy-choose-certificate-policies"></a>On the certificate details page, choose **Policies**\.
+
+1. <a name="update-iot-policy-choose-policy"></a>In the **Policies** tab, choose the AWS IoT policy to review and update\. You can add the required permissions to any policy that is attached to the core device's active certificate\.
+**Note**  
+If you used the [AWS IoT Greengrass Core software installer to provision resources](quick-installation.md), you have two AWS IoT policies\. We recommend that you choose the policy named **GreengrassV2IoTThingPolicy**, if it exists\. Core devices that you create with the quick installer use this policy name by default\. If you add permissions to this policy, you are also granting these permissions to other core devices that use this policy\.
+
+1. <a name="update-iot-policy-edit-policy"></a>In the policy overview, choose **Edit policy document**\.
+
+1. Review the policy and add, remove, or edit permissions as needed\.
+
+1. <a name="update-iot-policy-save-policy"></a>Choose **Save as new version**\.
 
 ## Minimal AWS IoT policy for AWS IoT Greengrass V2 core devices<a name="greengrass-core-minimal-iot-policy"></a>
 
@@ -168,7 +206,8 @@ The following example policy includes the minimum set of actions required to sup
             "Effect": "Allow",
             "Action": [
                 "greengrass:GetComponentVersionArtifact",
-                "greengrass:ResolveComponentCandidates"
+                "greengrass:ResolveComponentCandidates",
+                "greengrass:GetDeploymentConfiguration"
             ],
             "Resource": "*"
         }

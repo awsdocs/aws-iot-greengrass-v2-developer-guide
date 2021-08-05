@@ -399,7 +399,7 @@ function connectToStreamManagerWithDefaultPort() {
 }
 ```
 
-**Example: Connect to stream manager with non\-default port \(Java\)**  
+**Example: Connect to stream manager with non\-default port**  
 If you configure stream manager with a port other than the default, you must use [interprocess communication](interprocess-communication.md) to retrieve the port from the component configuration\.  
 The `port` configuration parameter contains the value that you specify in `STREAM_MANAGER_SERVER_PORT` when you deploy stream manager\.
 
@@ -425,4 +425,33 @@ void connectToStreamManagerWithCustomPort() {
     
     // Use the client.
 }
+```
+
+```
+import awsiot.greengrasscoreipc
+from awsiot.greengrasscoreipc.model import (
+    GetConfigurationRequest
+)
+from stream_manager import (
+    StreamManagerClient
+)
+
+TIMEOUT = 10
+
+def connect_to_stream_manager_with_custom_port():
+    # Use IPC to get the port from the stream manager component configuration.
+    ipc_client = awsiot.greengrasscoreipc.connect()
+    request = GetConfigurationRequest()
+    request.component_name = "aws.greengrass.StreamManager"
+    request.key_path = ["port"]
+    operation = ipc_client.new_get_configuration()
+    operation.activate(request)
+    futureResponse = operation.get_response()
+    response = futureResponse.result(TIMEOUT)
+    stream_manager_port = str(response.value["port"])
+    
+    # Use port to create a stream manager client.
+    stream_client = StreamManagerClient(port=stream_manager_port)
+    
+    # Use the client.
 ```

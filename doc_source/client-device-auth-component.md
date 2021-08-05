@@ -33,12 +33,37 @@ This component has the following requirements:
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#client-device-auth-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
-The following table lists the dependencies for version 2\.0\.x of this component\.
+------
+#### [ 2\.0\.2 ]
+
+The following table lists the dependencies for version 2\.0\.2 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
 | --- | --- | --- | 
-| [Greengrass nucleus](greengrass-nucleus-component.md) | \~2\.2\.0 | Soft | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.2\.0 <2\.5\.0 | Soft | 
+
+------
+#### [ 2\.0\.1 ]
+
+The following table lists the dependencies for version 2\.0\.1 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.2\.0 <2\.4\.0 | Soft | 
+
+------
+#### [ 2\.0\.0 ]
+
+The following table lists the dependencies for version 2\.0\.0 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.2\.0 <2\.3\.0 | Soft | 
+
+------
 
 For more information about component dependencies, see the [component recipe reference](component-recipe-reference.md#recipe-reference-component-dependencies)\.
 
@@ -63,6 +88,8 @@ This object contains the following information:
 The selection rule that specifies which client devices are members of this device group\. When a client device connects, the core device evaluates the selection rule to determine if the client device is a member of this device group\. If the client device is a member, the core device uses this device group's policy to authorize the client device's actions\.  
 Use the `*` wildcard to match multiple client devices with one selection rule clause\. You can use this wildcard at the end of the thing name to match client devices whose names start with a string that you specify\. You can also use this wildcard to match all client devices\.  
 To select a value that contains a colon character \(`:`\), escape the colon with a backslash character \(`\`\)\. In formats such as JSON, you must escape backslash characters, so you enter two backslash characters before the colon character\. For example, specify `thingName: MyTeam\\:ClientDevice1` to select a thing whose name is `MyTeam:ClientDevice1`\.
+You can specify the following selector:  
++ `thingName` – The name of a client device's AWS IoT thing\.
 
 **Example selection rule**  
 The following selection rule matches client devices whose names are `MyClientDevice1` or `MyClientDevice2`\.  
@@ -208,4 +235,6 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.0\.2  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
+|  2\.0\.1  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  2\.0\.0  |  Initial version\.  | 

@@ -73,6 +73,6 @@ Local shadow topics use the same format as the AWS IoT device shadow MQTT topics
    }
    ```
 
-1. To initiate a custom action in a component, use SubscribeToTopic IPC operations to subscribe to the shadow topics on which you want to receive messages\. For more information about using local publish/subscribe IPC operations in component code, see [Publish/subscribe local messages](ipc-publish-subscribe.md)\.
+1. To initiate a custom action in a component, use `SubscribeToTopic` IPC operations to subscribe to the shadow topics on which you want to receive messages\. For more information about using local publish/subscribe IPC operations in component code, see [Publish/subscribe local messages](ipc-publish-subscribe.md)\.
 
 1. To invoke a Lambda function, use the event source configuration to provide the name of the shadow topic and specify that it's a local publish/subscribe topic\. For information about creating Lambda function components, see [Run AWS Lambda functions](run-lambda-functions.md)\.

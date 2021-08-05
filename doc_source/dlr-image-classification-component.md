@@ -39,6 +39,30 @@ This component has the following requirements:<a name="ml-component-requirements
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#dlr-image-classification-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
+#### [ 2\.1\.4 \- 2\.1\.5 ]
+
+The following table lists the dependencies for versions 2\.1\.4 to 2\.1\.5 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.5\.0 | Soft | 
+| [DLR image classification model store](dlr-image-classification-model-store-component.md) | \~2\.1\.0 | Hard | 
+| [DLR](dlr-component.md) | \~1\.6\.0 | Hard | 
+
+------
+#### [ 2\.1\.3 ]
+
+The following table lists the dependencies for version 2\.1\.3 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.4\.0 | Soft | 
+| [DLR image classification model store](dlr-image-classification-model-store-component.md) | \~2\.1\.0 | Hard | 
+| [DLR](dlr-component.md) | \~1\.6\.0 | Hard | 
+
+------
 #### [ 2\.1\.2 ]
 
 The following table lists the dependencies for version 2\.1\.2 of this component\.
@@ -131,14 +155,19 @@ Default: `3600`
 Default:  
 
 ```
-armv7l: "DLR-resnet50-armv7l-cpu-ImageClassification"
-x86_64: "DLR-resnet50-x86_64-cpu-ImageClassification"
-aarch64: "DLR-resnet50-aarch64-cpu-ImageClassification"
+{
+    "armv7l": "DLR-resnet50-armv7l-cpu-ImageClassification",
+    "aarch64": "DLR-resnet50-aarch64-cpu-ImageClassification",
+    "x86_64": "DLR-resnet50-x86_64-cpu-ImageClassification"
+}
 ```
 
 `UseCamera`  <a name="ml-config-usecamera"></a>
-\(Optional\) Defines whether to use images from a camera connected to the Greengrass core device\. When you set this value to `true`, the sample inference code accesses the camera on your device and runs inference locally on the captured image\. The values of the `ImageName` and `ImageDirectory` parameters are ignored\. Make sure that the user running this component has read/write access to the location where the camera stores captured images\.  
-Default: `false`
+\(Optional\) String value that defines whether to use images from a camera connected to the Greengrass core device\. Supported values are `true` and `false`\.  
+When you set this value to `true`, the sample inference code accesses the camera on your device and runs inference locally on the captured image\. The values of the `ImageName` and `ImageDirectory` parameters are ignored\. Make sure that the user running this component has read/write access to the location where the camera stores captured images\.  
+Default: `false`  
+When you view the recipe of this component, the `UseCamera` configuration parameter doesn't appear in the default configuration\. However, you can modify the value of this parameter in a [configuration merge update](update-component-configurations.md) when you deploy the component\.   
+When you set `UseCamera` to `true`, you must also create a symlink to enable the inference component to access your camera from the virtual environment that is created by the runtime component\. For more information about using a camera with the sample inference components, see [Update component configurations](ml-tutorial-image-classification-camera.md)\.
 
 ------
 #### [ 2\.0\.x ]
@@ -169,10 +198,6 @@ armv7l: "DLR-resnet50-armv7l-cpu-ImageClassification"
 x86_64: "DLR-resnet50-x86_64-cpu-ImageClassification"
 ```
 
-**Note**  <a name="ml-config-not-visible-note"></a>
-When you view the recipe of this component, the `UseCamera` configuration parameter doesn't appear in the default configuration\. However, you can modify the value of this parameter in a [configuration update](update-component-configurations.md) when you deploy the component\.   
-When you set `UseCamera` to `true`, you must also create a symlink to enable the inference component to access your camera from the virtual environment that is created by the runtime component\. For more information about using a camera with the sample inference components, see [Update component configurations](ml-tutorial-image-classification-camera.md)\.
-
 ------
 
 ## Changelog<a name="dlr-image-classification-component-changelog"></a>
@@ -182,6 +207,9 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.1\.5  |  Component released in all AWS Regions\.  | 
+|  2\.1\.4  |  Version updated for Greengrass nucleus version 2\.4\.0 release\. This version isn't available in Europe \(London\) \(`eu-west-2`\)\.  | 
+|  2\.1\.3  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  2\.1\.2  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 
 |  2\.1\.1  |  <a name="changelog-dlr-image-classification-2.1.1"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/dlr-image-classification-component.html)  | 
 |  2\.0\.4  |  Initial version\.  | 

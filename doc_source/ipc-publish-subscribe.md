@@ -13,7 +13,7 @@ You can't use this publish/subscribe IPC service to publish or subscribe to AWS 
 
 ## Authorization<a name="ipc-publish-subscribe-authorization"></a>
 
-To use publish/subscribe messaging IPC service in a custom component, you must define authorization policies that allows your component to send and receive messages to topics\. For information about defining authorization policies, see [Authorize components to perform IPC operations](interprocess-communication.md#ipc-authorization-policies)\.
+To use local publish/subscribe messaging in a custom component, you must define authorization policies that allows your component to send and receive messages to topics\. For information about defining authorization policies, see [Authorize components to perform IPC operations](interprocess-communication.md#ipc-authorization-policies)\.
 
 Authorization policies for publish/subscribe messaging have the following properties\.
 
@@ -128,6 +128,84 @@ operation = ipc_client.new_publish_to_topic()
 operation.activate(request)
 future = operation.get_response()
 future.result(TIMEOUT)
+```
+
+------
+#### [ C\+\+ ]
+
+**Example: Publish a binary message**  
+
+```
+#include <iostream>
+
+#include <aws/crt/Api.h>
+#include <aws/greengrass/GreengrassCoreIpcClient.h>
+
+using namespace Aws::Crt;
+using namespace Aws::Greengrass;
+
+class IpcClientLifecycleHandler : public ConnectionLifecycleHandler {
+    void OnConnectCallback() override {
+        // Handle connection to IPC service.
+    }
+
+    void OnDisconnectCallback(RpcError error) override {
+        // Handle disconnection from IPC service.
+    }
+
+    bool OnErrorCallback(RpcError error) override {
+        // Handle IPC service connection error.
+        return true;
+    }
+};
+
+int main() {
+    ApiHandle apiHandle(g_allocator);
+    Io::EventLoopGroup eventLoopGroup(1);
+    Io::DefaultHostResolver socketResolver(eventLoopGroup, 64, 30);
+    Io::ClientBootstrap bootstrap(eventLoopGroup, socketResolver);
+    IpcClientLifecycleHandler ipcLifecycleHandler;
+    GreengrassCoreIpcClient ipcClient(bootstrap);
+    auto connectionStatus = ipcClient.Connect(ipcLifecycleHandler).get();
+    if (!connectionStatus) {
+        std::cerr << "Failed to establish IPC connection: " << connectionStatus.StatusToString() << std::endl;
+        exit(-1);
+    }
+    
+    String topic("my/topic");
+    String message("Hello, World!");
+    int timeout = 10;
+    
+    PublishToTopicRequest request;
+    Vector<uint8_t> messageData({message.begin(), message.end()});
+    BinaryMessage binaryMessage;
+    binaryMessage.SetMessage(messageData);
+    PublishMessage publishMessage;
+    publishMessage.SetBinaryMessage(binaryMessage);
+    request.SetTopic(topic);
+    request.SetPublishMessage(publishMessage);
+
+    PublishToTopicOperation operation = ipcClient.NewPublishToTopic();
+    auto activate = operation.Activate(request, nullptr);
+    activate.wait();
+
+    auto responseFuture = operation.GetResult();
+    if (responseFuture.wait_for(std::chrono::seconds(timeout)) == std::future_status::timeout) {
+        std::cerr << "Operation timed out while waiting for response from Greengrass Core." << std::endl;
+        exit(-1);
+    }
+    if (!response) {
+        // Handle error.
+        auto errorType = response.GetResultType();
+        if (errorType == OPERATION_ERROR) {
+            auto *error = response.GetOperationError();
+            // Handle operation error.
+        } else {
+            // Handle RPC error.
+        }
+    }
+    return 0;
+}
 ```
 
 ------
@@ -279,6 +357,113 @@ while True:
     
 # To stop subscribing, close the operation stream.
 operation.close()
+```
+
+------
+#### [ C\+\+ ]
+
+**Example: Subscribe to local publish/subscribe messages**  <a name="ipc-operation-subscribetotopic-example-cpp"></a>
+
+```
+#include <iostream>
+
+#include <aws/crt/Api.h>
+#include <aws/greengrass/GreengrassCoreIpcClient.h>
+
+using namespace Aws::Crt;
+using namespace Aws::Greengrass;
+
+class SubscribeResponseHandler : public SubscribeToTopicStreamHandler {
+    void OnStreamEvent(SubscriptionResponseMessage *response) override {
+        auto jsonMessage = response->GetJsonMessage();
+        if (jsonMessage.has_value() && jsonMessage.value().GetMessage().has_value()) {
+            auto messageString = jsonMessage.value().GetMessage().value().View().WriteReadable();
+            // Handle JSON message.
+        } else {
+            auto binaryMessage = response->GetBinaryMessage();
+            if (binaryMessage.has_value() && binaryMessage.value().GetMessage().has_value()) {
+                auto messageBytes = binaryMessage.value().GetMessage().value();
+                std::string messageString(messageBytes.begin(), messageBytes.end());
+                // Handle binary message.
+            }
+        } 
+    }
+
+    bool OnStreamError(OperationError *error) override {
+        // Handle error.
+        return false; // Return true to close stream, false to keep stream open.
+    }
+    
+    void OnStreamClosed() override {
+        // Handle close.
+    }
+};
+
+class IpcClientLifecycleHandler : public ConnectionLifecycleHandler {
+    void OnConnectCallback() override {
+        // Handle connection to IPC service.
+    }
+
+    void OnDisconnectCallback(RpcError error) override {
+        // Handle disconnection from IPC service.
+    }
+
+    bool OnErrorCallback(RpcError error) override {
+        // Handle IPC service connection error.
+        return true;
+    }
+};
+
+int main() {
+    ApiHandle apiHandle(g_allocator);
+    Io::EventLoopGroup eventLoopGroup(1);
+    Io::DefaultHostResolver socketResolver(eventLoopGroup, 64, 30);
+    Io::ClientBootstrap bootstrap(eventLoopGroup, socketResolver);
+    IpcClientLifecycleHandler ipcLifecycleHandler;
+    GreengrassCoreIpcClient ipcClient(bootstrap);
+    auto connectionStatus = ipcClient.Connect(ipcLifecycleHandler).get();
+    if (!connectionStatus) {
+        std::cerr << "Failed to establish IPC connection: " << connectionStatus.StatusToString() << std::endl;
+        exit(-1);
+    }
+    
+    String topic("my/topic");
+    int timeout = 10;
+
+    SubscribeToTopicRequest request;
+    request.SetTopic(topic);
+    
+    SubscribeResponseHandler streamHandler;
+    SubscribeToTopicOperation operation = ipcClient.NewSubscribeToTopic(streamHandler);
+    auto activate = operation.Activate(request, nullptr);
+    activate.wait();
+
+    auto responseFuture = operation.GetResult();
+    if (responseFuture.wait_for(std::chrono::seconds(timeout)) == std::future_status::timeout) {
+        std::cerr << "Operation timed out while waiting for response from Greengrass Core." << std::endl;
+        exit(-1);
+    }
+    
+    if (!response) {
+        // Handle error.
+        auto errorType = response.GetResultType();
+        if (errorType == OPERATION_ERROR) {
+            auto *error = response.GetOperationError();
+            // Handle operation error.
+        } else {
+            // Handle RPC error.
+        }
+        exit(-1);
+    }
+
+    // Keep the main thread alive, or the process will exit.
+    while (true) {
+        std::this_thread::sleep_for(std::chrono::seconds(10));
+    }
+    
+    operation.Close();
+    return 0;
+}
 ```
 
 ------
@@ -853,4 +1038,363 @@ except Exception:
     print('Exception occurred when using IPC.', file=sys.stderr)
     traceback.print_exc()
     exit(1)
+```
+
+### Example publish/subscribe publisher \(C\+\+\)<a name="ipc-publish-subscribe-example-publisher-cpp"></a>
+
+The following example recipe allows the component to publish to all topics\.
+
+------
+#### [ JSON ]
+
+```
+{
+  "RecipeFormatVersion": "2020-01-25",
+  "ComponentName": "com.example.PubSubPublisherCpp",
+  "ComponentVersion": "1.0.0",
+  "ComponentDescription": "A component that publishes messages.",
+  "ComponentPublisher": "Amazon",
+  "ComponentConfiguration": {
+    "DefaultConfiguration": {
+      "accessControl": {
+        "aws.greengrass.ipc.pubsub": {
+          "com.example.PubSubPublisherCpp:pubsub:1": {
+            "policyDescription": "Allows access to publish to all topics.",
+            "operations": [
+              "aws.greengrass#PublishToTopic"
+            ],
+            "resources": [
+              "*"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "Manifests": [
+    {
+      "Lifecycle": {
+        "Run": "{artifacts:path}/greengrassv2_pubsub_publisher"
+      },
+      "Artifacts": [
+        {
+          "URI": "s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.PubSubPublisherCpp/1.0.0/greengrassv2_pubsub_publisher",
+          "Permission": {
+            "Execute": "OWNER"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+------
+#### [ YAML ]
+
+```
+---
+RecipeFormatVersion: '2020-01-25'
+ComponentName: com.example.PubSubPublisherCpp
+ComponentVersion: 1.0.0
+ComponentDescription: A component that publishes messages.
+ComponentPublisher: Amazon
+ComponentConfiguration:
+  DefaultConfiguration:
+    accessControl:
+      aws.greengrass.ipc.pubsub:
+        com.example.PubSubPublisherCpp:pubsub:1:
+          policyDescription: Allows access to publish to all topics.
+          operations:
+            - aws.greengrass#PublishToTopic
+          resources:
+            - "*"
+Manifests:
+  - Lifecycle:
+      Run: "{artifacts:path}/greengrassv2_pubsub_publisher"
+    Artifacts:
+      - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.PubSubPublisherCpp/1.0.0/greengrassv2_pubsub_publisher
+        Permission:
+          Execute: OWNER
+```
+
+------
+
+The following example C\+\+ application demonstrates how to use the publish/subscribe IPC service to publish messages to other components\.
+
+```
+#include <iostream>
+
+#include <aws/crt/Api.h>
+#include <aws/greengrass/GreengrassCoreIpcClient.h>
+
+using namespace Aws::Crt;
+using namespace Aws::Greengrass;
+
+class IpcClientLifecycleHandler : public ConnectionLifecycleHandler {
+    void OnConnectCallback() override {
+        std::cout << "OnConnectCallback" << std::endl;
+    }
+
+    void OnDisconnectCallback(RpcError error) override {
+        std::cout << "OnDisconnectCallback: " << error.StatusToString() << std::endl;
+        exit(-1);
+    }
+
+    bool OnErrorCallback(RpcError error) override {
+        std::cout << "OnErrorCallback: " << error.StatusToString() << std::endl;
+        return true;
+    }
+};
+
+int main() {
+    String message("Hello from the pub/sub publisher (C++).");
+    String topic("test/topic/cpp");
+    int timeout = 10;
+    
+    ApiHandle apiHandle(g_allocator);
+    Io::EventLoopGroup eventLoopGroup(1);
+    Io::DefaultHostResolver socketResolver(eventLoopGroup, 64, 30);
+    Io::ClientBootstrap bootstrap(eventLoopGroup, socketResolver);
+    IpcClientLifecycleHandler ipcLifecycleHandler;
+    GreengrassCoreIpcClient ipcClient(bootstrap);
+    auto connectionStatus = ipcClient.Connect(ipcLifecycleHandler).get();
+    if (!connectionStatus) {
+        std::cerr << "Failed to establish IPC connection: " << connectionStatus.StatusToString() << std::endl;
+        exit(-1);
+    }
+
+    while (true) {
+        PublishToTopicRequest request;
+        Vector<uint8_t> messageData({message.begin(), message.end()});
+        BinaryMessage binaryMessage;
+        binaryMessage.SetMessage(messageData);
+        PublishMessage publishMessage;
+        publishMessage.SetBinaryMessage(binaryMessage);
+        request.SetTopic(topic);
+        request.SetPublishMessage(publishMessage);
+
+        PublishToTopicOperation operation = ipcClient.NewPublishToTopic();
+        auto activate = operation.Activate(request, nullptr);
+        activate.wait();
+
+        auto responseFuture = operation.GetResult();
+        if (responseFuture.wait_for(std::chrono::seconds(timeout)) == std::future_status::timeout) {
+            std::cerr << "Operation timed out while waiting for response from Greengrass Core." << std::endl;
+            exit(-1);
+        }
+
+        auto response = responseFuture.get();
+        if (response) {
+            std::cout << "Successfully published to topic: " << topic << std::endl;
+        } else {
+            // An error occurred.
+            std::cout << "Failed to publish to topic: " << topic << std::endl;
+            auto errorType = response.GetResultType();
+            if (errorType == OPERATION_ERROR) {
+                auto *error = response.GetOperationError();
+                std::cout << "Operation error: " << error->GetMessage().value() << std::endl;
+            } else {
+                std::cout << "RPC error: " << response.GetRpcError() << std::endl;
+            }
+            exit(-1);
+        }
+
+        std::this_thread::sleep_for(std::chrono::seconds(5));
+    }
+
+    return 0;
+}
+```
+
+### Example publish/subscribe subscriber \(C\+\+\)<a name="ipc-publish-subscribe-example-subscriber-cpp"></a>
+
+The following example recipe allows the component to subscribe to all topics\.
+
+------
+#### [ JSON ]
+
+```
+{
+  "RecipeFormatVersion": "2020-01-25",
+  "ComponentName": "com.example.PubSubSubscriberCpp",
+  "ComponentVersion": "1.0.0",
+  "ComponentDescription": "A component that subscribes to messages.",
+  "ComponentPublisher": "Amazon",
+  "ComponentConfiguration": {
+    "DefaultConfiguration": {
+      "accessControl": {
+        "aws.greengrass.ipc.pubsub": {
+          "com.example.PubSubSubscriberCpp:pubsub:1": {
+            "policyDescription": "Allows access to subscribe to all topics.",
+            "operations": [
+              "aws.greengrass#SubscribeToTopic"
+            ],
+            "resources": [
+              "*"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "Manifests": [
+    {
+      "Lifecycle": {
+        "Run": "{artifacts:path}/greengrassv2_pub_sub_subscriber"
+      },
+      "Artifacts": [
+        {
+          "URI": "s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.PubSubSubscriberCpp/1.0.0/greengrassv2_pub_sub_subscriber",
+          "Permission": {
+            "Execute": "OWNER"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+------
+#### [ YAML ]
+
+```
+---
+RecipeFormatVersion: '2020-01-25'
+ComponentName: com.example.PubSubSubscriberCpp
+ComponentVersion: 1.0.0
+ComponentDescription: A component that subscribes to messages.
+ComponentPublisher: Amazon
+ComponentConfiguration:
+  DefaultConfiguration:
+    accessControl:
+      aws.greengrass.ipc.pubsub:
+        com.example.PubSubSubscriberCpp:pubsub:1:
+          policyDescription: Allows access to subscribe to all topics.
+          operations:
+            - aws.greengrass#SubscribeToTopic
+          resources:
+            - "*"
+Manifests:
+  - Lifecycle:
+      Run: "{artifacts:path}/greengrassv2_pub_sub_subscriber"
+    Artifacts:
+      - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.PubSubSubscriberCpp/1.0.0/greengrassv2_pub_sub_subscriber
+        Permission:
+          Execute: OWNER
+```
+
+------
+
+The following example C\+\+ application demonstrates how to use the publish/subscribe IPC service to subscribe to messages to other components\.
+
+```
+#include <iostream>
+
+#include <aws/crt/Api.h>
+#include <aws/greengrass/GreengrassCoreIpcClient.h>
+
+using namespace Aws::Crt;
+using namespace Aws::Greengrass;
+
+class SubscribeResponseHandler : public SubscribeToTopicStreamHandler {
+    void OnStreamEvent(SubscriptionResponseMessage *response) override {
+        auto jsonMessage = response->GetJsonMessage();
+        if (jsonMessage.has_value() && jsonMessage.value().GetMessage().has_value()) {
+            auto messageString = jsonMessage.value().GetMessage().value().View().WriteReadable();
+            std::cout << "Received new message: " << messageString << std::endl;
+        } else {
+            auto binaryMessage = response->GetBinaryMessage();
+            if (binaryMessage.has_value() && binaryMessage.value().GetMessage().has_value()) {
+                auto messageBytes = binaryMessage.value().GetMessage().value();
+                std::string messageString(messageBytes.begin(), messageBytes.end());
+                std::cout << "Received new message: " << messageString << std::endl;
+            }
+        } 
+    }
+
+    bool OnStreamError(OperationError *error) override {
+        std::cout << "Received an operation error: ";
+        if (error->GetMessage().has_value()) {
+            std::cout << error->GetMessage().value();
+        }
+        std::cout << std::endl;
+        return false; // Return true to close stream, false to keep stream open.
+    }
+    
+    void OnStreamClosed() override {
+        std::cout << "Subscribe to topic stream closed." << std::endl;
+    }
+};
+
+class IpcClientLifecycleHandler : public ConnectionLifecycleHandler {
+    void OnConnectCallback() override {
+        std::cout << "OnConnectCallback" << std::endl;
+    }
+
+    void OnDisconnectCallback(RpcError error) override {
+        std::cout << "OnDisconnectCallback: " << error.StatusToString() << std::endl;
+        exit(-1);
+    }
+
+    bool OnErrorCallback(RpcError error) override {
+        std::cout << "OnErrorCallback: " << error.StatusToString() << std::endl;
+        return true;
+    }
+};
+
+int main() {
+    String topic("test/topic/cpp");
+    int timeout = 10;
+    
+    ApiHandle apiHandle(g_allocator);
+    Io::EventLoopGroup eventLoopGroup(1);
+    Io::DefaultHostResolver socketResolver(eventLoopGroup, 64, 30);
+    Io::ClientBootstrap bootstrap(eventLoopGroup, socketResolver);
+    IpcClientLifecycleHandler ipcLifecycleHandler;
+    GreengrassCoreIpcClient ipcClient(bootstrap);
+    auto connectionStatus = ipcClient.Connect(ipcLifecycleHandler).get();
+    if (!connectionStatus) {
+        std::cerr << "Failed to establish IPC connection: " << connectionStatus.StatusToString() << std::endl;
+        exit(-1);
+    }
+
+    SubscribeToTopicRequest request;
+    request.SetTopic(topic);
+    SubscribeResponseHandler streamHandler;
+    SubscribeToTopicOperation operation = ipcClient.NewSubscribeToTopic(streamHandler);
+    auto activate = operation.Activate(request, nullptr);
+    activate.wait();
+
+    auto responseFuture = operation.GetResult();
+    if (responseFuture.wait_for(std::chrono::seconds(timeout)) == std::future_status::timeout) {
+        std::cerr << "Operation timed out while waiting for response from Greengrass Core." << std::endl;
+        exit(-1);
+    }
+
+    auto response = responseFuture.get();
+    if (response) {
+        std::cout << "Successfully subscribed to topic: " << topic << std::endl;
+    } else {
+        // An error occurred.
+        std::cout << "Failed to subscribe to topic: " << topic << std::endl;
+        auto errorType = response.GetResultType();
+        if (errorType == OPERATION_ERROR) {
+            auto *error = response.GetOperationError();
+            std::cout << "Operation error: " << error->GetMessage().value() << std::endl;
+        } else {
+            std::cout << "RPC error: " << response.GetRpcError() << std::endl;
+        }
+        exit(-1);
+    }
+
+    // Keep the main thread alive, or the process will exit.
+    while (true) {
+        std::this_thread::sleep_for(std::chrono::seconds(10));
+    }
+
+    operation.Close();
+    return 0;
+}
 ```

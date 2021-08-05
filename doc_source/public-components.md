@@ -9,12 +9,12 @@ Several public components depend on specific minor versions of the Greengrass nu
 | Component | Description | Depends on nucleus | [Component type](manage-components.md#component-types) | [Open source](open-source.md) | 
 | --- | --- | --- | --- | --- | 
 | [Greengrass nucleus](greengrass-nucleus-component.md) | The nucleus of the AWS IoT Greengrass Core software\. Use this component to configure and update the software on your core devices\. | \- | Nucleus | [Yes](https://github.com/aws-greengrass/aws-greengrass-nucleus) | 
-| <a name="client-device-auth-component-table-row"></a>[Client device auth](client-device-auth-component.md) | Enables local IoT devices, called client devices, to connect to the core device\. | Yes | Plugin | No | 
+| <a name="client-device-auth-component-table-row"></a>[Client device auth](client-device-auth-component.md) | Enables local IoT devices, called client devices, to connect to the core device\. | Yes | Plugin | [Yes](https://github.com/aws-greengrass/aws-greengrass-client-device-auth) | 
 | [CloudWatch metrics](cloudwatch-metrics-component.md) | Publishes custom metrics to Amazon CloudWatch\. | Yes | Lambda | No | 
 | [Device Defender](device-defender-component.md) | Notifies administrators of changes in the state of the Greengrass core device to identify unusual behavior\. | Yes | Lambda | No | 
 | [Docker application manager](docker-application-manager-component.md) | Enables AWS IoT Greengrass to download Docker images from Docker Hub and Amazon Elastic Container Registry \(Amazon ECR\)\. | Yes | Generic | No | 
 | [Greengrass CLI](greengrass-cli-component.md) | Provides a command\-line interface that you can use to create local deployments and interact with the Greengrass core device and its components\. | Yes | Plugin | [Yes](https://github.com/aws-greengrass/aws-greengrass-cli) | 
-| <a name="ip-detector-component-table-row"></a>[IP detector](ip-detector-component.md) | Reports MQTT broker connectivity information to AWS IoT Greengrass, so client devices can discover how to connect\. | Yes | Plugin | No | 
+| <a name="ip-detector-component-table-row"></a>[IP detector](ip-detector-component.md) | Reports MQTT broker connectivity information to AWS IoT Greengrass, so client devices can discover how to connect\. | Yes | Plugin | [Yes](https://github.com/aws-greengrass/aws-greengrass-ip-detector) | 
 | [Kinesis Data Firehose](kinesis-firehose-component.md) | Publishes data through Amazon Kinesis Data Firehose delivery streams to destinations in the AWS Cloud\. | Yes | Lambda | No | 
 | [Lambda launcher](lambda-launcher-component.md) | Handles processes and environment configuration for Lambda functions\. | No | Generic | No | 
 | [Lambda manager](lambda-manager-component.md) | Handles interprocess communication and scaling for Lambda functions\. | Yes | Plugin | No | 
@@ -25,11 +25,14 @@ Several public components depend on specific minor versions of the Greengrass nu
 | [Machine learning components](machine-learning-components.md) | Provides machine learning models and sample inference code that you can use to perform machine learning inference on Greengrass core devices\. | See [Machine learning components](machine-learning-components.md)\. | 
 | [Modbus\-RTU protocol adapter](modbus-rtu-protocol-adapter-component.md) | Polls information from local Modbus RTU devices\. | Yes | Lambda | No | 
 | [SageMaker Edge Manager](sagemaker-edge-manager-component.md) | Deploys the Amazon SageMaker Edge Manager agent on the Greengrass core device\. | Yes | Generic | No | 
-| <a name="mqtt-bridge-component-table-row"></a>[MQTT bridge](mqtt-bridge-component.md) | Relays MQTT messages between client devices, local AWS IoT Greengrass publish/subscribe, and AWS IoT Core\. | No | Plugin | No | 
-| <a name="mqtt-broker-moquette-component-table-row"></a>[MQTT broker \(Moquette\)](mqtt-broker-moquette-component.md) | Handles MQTT messages between client devices and the core device\. | No | Plugin | No | 
+| <a name="mqtt-bridge-component-table-row"></a>[MQTT bridge](mqtt-bridge-component.md) | Relays MQTT messages between client devices, local AWS IoT Greengrass publish/subscribe, and AWS IoT Core\. | No | Plugin | [Yes](https://github.com/aws-greengrass/aws-greengrass-mqtt-bridge) | 
+| <a name="mqtt-broker-moquette-component-table-row"></a>[MQTT broker \(Moquette\)](mqtt-broker-moquette-component.md) | Handles MQTT messages between client devices and the core device\. | No | Plugin | [Yes](https://github.com/aws-greengrass/aws-greengrass-moquette-mqtt) | 
 | [Secret manager](secret-manager-component.md) | Deploys secrets from AWS Secrets Manager secrets so that you can securely use credentials, such as passwords, in custom components on the Greengrass core device\. | Yes | Plugin | [Yes](https://github.com/aws-greengrass/aws-greengrass-secret-manager) | 
 | [Secure tunneling](secure-tunneling-component.md) | Enables AWS IoT secure tunneling connections that you can use to establish bidrectional communications with Greengrass core devices that are behind restricted firewalls\. | Yes | Generic | No | 
-| [Shadow manager](shadow-manager-component.md) | Enables interaction with shadows on the core device\. It manages shadow document storage and also the synchronization of local shadow states with the AWS IoT Device Shadow service\. | Yes | Plugin | No | 
+| [Shadow manager](shadow-manager-component.md) | Enables interaction with shadows on the core device\. It manages shadow document storage and also the synchronization of local shadow states with the AWS IoT Device Shadow service\. | Yes | Plugin | [Yes](https://github.com/aws-greengrass/aws-greengrass-shadow-manager) | 
 | [Amazon SNS](sns-component.md) | Publishes messages to Amazon SNS topics\. | Yes | Lambda | No | 
 | [Stream manager](stream-manager-component.md) | Streams high\-volume data from local sources to the AWS Cloud\. | Yes | Plugin | No | 
 | [Token exchange service](token-exchange-service-component.md) | Provides AWS credentials that you can use to interact with AWS services\. | No | Generic | No | 
+| [IoT SiteWise OPC\-UA collector](iotsitewise-opcua-collector-component.md) | Collects data from OPC\-UA servers\. | Yes | Generic | No | 
+| [IoT SiteWise publisher](iotsitewise-publisher-component.md) | Publishes data to the AWS Cloud\. | Yes | Generic | No | 
+| [IoT SiteWise processor](iotsitewise-processor-component.md) | Processes data on the Greengrass core devices\. | Yes | Generic | No | 

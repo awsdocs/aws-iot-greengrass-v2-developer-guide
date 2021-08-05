@@ -19,38 +19,20 @@ This tutorial shows you how to deploy the sample components and the SageMaker Ed
 ## Prerequisites<a name="edge-manager-getting-started-prereqs"></a>
 
 To complete this tutorial, you must meet the following prerequisites:
-+ A Greengrass core device\. If you don't have one, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
++ <a name="sm-req-core-device"></a>A Greengrass core device running on a Debian\-based Linux platform \(x86\_64 or Armv8\)\. If you don't have one, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
++ <a name="sm-req-python"></a>[Python](https://www.python.org/downloads/) 3\.6 or later, including `pip` for your version of Python, installed on your core device\.
++ The OpenGL API GLX runtime \(`libgl1-mesa-glx`\) installed on your core device\.
 + An AWS Identity and Access Management \(IAM\) user with administrator permissions\.
 + An internet\-enabled Windows, Mac, or Unix\-like development computer that meets the following requirements:
-  + Python 3\.8 or later installed\.
-  + AWS CLI installed and configured with your IAM administrator user credentials
+  + [Python](https://www.python.org/downloads/) 3\.6 or later installed\.
+  + AWS CLI installed and configured with your IAM administrator user credentials\. For more information, see [Installing the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and [Configuring the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)\. 
 + The following S3 buckets created in the same AWS account and AWS Region as your Greengrass core device\. : 
   + An S3 bucket to store the artifacts that are included in the sample inference and model components\. This tutorial uses *DOC\-EXAMPLE\-BUCKET1* to refer to this bucket\. 
   + An S3 bucket that you associate with your SageMaker edge device fleet\. SageMaker Edge Manager requires an S3 bucket to create the edge device fleet, and to store sample data from running inference on your device\. This tutorial uses *DOC\-EXAMPLE\-BUCKET2* to refer to this bucket\. 
 
   For information about creating S3 buckets, see [Getting started with Amazon S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/GetStartedWithS3.html)\.
 + The [Greengrass device role](device-service-role.md) configured with the following: 
-  + The [Greengrass device role](device-service-role.md) configured with the `AmazonSageMakerEdgeDeviceFleetPolicy` and the `AmazonSageMakerFullAccess` policy\.
-  + The [AmazonSageMakerEdgeDeviceFleetPolicy](https://console.aws.amazon.com/iam/home#/policies/arn:aws:iam::aws:policy/service-role/AmazonSageMakerEdgeDeviceFleetPolicy) and the [AmazonSageMakerFullAccess](https://console.aws.amazon.com/iam/home#/policies/arn:aws:iam::aws:policy/service-role/AmazonSageMakerFullAccess) IAM managed policies\.
-  + The `s3:GetObject` action for the S3 bucket that contains your component artifacts, as shown in the following IAM policy example\.
-
-    ```
-    {
-      "Version": "2012-10-17",
-      "Statement": [
-      {
-        "Action": [
-          "s3:GetObject"
-        ],
-        "Resource": [
-          "arn:aws:s3:::DOC-EXAMPLE-BUCKET1/*"
-        ],
-        "Effect": "Allow"
-      }
-      ]
-    }
-    ```
-  + A trust relationship that allows `credentials.iot.amazonaws.com` and `sagemaker.amazonaws.com` to assume the role, as shown in the following IAM policy example\.
+  + <a name="sm-req-iam-trust-relationship"></a>A trust relationship that allows `credentials.iot.amazonaws.com` and `sagemaker.amazonaws.com` to assume the role, as shown in the following IAM policy example\.
 
     ```
     { 
@@ -71,6 +53,26 @@ To complete this tutorial, you must meet the following prerequisites:
         "Action": "sts:AssumeRole" 
       } 
       ] 
+    }
+    ```
+  + <a name="sm-req-iam-sagemanakeredgedevicefleetpolicy"></a>The [AmazonSageMakerEdgeDeviceFleetPolicy](https://console.aws.amazon.com/iam/home#/policies/arn:aws:iam::aws:policy/service-role/AmazonSageMakerEdgeDeviceFleetPolicy) IAM managed policy\.
+  + The [AmazonSageMakerFullAccess](https://console.aws.amazon.com/iam/home#/policies/arn:aws:iam::aws:policy/service-role/AmazonSageMakerFullAccess) IAM managed policy\.
+  + The `s3:GetObject` action for the S3 bucket that contains your component artifacts, as shown in the following IAM policy example\.
+
+    ```
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+      {
+        "Action": [
+          "s3:GetObject"
+        ],
+        "Resource": [
+          "arn:aws:s3:::DOC-EXAMPLE-BUCKET1/*"
+        ],
+        "Effect": "Allow"
+      }
+      ]
     }
     ```
 
@@ -270,7 +272,7 @@ After you deploy the components, you can view the inference results in the compo
 
   1. Under **Subscriptions**, choose **gg/sageMakerEdgeManager/image\-classification**\.
 
-   
+   
 + **Component log**—To view the inference results in the component log, run the following command on your Greengrass core device\. 
 
   ```

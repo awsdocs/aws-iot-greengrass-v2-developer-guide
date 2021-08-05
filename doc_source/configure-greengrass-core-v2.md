@@ -4,16 +4,84 @@ The AWS IoT Greengrass Core software provides options that you can use to config
 
 **Topics**
 + [Deploy the Greengrass core nucleus component](#configure-nucleus-component)
++ [Configure AWS IoT Greengrass as a system service](#configure-system-service)
 + [Use service endpoints that match the root CA certificate type](#certificate-endpoints)
 + [Control memory allocation with JVM options](#jvm-tuning)
 + [Configure the user and group that run components](#configure-component-user)
++ [Configure system resource limits for components](#configure-component-system-resource-limits)
 + [Connect on port 443 or through a network proxy](#configure-alpn-network-proxy)
 + [Configure MQTT timeouts and cache settings](#configure-mqtt)
-+ [Configure AWS IoT Greengrass as a system service](#configure-system-service)
 
 ## Deploy the Greengrass core nucleus component<a name="configure-nucleus-component"></a>
 
 AWS IoT Greengrass provides the AWS IoT Greengrass Core software as a component that you can deploy to your Greengrass core devices\. You can create a deployment to apply the same configuration to multiple Greengrass core devices\. For more information, see [Greengrass nucleus](greengrass-nucleus-component.md) and [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)\.
+
+## Configure AWS IoT Greengrass as a system service<a name="configure-system-service"></a>
+
+You must configure the AWS IoT Greengrass Core software as a system service in your device's init system to do the following:
++ Start the AWS IoT Greengrass Core software when the device boots\. This is a good practice if you manage large fleets of devices\.
++ Install and run plugin components\. Several AWS\-provided components are plugin components, which enables them to interface directly with the Greengrass nucleus\. For more information about component types, see [Component types](manage-components.md#component-types)\.
++ Apply over\-the\-air \(OTA\) updates to the core device's AWS IoT Greengrass Core software\. For more information, see [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)\.
++ Enable components to restart the AWS IoT Greengrass Core software or the core device when a deployment updates the component to a new version or updates certain configuration parameters\. For more information, see the [bootstrap lifecycle step](component-recipe-reference.md#bootstrap-lifecycle-definition)\.
+
+There are different init systems, such as initd, systemd, and SystemV\. AWS IoT Greengrass provides a built\-in option to configure the AWS IoT Greengrass Core software as a system service on a device with systemd\. Use the `--setup-system-service true` argument when you install the AWS IoT Greengrass Core software to start the nucleus as a system service and configure it to launch when the device boots\. 
+
+You can also manually configure the nucleus to run as a system service\. The following example is a service file for systemd\.
+
+```
+[Unit]
+Description=Greengrass Core
+
+[Service]
+Type=simple
+PIDFile=/greengrass/v2/alts/loader.pid
+RemainAfterExit=no
+Restart=on-failure
+RestartSec=10
+ExecStart=/bin/sh /greengrass/v2/alts/current/distro/bin/loader
+
+[Install]
+WantedBy=multi-user.target
+```
+
+For information about how to create and enable a service file for systemd on a Raspberry Pi, see [SYSTEMD](https://www.raspberrypi.org/documentation/linux/usage/systemd.md) in the Raspberry Pi documentation\. 
+
+After you configure the system service, you can use the following commands to configure starting the device on boot and to start or stop the AWS IoT Greengrass Core software\.
+
+**To check the status of the service \(systemd\)**
++ Run the following command to check the status of the system service\.
+
+  ```
+  sudo systemctl status greengrass.service
+  ```
+
+**To enable service start on device boot \(systemd\)**
++ Run the following command to enable the nucleus to start when the device boots\.
+
+  ```
+  sudo systemctl enable greengrass.service
+  ```
+
+**To disable service start on device boot \(systemd\)**
++ Run the following command to stop the nucleus from starting when the device boots\.
+
+  ```
+  sudo systemctl disable greengrass.service
+  ```
+
+**To start the nucleus as a system service \(systemd\)**
++ Run the following command to start the AWS IoT Greengrass Core software\.
+
+  ```
+  sudo systemctl start greengrass.service
+  ```
+
+**To stop the nucleus as a system service \(systemd\)**
++ Run the following command to stop the AWS IoT Greengrass Core software\.
+
+  ```
+  sudo systemctl stop greengrass.service
+  ```
 
 ## Use service endpoints that match the root CA certificate type<a name="certificate-endpoints"></a>
 
@@ -30,25 +98,70 @@ For backward compatibility, AWS IoT Greengrass currently supports legacy VeriSig
 
 ## Control memory allocation with JVM options<a name="jvm-tuning"></a>
 
-If you are running AWS IoT Greengrass on a device with limited memory, you can use Java virtual machine \(JVM\) heap size options to control the amount of memory that AWS IoT Greengrass Core software uses\. 
+If you're running AWS IoT Greengrass on a device with limited memory, you can use Java virtual machine \(JVM\) options to control the maximum heap size, garbage collection modes, and compiler options, which control the amount of memory that AWS IoT Greengrass Core software uses\. The heap size in the JVM determines how much memory an application can use before [garbage collection](https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/introduction.html) occurs, or before the application runs out of memory\. The maximum heap size specifies the maximum amount of memory the JVM can allocate when expanding the heap during heavy activity\. 
 
-To control memory allocation, create a new deployment or revise an existing deployment that includes the nucleus component, and specify the heap size options in the `jvmOptions` configuration parameter in the [nucleus component configuration](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration)\. The heap size in the JVM determines how many objects an application can create in memory before [garbage collection](https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/introduction.html) occurs\. You can specify the *initial JVM heap size* \(the `-Xms` argument\) and a *maximum JVM heap size* \(the `-Xmx` argument\)\. A larger initial heap size allows more objects to be created before garbage collection occurs, but it also means that the garbage collector will take longer to compact the heap\. The maximum heap size specifies the maximum amount of memory the JVM can allocate when expanding the heap during heavy activity\. We recommend that you set the `jvmOptions` value to at least `-Xmx64m`\. 
+To control memory allocation, create a new deployment or revise an existing deployment that includes the nucleus component, and specify your JVM options in the `jvmOptions` configuration parameter in the [nucleus component configuration](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-jvm-options)\. 
 
-For information about deploying components, see [Create deployments](create-deployments.md)\.
+Depending on your requirements, you can run AWS IoT Greengrass Core software with reduced memory allocation or with minimum memory allocation\. 
+
+**Reduced memory allocation**  
+To run AWS IoT Greengrass Core software with reduced memory allocation, we recommend that you use the following example configuration merge update to set JVM options in your nucleus configuration:
+
+```
+{
+  jvmOptions: "-Xmx64m -XX:+UseSerialGC -XX:TieredStopAtLevel=1"
+}
+```
+
+**Minimum memory allocation**  
+To run AWS IoT Greengrass Core software with minimum memory allocation, we recommend that you use the following example configuration merge update to set JVM options in your nucleus configuration:
+
+```
+{
+  jvmOptions: "-Xmx32m -XX:+UseSerialGC -Xint"
+}
+```
+
+These example configuration merge updates use the following JVM options:
+
+`-XmxNNm`  
+Sets the maximum JVM heap size\.  
+For reduced memory allocation, use `-Xmx64m` as a starting value to limit the heap size to 64 MB\. For minimum memory allocation, use `-Xmx32m` as a starting value to limit the heap size to 32 MB\.  
+You can increase or decrease the `-Xmx` value depending on your actual requirements; however, we strongly recommend that you don't set the maximum heap size below 16 MB\. If the maximum heap size is too low for your environment, then the AWS IoT Greengrass Core software might encounter unexpected errors because of insufficient memory\.
+
+`-XX:+UseSerialGC`  
+Specifies to use serial garbage collection for JVM heap space\. The serial garbage collector is slower, but uses less memory than other JVM garbage collection implementations\.
+
+`-XX:TieredStopAtLevel=1`  
+Instructs the JVM to use the Java just\-in\-time \(JIT\) compiler once\. Because JIT compiled code uses space in the device memory, using the JIT compiler more than once consumes more memory than a single compilation\.
+
+`-Xint`  
+Instructs the JVM not to use the just\-in\-time \(JIT\) compiler\. Instead, the JVM runs in interpreted\-only mode\. This mode is slower than running JIT compiled code; however, the compiled code doesn't use any space in memory\.
+
+For information about creating configuration merge updates, see [Update component configurations](update-component-configurations.md)\.
 
 ## Configure the user and group that run components<a name="configure-component-user"></a>
 
 The AWS IoT Greengrass Core software can run component processes as a system user and group different from the one that runs the software\. This increases security, because you can run the AWS IoT Greengrass Core software as root without giving root permissions to components that run on the core device\.
 
+The following table indicates which types of components the AWS IoT Greengrass Core software can run as a system user and group that you specify\. For more information, see [Component types](manage-components.md#component-types)\.
+
+
+| Component type | Configure system user/group | 
+| --- | --- | 
+|  Nucleus  |  <a name="polaris-no-para"></a> ![\[Image NOT FOUND\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/images/icon-no.png) No   | 
+|  Plugin  |  <a name="polaris-no-para"></a> ![\[Image NOT FOUND\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/images/icon-no.png) No   | 
+|  Generic  |  <a name="polaris-yes-para"></a> ![\[Image NOT FOUND\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/images/icon-yes.png) Yes   | 
+|  Lambda \(non\-containerized\)  |  <a name="polaris-yes-para"></a> ![\[Image NOT FOUND\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/images/icon-yes.png) Yes   | 
+|  Lambda \(containerized\)  |  <a name="polaris-yes-para"></a> ![\[Image NOT FOUND\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/images/icon-yes.png) Yes   | 
+
 When you configure the user and group, you specify them separated by a colon \(`:`\) in the following format: `user:group`\. The group is optional\. If you don't specify a group, the AWS IoT Greengrass Core software defaults to the primary group of the user\. You can use name or ID to identify the user and group\.
 
 You can configure the user and group for each component and for each core device\.
-+ **Configure per component**
++ **Configure for a component**
 
   You can configure each component to run with a user and group specific to that component\. When you create a deployment, you can specify the user and group for each component in the deployment\. The AWS IoT Greengrass Core software runs components as this user and group if you specify them\. Otherwise, it defaults to run components as the default user and group that you configure for the core device\. For more information, see [Create deployments](create-deployments.md)\.
-
-  You can also specify the default user and group for each component in the component's recipe\. For more information, see [AWS IoT Greengrass component recipe reference](component-recipe-reference.md)\.
-+ **Configure per core device**
++ **Configure defaults for a core device**
 
   You can configure a default system user and group that the AWS IoT Greengrass Core software uses to run components\. When the AWS IoT Greengrass Core software runs a component, it uses the user and group that you specify for that component\. If that component doesn't specify a user and group, then the AWS IoT Greengrass Core software runs the component as the default user and group that you configure for the core device\. For more information, see [Configure the default user and group](#configure-default-component-user)\.
 
@@ -83,9 +196,67 @@ The following example defines a deployment that configures `ggc_user` as the def
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.2.0",
+      "version": "2.4.0",
       "configurationUpdate": {
         "merge": "{\"runWithDefault\":{\"posixUser\":\"ggc_user:ggc_group\"}}"
+      }
+    }
+  }
+}
+```
+
+## Configure system resource limits for components<a name="configure-component-system-resource-limits"></a>
+
+This feature is available for v2\.4\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.
+
+You can configure the maximum amount of CPU and RAM usage that each component's processes can use on the core device\.
+
+The following table shows the types of components that support system resource limits\. For more information, see [Component types](manage-components.md#component-types)\.
+
+
+| Component type | Configure system resource limits | 
+| --- | --- | 
+|  Nucleus  |  <a name="polaris-no-para"></a> ![\[Image NOT FOUND\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/images/icon-no.png) No   | 
+|  Plugin  |  <a name="polaris-no-para"></a> ![\[Image NOT FOUND\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/images/icon-no.png) No   | 
+|  Generic  |  <a name="polaris-yes-para"></a> ![\[Image NOT FOUND\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/images/icon-yes.png) Yes   | 
+|  Lambda \(non\-containerized\)  |  <a name="polaris-yes-para"></a> ![\[Image NOT FOUND\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/images/icon-yes.png) Yes   | 
+|  Lambda \(containerized\)  |  <a name="polaris-no-para"></a> ![\[Image NOT FOUND\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/images/icon-no.png) No   | 
+
+**Important**  
+System resource limits aren't supported when you [run AWS IoT Greengrass Core software in a Docker container](run-greengrass-docker.md)\.
+
+You can configure system resource limits for each component and for each core device\.
++ **Configure for a component**
+
+  You can configure each component with system resource limits specific to that component\. When you create a deployment, you can specify the system resource limits for each component in the deployment\. If the component supports system resource limits, the AWS IoT Greengrass Core software applies the limits to the component's processes\. If you don't specify system resource limits for a component, the AWS IoT Greengrass Core software uses any defaults that you have configured for the core device\. For more information, see [Create deployments](create-deployments.md)\.
++ **Configure defaults for a core device**
+
+  You can configure the default system resource limits that the AWS IoT Greengrass Core software applies to components that support these limits\. When the AWS IoT Greengrass Core software runs a component, it applies the system resource limits that you specify for that component\. If that component doesn't specify system resource limits, the the AWS IoT Greengrass Core software applies the default system resource limits that you configure for the core device\. If you don't specify default system resource limits, the AWS IoT Greengrass Core software doesn't apply any system resource limits by default\. For more information, see [Configure default system resource limits](#configure-default-component-system-resource-limits)\.
+
+### Configure default system resource limits<a name="configure-default-component-system-resource-limits"></a>
+
+You can deploy the [Greengrass nucleus component](greengrass-nucleus-component.md) to configure the default system resource limits for a core device\. To configure the default system resource limits, [create a deployment](create-deployments.md) that specifies the following configuration update for the `aws.greengrass.Nucleus` component\.
+
+```
+{
+  "runWithDefault": {
+    "systemResourceLimits": {
+      "cpu": cpuTimeLimit,
+      "memory": memoryLimitInKb
+    }
+  }
+}
+```
+
+The following example defines a deployment that configures the CPU time limit to `2`, which is equivalent to 50% usage on a device with 4 CPU cores\. This example also configures the memory usage to 100 MB\.
+
+```
+{
+  "components": {
+    "aws.greengrass.Nucleus": {
+      "version": "2.4.0",
+      "configurationUpdate": {
+        "merge": "{\"runWithDefault\":{\"cpu\":2,\"memory\":102400}}"
       }
     }
   }
@@ -134,7 +305,7 @@ The following example defines a deployment that configures MQTT over port 443\. 
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.2.0",
+      "version": "2.4.0",
       "configurationUpdate": {
         "merge": "{\"mqtt\":{\"port\":443}}"
       }
@@ -163,7 +334,7 @@ The following example defines a deployment that configures HTTPS over port 443\.
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.2.0",
+      "version": "2.4.0",
       "configurationUpdate": {
         "merge": "{\"greengrassDataPlanePort\":443}"
       }
@@ -208,7 +379,7 @@ The following example defines a deployment that configures a network proxy\. The
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.2.0",
+      "version": "2.4.0",
       "configurationUpdate": {
         "merge": "{\"networkProxy\":{\"noProxyAddresses\":\"http://192.168.0.1,www.example.com\",\"proxy\":{\"url\":\"https://my-proxy-server:1100\",\"username\":\"Mary_Major\",\"password\":\"pass@word1357\"}}}"
       }
@@ -258,49 +429,3 @@ Communication between Greengrass core devices and AWS IoT Core or AWS IoT Greeng
 In the AWS IoT Greengrass environment, components can use MQTT to communicate with AWS IoT Core\. The AWS IoT Greengrass Core software manages MQTT messages for components\. When the core device loses connection to the AWS Cloud, the software caches MQTT messages to retry later when the connection restores\. You can configure settings such as message timeouts and the size of the cache\. For more information, see the `mqtt` and `mqtt.spooler` configuration parameters of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.
 
 AWS IoT Core imposes service quotas on its MQTT message broker\. These quotas might apply to messages that you send between core devices and AWS IoT Core\. For more information, see [AWS IoT Core message broker service quotas](https://docs.aws.amazon.com/general/latest/gr/iot-core.html#message-broker-limits) in the *AWS General Reference*\.
-
-## Configure AWS IoT Greengrass as a system service<a name="configure-system-service"></a>
-
-You can configure the AWS IoT Greengrass Core software as a system service in your device's init system\. This enables you to do the following:
-+ Start the AWS IoT Greengrass Core software when the device boots\. This is a good practice if you manage large fleets of devices\.
-+ Apply over\-the\-air \(OTA\) updates to the core device's AWS IoT Greengrass Core software\. For more information, see [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)\.
-+ Enable components to restart the AWS IoT Greengrass Core software or the core device when a deployment updates the component to a new version or updates certain configuration parameters\. For more information, see the [bootstrap lifecycle step](component-recipe-reference.md#bootstrap-lifecycle-definition)\.
-
-There are different init systems, such as initd, systemd, and SystemV\. To configure the AWS IoT Greengrass Core software as a system service on a device with systemd, run the nucleus with the `--setup-system-service true` argument\. This argument starts the nucleus as a system service and configures it to launch when the device boots\.
-
-Then, you can use the following commands to configure starting the device on boot and to start or stop the AWS IoT Greengrass Core software\.
-
-**To check the status of the service \(systemd\)**
-+ Run the following command to check the status of the system service\.
-
-  ```
-  sudo systemctl status greengrass.service
-  ```
-
-**To enable service start on device boot \(systemd\)**
-+ Run the following command to enable the nucleus to start when the device boots\.
-
-  ```
-  sudo systemctl enable greengrass.service
-  ```
-
-**To disable service start on device boot \(systemd\)**
-+ Run the following command to stop the nucleus from starting when the device boots\.
-
-  ```
-  sudo systemctl disable greengrass.service
-  ```
-
-**To start the nucleus as a system service \(systemd\)**
-+ Run the following command to start the AWS IoT Greengrass Core software\.
-
-  ```
-  sudo systemctl start greengrass.service
-  ```
-
-**To stop the nucleus as a system service \(systemd\)**
-+ Run the following command to stop the AWS IoT Greengrass Core software\.
-
-  ```
-  sudo systemctl stop greengrass.service
-  ```

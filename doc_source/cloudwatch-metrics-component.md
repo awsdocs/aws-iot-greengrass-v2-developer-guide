@@ -105,6 +105,32 @@ You must update the Lambda function version on the legacy subscription router ev
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#cloudwatch-metrics-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
+#### [ 2\.0\.7 ]
+
+The following table lists the dependencies for version 2\.0\.7 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.5\.0  | Hard | 
+| [Lambda launcher](lambda-launcher-component.md) | ^2\.0\.0  | Hard | 
+| [Lambda runtimes](lambda-runtimes-component.md) | ^2\.0\.0  | Soft | 
+| [Token exchange service](token-exchange-service-component.md) | ^2\.0\.0  | Hard | 
+
+------
+#### [ 2\.0\.6 ]
+
+The following table lists the dependencies for version 2\.0\.6 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.4\.0  | Hard | 
+| [Lambda launcher](lambda-launcher-component.md) | ^2\.0\.0  | Hard | 
+| [Lambda runtimes](lambda-runtimes-component.md) | ^2\.0\.0  | Soft | 
+| [Token exchange service](token-exchange-service-component.md) | ^2\.0\.0  | Hard | 
+
+------
 #### [ 2\.0\.5 ]
 
 The following table lists the dependencies for version 2\.0\.5 of this component\.
@@ -346,6 +372,8 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.0\.7  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
+|  2\.0\.6  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  2\.0\.5  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 
 |  2\.0\.4  |  Version updated for Greengrass nucleus version 2\.1\.0 release\.  | 
 |  2\.0\.3  |  Initial version\.  | 

@@ -2,7 +2,7 @@
 
 The Moquette MQTT broker component \(`aws.greengrass.clientdevices.mqtt.Moquette`\) handles MQTT messages between client devices and a Greengrass core device\. This component provides a modified version of the [Moquette MQTT broker](https://github.com/moquette-io/moquette)\.
 
-This broker implements the MQTT 3\.1 protocol\. It includes support for QoS 0, QoS 1, QoS 2 retained messages, and persistent subscriptions\.
+This broker implements the MQTT 3\.1\.1 protocol\. It includes support for QoS 0, QoS 1, QoS 2 retained messages, last will messages, and persistent subscriptions\.
 
 **Note**  <a name="client-device-component-context"></a>
 Client devices are local IoT devices that connect to a Greengrass core device to send MQTT messages and data to process\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.
@@ -29,12 +29,17 @@ This component has the following requirements:
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#mqtt-broker-moquette-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
+------
+#### [ 2\.0\.x ]
+
 The following table lists the dependencies for version 2\.0\.x of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
 | --- | --- | --- | 
-| [Client device auth](client-device-auth-component.md) | \~2\.0\.0 | Hard | 
+| [Client device auth](client-device-auth-component.md) | >=2\.0\.0 <2\.1\.0 | Hard | 
+
+------
 
 For more information about component dependencies, see the [component recipe reference](component-recipe-reference.md#recipe-reference-component-dependencies)\.
 
@@ -71,4 +76,5 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.0\.1  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  2\.0\.0  |  Initial version\.  | 

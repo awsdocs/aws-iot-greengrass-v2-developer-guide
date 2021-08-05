@@ -1,9 +1,9 @@
 # Interact with component configuration<a name="ipc-component-configuration"></a>
 
 The component configuration IPC service lets you do the following:
-+ Get and set component configuration parameters
-+ Subscribe to component configuration updates
-+ Validate component configuration updates before the nucleus applies them
++ Get and set component configuration parameters\.
++ Subscribe to component configuration updates\.
++ Validate component configuration updates before the nucleus applies them\.
 
 **Topics**
 + [GetConfiguration](#ipc-operation-getconfiguration)

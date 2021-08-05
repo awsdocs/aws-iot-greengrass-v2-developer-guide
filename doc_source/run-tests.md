@@ -21,7 +21,7 @@ IDT prompts you if a newer test suite version is available online\. For more inf
 
 ## Example commands to run the qualification suite<a name="idt-run-suite-examples"></a>
 
-The following command line examples show you how to run the qualification tests for a device pool\. For more information about `run-suite` and other IDT commands, see [IDT for AWS IoT Greengrass commands](#bk-cli)\.
+The following command line examples show you how to run the qualification tests for a device pool\. For more information about `run-suite` and other IDT commands, see [IDT for AWS IoT Greengrass V2 commands](#bk-cli)\.
 
 Use the following command to run all test groups in a specified test suite\. The `list-suites` command lists the test suites that are in the `tests` folder\.
 
@@ -69,7 +69,7 @@ devicetester_[linux | mac | win]_x86-64 list-test-cases --group-id <group-id>
 We recommend that you run the dependency checker test group to make sure all Greengrass dependencies are installed before you run related test groups\. For example:
 + Run `coredependencies` before running core qualification test groups\.
 
-## IDT for AWS IoT Greengrass commands<a name="bk-cli"></a>
+## IDT for AWS IoT Greengrass V2 commands<a name="bk-cli"></a>
 
 The IDT commands are located in the `<device-tester-extract-location>/bin` directory\. To run a test suite, you provide the command in the following format:
 

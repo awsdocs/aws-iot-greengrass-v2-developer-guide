@@ -6,6 +6,7 @@ Complete the tasks in this section to install, configure, and run the AWS IoT Gr
 This section describes advanced configuration of the AWS IoT Greengrass Core software\. If you're a first\-time user of AWS IoT Greengrass V2, we recommend that you complete the [getting started tutorial](getting-started.md) to set up a core device and explore the features of AWS IoT Greengrass\.
 
 **Topics**
++ [Supported platforms](#greengrass-v2-supported-platforms)
 + [Requirements](#greengrass-v2-requirements)
 + [Set up an AWS account](#set-up-aws-account)
 + [Install the AWS IoT Greengrass Core software](install-greengrass-core-v2.md)
@@ -15,18 +16,22 @@ This section describes advanced configuration of the AWS IoT Greengrass Core sof
 + [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)
 + [Uninstall the AWS IoT Greengrass Core software](uninstall-greengrass-core-v2.md)
 
-## Requirements<a name="greengrass-v2-requirements"></a>
+## Supported platforms<a name="greengrass-v2-supported-platforms"></a>
 
-Devices must meet the following requirements to install and run the AWS IoT Greengrass Core software v2\.0:
-+ One of the following supported platforms:<a name="greengrass-supported-platforms"></a>
-  + Architecture: Armv7l
-    + OS: Linux
-  + Architecture: Armv8 \(AArch64\)
-    + OS: Linux
-  + Architecture: x86\_64
-    + OS: Linux
+AWS IoT Greengrass supports devices running the following supported platforms:
++ Architecture: Armv7l
+  + OS: Linux
++ Architecture: Armv8 \(AArch64\)
+  + OS: Linux
++ Architecture: x86\_64
+  + OS: Linux
+
 **Note**  
 You can use AWS IoT Device Tester for AWS IoT Greengrass to verify that the AWS IoT Greengrass Core software runs on your hardware and can communicate with the AWS Cloud\. For more information, see [Using AWS IoT Device Tester for AWS IoT Greengrass V2](device-tester-for-greengrass-ug.md)\.
+
+## Requirements<a name="greengrass-v2-requirements"></a>
+
+Devices must meet the following requirements to install and run the AWS IoT Greengrass Core software v2\.x:
 + Minimum 256 MB disk space available for the AWS IoT Greengrass Core software\. This requirement doesn't include components deployed to the core device\.
 + Minimum 96 MB RAM allocated to the AWS IoT Greengrass Core software\. This requirement doesn't include components that run on the core device\. For more information, see [Control memory allocation with JVM options](configure-greengrass-core-v2.md#jvm-tuning)\.
 + Java version 8 or greater\. We recommend [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.
@@ -55,6 +60,7 @@ You can use AWS IoT Device Tester for AWS IoT Greengrass to verify that the AWS 
   + \(Optional\) `systemctl` \(to set up the AWS IoT Greengrass Core software as a system service\)
   + \(Optional\) `useradd`, `groupadd`, and `usermod` \(to set up the `ggc_user` system user and `ggc_group` system group\)
   + \(Optional\) `mkfifo` \(to run Lambda functions as components\)
++ To configure system resource limits for component processes, your device must run Linux kernel version 2\.6\.24 or later\.
 + To run Lambda functions, your device must meet additional requirements\. For more information, see [Requirements to run Lambda functions](#greengrass-v2-lambda-requirements)\.
 
 ### Requirements to run Lambda functions<a name="greengrass-v2-lambda-requirements"></a>

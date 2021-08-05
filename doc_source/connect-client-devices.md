@@ -11,7 +11,7 @@ To use cloud discovery, you must do the following:
   + Relay messages between client devices, Greengrass components, and the AWS IoT Core cloud service\.
   + Automatically manage core device MQTT broker endpoints for you\.
 
-You must also review and update the core device's AWS IoT policy to ensure that it has the permissions required to connect client devices\. For more information, see [Review and update the core device AWS IoT policy](client-devices-tutorial.md#update-core-device-iot-policy)\.
+You must also review and update the core device's AWS IoT policy to ensure that it has the permissions required to connect client devices\. For more information, see [Review and update the core device AWS IoT policy](client-devices-tutorial.md#update-core-device-iot-policy-client-devices)\.
 
 After you configure cloud discovery, you can test communications between a client device and a core device\. For more information, see [Test client device communications](test-client-device-communications.md)\.
 
@@ -31,10 +31,10 @@ To enable client devices to connect and communicate with a core device, you depl
 
   Deploy the client device auth component to authenticate client devices and authorize client device actions\. This component allows your AWS IoT things to connect to a core device\.
 
-  This component requires configuration to use\. You must specify groups of client devices and the operations that each group is authorized to perform, such as to connect and communicate over MQTT\. For more information, see [client device auth component configuration](client-device-auth-component.md#client-device-auth-component-configuration)\.
+  This component requires some configuration to use it\. You must specify groups of client devices and the operations that each group is authorized to perform, such as to connect and communicate over MQTT\. For more information, see [client device auth component configuration](client-device-auth-component.md#client-device-auth-component-configuration)\.
 + [MQTT broker \(Moquette\)](mqtt-broker-moquette-component.md) \(`aws.greengrass.clientdevices.mqtt.Moquette`\)
 
-  Deploy the Moquette MQTT broker component to run the open source Moquette MQTT broker\. The Moquette MQTT broker is compliant with MQTT 3\.1 and includes local support for QoS 0, QoS 1, QoS 2, retained messages, and persistent subscriptions\.
+  Deploy the Moquette MQTT broker component to run the open source Moquette MQTT broker\. The Moquette MQTT broker is compliant with MQTT 3\.1\.1 and includes local support for QoS 0, QoS 1, QoS 2, retained messages, last will messages, and persistent subscriptions\.
 
   You aren't required to configure this component to use it\. However, you can configure the port where this component operates the MQTT broker\. By default, it uses port 8883\.
 + [MQTT bridge](mqtt-bridge-component.md) \(`aws.greengrass.clientdevices.mqtt.Bridge`\)
@@ -44,7 +44,7 @@ To enable client devices to connect and communicate with a core device, you depl
   This component requires configuration to use\. You must specify the topic mappings where this component relays messages\. For more information, see [MQTT bridge component configuration](mqtt-bridge-component.md#mqtt-bridge-component-configuration)\.
 + [IP detector](ip-detector-component.md) \(`aws.greengrass.clientdevices.IPDetector`\)
 
-  \(Optional\) Deploy the IP detector component to automatically report the core device's MQTT broker endpoints to the AWS IoT Greengrass cloud service\. You can use this component unless you have a complex network setup, such as one where a router forwards the MQTT broker port to the core device\.
+  \(Optional\) Deploy the IP detector component to automatically report the core device's MQTT broker endpoints to the AWS IoT Greengrass cloud service\. You cannot use this component if you have a complex network setup, such as one where a router forwards the MQTT broker port to the core device\.
 
   You aren't required to configure this component to use it\.
 

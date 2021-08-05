@@ -44,6 +44,8 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.0\.7  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
+|  2\.0\.6  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  2\.0\.5  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 
 |  2\.0\.4  |  Version updated for Greengrass nucleus version 2\.1\.0 release\.  | 
 |  2\.0\.3  |  Initial version\.  | 

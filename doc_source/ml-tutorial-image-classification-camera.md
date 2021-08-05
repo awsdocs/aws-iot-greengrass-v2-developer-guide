@@ -235,7 +235,7 @@ After you deploy the component, you can view the inference results in the compon
 
   1. Under **Subscriptions**, choose **ml/tflite/image\-classification**\.
 
-   
+   
 + **Component log**—To view the inference results in the component log, run the following command on your Greengrass core device\. 
 
   ```

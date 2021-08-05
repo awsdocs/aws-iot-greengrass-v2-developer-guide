@@ -16,6 +16,9 @@ For more information about how to configure and use stream manager in custom com
 This component has the following versions:
 + 2\.0\.x
 
+**Note**  <a name="stream-manager-upgrade-note"></a>
+If you use stream manager to export data to the cloud, you can't upgrade version 2\.0\.7 of the stream manager component to a later v2\.0\.x version\. If you are deploying stream manager for the first time, we strongly recommend that you deploy v2\.0\.8 or later versions of the stream manager component\.
+
 ## Type<a name="stream-manager-component-type"></a>
 
 <a name="public-component-type-plugin-para1"></a>This component is a plugin component \(`aws.greengrass.plugin`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component in the same Java Virtual Machine \(JVM\) as the nucleus\. The nucleus restarts when you install or restart this component\.
@@ -27,6 +30,28 @@ This component has the following versions:
 ## Dependencies<a name="stream-manager-component-dependencies"></a>
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#stream-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+
+------
+#### [ 2\.0\.11 ]
+
+The following table lists the dependencies for version 2\.0\.11 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.0\.0 <2\.5\.0  | Soft | 
+| [Token exchange service](token-exchange-service-component.md) |  >=0\.0\.0  | Hard | 
+
+------
+#### [ 2\.0\.10 ]
+
+The following table lists the dependencies for version 2\.0\.10 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.0\.0 <2\.4\.0  | Soft | 
+| [Token exchange service](token-exchange-service-component.md) |  >=0\.0\.0  | Hard | 
 
 ------
 #### [ 2\.0\.9 ]
@@ -118,6 +143,8 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.0\.11  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
+|  2\.0\.10  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  2\.0\.9  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 
 |  2\.0\.8  |  Version updated for Greengrass nucleus version 2\.1\.0 release\.  | 
 |  2\.0\.7  |  Initial version\.  | 

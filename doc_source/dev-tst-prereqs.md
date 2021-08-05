@@ -12,7 +12,7 @@ Windows has a path length limitation of 260 characters\. If you are using Window
 
 ## Download the AWS IoT Greengrass software<a name="config-gg"></a>
 
-IDT for AWS IoT Greengrass tests your device for compatibility with a specific version of AWS IoT Greengrass\. Run the following command to download the AWS IoT Greengrass Core software to a file named `aws.greengrass.nucleus.zip`\. Replace *version* with a [supported nucleus component version](dev-test-versions.md) for your IDT version\. 
+IDT for AWS IoT Greengrass V2 tests your device for compatibility with a specific version of AWS IoT Greengrass\. Run the following command to download the AWS IoT Greengrass Core software to a file named `aws.greengrass.nucleus.zip`\. Replace *version* with a [supported nucleus component version](dev-test-versions.md) for your IDT version\. 
 
 ```
 curl -s https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-version.zip > aws.greengrass.nucleus.zip
@@ -25,7 +25,7 @@ Do not place multiple files in this directory for the same operating system and 
 
 ## Create and configure an AWS account<a name="config-aws-account-for-idt"></a>
 
-Before you can use AWS IoT Device Tester for AWS IoT Greengrass, you must perform the following steps:
+Before you can use AWS IoT Device Tester for AWS IoT Greengrass V2, you must perform the following steps:
 
 1. [Set up an AWS account\.](#create-aws-account-for-idt) If you already have an AWS account, skip to step 2\.
 
@@ -33,7 +33,7 @@ Before you can use AWS IoT Device Tester for AWS IoT Greengrass, you must perfor
 
 These account permissions allow IDT to access AWS services and create AWS resources, such as AWS IoT things and AWS IoT Greengrass components, on your behalf\.
 
-<a name="idt-aws-credentials"></a>To create these resources, IDT for AWS IoT Greengrass uses the AWS credentials configured in the `config.json` file to make API calls on your behalf\. These resources are provisioned at various times during a test\.
+<a name="idt-aws-credentials"></a>To create these resources, IDT for AWS IoT Greengrass V2 uses the AWS credentials configured in the `config.json` file to make API calls on your behalf\. These resources are provisioned at various times during a test\.
 
 **Note**  
 Although most tests qualify for [AWS Free Tier](http://aws.amazon.com/free), you must provide a credit card when you sign up for an AWS account\. For more information, see [ Why do I need a payment method if my account is covered by the Free Tier?](http://aws.amazon.com/premiumsupport/knowledge-center/free-tier-payment-method/)\.
@@ -92,7 +92,7 @@ You can use this same process to create more groups and users and to give your u
 
 ### Step 2: Configure permissions for IDT<a name="configure-idt-permissions"></a>
 
-In this step, configure the permissions that IDT for AWS IoT Greengrass uses to run tests and collect IDT usage data\. You can use the [AWS Management Console](#configure-idt-permissions-console) or [AWS Command Line Interface \(AWS CLI\)](#configure-idt-permissions-cli) to create an IAM policy and a test user for IDT, and then attach policies to the user\. If you already created a test user for IDT, skip to [Configure your device to run IDT tests](device-config-setup.md)\.
+In this step, configure the permissions that IDT for AWS IoT Greengrass V2 uses to run tests and collect IDT usage data\. You can use the [AWS Management Console](#configure-idt-permissions-console) or [AWS Command Line Interface \(AWS CLI\)](#configure-idt-permissions-cli) to create an IAM policy and a test user for IDT, and then attach policies to the user\. If you already created a test user for IDT, skip to [Configure your device to run IDT tests](device-config-setup.md)\.
 
 #### To configure permissions for IDT \(console\)<a name="configure-idt-permissions-console"></a>
 
@@ -194,16 +194,20 @@ In this step, configure the permissions that IDT for AWS IoT Greengrass uses to 
               "iam:ListPolicies",
               "iam:ListRolePolicies",
               "iam:AttachRolePolicy",
+              "iam:ListEntitiesForPolicy",
               "iam:GetRole",
               "iam:PassRole",
               "iam:DeleteRole",
               "iam:DeletePolicy",
               "iam:DetachRolePolicy",
+              "iam:TagRole",
+              "iam:TagPolicy",
               "iot:CreateRoleAlias",
               "iot:DescribeThingGroup",
               "iot:CreateThingGroup",
               "iot:AddThingToThingGroup",
               "iot:AttachPolicy",
+              "iot:ListAttachedPolicies",
               "iot:CreateThing",
               "iot:DescribeRoleAlias",
               "iot:DescribeEndpoint",
@@ -225,6 +229,9 @@ In this step, configure the permissions that IDT for AWS IoT Greengrass uses to 
               "iot:UpdateThingShadow",
               "iot:Publish",
               "iot:CreateCertificateFromCsr",
+              "iot:ListTagsForResource",
+              "iot:TagResource",
+              "iot:ListThingPrincipals",
               "iot-device-tester:SendMetrics",
               "iot-device-tester:SupportedVersion",
               "iot-device-tester:LatestIdt",
@@ -249,13 +256,18 @@ In this step, configure the permissions that IDT for AWS IoT Greengrass uses to 
             "Sid": "VisualEditor8",
             "Effect": "Allow",
             "Action": [
+              "s3:GetObject",
               "s3:PutObject",
+              "s3:AbortMultipartUpload",
+              "s3:ListMultipartUploadParts",
               "s3:DeleteObjectVersion",
+              "s3:PutObjectTagging",
               "s3:ListBucketVersions",
               "s3:CreateBucket",
               "s3:DeleteObject",
               "s3:DeleteBucket",
-              "s3:GetObject"
+              "s3:ListBucket",
+              "s3:PutBucketTagging"
             ],
             "Resource": "arn:aws:s3:::idt*"
           },
@@ -415,16 +427,20 @@ The AWS CLI is an open source tool that you can use to interact with AWS service
               "iam:ListPolicies",
               "iam:ListRolePolicies",
               "iam:AttachRolePolicy",
+              "iam:ListEntitiesForPolicy",
               "iam:GetRole",
               "iam:PassRole",
               "iam:DeleteRole",
               "iam:DeletePolicy",
               "iam:DetachRolePolicy",
+              "iam:TagRole",
+              "iam:TagPolicy",
               "iot:CreateRoleAlias",
               "iot:DescribeThingGroup",
               "iot:CreateThingGroup",
               "iot:AddThingToThingGroup",
               "iot:AttachPolicy",
+              "iot:ListAttachedPolicies",
               "iot:CreateThing",
               "iot:DescribeRoleAlias",
               "iot:DescribeEndpoint",
@@ -446,6 +462,9 @@ The AWS CLI is an open source tool that you can use to interact with AWS service
               "iot:UpdateThingShadow",
               "iot:Publish",
               "iot:CreateCertificateFromCsr",
+              "iot:ListTagsForResource",
+              "iot:TagResource",
+              "iot:ListThingPrincipals",
               "iot-device-tester:SendMetrics",
               "iot-device-tester:SupportedVersion",
               "iot-device-tester:LatestIdt",
@@ -470,13 +489,18 @@ The AWS CLI is an open source tool that you can use to interact with AWS service
             "Sid": "VisualEditor8",
             "Effect": "Allow",
             "Action": [
+              "s3:GetObject",
               "s3:PutObject",
+              "s3:AbortMultipartUpload",
+              "s3:ListMultipartUploadParts",
               "s3:DeleteObjectVersion",
+              "s3:PutObjectTagging",
               "s3:ListBucketVersions",
               "s3:CreateBucket",
               "s3:DeleteObject",
               "s3:DeleteBucket",
-              "s3:GetObject"
+              "s3:ListBucket",
+              "s3:PutBucketTagging"
             ],
             "Resource": "arn:aws:s3:::idt*"
           },

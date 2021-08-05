@@ -37,7 +37,7 @@ The following example configuration update instructs the shadow manager componen
   "synchronize":{
     "coreThing":{
       "classic":true,
-      "namedShadows":"MyCoreShadow"
+      "namedShadows":["MyCoreShadow"]
     },
     "shadowDocuments":[
       {

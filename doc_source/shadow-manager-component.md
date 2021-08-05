@@ -4,6 +4,14 @@ The shadow manager component \(`aws.greengrass.ShadowManager`\) enables the loca
 
 For more information about how AWS IoT Greengrass devices can interact with shadows, see [Interact with device shadows](interact-with-shadows.md)\.
 
+**Topics**
++ [Versions](#shadow-manager-component-versions)
++ [Type](#shadow-manager-component-type)
++ [Requirements](#shadow-manager-component-requirements)
++ [Dependencies](#shadow-manager-component-dependencies)
++ [Configuration](#shadow-manager-component-config)
++ [Changelog](#shadow-manager-component-changelog)
+
 ## Versions<a name="shadow-manager-component-versions"></a>
 
 This component has the following versions:
@@ -33,12 +41,37 @@ This component has the following requirements:
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#shadow-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
-The following table lists the dependencies for version 2\.0\.x of this component\.
+------
+#### [ 2\.0\.3 ]
+
+The following table lists the dependencies for version 2\.0\.3 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
 | --- | --- | --- | 
-| [Greengrass nucleus](greengrass-nucleus-component.md) | \~2\.2\.0 | Soft | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.2\.0 <2\.5\.0 | Soft | 
+
+------
+#### [ 2\.0\.1 \- 2\.0\.2 ]
+
+The following table lists the dependencies for versions 2\.0\.1 and 2\.0\.2 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.2\.0 <2\.4\.0 | Soft | 
+
+------
+#### [ 2\.0\.0 ]
+
+The following table lists the dependencies for version 2\.0\.0 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.2\.0 <2\.3\.0 | Soft | 
+
+------
 
 For more information about component dependencies, see the [component recipe reference](component-recipe-reference.md#recipe-reference-component-dependencies)\.
 
@@ -132,4 +165,7 @@ The following table describes the changes in each version of the component\.
 
 |  Version  |  Changes  | 
 | --- | --- | 
+|  2\.0\.3  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
+|  2\.0\.2  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/shadow-manager-component.html)  | 
+|  2\.0\.1  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  2\.0\.0  |  Initial version\.  | 

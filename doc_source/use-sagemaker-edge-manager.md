@@ -28,28 +28,11 @@ When you use SageMaker Edge Manager on Greengrass core devices, you can also use
 
 ## Requirements<a name="greengrass-edge-manager-agent-requirements"></a>
 
-You must meet the following requirements to deploy and use the SageMaker Edge Manager agent on Greengrass core devices\.
+You must meet the following requirements to use the SageMaker Edge Manager agent on Greengrass core devices\.<a name="sm-edge-manager-component-reqs"></a>
++ <a name="sm-req-core-device"></a>A Greengrass core device running on a Debian\-based Linux platform \(x86\_64 or Armv8\)\. If you don't have one, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
++ <a name="sm-req-python"></a>[Python](https://www.python.org/downloads/) 3\.6 or later, including `pip` for your version of Python, installed on your core device\.
 + The [Greengrass device role](device-service-role.md) configured with the following: 
-  + The [AmazonSageMakerEdgeDeviceFleetPolicy](https://console.aws.amazon.com/iam/home#/policies/arn:aws:iam::aws:policy/service-role/AmazonSageMakerEdgeDeviceFleetPolicy) IAM managed policy\.
-  + The `s3:PutObject` action, as shown in the following IAM policy example\.
-
-    ```
-    {
-      "Version": "2012-10-17",
-      "Statement": [
-      {
-        "Action": [
-          "s3:PutObject"
-        ],
-        "Resource": [
-          "*"
-        ],
-        "Effect": "Allow"
-      }
-      ]
-    }
-    ```
-  + A trust relationship that allows `credentials.iot.amazonaws.com` and `sagemaker.amazonaws.com` to assume the role, as shown in the following IAM policy example\.
+  + <a name="sm-req-iam-trust-relationship"></a>A trust relationship that allows `credentials.iot.amazonaws.com` and `sagemaker.amazonaws.com` to assume the role, as shown in the following IAM policy example\.
 
     ```
     { 
@@ -72,6 +55,25 @@ You must meet the following requirements to deploy and use the SageMaker Edge Ma
       ] 
     }
     ```
-+ An Amazon S3 bucket created in the same AWS account and AWS Region as your Greengrass core device\. SageMaker Edge Manager requires an S3 bucket to create an edge device fleet, and to store sample data from running inference on your device\. For information about creating S3 buckets, see [Getting started with Amazon S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/GetStartedWithS3.html)\.
-+ A SageMaker edge device fleet that uses the same AWS IoT role alias as your Greengrass core device\. For more information, see [Create an edge device fleet](get-started-with-edge-manager-on-greengrass.md#create-edge-device-fleet-for-greengrass)\.
-+ Your Greengrass core device registered as an edge device in your SageMaker Edge device fleet\. The edge device name must match the AWS IoT thing name for your core device\. For more information, see [Register your Greengrass core device](get-started-with-edge-manager-on-greengrass.md#register-greengrass-core-device-in-sme)\.
+  + <a name="sm-req-iam-sagemanakeredgedevicefleetpolicy"></a>The [AmazonSageMakerEdgeDeviceFleetPolicy](https://console.aws.amazon.com/iam/home#/policies/arn:aws:iam::aws:policy/service-role/AmazonSageMakerEdgeDeviceFleetPolicy) IAM managed policy\.
+  + <a name="sm-req-iam-s3-putobject"></a>The `s3:PutObject` action, as shown in the following IAM policy example\.
+
+    ```
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+      {
+        "Action": [
+          "s3:PutObject"
+        ],
+        "Resource": [
+          "*"
+        ],
+        "Effect": "Allow"
+      }
+      ]
+    }
+    ```
++ <a name="sm-req-s3-bucket"></a>An Amazon S3 bucket created in the same AWS account and AWS Region as your Greengrass core device\. SageMaker Edge Manager requires an S3 bucket to create an edge device fleet, and to store sample data from running inference on your device\. For information about creating S3 buckets, see [Getting started with Amazon S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/GetStartedWithS3.html)\.
++ <a name="sm-req-edge-device-fleet"></a>A SageMaker edge device fleet that uses the same AWS IoT role alias as your Greengrass core device\. For more information, see [Create an edge device fleet](get-started-with-edge-manager-on-greengrass.md#create-edge-device-fleet-for-greengrass)\.
++ <a name="sm-req-edge-device"></a>Your Greengrass core device registered as an edge device in your SageMaker Edge device fleet\. The edge device name must match the AWS IoT thing name for your core device\. For more information, see [Register your Greengrass core device](get-started-with-edge-manager-on-greengrass.md#register-greengrass-core-device-in-sme)\.

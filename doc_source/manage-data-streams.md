@@ -33,6 +33,8 @@ The following requirements apply for using stream manager:
   + [Stream Manager SDK for Node\.js](https://github.com/aws-greengrass/aws-greengrass-stream-manager-sdk-js/) \(v1\.1\.0 or later\)
   + [Stream Manager SDK for Python](https://github.com/aws-greengrass/aws-greengrass-stream-manager-sdk-python/) \(v1\.1\.0 or later\)
 + AWS IoT Greengrass components must specify the stream manager component \(`aws.greengrass.StreamManager`\) as a dependency in their recipe to use stream manager\.
+**Note**  <a name="stream-manager-upgrade-note"></a>
+If you use stream manager to export data to the cloud, you can't upgrade version 2\.0\.7 of the stream manager component to a later v2\.0\.x version\. If you are deploying stream manager for the first time, we strongly recommend that you deploy v2\.0\.8 or later versions of the stream manager component\.
 + If you define AWS Cloud export destinations for a stream, you must create your export targets and grant access permissions in the [Greengrass device role](device-service-role.md)\. Depending on the destination, other requirements might also apply\. For more information, see:<a name="export-destinations-links"></a>
   + [AWS IoT Analytics channels](stream-export-configurations.md#export-to-iot-analytics)
   + [Amazon Kinesis data streams](stream-export-configurations.md#export-to-kinesis)
@@ -61,7 +63,7 @@ You use the [STREAM\_MANAGER\_AUTHENTICATE\_CLIENT](configure-stream-manager.md#
 
 ****  
 
-|   | Enabled | Disabled | 
+|   | Enabled | Disabled | 
 | --- | --- | --- | 
 | Parameter value | `true` \(default and recommended\) | `false` | 
 | Allowed clients | Greengrass components on the core device | Greengrass components on the core device Other processes running on the Greengrass core device | 

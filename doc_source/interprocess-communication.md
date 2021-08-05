@@ -31,6 +31,9 @@ The AWS IoT Greengrass Core IPC libraries are included in the following AWS IoT 
 + [AWS IoT Device SDK for Python v2](https://github.com/aws/aws-iot-device-sdk-python-v2) \(v1\.5\.3 or later\)
 
   For more information about using the AWS IoT Device SDK for Python v2 to connect to the AWS IoT Greengrass Core IPC service, see [Use AWS IoT Device SDK for Python v2](#ipc-python)\.
++ [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2) \(v1\.13\.0 or later\)
+
+  For more information about using the AWS IoT Device SDK for C\+\+ v2 to connect to the AWS IoT Greengrass Core IPC service, see [Use AWS IoT Device SDK for C\+\+ v2](#ipc-cpp)\.
 
 ## Connect to the AWS IoT Greengrass Core IPC service<a name="ipc-service-connect"></a>
 
@@ -231,6 +234,163 @@ To use interprocess communication in your custom component, you must create a co
 
 ------
 
+### Use AWS IoT Device SDK for C\+\+ v2<a name="ipc-cpp"></a>
+
+**Important**  <a name="iot-device-sdk-cpp-v2-build-requirements"></a>
+To build the AWS IoT Device SDK v2 for C\+\+, a device must have the following tools:  
+C\+\+ 11 or later
+CMake 3\.1 or later
+One of the following compilers:  
+GCC 4\.8 or later
+Clang 3\.9 or later
+MSVC 2015 or later
+
+**To use the AWS IoT Device SDK for C\+\+ v2**
+
+1. Download the [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2) \(v1\.13\.0 or later\)\.
+
+1. Follow the [installation instructions in the README](https://github.com/aws/aws-iot-device-sdk-cpp-v2#Installation) to build the AWS IoT Device SDK for C\+\+ v2 from source\.
+
+1. In your C\+\+ build tool, link the Greengrass IPC library, `AWS::GreengrassIpc-cpp`, that you built in the previous step\. The following `CMakeLists.txt` example links the Greengrass IPC library to a project that you build with CMake\.
+
+   ```
+   cmake_minimum_required(VERSION 3.1)
+   project (greengrassv2_pubsub_subscriber)
+   
+   file(GLOB MAIN_SRC
+           "*.h"
+           "*.cpp"
+           )
+   add_executable(${PROJECT_NAME} ${MAIN_SRC})
+   
+   set_target_properties(${PROJECT_NAME} PROPERTIES
+           LINKER_LANGUAGE CXX
+           CXX_STANDARD 11)
+   find_package(aws-crt-cpp PATHS ~/sdk-cpp-workspace/build)
+   find_package(EventstreamRpc-cpp PATHS ~/sdk-cpp-workspace/build)
+   find_package(GreengrassIpc-cpp PATHS ~/sdk-cpp-workspace/build)
+   target_link_libraries(${PROJECT_NAME} AWS::GreengrassIpc-cpp)
+   ```
+
+1. In your component code, create a connection to the AWS IoT Greengrass Core IPC service to create an IPC client \(`Aws::Greengrass::GreengrassCoreIpcClient`\)\. You must define an IPC connection lifecycle handler that handles IPC connection, disconnection, and error events\. The following example creates an IPC client and an IPC connection lifecycle handler that prints when the IPC client connects, disconnects, and encounters errors\.
+
+   ```
+   #include <iostream>
+   
+   #include <aws/crt/Api.h>
+   #include <aws/greengrass/GreengrassCoreIpcClient.h>
+   
+   using namespace Aws::Crt;
+   using namespace Aws::Greengrass;
+   
+   class IpcClientLifecycleHandler : public ConnectionLifecycleHandler {
+       void OnConnectCallback() override {
+           std::cout << "OnConnectCallback" << std::endl;
+       }
+   
+       void OnDisconnectCallback(RpcError error) override {
+           std::cout << "OnDisconnectCallback: " << error.StatusToString() << std::endl;
+           exit(-1);
+       }
+   
+       bool OnErrorCallback(RpcError error) override {
+           std::cout << "OnErrorCallback: " << error.StatusToString() << std::endl;
+           return true;
+       }
+   };
+   
+   int main() {
+       // Create the IPC client.
+       ApiHandle apiHandle(g_allocator);
+       Io::EventLoopGroup eventLoopGroup(1);
+       Io::DefaultHostResolver socketResolver(eventLoopGroup, 64, 30);
+       Io::ClientBootstrap bootstrap(eventLoopGroup, socketResolver);
+       IpcClientLifecycleHandler ipcLifecycleHandler;
+       GreengrassCoreIpcClient ipcClient(bootstrap);
+       auto connectionStatus = ipcClient.Connect(ipcLifecycleHandler).get();
+       if (!connectionStatus) {
+           std::cerr << "Failed to establish IPC connection: " << connectionStatus.StatusToString() << std::endl;
+           exit(-1);
+       }
+       
+       // Use the IPC client to create an operation request.
+       
+       // Activate the operation request.
+       auto activate = operation.Activate(request, nullptr);
+       activate.wait();
+   
+       // Wait for Greengrass Core to respond to the request.
+       auto responseFuture = operation.GetResult();
+       if (responseFuture.wait_for(std::chrono::seconds(timeout)) == std::future_status::timeout) {
+           std::cerr << "Operation timed out while waiting for response from Greengrass Core." << std::endl;
+           exit(-1);
+       }
+   
+       // Check the result of the request.
+       auto response = responseFuture.get();
+       if (response) {
+           std::cout << "Successfully published to topic: " << topic << std::endl;
+       } else {
+           // An error occurred.
+           std::cout << "Failed to publish to topic: " << topic << std::endl;
+           auto errorType = response.GetResultType();
+           if (errorType == OPERATION_ERROR) {
+               auto *error = response.GetOperationError();
+               std::cout << "Operation error: " << error->GetMessage().value() << std::endl;
+           } else {
+               std::cout << "RPC error: " << response.GetRpcError() << std::endl;
+           }
+           exit(-1);
+       }
+       
+       return 0;
+   }
+   ```
+
+1. To run your custom code in your component, build your code as a binary artifact, and run the binary artifact in your component recipe\. Set the artifact's `Execute` permission to `OWNER` to enable the AWS IoT Greengrass Core software to run the binary artifact\.
+
+   Your component recipe's `Manifests` section might look similar to the following example\.
+
+------
+#### [ JSON ]
+
+   ```
+   {
+     ...
+     "Manifests": [
+       {
+         "Lifecycle": {
+           "Run": "{artifacts:path}/greengrassv2_pubsub_subscriber"
+         },
+         "Artifacts": [
+           {
+             "URI": "s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.PubSubSubscriberCpp/1.0.0/greengrassv2_pubsub_subscriber",
+             "Permission": {
+               "Execute": "OWNER"
+             }
+           }
+         ]
+       }
+     ]
+   }
+   ```
+
+------
+#### [ YAML ]
+
+   ```
+   ...
+   Manifests:
+     - Lifecycle:
+         Run: {artifacts:path}/greengrassv2_pubsub_subscriber
+       Artifacts:
+         - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.PubSubSubscriberCpp/1.0.0/greengrassv2_pubsub_subscriber
+           Permission:
+             Execute: OWNER
+   ```
+
+------
+
 ## Authorize components to perform IPC operations<a name="ipc-authorization-policies"></a>
 
 To allow your custom components to use some IPC operations, you must define *authorization policies* that allow the component to perform the operation on certain resources\. Each authorization policy defines a list of operations and a list of resources that the policy allows\. For example, the publish/subscribe messaging IPC service defines publish and subscribe operations for topic resources\. You can use the `*` wildcard to allow access to all operations or all resources\.
@@ -346,7 +506,7 @@ Manifests:
 
 You can use IPC operations to subscribe to streams of events on a Greengrass core device\. To use a subscribe operation, define a *subscription handler* and create a request to the IPC service\. Then, the IPC client runs the subscription handler's functions each time that the core device streams an event message to your component\.
 
-You can close a subscription to stop processing event messages\. To do so, call `closeStream()` \(Java\) or `close()` \(Python\) on the subscription operation object that you used to open the subscription\.
+You can close a subscription to stop processing event messages\. To do so, call `closeStream()` \(Java\), `close()` \(Python\), or `Close()` \(C\+\+\) on the subscription operation object that you used to open the subscription\.
 
 The AWS IoT Greengrass Core IPC service supports the following subscribe operations:
 + [SubscribeToTopic](ipc-publish-subscribe.md#ipc-operation-subscribetotopic)
@@ -374,7 +534,7 @@ The callback that the IPC client calls when it receives an event message, such a
 
 `boolean onStreamError(Throwable error)`  
 The callback that the IPC client calls when a stream error occurs\.  
-Return `true` to close the subscription stream as a result of the error, or return `false` to keep the stream open\.
+<a name="ipc-subscription-handler-on-stream-error-return-value"></a>Return true to close the subscription stream as a result of the error, or return false to keep the stream open\.
 
 `void onStreamClosed()`  
 The callback that the IPC client calls when the stream closes\.
@@ -389,9 +549,24 @@ The callback that the IPC client calls when it receives an event message, such a
 
 `def on_stream_error(self, error: Exception) -> bool`  
 The callback that the IPC client calls when a stream error occurs\.  
-Return `True` to close the subscription stream as a result of the error, or return `False` to keep the stream open\.
+<a name="ipc-subscription-handler-on-stream-error-return-value"></a>Return true to close the subscription stream as a result of the error, or return false to keep the stream open\.
 
 `def on_stream_closed(self) -> None`  
+The callback that the IPC client calls when the stream closes\.
+
+------
+#### [ C\+\+ ]
+
+Implement a class that derives from the stream response handler class that corresponds to the subscription operation\. The AWS IoT Device SDK includes a subscription handler base class for each subscription operation\. *StreamEventType* is the type of event message for the subscription operation\. Define the following functions to handle event messages, errors, and stream closure\.
+
+`void OnStreamEvent(StreamEventType *event)`  
+The callback that the IPC client calls when it receives an event message, such as an MQTT message or a component update notification\.
+
+`bool OnStreamError(OperationError *error)`  
+The callback that the IPC client calls when a stream error occurs\.  
+<a name="ipc-subscription-handler-on-stream-error-return-value"></a>Return true to close the subscription stream as a result of the error, or return false to keep the stream open\.
+
+`void OnStreamClosed()`  
 The callback that the IPC client calls when the stream closes\.
 
 ------
@@ -522,6 +697,113 @@ while True:
     
 # To stop subscribing, close the operation stream.
 operation.close()
+```
+
+------
+#### [ C\+\+ ]
+
+**Example: Subscribe to local publish/subscribe messages**  <a name="ipc-operation-subscribetotopic-example-cpp"></a>
+
+```
+#include <iostream>
+
+#include <aws/crt/Api.h>
+#include <aws/greengrass/GreengrassCoreIpcClient.h>
+
+using namespace Aws::Crt;
+using namespace Aws::Greengrass;
+
+class SubscribeResponseHandler : public SubscribeToTopicStreamHandler {
+    void OnStreamEvent(SubscriptionResponseMessage *response) override {
+        auto jsonMessage = response->GetJsonMessage();
+        if (jsonMessage.has_value() && jsonMessage.value().GetMessage().has_value()) {
+            auto messageString = jsonMessage.value().GetMessage().value().View().WriteReadable();
+            // Handle JSON message.
+        } else {
+            auto binaryMessage = response->GetBinaryMessage();
+            if (binaryMessage.has_value() && binaryMessage.value().GetMessage().has_value()) {
+                auto messageBytes = binaryMessage.value().GetMessage().value();
+                std::string messageString(messageBytes.begin(), messageBytes.end());
+                // Handle binary message.
+            }
+        } 
+    }
+
+    bool OnStreamError(OperationError *error) override {
+        // Handle error.
+        return false; // Return true to close stream, false to keep stream open.
+    }
+    
+    void OnStreamClosed() override {
+        // Handle close.
+    }
+};
+
+class IpcClientLifecycleHandler : public ConnectionLifecycleHandler {
+    void OnConnectCallback() override {
+        // Handle connection to IPC service.
+    }
+
+    void OnDisconnectCallback(RpcError error) override {
+        // Handle disconnection from IPC service.
+    }
+
+    bool OnErrorCallback(RpcError error) override {
+        // Handle IPC service connection error.
+        return true;
+    }
+};
+
+int main() {
+    ApiHandle apiHandle(g_allocator);
+    Io::EventLoopGroup eventLoopGroup(1);
+    Io::DefaultHostResolver socketResolver(eventLoopGroup, 64, 30);
+    Io::ClientBootstrap bootstrap(eventLoopGroup, socketResolver);
+    IpcClientLifecycleHandler ipcLifecycleHandler;
+    GreengrassCoreIpcClient ipcClient(bootstrap);
+    auto connectionStatus = ipcClient.Connect(ipcLifecycleHandler).get();
+    if (!connectionStatus) {
+        std::cerr << "Failed to establish IPC connection: " << connectionStatus.StatusToString() << std::endl;
+        exit(-1);
+    }
+    
+    String topic("my/topic");
+    int timeout = 10;
+
+    SubscribeToTopicRequest request;
+    request.SetTopic(topic);
+    
+    SubscribeResponseHandler streamHandler;
+    SubscribeToTopicOperation operation = ipcClient.NewSubscribeToTopic(streamHandler);
+    auto activate = operation.Activate(request, nullptr);
+    activate.wait();
+
+    auto responseFuture = operation.GetResult();
+    if (responseFuture.wait_for(std::chrono::seconds(timeout)) == std::future_status::timeout) {
+        std::cerr << "Operation timed out while waiting for response from Greengrass Core." << std::endl;
+        exit(-1);
+    }
+    
+    if (!response) {
+        // Handle error.
+        auto errorType = response.GetResultType();
+        if (errorType == OPERATION_ERROR) {
+            auto *error = response.GetOperationError();
+            // Handle operation error.
+        } else {
+            // Handle RPC error.
+        }
+        exit(-1);
+    }
+
+    // Keep the main thread alive, or the process will exit.
+    while (true) {
+        std::this_thread::sleep_for(std::chrono::seconds(10));
+    }
+    
+    operation.Close();
+    return 0;
+}
 ```
 
 ------

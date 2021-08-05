@@ -28,14 +28,24 @@ Follow the steps in this section to create a deployment to a target for the firs
    + `configurationUpdate` – The [configuration update](update-component-configurations.md) to deploy\. The update is a patch operation that modifies the component's existing configuration on each target device, or the component's default configuration if it doesn't exist on the target device\. You can specify the following configuration updates:
      + Reset updates \(`reset`\) – \(Optional\) A list of JSON pointers that define the configuration values to reset to their default values on the target device\. The AWS IoT Greengrass Core software applies reset updates before it applies merge updates\. For more information, see [Reset updates](update-component-configurations.md#reset-configuration-update)\.
      + Merge updates \(`merge`\) – \(Optional\) A JSON document that defines the configuration values to merge onto the target device\. You must serialize the JSON document as a string\. For more information, see [Merge updates](update-component-configurations.md#merge-configuration-update)\.
-   + `runWith` – \(Optional\) The system user and group that the AWS IoT Greengrass Core software uses to run this component's processes on core devices\. If you omit this parameter, the AWS IoT Greengrass Core software uses the system user and group that you configure for the core device\. For more information, see [Configure the user and group that run components](configure-greengrass-core-v2.md#configure-component-user)\. Specify the following option:
-     + `posixUser` – The POSIX system user and \(optional\) group to use to run this component\. Specify the user and group separated by a colon \(`:`\) in the following format: `user:group`\. If you don't specify a group, the AWS IoT Greengrass Core software uses the primary user for the group\.  
+   + `runWith` – \(Optional\) The system process options that the AWS IoT Greengrass Core software uses to run this component's processes on the core device\. If you omit a parameter in the `runWith` object, the AWS IoT Greengrass Core software uses the default values that you configure on the [Greengrass nucleus component](greengrass-nucleus-component.md)\.
+
+     You can specify any of the following options:
+     + `posixUser` – The POSIX system user and \(optional\) group to use to run this component's processes\. Specify the user and group separated by a colon \(`:`\) in the following format: `user:group`\. If you don't specify a group, the AWS IoT Greengrass Core software uses the primary group for the user\. For more information, see [Configure the user and group that run components](configure-greengrass-core-v2.md#configure-component-user)\.
+     + `systemResourceLimits` – The system resource limits to apply to this component's processes\. For more information, see [Configure system resource limits for components](configure-greengrass-core-v2.md#configure-component-system-resource-limits)\.
+
+       You can specify any of the following options:
+       + `cpus` – <a name="system-resource-limits-cpu-definition-this"></a>The maximum amount of CPU time that this component's processes can use on the core device\. A core device's total CPU time is equivalent to the device's number of CPU cores\. For example, on a core device with 4 CPU cores, you can set this value to `2` to limit this component's processes to 50 percent usage of each CPU core\. On a device with 1 CPU core, you can set this value to `0.25` to limit this component's processes to 25 percent usage of the CPU\. If you set this value to a number greater than the number of CPU cores, the AWS IoT Greengrass Core software doesn't limit the component's CPU usage\.
+       + `memory` – <a name="system-resource-limits-memory-definition-this"></a>The maximum amount of RAM \(in kilobytes\) that this component's processes can use on the core device\.
+
+       This feature is available for v2\.4\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.  
 **Example basic configuration update**  
 
    The following example `components` object specifies to deploy a component, `com.example.PythonRuntime`, that expects a configuration parameter named `pythonVersion`\.
 
    ```
    {
+     "targetArn": "targetArn",
      "components": {
        "com.example.PythonRuntime": {
          "componentVersion": "1.0.0",
@@ -94,6 +104,7 @@ Follow the steps in this section to create a deployment to a target for the firs
 
    ```
    {
+     "targetArn": "targetArn",
      "components": {
        "com.example.IndustrialDashboard": {
          "componentVersion": "1.0.0",
@@ -140,6 +151,7 @@ Follow the steps in this section to create a deployment to a target for the firs
 
    ```
    {
+     "targetArn": "targetArn",
      "components": {
        "com.example.IndustrialDashboard": {
          "componentVersion": "1.0.0",
@@ -173,6 +185,7 @@ Follow the steps in this section to create a deployment to a target for the firs
 
    ```
    {
+     "targetArn": "targetArn",
      "components": {
        "com.example.IndustrialDashboard": {
          "componentVersion": "1.0.0",

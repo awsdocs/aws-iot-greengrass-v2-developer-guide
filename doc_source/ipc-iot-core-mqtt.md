@@ -9,6 +9,7 @@ This MQTT messaging IPC service lets you exchange messages with AWS IoT Core\. F
 + [Authorization](#ipc-iot-core-mqtt-authorization)
 + [PublishToIoTCore](#ipc-operation-publishtoiotcore)
 + [SubscribeToIoTCore](#ipc-operation-subscribetoiotcore)
++ [Examples](#ipc-iot-core-mqtt-examples)
 
 ## Authorization<a name="ipc-iot-core-mqtt-authorization"></a>
 
@@ -99,6 +100,7 @@ This example assumes that you are using version 1\.5\.4 or later of the AWS IoT 
 
 ```
 import awsiot.greengrasscoreipc
+import awsiot.greengrasscoreipc.client as client
 from awsiot.greengrasscoreipc.model import (
     QOS,
     PublishToIoTCoreRequest
@@ -120,6 +122,85 @@ operation = ipc_client.new_publish_to_iot_core()
 operation.activate(request)
 future = operation.get_response()
 future.result(TIMEOUT)
+```
+
+------
+#### [ C\+\+ ]
+
+**Example: Publish a message**  
+
+```
+#include <iostream>
+
+#include <aws/crt/Api.h>
+#include <aws/greengrass/GreengrassCoreIpcClient.h>
+
+using namespace Aws::Crt;
+using namespace Aws::Greengrass;
+
+class IpcClientLifecycleHandler : public ConnectionLifecycleHandler {
+    void OnConnectCallback() override {
+        // Handle connection to IPC service.
+    }
+
+    void OnDisconnectCallback(RpcError error) override {
+        // Handle disconnection from IPC service.
+    }
+
+    bool OnErrorCallback(RpcError error) override {
+        // Handle IPC service connection error.
+        return true;
+    }
+};
+
+int main() {
+    ApiHandle apiHandle(g_allocator);
+    Io::EventLoopGroup eventLoopGroup(1);
+    Io::DefaultHostResolver socketResolver(eventLoopGroup, 64, 30);
+    Io::ClientBootstrap bootstrap(eventLoopGroup, socketResolver);
+    IpcClientLifecycleHandler ipcLifecycleHandler;
+    GreengrassCoreIpcClient ipcClient(bootstrap);
+    auto connectionStatus = ipcClient.Connect(ipcLifecycleHandler).get();
+    if (!connectionStatus) {
+        std::cerr << "Failed to establish IPC connection: " << connectionStatus.StatusToString() << std::endl;
+        exit(-1);
+    }
+
+    String message("Hello, World!");
+    String topic("my/topic");
+    QOS qos = QOS_AT_MOST_ONCE;
+    int timeout = 10;
+    
+    PublishToIoTCoreRequest request;
+    Vector<uint8_t> messageData({message.begin(), message.end()});
+    request.SetTopicName(topic);
+    request.SetPayload(messageData);
+    request.SetQos(qos);
+
+    PublishToIoTCoreOperation operation = ipcClient.NewPublishToIoTCore();
+    auto activate = operation.Activate(request, nullptr);
+    activate.wait();
+
+    auto responseFuture = operation.GetResult();
+    if (responseFuture.wait_for(std::chrono::seconds(timeout)) == std::future_status::timeout) {
+        std::cerr << "Operation timed out while waiting for response from Greengrass Core." << std::endl;
+        exit(-1);
+    }
+
+    auto response = responseFuture.get();
+    if (!response) {
+        // Handle error.
+        auto errorType = response.GetResultType();
+        if (errorType == OPERATION_ERROR) {
+            auto *error = response.GetOperationError();
+            // Handle operation error.
+        } else {
+            // Handle RPC error.
+        }
+    }
+
+    return 0;
+}
 ```
 
 ------
@@ -150,7 +231,7 @@ This operation's response has the following information:
 
 `messages`  
 The stream of MQTT messages\. This object, `IoTCoreMessage`, contains the following information:    
-message  
+`message`  
 The MQTT message\. This object, `MQTTMessage`, contains the following information:    
 `topicName`  
 The topic to which the message was published\.  
@@ -222,6 +303,7 @@ This example assumes that you are using version 1\.5\.4 or later of the AWS IoT 
 
 ```
 import time
+import traceback
 
 import awsiot.greengrasscoreipc
 import awsiot.greengrasscoreipc.client as client
@@ -275,3 +357,463 @@ operation.close()
 ```
 
 ------
+#### [ C\+\+ ]
+
+**Example: Subscribe to messages**  
+
+```
+#include <iostream>
+
+#include <aws/crt/Api.h>
+#include <aws/greengrass/GreengrassCoreIpcClient.h>
+
+using namespace Aws::Crt;
+using namespace Aws::Greengrass;
+
+class IoTCoreResponseHandler : public SubscribeToIoTCoreStreamHandler {
+    void OnStreamEvent(IoTCoreMessage *response) override {
+        auto message = response->GetMessage();
+        if (message.has_value() && message.value().GetPayload().has_value()) {
+            auto messageBytes = message.value().GetPayload().value();
+            std::string messageString(messageBytes.begin(), messageBytes.end());
+            // Handle message.
+        }
+    }
+
+    bool OnStreamError(OperationError *error) override {
+        // Handle error.
+        return false; // Return true to close stream, false to keep stream open.
+    }
+    
+    void OnStreamClosed() override {
+        // Handle close.
+    }
+};
+
+class IpcClientLifecycleHandler : public ConnectionLifecycleHandler {
+    void OnConnectCallback() override {
+        // Handle connection to IPC service.
+    }
+
+    void OnDisconnectCallback(RpcError error) override {
+        // Handle disconnection from IPC service.
+    }
+
+    bool OnErrorCallback(RpcError error) override {
+        // Handle IPC service connection error.
+        return true;
+    }
+};
+
+int main() {
+    ApiHandle apiHandle(g_allocator);
+    Io::EventLoopGroup eventLoopGroup(1);
+    Io::DefaultHostResolver socketResolver(eventLoopGroup, 64, 30);
+    Io::ClientBootstrap bootstrap(eventLoopGroup, socketResolver);
+    IpcClientLifecycleHandler ipcLifecycleHandler;
+    GreengrassCoreIpcClient ipcClient(bootstrap);
+    auto connectionStatus = ipcClient.Connect(ipcLifecycleHandler).get();
+    if (!connectionStatus) {
+        std::cerr << "Failed to establish IPC connection: " << connectionStatus.StatusToString() << std::endl;
+        exit(-1);
+    }
+    
+    String topic("my/topic");
+    QOS qos = QOS_AT_MOST_ONCE;
+    int timeout = 10;
+
+    SubscribeToIoTCoreRequest request;
+    request.SetTopicName(topic);
+    request.SetQos(qos);
+    IoTCoreResponseHandler streamHandler;
+    SubscribeToIoTCoreOperation operation = ipcClient.NewSubscribeToIoTCore(streamHandler);
+    auto activate = operation.Activate(request, nullptr);
+    activate.wait();
+
+    auto responseFuture = operation.GetResult();
+    if (responseFuture.wait_for(std::chrono::seconds(timeout)) == std::future_status::timeout) {
+        std::cerr << "Operation timed out while waiting for response from Greengrass Core." << std::endl;
+        exit(-1);
+    }
+
+    auto response = responseFuture.get();
+    if (!response) {
+        // Handle error.
+        auto errorType = response.GetResultType();
+        if (errorType == OPERATION_ERROR) {
+            auto *error = response.GetOperationError();
+            // Handle operation error.
+        } else {
+            // Handle RPC error.
+        }
+        exit(-1);
+    }
+
+    // Keep the main thread alive, or the process will exit.
+    while (true) {
+        std::this_thread::sleep_for(std::chrono::seconds(10));
+    }
+
+    operation.Close();
+    return 0;
+}
+```
+
+------
+
+## Examples<a name="ipc-iot-core-mqtt-examples"></a>
+
+Use the following examples to learn how to use the AWS IoT Core MQTT IPC service in your components\.
+
+### Example AWS IoT Core MQTT publisher \(C\+\+\)<a name="ipc-iot-core-mqtt-example-publisher-cpp"></a>
+
+The following example recipe allows the component to publish to all topics\.
+
+------
+#### [ JSON ]
+
+```
+{
+  "RecipeFormatVersion": "2020-01-25",
+  "ComponentName": "com.example.IoTCorePublisherCpp",
+  "ComponentVersion": "1.0.0",
+  "ComponentDescription": "A component that publishes MQTT messages to IoT Core.",
+  "ComponentPublisher": "Amazon",
+  "ComponentConfiguration": {
+    "DefaultConfiguration": {
+      "accessControl": {
+        "aws.greengrass.ipc.mqttproxy": {
+          "com.example.IoTCorePublisherCpp:mqttproxy:1": {
+            "policyDescription": "Allows access to publish to all topics.",
+            "operations": [
+              "aws.greengrass#PublishToIoTCore"
+            ],
+            "resources": [
+              "*"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "Manifests": [
+    {
+      "Lifecycle": {
+        "Run": "{artifacts:path}/greengrassv2_iotcore_publisher"
+      },
+      "Artifacts": [
+        {
+          "URI": "s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.IoTCorePublisherCpp/1.0.0/greengrassv2_iotcore_publisher",
+          "Permission": {
+            "Execute": "OWNER"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+------
+#### [ YAML ]
+
+```
+---
+RecipeFormatVersion: '2020-01-25'
+ComponentName: com.example.IoTCorePublisherCpp
+ComponentVersion: 1.0.0
+ComponentDescription: A component that publishes MQTT messages to IoT Core.
+ComponentPublisher: Amazon
+ComponentConfiguration:
+  DefaultConfiguration:
+    accessControl:
+      aws.greengrass.ipc.mqttproxy:
+        com.example.IoTCorePublisherCpp:mqttproxy:1:
+          policyDescription: Allows access to publish to all topics.
+          operations:
+            - aws.greengrass#PublishToIoTCore
+          resources:
+            - "*"
+Manifests:
+  - Lifecycle:
+      Run: "{artifacts:path}/greengrassv2_iotcore_publisher"
+    Artifacts:
+      - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.IoTCorePublisherCpp/1.0.0/greengrassv2_iotcore_publisher
+        Permission:
+          Execute: OWNER
+```
+
+------
+
+The following example C\+\+ application demonstrates how to use the AWS IoT Core MQTT IPC service to publish messages to AWS IoT Core\.
+
+```
+#include <iostream>
+
+#include <aws/crt/Api.h>
+#include <aws/greengrass/GreengrassCoreIpcClient.h>
+
+using namespace Aws::Crt;
+using namespace Aws::Greengrass;
+
+class IpcClientLifecycleHandler : public ConnectionLifecycleHandler {
+    void OnConnectCallback() override {
+        std::cout << "OnConnectCallback" << std::endl;
+    }
+
+    void OnDisconnectCallback(RpcError error) override {
+        std::cout << "OnDisconnectCallback: " << error.StatusToString() << std::endl;
+        exit(-1);
+    }
+
+    bool OnErrorCallback(RpcError error) override {
+        std::cout << "OnErrorCallback: " << error.StatusToString() << std::endl;
+        return true;
+    }
+};
+
+int main() {
+    String message("Hello from the Greengrass IPC MQTT publisher (C++).");
+    String topic("test/topic/cpp");
+    QOS qos = QOS_AT_LEAST_ONCE;
+    int timeout = 10;
+    
+    ApiHandle apiHandle(g_allocator);
+    Io::EventLoopGroup eventLoopGroup(1);
+    Io::DefaultHostResolver socketResolver(eventLoopGroup, 64, 30);
+    Io::ClientBootstrap bootstrap(eventLoopGroup, socketResolver);
+    IpcClientLifecycleHandler ipcLifecycleHandler;
+    GreengrassCoreIpcClient ipcClient(bootstrap);
+    auto connectionStatus = ipcClient.Connect(ipcLifecycleHandler).get();
+    if (!connectionStatus) {
+        std::cerr << "Failed to establish IPC connection: " << connectionStatus.StatusToString() << std::endl;
+        exit(-1);
+    }
+
+    while (true) {
+        PublishToIoTCoreRequest request;
+        Vector<uint8_t> messageData({message.begin(), message.end()});
+        request.SetTopicName(topic);
+        request.SetPayload(messageData);
+        request.SetQos(qos);
+
+        PublishToIoTCoreOperation operation = ipcClient.NewPublishToIoTCore();
+        auto activate = operation.Activate(request, nullptr);
+        activate.wait();
+
+        auto responseFuture = operation.GetResult();
+        if (responseFuture.wait_for(std::chrono::seconds(timeout)) == std::future_status::timeout) {
+            std::cerr << "Operation timed out while waiting for response from Greengrass Core." << std::endl;
+            exit(-1);
+        }
+
+        auto response = responseFuture.get();
+        if (response) {
+            std::cout << "Successfully published to topic: " << topic << std::endl;
+        } else {
+            // An error occurred.
+            std::cout << "Failed to publish to topic: " << topic << std::endl;
+            auto errorType = response.GetResultType();
+            if (errorType == OPERATION_ERROR) {
+                auto *error = response.GetOperationError();
+                std::cout << "Operation error: " << error->GetMessage().value() << std::endl;
+            } else {
+                std::cout << "RPC error: " << response.GetRpcError() << std::endl;
+            }
+            exit(-1);
+        }
+
+        std::this_thread::sleep_for(std::chrono::seconds(5));
+    }
+
+    return 0;
+}
+```
+
+### Example AWS IoT Core MQTT subscriber \(C\+\+\)<a name="ipc-iot-core-mqtt-example-subscriber-cpp"></a>
+
+The following example recipe allows the component to subscribe to all topics\.
+
+------
+#### [ JSON ]
+
+```
+{
+  "RecipeFormatVersion": "2020-01-25",
+  "ComponentName": "com.example.IoTCoreSubscriberCpp",
+  "ComponentVersion": "1.0.0",
+  "ComponentDescription": "A component that subscribes to MQTT messages from IoT Core.",
+  "ComponentPublisher": "Amazon",
+  "ComponentConfiguration": {
+    "DefaultConfiguration": {
+      "accessControl": {
+        "aws.greengrass.ipc.mqttproxy": {
+          "com.example.IoTCoreSubscriberCpp:mqttproxy:1": {
+            "policyDescription": "Allows access to subscribe to all topics.",
+            "operations": [
+              "aws.greengrass#SubscribeToIoTCore"
+            ],
+            "resources": [
+              "*"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "Manifests": [
+    {
+      "Lifecycle": {
+        "Run": "{artifacts:path}/greengrassv2_iotcore_subscriber"
+      },
+      "Artifacts": [
+        {
+          "URI": "s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.IoTCoreSubscriberCpp/1.0.0/greengrassv2_iotcore_subscriber",
+          "Permission": {
+            "Execute": "OWNER"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+------
+#### [ YAML ]
+
+```
+---
+RecipeFormatVersion: '2020-01-25'
+ComponentName: com.example.IoTCoreSubscriberCpp
+ComponentVersion: 1.0.0
+ComponentDescription: A component that subscribes to MQTT messages from IoT Core.
+ComponentPublisher: Amazon
+ComponentConfiguration:
+  DefaultConfiguration:
+    accessControl:
+      aws.greengrass.ipc.mqttproxy:
+        com.example.IoTCoreSubscriberCpp:mqttproxy:1:
+          policyDescription: Allows access to subscribe to all topics.
+          operations:
+            - aws.greengrass#SubscribeToIoTCore
+          resources:
+            - "*"
+Manifests:
+  - Lifecycle:
+      Run: "{artifacts:path}/greengrassv2_iotcore_subscriber"
+    Artifacts:
+      - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.IoTCoreSubscriberCpp/1.0.0/greengrassv2_iotcore_subscriber
+        Permission:
+          Execute: OWNER
+```
+
+------
+
+The following example C\+\+ application demonstrates how to use the AWS IoT Core MQTT IPC service to subscribe to messages from AWS IoT Core\.
+
+```
+#include <iostream>
+
+#include <aws/crt/Api.h>
+#include <aws/greengrass/GreengrassCoreIpcClient.h>
+
+using namespace Aws::Crt;
+using namespace Aws::Greengrass;
+
+class IoTCoreResponseHandler : public SubscribeToIoTCoreStreamHandler {
+    void OnStreamEvent(IoTCoreMessage *response) override {
+        auto message = response->GetMessage();
+        if (message.has_value() && message.value().GetPayload().has_value()) {
+            auto messageBytes = message.value().GetPayload().value();
+            std::string messageString(messageBytes.begin(), messageBytes.end());
+            std::cout << "Received new message: " << messageString << std::endl;
+        }
+    }
+
+    bool OnStreamError(OperationError *error) override {
+        std::cout << "Received an operation error: ";
+        if (error->GetMessage().has_value()) {
+            std::cout << error->GetMessage().value();
+        }
+        std::cout << std::endl;
+        return false; // Return true to close stream, false to keep stream open.
+    }
+    
+    void OnStreamClosed() override {
+        std::cout << "Subscribe to IoT Core stream closed." << std::endl;
+    }
+};
+
+class IpcClientLifecycleHandler : public ConnectionLifecycleHandler {
+    void OnConnectCallback() override {
+        std::cout << "OnConnectCallback" << std::endl;
+    }
+
+    void OnDisconnectCallback(RpcError error) override {
+        std::cout << "OnDisconnectCallback: " << error.StatusToString() << std::endl;
+        exit(-1);
+    }
+
+    bool OnErrorCallback(RpcError error) override {
+        std::cout << "OnErrorCallback: " << error.StatusToString() << std::endl;
+        return true;
+    }
+};
+
+int main() {
+    String topic("test/topic/cpp");
+    QOS qos = QOS_AT_LEAST_ONCE;
+    int timeout = 10;
+    
+    ApiHandle apiHandle(g_allocator);
+    Io::EventLoopGroup eventLoopGroup(1);
+    Io::DefaultHostResolver socketResolver(eventLoopGroup, 64, 30);
+    Io::ClientBootstrap bootstrap(eventLoopGroup, socketResolver);
+    IpcClientLifecycleHandler ipcLifecycleHandler;
+    GreengrassCoreIpcClient ipcClient(bootstrap);
+    auto connectionStatus = ipcClient.Connect(ipcLifecycleHandler).get();
+    if (!connectionStatus) {
+        std::cerr << "Failed to establish IPC connection: " << connectionStatus.StatusToString() << std::endl;
+        exit(-1);
+    }
+
+    SubscribeToIoTCoreRequest request;
+    request.SetTopicName(topic);
+    request.SetQos(qos);
+    IoTCoreResponseHandler streamHandler;
+    SubscribeToIoTCoreOperation operation = ipcClient.NewSubscribeToIoTCore(streamHandler);
+    auto activate = operation.Activate(request, nullptr);
+    activate.wait();
+
+    auto responseFuture = operation.GetResult();
+    if (responseFuture.wait_for(std::chrono::seconds(timeout)) == std::future_status::timeout) {
+        std::cerr << "Operation timed out while waiting for response from Greengrass Core." << std::endl;
+        exit(-1);
+    }
+
+    auto response = responseFuture.get();
+    if (response) {
+        std::cout << "Successfully subscribed to topic: " << topic << std::endl;
+    } else {
+        // An error occurred.
+        std::cout << "Failed to subscribe to topic: " << topic << std::endl;
+        auto errorType = response.GetResultType();
+        if (errorType == OPERATION_ERROR) {
+            auto *error = response.GetOperationError();
+            std::cout << "Operation error: " << error->GetMessage().value() << std::endl;
+        } else {
+            std::cout << "RPC error: " << response.GetRpcError() << std::endl;
+        }
+        exit(-1);
+    }
+
+    // Keep the main thread alive, or the process will exit.
+    while (true) {
+        std::this_thread::sleep_for(std::chrono::seconds(10));
+    }
+
+    operation.Close();
+    return 0;
+}
+```

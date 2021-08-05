@@ -30,7 +30,6 @@ When you deploy any of the following AWS\-provided components, update the config
 + [CloudWatch metrics](cloudwatch-metrics-component.md)
 + [Device Defender](device-defender-component.md)
 + [Kinesis Data Firehose](kinesis-firehose-component.md)
-+ [Legacy subscription router](legacy-subscription-router-component.md)
 + [Modbus\-RTU protocol adapter](modbus-rtu-protocol-adapter-component.md)
 + [Amazon SNS](sns-component.md)
 
@@ -39,8 +38,8 @@ When you deploy any of the following AWS\-provided components, update the config
 AWS IoT Greengrass provides the following Dockerfile and Docker images that make it easier for you to run AWS IoT Greengrass Core software in a Docker container\. 
 
 **Dockerfile**  
-AWS IoT Greengrass provides a Dockerfile to build a container image that has AWS IoT Greengrass Core software and dependencies installed on an Amazon Linux 2 \(x86\_64\) base image\. You can modify the base image in the Dockerfile to run AWS IoT Greengrass on a different platform architecture\. Download the Dockerfile package from the following location\.  
-[Dockerfile for AWS IoT Greengrass v2\.1\.0](https://github.com/aws-greengrass/aws-greengrass-docker/releases/tag/v2.1.0)  
+AWS IoT Greengrass provides a Dockerfile to build a container image that has AWS IoT Greengrass Core software and dependencies installed on an Amazon Linux 2 \(x86\_64\) base image\. You can modify the base image in the Dockerfile to run AWS IoT Greengrass on a different platform architecture\.  
+Download the Dockerfile package from [GitHub](https://github.com/aws-greengrass/aws-greengrass-docker/releases/)\.  
 For information about building the AWS IoT Greengrass container image from the Dockerfile, see [Build the AWS IoT Greengrass container image from a Dockerfile](build-greengrass-dockerfile.md)\.
 
 **Docker images**  

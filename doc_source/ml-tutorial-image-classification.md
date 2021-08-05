@@ -142,7 +142,7 @@ After you deploy the component, you can view the inference results in the compon
      }
      ```
 
-   
+   
 + **Component log**—To view the inference results in the component log, run the following command on your Greengrass core device\. 
 
   ```

@@ -8,7 +8,7 @@ Several public components depend on specific minor versions of the Greengrass nu
 
 | Component | Description | Depends on nucleus | [Component type](manage-components.md#component-types) | [Open source](open-source.md) | 
 | --- | --- | --- | --- | --- | 
-| <a name="client-device-auth-component-table-row"></a>[Client device auth](client-device-auth-component.md) | Enables local IoT devices, called client devices, to connect to the core device\. | Yes | Plugin | No | 
-| <a name="ip-detector-component-table-row"></a>[IP detector](ip-detector-component.md) | Reports MQTT broker connectivity information to AWS IoT Greengrass, so client devices can discover how to connect\. | Yes | Plugin | No | 
-| <a name="mqtt-bridge-component-table-row"></a>[MQTT bridge](mqtt-bridge-component.md) | Relays MQTT messages between client devices, local AWS IoT Greengrass publish/subscribe, and AWS IoT Core\. | No | Plugin | No | 
-| <a name="mqtt-broker-moquette-component-table-row"></a>[MQTT broker \(Moquette\)](mqtt-broker-moquette-component.md) | Handles MQTT messages between client devices and the core device\. | No | Plugin | No | 
+| <a name="client-device-auth-component-table-row"></a>[Client device auth](client-device-auth-component.md) | Enables local IoT devices, called client devices, to connect to the core device\. | Yes | Plugin | [Yes](https://github.com/aws-greengrass/aws-greengrass-client-device-auth) | 
+| <a name="ip-detector-component-table-row"></a>[IP detector](ip-detector-component.md) | Reports MQTT broker connectivity information to AWS IoT Greengrass, so client devices can discover how to connect\. | Yes | Plugin | [Yes](https://github.com/aws-greengrass/aws-greengrass-ip-detector) | 
+| <a name="mqtt-bridge-component-table-row"></a>[MQTT bridge](mqtt-bridge-component.md) | Relays MQTT messages between client devices, local AWS IoT Greengrass publish/subscribe, and AWS IoT Core\. | No | Plugin | [Yes](https://github.com/aws-greengrass/aws-greengrass-mqtt-bridge) | 
+| <a name="mqtt-broker-moquette-component-table-row"></a>[MQTT broker \(Moquette\)](mqtt-broker-moquette-component.md) | Handles MQTT messages between client devices and the core device\. | No | Plugin | [Yes](https://github.com/aws-greengrass/aws-greengrass-moquette-mqtt) | 

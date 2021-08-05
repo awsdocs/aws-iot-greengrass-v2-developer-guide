@@ -12,6 +12,7 @@ If a component is installed correctly, then the component log contains the locat
 + [Failed to fetch library](#rpi-update-error)
 + [Cannot open shared object file](#rpi-import-cv-error)
 + [<library> not found](#troubleshooting-venv-errors-not-found)
++ [No CUDA\-capable device is detected](#troubleshooting-cuda-error)
 + [No such file or directory](#troubleshooting-venv-errors-no-such-file)
 + [Memory errors](#troubleshooting-memory-errors)
 + [Disk space errors](#troubleshooting-disk-space-errors)
@@ -53,6 +54,14 @@ The following errors indicate that the runtime component was unable to set up th
 Check the logs to make sure that all runtime dependencies were installed correctly\. For more information about the libraries installed by the installer script, see the following topics:
 + [DLR](dlr-component.md)
 + [TensorFlow Lite](tensorflow-lite-component.md)
+
+## No CUDA\-capable device is detected<a name="troubleshooting-cuda-error"></a>
+
+You might see the following error when you use GPU acceleration\. Run the following command to enable GPU access for the Greengrass user\.
+
+```
+sudo usermod -a -G video ggc_user
+```
 
 ## No such file or directory<a name="troubleshooting-venv-errors-no-such-file"></a>
 

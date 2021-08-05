@@ -74,7 +74,7 @@ To develop a new component or a new version of a component, create a recipe and 
 
    ```
    ---
-   RecipeFormatVersion: 2020-01-25
+   RecipeFormatVersion: '2020-01-25'
    ComponentName: com.example.HelloWorld
    ComponentVersion: '1.0.0'
    ComponentDescription: My first AWS IoT Greengrass component.

@@ -6,6 +6,9 @@ Core devices have the following health statuses:
 + `HEALTHY` – The AWS IoT Greengrass Core software and all components run without issue on the core device\.
 + `UNHEALTHY` – The AWS IoT Greengrass Core software or a component is in an error state on the core device\.
 
+**Note**  
+AWS IoT Greengrass relies on individual devices to send status updates to the AWS Cloud\. If the AWS IoT Greengrass Core software isn't running on the device, or if device isn't connected to the AWS Cloud, then the reported status of that device might not reflect its current status\. The status timestamp indicates when the device status was last updated\.
+
 **Topics**
 + [Check health of a core device](#check-core-device-health-status)
 + [Check health of a core device group](#check-core-device-group-health-status)

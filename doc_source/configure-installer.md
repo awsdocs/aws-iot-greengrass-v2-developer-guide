@@ -27,9 +27,16 @@ You must specify `--provision true` to apply this argument\.
 Default: `GreengrassV2IotThing_` plus a random UUID\.
 
 `-tgn`, `--thing-group-name`  
-\(Optional\) The name of the AWS IoT thing group where you add this core device's AWS IoT thing\. If a deployment targets this thing group, this core device receives that deployment when it connects to AWS IoT Greengrass\. If the thing group with this name doesn't exist in your AWS account, the AWS IoT Greengrass Core creates it\.  
+\(Optional\) The name of the AWS IoT thing group where you add this core device's AWS IoT thing\. If a deployment targets this thing group, this core device receives that deployment when it connects to AWS IoT Greengrass\. If the thing group with this name doesn't exist in your AWS account, the AWS IoT Greengrass Core software creates it\.  
 The thing group name can't contain colon \(`:`\) characters\.
 You must specify `--provision true` to apply this argument\.
+
+`-tpn`, `--thing-policy-name`  
+This feature is available for v2\.4\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.  
+\(Optional\) The name of the AWS IoT policy to attach to this core device's AWS IoT thing certificate\. If the AWS IoT policy with this name doesn't exist in your AWS account, the AWS IoT Greengrass Core software creates it\.  
+The AWS IoT Greengrass Core software creates a permissive AWS IoT policy by default\. You can scope down this policy, or create a custom policy where you restrict permissions for your use case\. For more information, see [Minimal AWS IoT policy for AWS IoT Greengrass V2 core devices](device-auth.md#greengrass-core-minimal-iot-policy)\.  
+You must specify `--provision true` to apply this argument\.  
+Default: `GreengrassV2IoTThingPolicy`
 
 `-trn`, `--tes-role-name`  
 \(Optional\) The name of the IAM role to use to acquire AWS credentials that let the core device interact with AWS services\. If the role with this name doesn't exist in your AWS account, the AWS IoT Greengrass Core software creates it with the `GreengrassV2TokenExchangeRoleAccess` policy\. This role doesn't have access to your S3 buckets where you host component artifacts\. So, you must add permissions to your artifacts' S3 buckets and objects when you create a component\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.  
@@ -62,6 +69,9 @@ Default: `false`
 `-init`, `--init-config`  
 \(Optional\) The path to the configuration file to use to install the AWS IoT Greengrass Core software\. You can use this option to set up new core devices with a specific nucleus configuration, for example\.   
 The configuration file that you specify replaces the existing configuration file on the core device\. This erases the existing configuration, which includes the components and component configurations on the core device\.
+
+`-tp`, `--trusted-plugin`  
+\(Optional\) The path to a JAR file to load as a trusted plugin\. Use this option to provide provisioning plugin JAR files, such as to install with [fleet provisioning](fleet-provisioning.md) or [custom provisioning](custom-provisioning.md)\.
 
 `-s`, `--start`  
 \(Optional\) You can start the AWS IoT Greengrass Core software after it installs and, optionally, provisions resources\.  

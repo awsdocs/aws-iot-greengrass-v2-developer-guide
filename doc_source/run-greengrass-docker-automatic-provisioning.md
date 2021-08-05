@@ -103,24 +103,26 @@ This tutorial shows you how to pull the latest AWS IoT Greengrass Docker image f
 
    ```
    docker run --rm --init -it --name aws-iot-greengrass \
-    -v ./greengrass-v2-credentials:/root/.aws/:ro \
+    -v path/to/greengrass-v2-credentials:/root/.aws/:ro \
     --env-file .env \
+    -p 8883 \
     amazon/aws-iot-greengrass:latest
    ```
 
    This example command uses the following arguments for [docker run](https://docs.docker.com/engine/reference/commandline/run/):
-   + [https://docs.docker.com/engine/reference/run/#clean-up---rm](https://docs.docker.com/engine/reference/run/#clean-up---rm)\. Cleans up the container when it exits\.
-   + [https://docs.docker.com/engine/reference/run/#specify-an-init-process](https://docs.docker.com/engine/reference/run/#specify-an-init-process)\. Uses an init process in the container\. 
+   + <a name="docker-run-rm"></a>[https://docs.docker.com/engine/reference/run/#clean-up---rm](https://docs.docker.com/engine/reference/run/#clean-up---rm)\. Cleans up the container when it exits\.
+   + <a name="docker-run-init"></a>[https://docs.docker.com/engine/reference/run/#specify-an-init-process](https://docs.docker.com/engine/reference/run/#specify-an-init-process)\. Uses an init process in the container\. 
 **Note**  
 The `--init` argument is required to shut down AWS IoT Greengrass Core software when you stop the Docker container\.
-   + [https://docs.docker.com/engine/reference/run/#foreground](https://docs.docker.com/engine/reference/run/#foreground)\. \(Optional\) Runs the Docker container in the foreground as an interactive process\. You can replace this with the `-d` argument to run the Docker container in detached mode instead\. For more information, see [Detached vs foreground](https://docs.docker.com/engine/reference/run/#detached-vs-foreground) in the Docker documentation\.
-   + [https://docs.docker.com/engine/reference/run/#name---name](https://docs.docker.com/engine/reference/run/#name---name)\. Runs a container named `aws-iot-greengrass` 
-   + [https://docs.docker.com/storage/volumes/](https://docs.docker.com/storage/volumes/)\. Mounts a volume into the Docker container to make the credential file available to AWS IoT Greengrass running inside the container\. For more information about volumes, see the [Docker documentation](https://docs.docker.com/storage/volumes/)\.
-   + [https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file)\. Specifies the environment file to set the environment variables that will be passed to the AWS IoT Greengrass Core software installer inside the Docker container\. This argument is required only if you used an environment file to [set environment variables](#create-env-file-automatic-provisioning)\.
+   + <a name="docker-run-it"></a>[https://docs.docker.com/engine/reference/run/#foreground](https://docs.docker.com/engine/reference/run/#foreground)\. \(Optional\) Runs the Docker container in the foreground as an interactive process\. You can replace this with the `-d` argument to run the Docker container in detached mode instead\. For more information, see [Detached vs foreground](https://docs.docker.com/engine/reference/run/#detached-vs-foreground) in the Docker documentation\.
+   + <a name="docker-run-name"></a>[https://docs.docker.com/engine/reference/run/#name---name](https://docs.docker.com/engine/reference/run/#name---name)\. Runs a container named `aws-iot-greengrass` 
+   + <a name="docker-run-v"></a>[https://docs.docker.com/storage/volumes/](https://docs.docker.com/storage/volumes/)\. Mounts a volume into the Docker container to make the configuration file and the certificate files available to AWS IoT Greengrass running inside the container\.
+   + <a name="docker-run-env-file"></a>[https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file)\. \(Optional\) Specifies the environment file to set the environment variables that will be passed to the AWS IoT Greengrass Core software installer inside the Docker container\. This argument is required only if you created an [environment file](run-greengrass-docker-manual-provisioning.md#create-env-file-manual-provisioning) to set environment variables\. If you didn't create an environment file, you can use `--env` arguments to set environment variables directly in your Docker run command\.
+   + <a name="docker-run-p"></a>[https://docs.docker.com/engine/reference/commandline/run/#publish-or-expose-port--p---expose](https://docs.docker.com/engine/reference/commandline/run/#publish-or-expose-port--p---expose)\. \(Optional\) Publishes the 8883 container port to the host machine\. This argument is required if you want to connect and communicate over MQTT because AWS IoT Greengrass uses port 8883 for MQTT traffic\. To open other ports, use additional `-p` arguments\.
 **Note**  <a name="docker-run-cap-drop"></a>
 To run your Docker container with increased security, you can use the `--cap-drop` and `--cap-add` arguments to selectively enable Linux capabilities for your container\. For more information, see [Runtime privilege and Linux capabilities](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities) in the Docker documentation\.
 
-1. Remove the credential file from `./greengrass-v2-credentials`\.
+1. Remove the credential file from `path/to/greengrass-v2-credentials`\.
 
 ------
 #### [ Docker Compose ]
@@ -148,18 +150,23 @@ You can also download and use the latest version of the AWS\-provided Compose fi
        container_name: aws-iot-greengrass
        image: amazon/aws-iot-greengrass:latest
        volumes:
-         - ./greengrass-v2-credentials:/root/.aws/:ro
-   ```
+         - ./greengrass-v2-credentials:/root/.aws/:ro 
+       env_file: .env
+       ports:
+         - "8883:8883"
+   ```<a name="docker-compose-optional-params"></a>
+
+   The following parameters in this example Compose file are optional:
+   + `ports`—Publishes the 8883 container ports to the host machine\. This parameter is required if you want to connect and communicate over MQTT because AWS IoT Greengrass uses port 8883 for MQTT traffic\. 
+   + `env_file`—Specifies the environment file to set the environment variables that will be passed to the AWS IoT Greengrass Core software installer inside the Docker container\. This parameter is required only if you created an [environment file](run-greengrass-docker-manual-provisioning.md#create-env-file-manual-provisioning) to set environment variables\. If you didn't create an environment file, you can use the [ environment](https://docs.docker.com/compose/compose-file/compose-file-v3/#environment) parameter to set the variables directly in your Compose file\.
 **Note**  <a name="docker-compose-cap-drop"></a>
 To run your Docker container with increased security, you can use `cap_drop` and `cap_add` in your Compose file to selectively enable Linux capabilities for your container\. For more information, see [Runtime privilege and Linux capabilities](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities) in the Docker documentation\.
 
 1. Run the following command start the Docker container\.
 
    ```
-   docker-compose --env-file .env -f docker-compose.yml up
+   docker-compose -f docker-compose.yml up
    ```
-
-   The `--env-file` argument is required only if you used an environment file to [set environment variables](#create-env-file-automatic-provisioning)\.
 
 1. Remove the credential file from `./greengrass-v2-credentials`\.
 

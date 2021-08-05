@@ -128,7 +128,7 @@ Follow these steps to use the console to configure permissions for IDT for AWS I
 
    1. To view the user's access keys \(access key IDs and secret access keys\), choose **Show** next to the password and access key\. To save the access keys, choose **Download\.csv** and save the file to a secure location\. You use this information later to configure your AWS credentials file\.
 
- <a name="idt-metrics-permissions-cli"></a>
+ <a name="idt-metrics-permissions-cli"></a>
 
 **To configure permissions for IDT \(AWS CLI\)**
 

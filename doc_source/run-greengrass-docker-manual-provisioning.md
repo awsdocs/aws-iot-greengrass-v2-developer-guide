@@ -107,7 +107,7 @@ The thing name can't contain colon \(`:`\) characters\.
 
    Do the following:
 
-   1. \(Optional\) Create a file that contains the AWS IoT policy document that Greengrass core devices require\.
+   1. Create a file that contains the AWS IoT policy document that Greengrass core devices require\.
 
       ```
       nano greengrass-v2-iot-policy.json
@@ -136,7 +136,7 @@ The thing name can't contain colon \(`:`\) characters\.
       }
       ```
 
-   1. \(Optional\) Create an AWS IoT policy from the policy document\.
+   1. Create an AWS IoT policy from the policy document\.
       + Replace *GreengrassV2IoTThingPolicy* with the name of the policy to create\.
 
       ```
@@ -256,15 +256,15 @@ Get the AWS IoT endpoints for your AWS account, and save them to use later\. You
 
 ## Create a token exchange role<a name="create-token-exchange-role"></a>
 
-Greengrass core devices use an IAM service role, called the *token exchange role*, to authorize calls to AWS services\. The device uses the AWS IoT credentials provider to get temporary AWS credentials for this role, which allows the device to interact with AWS IoT, send logs to Amazon CloudWatch Logs, and download custom component artifacts from Amazon S3\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
+<a name="installation-create-token-exchange-role-intro"></a>Greengrass core devices use an IAM service role, called the *token exchange role*, to authorize calls to AWS services\. The device uses the AWS IoT credentials provider to get temporary AWS credentials for this role, which allows the device to interact with AWS IoT, send logs to Amazon CloudWatch Logs, and download custom component artifacts from Amazon S3\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
 
-You use an AWS IoT *role alias* to configure the token exchange role for a Greengrass core device\. Role aliases enable you to change the token exchange role for a device but keep the device configuration the same\. For more information, see [Authorizing direct calls to AWS services](https://docs.aws.amazon.com/iot/latest/developerguide/authorizing-direct-aws.html) in the *AWS IoT Core Developer Guide*\.
+<a name="installation-create-token-exchange-role-alias-intro"></a>You use an AWS IoT *role alias* to configure the token exchange role for Greengrass core devices\. Role aliases enable you to change the token exchange role for a device but keep the device configuration the same\. For more information, see [Authorizing direct calls to AWS services](https://docs.aws.amazon.com/iot/latest/developerguide/authorizing-direct-aws.html) in the *AWS IoT Core Developer Guide*\.
 
 In this section, you create a token exchange IAM role and an AWS IoT role alias that points to the role\. If you have already set up a Greengrass core device, you can use its token exchange role and role alias instead of creating new ones\. Then, you configure your device's AWS IoT thing to use that role and alias\.
 
 **To create a token exchange IAM role**
 
-1. \(Optional\) Create an IAM role that your device can use as a token exchange role\. Do the following:
+1. <a name="create-token-exchange-role-create-iam-role"></a>Create an IAM role that your device can use as a token exchange role\. Do the following:
 
    1. Create a file that contains the trust policy document that the token exchange role requires\.
 
@@ -319,7 +319,6 @@ In this section, you create a token exchange IAM role and an AWS IoT role alias 
             ]
           }
         }
-      }
       ```
 
    1. Create a file that contains the access policy document that the token exchange role requires\.
@@ -393,7 +392,7 @@ If you don't yet have an S3 bucket for component artifacts, you can add these pe
 
       The command doesn't have any output if the request succeeds\.
 
-1. \(Optional\) Create an AWS IoT role alias that points to the token exchange role\.
+1. <a name="create-token-exchange-role-create-iot-role-alias"></a>Create an AWS IoT role alias that points to the token exchange role\.
    + Replace *GreengrassCoreTokenExchangeRoleAlias* with the name of the role alias to create\.
    + Replace the role ARN with the ARN of the IAM role that you created in the previous step\.
 
@@ -410,7 +409,7 @@ If you don't yet have an S3 bucket for component artifacts, you can add these pe
    }
    ```
 **Note**  
-To create a role alias, you must have permission to pass the token exchange IAM role to AWS IoT\. If you receive an error when you try to create a role alias, check that your AWS user has this permission\. For more information, see [Granting a user permissions to pass a role to an AWS service](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_passrole.html) in the *AWS Identity and Access Management User Guide*\.
+To create a role alias, you must have permission to pass the token exchange IAM role to AWS IoT\. If you receive an error message when you try to create a role alias, check that your AWS user has this permission\. For more information, see [Granting a user permissions to pass a role to an AWS service](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_passrole.html) in the *AWS Identity and Access Management User Guide*\.
 
 1. Create and attach an AWS IoT policy that allows your Greengrass core device to use the role alias to assume the token exchange role\. If you have set up a Greengrass core device before, you can attach its role alias AWS IoT policy instead of creating a new one\. Do the following:
 
@@ -436,7 +435,7 @@ To create a role alias, you must have permission to pass the token exchange IAM 
       }
       ```
 
-   1. \(Optional\) Create an AWS IoT policy from the policy document\.
+   1. Create an AWS IoT policy from the policy document\.
       + Replace *GreengrassCoreTokenExchangeRoleAliasPolicy* with the name of the AWS IoT policy to create\.
 
       ```
@@ -565,21 +564,23 @@ This tutorial shows you how to pull the latest AWS IoT Greengrass Docker image f
 
    ```
    docker run --rm --init -it --name aws-iot-greengrass \
-    -v ./greengrass-v2-config:/tmp/config/:ro \
-    -v ./greengrass-v2-certs:/tmp/certs:ro \ 
+    -v path/to/greengrass-v2-config:/tmp/config/:ro \
+    -v path/to/greengrass-v2-certs:/tmp/certs:ro \ 
     --env-file .env \
+    -p 8883 \
     amazon/aws-iot-greengrass:latest
    ```
 
    This example command uses the following arguments for [docker run](https://docs.docker.com/engine/reference/commandline/run/):
-   + [https://docs.docker.com/engine/reference/run/#clean-up---rm](https://docs.docker.com/engine/reference/run/#clean-up---rm)\. Cleans up the container when it exits\.
-   + [https://docs.docker.com/engine/reference/run/#specify-an-init-process](https://docs.docker.com/engine/reference/run/#specify-an-init-process)\. Uses an init process in the container\. 
+   + <a name="docker-run-rm"></a>[https://docs.docker.com/engine/reference/run/#clean-up---rm](https://docs.docker.com/engine/reference/run/#clean-up---rm)\. Cleans up the container when it exits\.
+   + <a name="docker-run-init"></a>[https://docs.docker.com/engine/reference/run/#specify-an-init-process](https://docs.docker.com/engine/reference/run/#specify-an-init-process)\. Uses an init process in the container\. 
 **Note**  
 The `--init` argument is required to shut down AWS IoT Greengrass Core software when you stop the Docker container\.
-   + [https://docs.docker.com/engine/reference/run/#foreground](https://docs.docker.com/engine/reference/run/#foreground)\. \(Optional\) Runs the Docker container in the foreground as an interactive process\. You can replace this with the `-d` argument to run the Docker container in detached mode instead\. For more information, see [Detached vs foreground](https://docs.docker.com/engine/reference/run/#detached-vs-foreground) in the Docker documentation\.
-   + [https://docs.docker.com/engine/reference/run/#name---name](https://docs.docker.com/engine/reference/run/#name---name)\. Runs a container named `aws-iot-greengrass` 
-   + [https://docs.docker.com/storage/volumes/](https://docs.docker.com/storage/volumes/)\. Mounts a volume into the Docker container to make the configuration file and the certificate files available to AWS IoT Greengrass running inside the container\.
-   + [https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file)\. Specifies the environment file to set the environment variables that will be passed to the AWS IoT Greengrass Core software installer inside the Docker container\. This argument is required only if you used an environment file to [set environment variables](#create-env-file-manual-provisioning)\.
+   + <a name="docker-run-it"></a>[https://docs.docker.com/engine/reference/run/#foreground](https://docs.docker.com/engine/reference/run/#foreground)\. \(Optional\) Runs the Docker container in the foreground as an interactive process\. You can replace this with the `-d` argument to run the Docker container in detached mode instead\. For more information, see [Detached vs foreground](https://docs.docker.com/engine/reference/run/#detached-vs-foreground) in the Docker documentation\.
+   + <a name="docker-run-name"></a>[https://docs.docker.com/engine/reference/run/#name---name](https://docs.docker.com/engine/reference/run/#name---name)\. Runs a container named `aws-iot-greengrass` 
+   + <a name="docker-run-v"></a>[https://docs.docker.com/storage/volumes/](https://docs.docker.com/storage/volumes/)\. Mounts a volume into the Docker container to make the configuration file and the certificate files available to AWS IoT Greengrass running inside the container\.
+   + <a name="docker-run-env-file"></a>[https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file)\. \(Optional\) Specifies the environment file to set the environment variables that will be passed to the AWS IoT Greengrass Core software installer inside the Docker container\. This argument is required only if you created an [environment file](#create-env-file-manual-provisioning) to set environment variables\. If you didn't create an environment file, you can use `--env` arguments to set environment variables directly in your Docker run command\.
+   + <a name="docker-run-p"></a>[https://docs.docker.com/engine/reference/commandline/run/#publish-or-expose-port--p---expose](https://docs.docker.com/engine/reference/commandline/run/#publish-or-expose-port--p---expose)\. \(Optional\) Publishes the 8883 container port to the host machine\. This argument is required if you want to connect and communicate over MQTT because AWS IoT Greengrass uses port 8883 for MQTT traffic\. To open other ports, use additional `-p` arguments\.
 **Note**  <a name="docker-run-cap-drop"></a>
 To run your Docker container with increased security, you can use the `--cap-drop` and `--cap-add` arguments to selectively enable Linux capabilities for your container\. For more information, see [Runtime privilege and Linux capabilities](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities) in the Docker documentation\.
 
@@ -609,19 +610,24 @@ You can also download and use the latest version of the AWS\-provided Compose fi
        container_name: aws-iot-greengrass
        image: amazon/aws-iot-greengrass:latest
        volumes:
-         - ./greengrass-v2-config:/tmp/config/:ro
-         - ./greengrass-v2-certs:/tmp/certs:ro
-   ```
+         - path/to/greengrass-v2-config:/tmp/config/:ro
+         - path/to/greengrass-v2-certs:/tmp/certs:ro 
+       env_file: .env
+       ports:
+         - "8883:8883"
+   ```<a name="docker-compose-optional-params"></a>
+
+   The following parameters in this example Compose file are optional:
+   + `ports`—Publishes the 8883 container ports to the host machine\. This parameter is required if you want to connect and communicate over MQTT because AWS IoT Greengrass uses port 8883 for MQTT traffic\. 
+   + `env_file`—Specifies the environment file to set the environment variables that will be passed to the AWS IoT Greengrass Core software installer inside the Docker container\. This parameter is required only if you created an [environment file](#create-env-file-manual-provisioning) to set environment variables\. If you didn't create an environment file, you can use the [ environment](https://docs.docker.com/compose/compose-file/compose-file-v3/#environment) parameter to set the variables directly in your Compose file\.
 **Note**  <a name="docker-compose-cap-drop"></a>
 To run your Docker container with increased security, you can use `cap_drop` and `cap_add` in your Compose file to selectively enable Linux capabilities for your container\. For more information, see [Runtime privilege and Linux capabilities](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities) in the Docker documentation\.
 
 1. Run the following command to start the container\.
 
    ```
-   docker-compose --env-file .env -f docker-compose.yml up
+   docker-compose -f docker-compose.yml up
    ```
-
-   The `--env-file` argument is required only if you used an environment file to [set environment variables](#create-env-file-manual-provisioning)\.
 
 ------
 

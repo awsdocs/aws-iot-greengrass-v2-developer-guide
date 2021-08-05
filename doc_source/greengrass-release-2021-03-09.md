@@ -1,6 +1,6 @@
 # Release: AWS IoT Greengrass Core v2\.0\.5 software update on March 09, 2021<a name="greengrass-release-2021-03-09"></a>
 
-This release provides version 2\.0\.5 of the Greengrass nucleus component\. It fixes an issue with network proxy support and an issue with the Greengrass data plane endpoint in AWS China Regions\.
+This release provides version 2\.0\.5 of the Greengrass nucleus component and updates AWS\-provided components\. It fixes an issue with network proxy support and an issue with the Greengrass data plane endpoint in AWS China Regions\.
 
 **Release date:** March 09, 2021
 

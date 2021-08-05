@@ -1,14 +1,55 @@
 # Interact with component lifecycle<a name="ipc-component-lifecycle"></a>
 
-The component lifecycle IPC service lets you do the following:
-+ Update component state on the core device
-+ Subscribe to component state updates
-+ Prevent the nucleus from stopping the component to apply an update
+Use the component lifecycle IPC service to:
++ Update the component state on the core device\.
++ Subscribe to component state updates\.
++ Prevent the nucleus from stopping the component to apply an update during a deployment\.
++ Pause and resume component processes\.
 
 **Topics**
++ [Authorization](#ipc-component-lifecycle-authorization)
 + [UpdateState](#ipc-operation-updatestate)
 + [SubscribeToComponentUpdates](#ipc-operation-subscribetocomponentupdates)
 + [DeferComponentUpdate](#ipc-operation-defercomponentupdate)
++ [PauseComponent](#ipc-operation-pausecomponent)
++ [ResumeComponent](#ipc-operation-resumecomponent)
+
+## Authorization<a name="ipc-component-lifecycle-authorization"></a>
+
+To pause or resume other components from a custom component, you must define authorization policies that allows your component to manage other components\. For information about defining authorization policies, see [Authorize components to perform IPC operations](interprocess-communication.md#ipc-authorization-policies)\.
+
+Authorization policies for component lifecycle management have the following properties\.
+
+**IPC service identifier:** `aws.greengrass.ipc.lifecycle`
+
+
+| Operation | Description | Resources | 
+| --- | --- | --- | 
+|  `aws.greengrass#PauseComponent`  |  Allows a component to pause the components that you specify\.  |  A component name, or `*` to allow access to all components\.  | 
+|  `aws.greengrass#ResumeComponent`  |  Allows a component to resume the components that you specify\.  |  A component name, or `*` to allow access to all components\.  | 
+|  `*`  |  Allows a component to pause and resume the components that you specify\.  |  A component name, or `*` to allow access to all components\.  | 
+
+**Example authorization policy**  
+The following example authorization policy allows a component to pause and resume all components\.  
+
+```
+{
+  "accessControl": {
+    "aws.greengrass.ipc.lifecycle": {
+      "com.example.MyLocalLifecycleComponent:lifecycle:1": {
+        "policyDescription": "Allows access to pause/resume all components.",
+        "operations": [
+          "aws.greengrass#PauseComponent",
+          "aws.greengrass#ResumeComponent"
+        ],
+        "resources": [
+          "*"
+        ]
+      }
+    }
+  }
+}
+```
 
 ## UpdateState<a name="ipc-operation-updatestate"></a>
 
@@ -82,6 +123,79 @@ Defaults to the name of the component that makes the request\.
 The amount of time in milliseconds for which to defer the update\. The nucleus waits for this amount of time and then sends another `PreComponentUpdateEvent` that you can discover with [SubscribeToComponentUpdates](#ipc-operation-subscribetocomponentupdates)\.  
 Specify `0` to acknowledge the update\. This tells the nucleus that your component is ready for the update\.  
 Defaults to zero milliseconds, which means to acknowledge the update\.
+
+### Response<a name="ipc-operation-defercomponentupdate-response"></a>
+
+This operation doesn't provide any information in its response\.
+
+## PauseComponent<a name="ipc-operation-pausecomponent"></a>
+
+This feature is available for v2\.4\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.
+
+Pauses a component's processes on the core device\. To resume a component, use the [ResumeComponent](#ipc-operation-resumecomponent) operation\.
+
+You can pause only generic components\. If you try to pause any other type of component, this operation throws an `InvalidRequestError`\.
+
+**Note**  
+This operation can't pause containerized processes, such as Docker containers\. To pause and resume a Docker container, you can use the [docker pause](https://docs.docker.com/engine/reference/commandline/pause/) and [docker resume](https://docs.docker.com/engine/reference/commandline/unpause/) commands\.
+
+This operation doesn't pause component dependencies or components that depend on the component that you pause\. Consider this behavior when you pause a component that is a dependency of another component, because the dependent component might encounter issues when its dependency is paused\.
+
+When you restart or shut down a paused component, such as through a deployment, the Greengrass nucleus resumes the component and runs its shutdown lifecycle\.
+
+**Important**  
+To use this operation, you must define an authorization policy that grants permission to use this operation\. For more information, see [Authorization](#ipc-component-lifecycle-authorization)\.
+
+### Minimum SDK versions<a name="ipc-operation-pausecomponent-sdk-versions"></a>
+
+The following table lists the minimum versions of the AWS IoT Device SDK that you must use to pause and resume components\.
+
+
+| SDK | Minimum version | 
+| --- | --- | 
+|  [AWS IoT Device SDK for Java v2](https://github.com/aws/aws-iot-device-sdk-java-v2)  |  v1\.5\.0  | 
+|  [AWS IoT Device SDK for Python v2](https://github.com/aws/aws-iot-device-sdk-python-v2)  |  v1\.7\.0  | 
+|  [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2)  |  v1\.14\.0  | 
+
+### Request<a name="ipc-operation-defercomponentupdate-request"></a>
+
+This operation's request has the following parameters:
+
+`componentName`  
+The name of the component to pause, which must be a generic component\. For more information, see [Component types](manage-components.md#component-types)\.
+
+### Response<a name="ipc-operation-defercomponentupdate-response"></a>
+
+This operation doesn't provide any information in its response\.
+
+## ResumeComponent<a name="ipc-operation-resumecomponent"></a>
+
+This feature is available for v2\.4\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.
+
+Resumes a component's processes on the core device\. To pause a component, use the [PauseComponent](#ipc-operation-pausecomponent) operation\.
+
+You can resume only paused components\. If you try to resume a component that isn't paused, this operation throws an `InvalidRequestError`\.
+
+**Important**  
+To use this operation, you must define an authorization policy that grants permission to do so\. For more information, see [Authorization](#ipc-component-lifecycle-authorization)\.
+
+### Minimum SDK versions<a name="ipc-operation-resumecomponent-sdk-versions"></a>
+
+The following table lists the minimum versions of the AWS IoT Device SDK that you must use to pause and resume components\.
+
+
+| SDK | Minimum version | 
+| --- | --- | 
+|  [AWS IoT Device SDK for Java v2](https://github.com/aws/aws-iot-device-sdk-java-v2)  |  v1\.5\.0  | 
+|  [AWS IoT Device SDK for Python v2](https://github.com/aws/aws-iot-device-sdk-python-v2)  |  v1\.7\.0  | 
+|  [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2)  |  v1\.14\.0  | 
+
+### Request<a name="ipc-operation-defercomponentupdate-request"></a>
+
+This operation's request has the following parameters:
+
+`componentName`  
+The name of the component to resume\.
 
 ### Response<a name="ipc-operation-defercomponentupdate-response"></a>
 

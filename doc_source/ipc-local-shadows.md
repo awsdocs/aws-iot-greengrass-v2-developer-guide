@@ -20,7 +20,8 @@ The following table lists the minimum versions of the AWS IoT Device SDK that yo
 | SDK | Minimum version | 
 | --- | --- | 
 |  [AWS IoT Device SDK for Java v2](https://github.com/aws/aws-iot-device-sdk-java-v2)  |  v1\.4\.0  | 
-|  [AWS IoT Device SDK for Python v2](https://github.com/aws/aws-iot-device-sdk-java-v2)  |  v1\.6\.0  | 
+|  [AWS IoT Device SDK for Python v2](https://github.com/aws/aws-iot-device-sdk-python-v2)  |  v1\.6\.0  | 
+|  [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2)  |  v1\.13\.0  | 
 
 ## Authorization<a name="ipc-local-shadow-authorization"></a>
 
@@ -224,20 +225,21 @@ byte[] sampleGetThingShadowRequest(String thingName, String shadowName) {
 #### [ Python ]
 
 ```
+import awsiot.greengrasscoreipc
 import awsiot.greengrasscoreipc.client as client
-from aws.iot.greengrasscoreipc.model import GetThingShadowRequest
+from awsiot.greengrasscoreipc.model import GetThingShadowRequest
 
 TIMEOUT = 10
 
 def sample_get_thing_shadow_request(thingName, shadowName):
     try:
         # set up IPC client to connect to the IPC server
-        ipc_client = client.GreengrassCoreIPCClient(connection)
+        ipc_client = awsiot.greengrasscoreipc.connect()
                 
         # create the GetThingShadow request
         get_thing_shadow_request = GetThingShadowRequest()
-        get_thing_shadow_request.thing_name = thing_name
-        get_thing_shadow_request.shadow_name = shadow_name
+        get_thing_shadow_request.thing_name = thingName
+        get_thing_shadow_request.shadow_name = shadowName
         
         # retrieve the GetThingShadow response after sending the request to the IPC server
         op = ipc_client.new_get_thing_shadow()
@@ -387,20 +389,21 @@ byte[] sampleUpdateThingShadowRequest(String thingName, String shadowName, byte[
 #### [ Python ]
 
 ```
+import awsiot.greengrasscoreipc
 import awsiot.greengrasscoreipc.client as client
-from aws.iot.greengrasscoreipc.model import UpdateThingShadowRequest
+from awsiot.greengrasscoreipc.model import UpdateThingShadowRequest
 
 TIMEOUT = 10
 
 def sample_update_thing_shadow_request(thingName, shadowName, payload):
     try:
         # set up IPC client to connect to the IPC server
-        ipc_client = client.GreengrassCoreIPCClient(connection)
+        ipc_client = awsiot.greengrasscoreipc.connect()
                 
         # create the UpdateThingShadow request
         update_thing_shadow_request = UpdateThingShadowRequest()
-        update_thing_shadow_request.thing_name = thing_name
-        update_thing_shadow_request.shadow_name = shadow_name
+        update_thing_shadow_request.thing_name = thingName
+        update_thing_shadow_request.shadow_name = shadowName
         update_thing_shadow_request.payload = payload
                         
         # retrieve the UpdateThingShadow response after sending the request to the IPC server
@@ -500,20 +503,21 @@ byte[] sampleDeleteThingShadowRequest(String thingName, String shadowName) {
 #### [ Python ]
 
 ```
+import awsiot.greengrasscoreipc
 import awsiot.greengrasscoreipc.client as client
-from aws.iot.greengrasscoreipc.model import DeleteThingShadowRequest
+from awsiot.greengrasscoreipc.model import DeleteThingShadowRequest
 
 TIMEOUT = 10
 
 def sample_delete_thing_shadow_request(thingName, shadowName):
     try:
         # set up IPC client to connect to the IPC server
-        ipc_client = client.GreengrassCoreIPCClient(connection)
+        ipc_client = awsiot.greengrasscoreipc.connect()
                 
         # create the DeleteThingShadow request
         delete_thing_shadow_request = DeleteThingShadowRequest()
-        delete_thing_shadow_request.thing_name = thing_name
-        delete_thing_shadow_request.shadow_name = shadow_name
+        delete_thing_shadow_request.thing_name = thingName
+        delete_thing_shadow_request.shadow_name = shadowName
                         
         # retrieve the DeleteThingShadow response after sending the request to the IPC server
         op = ipc_client.new_delete_thing_shadow()
@@ -632,21 +636,22 @@ List<String> sampleListNamedShadowsForThingRequest(String thingName, String next
 #### [ Python ]
 
 ```
+import awsiot.greengrasscoreipc
 import awsiot.greengrasscoreipc.client as client
-from aws.iot.greengrasscoreipc.model import ListNamedShadowsForThingRequest
+from awsiot.greengrasscoreipc.model import ListNamedShadowsForThingRequest
 
 TIMEOUT = 10
 
-def sample_list_named_shadows_for_thing_request(thingName, next_token, page_size):
+def sample_list_named_shadows_for_thing_request(thingName, nextToken, pageSize):
     try:
         # set up IPC client to connect to the IPC server
-        ipc_client = client.GreengrassCoreIPCClient(connection)
+        ipc_client = awsiot.greengrasscoreipc.connect()
                 
         # create the ListNamedShadowsForThingRequest request
         list_named_shadows_for_thing_request = ListNamedShadowsForThingRequest()
-        list_named_shadows_for_thing_request.thing_name = thing_name
-        list_named_shadows_for_thing_request.next_token = next_token
-        list_named_shadows_for_thing_request.page_size = page_size
+        list_named_shadows_for_thing_request.thing_name = thingName
+        list_named_shadows_for_thing_request.next_token = nextToken
+        list_named_shadows_for_thing_request.page_size = pageSize
         
         # retrieve the ListNamedShadowsForThingRequest response after sending the request to the IPC server
         op = ipc_client.new_list_named_shadows_for_thing()

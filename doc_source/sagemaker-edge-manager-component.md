@@ -15,6 +15,14 @@ EU \(Frankfurt\)
 EU \(Ireland\)
 Asia Pacific \(Tokyo\)
 
+**Topics**
++ [Versions](#sagemaker-edge-manager-component-versions)
++ [Type](#sagemaker-edge-manager-component-type)
++ [Requirements](#sagemaker-edge-manager-component-requirements)
++ [Dependencies](#sagemaker-edge-manager-component-dependencies)
++ [Configuration](#sagemaker-edge-manager-component-config)
++ [Changelog](#sagemaker-edge-manager-component-changelog)
+
 ## Versions<a name="sagemaker-edge-manager-component-versions"></a>
 
 This component has the following versions:
@@ -28,29 +36,11 @@ This component has the following versions:
 
 ## Requirements<a name="sagemaker-edge-manager-component-requirements"></a>
 
-This component has the following requirements:
-+ A SageMaker Edge device fleet that uses the same AWS IoT role alias as your Greengrass core device\.
+This component has the following requirements:<a name="sm-edge-manager-component-reqs"></a>
++ <a name="sm-req-core-device"></a>A Greengrass core device running on a Debian\-based Linux platform \(x86\_64 or Armv8\)\. If you don't have one, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
++ <a name="sm-req-python"></a>[Python](https://www.python.org/downloads/) 3\.6 or later, including `pip` for your version of Python, installed on your core device\.
 + The [Greengrass device role](device-service-role.md) configured with the following: 
-  + The [AmazonSageMakerEdgeDeviceFleetPolicy](https://console.aws.amazon.com/iam/home#/policies/arn:aws:iam::aws:policy/service-role/AmazonSageMakerEdgeDeviceFleetPolicy) IAM managed policy\.
-  + The `s3:PutObject` action, as shown in the following IAM policy example\.
-
-    ```
-    {
-      "Version": "2012-10-17",
-      "Statement": [
-      {
-        "Action": [
-          "s3:PutObject"
-        ],
-        "Resource": [
-          "*"
-        ],
-        "Effect": "Allow"
-      }
-      ]
-    }
-    ```
-  + A trust relationship that allows `credentials.iot.amazonaws.com` and `sagemaker.amazonaws.com` to assume the role, as shown in the following IAM policy example\.
+  + <a name="sm-req-iam-trust-relationship"></a>A trust relationship that allows `credentials.iot.amazonaws.com` and `sagemaker.amazonaws.com` to assume the role, as shown in the following IAM policy example\.
 
     ```
     { 
@@ -73,18 +63,67 @@ This component has the following requirements:
       ] 
     }
     ```
+  + <a name="sm-req-iam-sagemanakeredgedevicefleetpolicy"></a>The [AmazonSageMakerEdgeDeviceFleetPolicy](https://console.aws.amazon.com/iam/home#/policies/arn:aws:iam::aws:policy/service-role/AmazonSageMakerEdgeDeviceFleetPolicy) IAM managed policy\.
+  + <a name="sm-req-iam-s3-putobject"></a>The `s3:PutObject` action, as shown in the following IAM policy example\.
+
+    ```
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+      {
+        "Action": [
+          "s3:PutObject"
+        ],
+        "Resource": [
+          "*"
+        ],
+        "Effect": "Allow"
+      }
+      ]
+    }
+    ```
++ <a name="sm-req-s3-bucket"></a>An Amazon S3 bucket created in the same AWS account and AWS Region as your Greengrass core device\. SageMaker Edge Manager requires an S3 bucket to create an edge device fleet, and to store sample data from running inference on your device\. For information about creating S3 buckets, see [Getting started with Amazon S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/GetStartedWithS3.html)\.
++ <a name="sm-req-edge-device-fleet"></a>A SageMaker edge device fleet that uses the same AWS IoT role alias as your Greengrass core device\. For more information, see [Create an edge device fleet](get-started-with-edge-manager-on-greengrass.md#create-edge-device-fleet-for-greengrass)\.
++ <a name="sm-req-edge-device"></a>Your Greengrass core device registered as an edge device in your SageMaker Edge device fleet\. The edge device name must match the AWS IoT thing name for your core device\. For more information, see [Register your Greengrass core device](get-started-with-edge-manager-on-greengrass.md#register-greengrass-core-device-in-sme)\.
 
 ## Dependencies<a name="sagemaker-edge-manager-component-dependencies"></a>
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#sagemaker-edge-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
-The following table lists the dependencies for version 1\.0\.x of this component\.
+------
+#### [ 1\.0\.3 ]
+
+The following table lists the dependencies for version 1\.0\.3 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.5\.0 | Soft | 
+| [Token exchange service](token-exchange-service-component.md) | >=0\.0\.0 | Hard | 
+
+------
+#### [ 1\.0\.1 \- 1\.0\.2 ]
+
+The following table lists the dependencies for versions 1\.0\.1 and 1\.0\.2 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.4\.0 | Soft | 
+| [Token exchange service](token-exchange-service-component.md) | >=0\.0\.0 | Hard | 
+
+------
+#### [ 1\.0\.0 ]
+
+The following table lists the dependencies for version 1\.0\.0 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
 | --- | --- | --- | 
 | [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.3\.0 | Soft | 
 | [Token exchange service](token-exchange-service-component.md) | >=0\.0\.0 | Hard | 
+
+------
 
 For more information about component dependencies, see the [component recipe reference](component-recipe-reference.md#recipe-reference-component-dependencies)\.
 
@@ -121,7 +160,8 @@ If you specify `Disk`, you can also choose to periodically upload the captured d
 Default: `Cloud`
 
 `CaptureDataPeriodicUpload`  
-\(Optional\) Boolean value that specifies whether to periodically upload captured data\. Set this parameter to `true` if you set `CaptureDataDestination` to `Disk`, and you also want the agent to periodically upload the captured data your S3 bucket\.  
+\(Optional\) String value that specifies whether to periodically upload captured data\. Supported values are `true` and `false`\.  
+Set this parameter to `true` if you set `CaptureDataDestination` to `Disk`, and you also want the agent to periodically upload the captured data your S3 bucket\.  
 Default: `false`
 
 `CaptureDataPeriodicUploadPeriodSeconds`  
@@ -138,24 +178,27 @@ Default: `4`
 Default: `3072`
 
 `FolderPrefix`  
-\(Optional\) The name of the folder to which the agent writes the captured data\. If you set `CaptureDataDestination` to `Disk`, the agent creates the folder in the component's work directory\. If you set `CaptureDataDestination` to `Cloud`, the agent creates the folder in your S3 bucket\.   
+\(Optional\) The name of the folder to which the agent writes the captured data\. If you set `CaptureDataDestination` to `Disk`, the agent creates the folder in the component's work directory\. If you set `CaptureDataDestination` to `Cloud`, or if you set `CaptureDataPeriodicUpload` to `true`, the agent creates the folder in your S3 bucket\.   
 Default: `sme-capture`
 
 `SagemakerEdgeLogVerbose`  
-\(Optional\) Boolean value that specifies whether to enable debug logging\.   
+\(Optional\) String value that specifies whether to enable debug logging\. Supported values are `true` and `false`\.  
 Default: `false`
 
 `UnixSocketName`  
 \(Optional\) The location of the SageMaker Edge Manager socket file descriptor on the core device\.  
 Default: `/tmp/aws.greengrass.SageMakerEdgeManager.sock`
 
-**Example Configuration merge update**  
-The following example configuration specifies that the core device is part of the *MyEdgeDeviceFleet* and that the agent uploads capture data to the *DOC\-EXAMPLE\-BUCKET* S3 bucket\.   
+**Example: Configuration merge update**  
+The following example configuration specifies that the core device is part of the *MyEdgeDeviceFleet* and that the agent writes capture data both to the device and to an S3 bucket\. This configuration also enables debug logging\.  
 
 ```
 {
     "DeviceFleetName": "MyEdgeDeviceFleet",
-    "BucketName": "DOC-EXAMPLE-BUCKET"
+    "BucketName": "DOC-EXAMPLE-BUCKET",
+    "CaptureDataDestination": "Disk",
+    "CaptureDataPeriodicUpload": "true",
+    "SagemakerEdgeLogVerbose": "true"    
 }
 ```
 
@@ -166,4 +209,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  1\.0\.3  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
+|  1\.0\.2  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/sagemaker-edge-manager-component.html)  | 
+|  1\.0\.1  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  1\.0\.0  |  Initial version\.  | 

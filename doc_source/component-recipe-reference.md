@@ -57,7 +57,7 @@ An object that defines the default configuration for the component\. You define 
 `ComponentDependencies`  <a name="recipe-reference-component-dependencies"></a>
 \(Optional\) A dictionary of objects that each define a component dependency for the component\. The key for each object identifies the name of the component dependency\. AWS IoT Greengrass installs component dependencies when the component installs\. AWS IoT Greengrass waits for dependencies to start before it starts the component\. Each object contains the following information:    
 `VersionRequirement`  
-The semantic version constraint that defines the component versions for this dependency\. You can specify a version or a range of versions\. For more information, see the [npm semantic version calculator](https://semver.npmjs.com/)\.  
+The npm\-style semantic version constraint that defines the compatible component versions for this dependency\. You can specify a version or a range of versions\. For more information, see the [npm semantic version calculator](https://semver.npmjs.com/)\.  
 `DependencyType`  
 \(Optional\) The type of this dependency\. Choose from the following options\.  
 + `SOFT` – The component doesn't restart if the dependency changes state\.
@@ -243,7 +243,7 @@ You can specify the `all` selection key to run sections of the global lifecycle 
 When the component deploys, the AWS IoT Greengrass Core software downloads the artifact to a folder on the core device\. You can also define artifacts as archive files that the software extracts after it downloads them\.  
 You can use [recipe variables](#recipe-variables) to get the paths to the folders where the artifacts install on the core device\.  
 + Normal files – Use the [artifacts:path recipe variable](#component-recipe-artifacts-path) to get the path to the folder that contains the artifacts\. For example, specify `{artifacts:path}/my_script.py` in a recipe to get the path to an artifact that has the URI `s3://DOC-EXAMPLE-BUCKET/path/to/my_script.py`\.
-+ Extracted archives – Use the [artifacts:decompressedPath recipe variable](#component-recipe-artifacts-decompressed-path) to get the path to the folder that contains the extracted archive artifacts\. The AWS IoT Greengrass Core software extracts each archive to a folder with the same name as the archive\. For example, specify `{artifacts:decompressedPath}/my_archive/my_script.py` in a recipe to get the path to `my_script.py` in the archive artifact that has the URI `s3://DOC-EXAMPLE-BUCKET/path/to/my_artifact.zip`\.
++ Extracted archives – Use the [artifacts:decompressedPath recipe variable](#component-recipe-artifacts-decompressed-path) to get the path to the folder that contains the extracted archive artifacts\. The AWS IoT Greengrass Core software extracts each archive to a folder with the same name as the archive\. For example, specify `{artifacts:decompressedPath}/my_archive/my_script.py` in a recipe to get the path to `my_script.py` in the archive artifact that has the URI `s3://DOC-EXAMPLE-BUCKET/path/to/my_archive.zip`\.
 When you develop a component with an archive artifact on a local core device, you might not have a URI for that artifact\. To test your component with an `Unarchive` option that extracts the artifact, specify a URI where the file name matches the name of your archive artifact file\. You can specify the URI where you expect to upload the archive artifact, or you can specify a new placeholder URI\. For example, to extract the `my_archive.zip` artifact during a local deployment, you can specify `s3://DOC-EXAMPLE-BUCKET/my_archive.zip`\.
 Each object contains the following information:    
 `URI`  
@@ -373,6 +373,7 @@ This recipe variable has the following inputs:
 + <a name="recipe-variable-component-dependency-name"></a>`component_dependency_name` – \(Optional\) The name of the component dependency to query\. Omit this segment to query the component that this recipe defines\. You can specify only direct dependencies\.
 
   `component_dependency_name:work:path`   
+This feature is available for v2\.0\.4 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.  
 The work path for the component that this recipe defines or for a component on which this component depends\. The value of this recipe variable is equivalent to the output of the `$PWD` environment variable and the [pwd](https://en.wikipedia.org/wiki/Pwd) command when run from the context of the component\.  
 You can use this recipe variable to share files between a component and a dependency\.  
 The folder at this path is readable and writable by the component that this recipe defines and by other components that run as the same user and group\.  
@@ -381,6 +382,10 @@ This recipe variable has the following inputs:
 
 `kernel:rootPath`  
 The AWS IoT Greengrass Core root path\.
+
+`iot:thingName`  
+This feature is available for v2\.3\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.  
+The name of the core device's AWS IoT thing\.
 
 ## Recipe examples<a name="recipe-examples"></a>
 
@@ -428,7 +433,7 @@ The following recipe describes a Hello World component that runs a Python script
 
 ```
 ---
-RecipeFormatVersion: 2020-01-25
+RecipeFormatVersion: '2020-01-25'
 ComponentName: com.example.HelloWorld
 ComponentVersion: '1.0.0'
 ComponentDescription: My first AWS IoT Greengrass component.
@@ -479,7 +484,7 @@ The following recipe describes a component that installs Python\. This component
 
 ```
 ---
-RecipeFormatVersion: 2020-01-25
+RecipeFormatVersion: '2020-01-25'
 ComponentName: com.example.PythonRuntime
 ComponentDescription: Installs Python 3.7
 ComponentPublisher: Amazon
@@ -567,7 +572,7 @@ The following component recipe uses several recipe fields\.
 
 ```
 ---
-RecipeFormatVersion: 2020-01-25
+RecipeFormatVersion: '2020-01-25'
 ComponentName: com.example.FooService
 ComponentDescription: Complete recipe for AWS IoT Greengrass components
 ComponentPublisher: Amazon

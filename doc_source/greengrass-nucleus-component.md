@@ -1,6 +1,6 @@
 # Greengrass nucleus<a name="greengrass-nucleus-component"></a>
 
-The Greengrass nucleus component \(`aws.greengrass.Nucleus`\) is the only mandatory component and the minimum requirement to run the AWS IoT Greengrass Core software on a device\. You can configure this component to customize and update your AWS IoT Greengrass Core software remotely\. You can deploy this component to configure settings such as proxy, device role, and AWS IoT thing configuration on your core devices\.
+The Greengrass nucleus component \(`aws.greengrass.Nucleus`\) is a mandatory component and the minimum requirement to run the AWS IoT Greengrass Core software on a device\. You can configure this component to customize and update your AWS IoT Greengrass Core software remotely\. Deploy this component to configure settings such as proxy, device role, and AWS IoT thing configuration on your core devices\.
 
 **Important**  
 When the version of the nucleus component changes, or when you change certain configuration parameters, the AWS IoT Greengrass Core software—which includes the nucleus and all other components on your device—restarts to apply the changes\.   
@@ -18,6 +18,8 @@ When the version of the nucleus component changes, or when you change certain co
 ## Versions<a name="greengrass-nucleus-component-versions"></a>
 
 This component has the following versions:
++ 2\.4\.x
++ 2\.3\.x
 + 2\.2\.x
 + 2\.1\.x
 + 2\.0\.x
@@ -43,8 +45,8 @@ You can also follow a tutorial to install the Greengrass nucleus and explore Gre
 This component provides the following configuration parameters that you can customize when you deploy the component\. Some parameters require that the AWS IoT Greengrass Core software restarts to take effect\. For more information about why and how to configure this component, see [Configure the AWS IoT Greengrass Core software](configure-greengrass-core-v2.md)\.
 
 `iotRoleAlias`  
-The AWS IoT role alias that points to an IAM role\. The AWS IoT credentials provider assumes this role to allow the Greengrass core device to interact with AWS services\.  
-When you run the AWS IoT Greengrass Core software with the `--provision true` option, the software provisions a role alias and sets its value in the nucleus component\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
+<a name="nucleus-component-configuration-iot-role-alias"></a>The AWS IoT role alias that points to a token exchange IAM role\. The AWS IoT credentials provider assumes this role to allow the Greengrass core device to interact with AWS services\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.  
+When you run the AWS IoT Greengrass Core software with the `--provision true` option, the software provisions a role alias and sets its value in the nucleus component\.
 
 `networkProxy`  
 \(Optional\) The network proxy to use for all connections\. For more information, see [Connect on port 443 or through a network proxy](configure-greengrass-core-v2.md#configure-alpn-network-proxy)\.  
@@ -55,17 +57,16 @@ This object contains the following information:
 `proxy`  
 The proxy to which to connect\. This object contains the following information:    
 `url`  
-The URL of the proxy server in the format `scheme://userinfo@host:port`\.  
-+ `scheme` – The scheme, which must be `http` or `https`\.
-+ `userinfo` – \(Optional\) The user name and password information\. If you specify this in the `url`, the Greengrass core device ignores the `username` and `password` fields\.
+The URL of the proxy server in the format `scheme://userinfo@host:port`\.  <a name="nucleus-component-configuration-proxy-url-segments"></a>
++ `scheme` – The scheme, which must be `http`\.
++ `userinfo` – \(Optional\) The user name and password information\. If you specify this information in the `url`, the Greengrass core device ignores the `username` and `password` fields\.
 + `host` – The host name or IP address of the proxy server\.
-+ `port` – \(Optional\) The port number\. If you don't specify the port, then the Greengrass core device uses the following default values:
-  + `http` – 80
-  + `https` – 443  
++ `port` – \(Optional\) The port number\. If you don't specify the port, then the Greengrass core device uses the following default value:
+  + `http` – 80  
 `username`  
-\(Optional\) The user name to use to authenticate to the proxy server\.  
+\(Optional\) The user name that authenticates the proxy server\.  
 `password`  
-\(Optional\) The password to use to authenticate to the proxy server\.
+\(Optional\) The password that authenticates the proxy server\.
 
 `mqtt`  
 \(Optional\) The MQTT configuration for the Greengrass core device\. For more information, see [Connect on port 443 or through a network proxy](configure-greengrass-core-v2.md#configure-alpn-network-proxy)\.  
@@ -103,20 +104,20 @@ Default: `2621440` \(2\.5 MB\)
 \(Optional\) You can spool MQTT QoS 0 messages that the core device receives while its offline\. If you set this option to `true`, the core device spools QoS 0 messages that it can't send while it's offline\. If you set this option to `false`, the core device discards these messages\. The core device always spools QoS 1 messages unless the spool is full\.  
 Default: `false`
 
-`jvmOptions`  
-\(Optional\) The JVM options to use to run the AWS IoT Greengrass Core software\. For example, to specify a maximum heap size, you can set this option to `-Xmx64m`\.  
+  `jvmOptions`  
+\(Optional\) The JVM options to use to run the AWS IoT Greengrass Core software\. For information about recommended JVM options for running AWS IoT Greengrass Core software, see [Control memory allocation with JVM options](configure-greengrass-core-v2.md#jvm-tuning)\.  
 <a name="nucleus-component-parameter-restart-para"></a>When you deploy a change to this configuration parameter, the AWS IoT Greengrass Core software restarts for the change to take effect\.
 
 `iotDataEndpoint`  
-The AWS IoT data endpoint for your AWS account\.  
+<a name="nucleus-component-configuration-iot-data-endpoint"></a>The AWS IoT data endpoint for your AWS account\.  
 <a name="nucleus-component-set-iot-endpoints"></a>When you run the AWS IoT Greengrass Core software with the `--provision true` option, the software gets your data and credentials endpoints from AWS IoT and sets them in the nucleus component\.
 
 `iotCredEndpoint`  
-The AWS IoT credentials endpoint for your AWS account\.  
+<a name="nucleus-component-configuration-iot-cred-endpoint"></a>The AWS IoT credentials endpoint for your AWS account\.  
 <a name="nucleus-component-set-iot-endpoints"></a>When you run the AWS IoT Greengrass Core software with the `--provision true` option, the software gets your data and credentials endpoints from AWS IoT and sets them in the nucleus component\.
 
 `greengrassDataPlanePort`  
-This parameter is available in v2\.0\.4 and later of this component\.  
+This feature is available in v2\.0\.4 and later of this component\.  
 \(Optional\) The port to use for data plane connections\. For more information, see [Connect on port 443 or through a network proxy](configure-greengrass-core-v2.md#configure-alpn-network-proxy)\.  
 You must specify a port where the device can make outbound connections\. If you specify a port that is blocked, the device won't be able to connect to AWS IoT Greengrass to receive deployments\.
 Choose from the following options:  
@@ -134,7 +135,15 @@ This object contains the following information:
 `posixUser`  
 The name or ID of the system user and system group that the core device uses to run components\. Specify the user and group separated by a colon \(`:`\), where the group is optional\. If you omit the group, the AWS IoT Greengrass Core software defaults to the primary group of the user that you specify\. For example, you can specify `ggc_user` or `ggc_user:ggc_group`\. For more information, see [Configure the user and group that run components](configure-greengrass-core-v2.md#configure-component-user)\.  
 When you run the AWS IoT Greengrass Core software with the `--component-default-user ggc_user:ggc_group` option, the software sets this parameter in the nucleus component\.  
-You can't specify `root` or `0` for the user or the group\.
+You can't specify `root` or `0` for the user or the group\.  
+`systemResourceLimits`  
+This feature is available in v2\.4\.0 and later of this component\.  
+The system resource limits to apply to component processes by default\. You can override system resource limits for individual components when you create a deployment\. For more information, see [Configure system resource limits for components](configure-greengrass-core-v2.md#configure-component-system-resource-limits)\.  
+This object contains the following information:    
+`cpus`  
+<a name="system-resource-limits-cpu-definition-each"></a>The maximum amount of CPU time that each component's processes can use on the core device\. A core device's total CPU time is equivalent to the device's number of CPU cores\. For example, on a core device with 4 CPU cores, you can set this value to `2` to limit each component's processes to 50 percent usage of each CPU core\. On a device with 1 CPU core, you can set this value to `0.25` to limit each component's processes to 25 percent usage of the CPU\. If you set this value to a number greater than the number of CPU cores, the AWS IoT Greengrass Core software doesn't limit the components' CPU usage\.  
+`memory`  
+<a name="system-resource-limits-memory-definition-each"></a>The maximum amount of RAM \(in kilobytes\) that each component's processes can use on the core device\.
 
 `logging`  
 \(Optional\) The logging configuration for the core device\. This object contains the following information:    
@@ -161,7 +170,7 @@ Default: `FILE`
 Default: `1024`  
   `totalLogsSizeKB`   
 \(Optional\) The maximum total size of all log files \(in kilobytes\)\. After the total size of all log files exceeds this maximum total size, the AWS IoT Greengrass Core software deletes the oldest log files\.  
-This parameter is equivalent to the [system logs disk space limit](log-manager-component.md#log-manager-component-configuration) parameter of the [log manager component](log-manager-component.md)\. If you specify this parameter on both components, the AWS IoT Greengrass Core software uses the minimum of the two values as the maximum total log size\.  
+This parameter is equivalent to the [system logs disk space limit](log-manager-component.md#log-manager-component-configuration) parameter \(`diskSpaceLimit`\) of the [log manager component](log-manager-component.md)\. If you specify this parameter on both components, the AWS IoT Greengrass Core software uses the minimum of the two values as the maximum total log size\.  
 <a name="nucleus-component-logging-parameter-file-only"></a>This parameter applies only when you specify `FILE` for `outputType`\.  
 Default: `10240`  
 `outputDirectory`  
@@ -169,7 +178,7 @@ Default: `10240`
 <a name="nucleus-component-logging-parameter-file-only"></a>This parameter applies only when you specify `FILE` for `outputType`\.  
 Default: `/greengrass/v2/logs`, where */greengrass/v2* is the AWS IoT Greengrass root folder\.
 
-  `fleetstatusservice`   
+  `fleetstatus`   
 This parameter is available in v2\.1\.0 and later of this component\.  
 \(Optional\) The fleet status configuration for the core device\.  
 This object contains the following information:    
@@ -195,15 +204,15 @@ If you set this value lower than the minimum supported value, the nucleus uses t
 Minimum: `86400`  
 Default: `86400`
 
-`deploymentPollingFrequency`  
+`deploymentPollingFrequencySeconds`  
 \(Optional\) The period in seconds at which to poll for deployment notifications\.  
 Default: `15`
 
-`componentStoreMaxSize`  
+`componentStoreMaxSizeBytes`  
 \(Optional\) The maximum size on disk of the component store, which comprises component recipes and artifacts\.  
 Default: `10000000000` \(10 GB\)
 
-  `platformOverrides`   
+  `platformOverride`   
 \(Optional\) A dictionary of attributes that identify the core device's platform\. Use this to define custom platform attributes that component recipes can use to identify the correct lifecycle and artifacts for the component\. For example, you might define a hardware capability attribute to deploy only the minimal set of artifacts for a component to run\. For more information, see the [manifest platform parameter](component-recipe-reference.md#component-platform-definition) in the component recipe\.  
 You can also use this parameter to override the `os` and `architecture` platform attributes of the core device\.
 
@@ -215,7 +224,7 @@ You can also use this parameter to override the `os` and `architecture` platform
   "networkProxy": {
     "noProxyAddresses": "http://192.168.0.1,www.example.com",
     "proxy": {
-      "url": "https://my-proxy-server:1100",
+      "url": "http://my-proxy-server:1100",
       "username": "Mary_Major",
       "password": "pass@word1357"
     }
@@ -238,6 +247,8 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.4\.0  |  <a name="changelog-nucleus-2.4.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
+|  2\.3\.0  |  <a name="changelog-nucleus-2.3.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
 |  2\.2\.0  |  <a name="changelog-nucleus-2.2.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
 |  2\.1\.0  |  <a name="changelog-nucleus-2.1.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
 |  2\.0\.5  |  <a name="changelog-nucleus-2.0.5"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 

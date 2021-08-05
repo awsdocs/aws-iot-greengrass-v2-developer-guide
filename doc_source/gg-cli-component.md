@@ -15,7 +15,7 @@ Retrieve the version, status, and configuration of one component\.
 **Synopsis**  
 
 ```
-$ greengrass-cli component details --name <component-name> 
+$ sudo greengrass-cli component details --name <component-name> 
 ```
 
 **Arguments**  
@@ -25,7 +25,7 @@ $ greengrass-cli component details --name <component-name>
 The following example shows the output produced when you run this command\.  
 
 ```
-$ greengrass-cli component details --name MyComponent 
+$ sudo greengrass-cli component details --name MyComponent 
 
 Component Name: MyComponent 
 Version: 1.0.0
@@ -40,7 +40,7 @@ Retrieve the names, component details, and runtime configuration for all root\-l
 **Synopsis**  
 
 ```
-$ greengrass-cli component list
+$ sudo greengrass-cli component list
 ```
 
 **Arguments**  
@@ -50,7 +50,7 @@ None
 The following example shows the output produced when you run this command\.  
 
 ```
-$ greengrass-cli component list
+$ sudo greengrass-cli component list
 
 Components currently running in Greengrass:
 Component Name: FleetStatusService
@@ -86,7 +86,7 @@ Restart components\.
 **Synopsis**  
 
 ```
-$ greengrass-cli component restart --names <component-name>,...
+$ sudo greengrass-cli component restart --names <component-name>,...
 ```
 
 **Arguments**  
@@ -102,7 +102,7 @@ Stop running components\.
 **Synopsis**  
 
 ```
-$ greengrass-cli component stop --names <component-name>,...
+$ sudo greengrass-cli component stop --names <component-name>,...
 ```
 
 **Arguments**  

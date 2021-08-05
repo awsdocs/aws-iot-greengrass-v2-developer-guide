@@ -39,6 +39,28 @@ This component has the following requirements:
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#local-debug-console-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
+#### [ 2\.2\.2 ]
+
+The following table lists the dependencies for version 2\.2\.2 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.1\.0 <2\.5\.0 | Hard | 
+| [Greengrass CLI](greengrass-cli-component.md) | >=2\.1\.0 <2\.5\.0 | Hard | 
+
+------
+#### [ 2\.2\.1 ]
+
+The following table lists the dependencies for version 2\.2\.1 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.1\.0 <2\.4\.0 | Hard | 
+| [Greengrass CLI](greengrass-cli-component.md) | >=2\.1\.0 <2\.4\.0 | Hard | 
+
+------
 #### [ 2\.2\.0 ]
 
 The following table lists the dependencies for version 2\.2\.0 of this component\.
@@ -191,6 +213,21 @@ If the certificate fingerprint doesn't match, go to [Step 2](#local-debug-consol
      1. Sign in to the website using the user name and password that the `get-debug-password` command printed earlier\.
 
         The local debug console opens\.
+
+     1. If the local debug console shows an error that says it can't connect to the WebSocket due to a failed TLS handshake, you must bypass the self\-signed security warning for the WebSocket URL\.  
+![\[The WebSocket TLS handshake error in the local debug console.\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/images/local-debug-console/websocket-tls-handshake-error.png)
+
+        Do the following:
+
+        1. Open `https://localhost:1442` in the same browser where you opened the local debug console\.
+
+        1. Verify the certificate and bypass the security warning\.
+
+           Your browser might show an HTTP 404 page after you bypass the warning\.
+
+        1. Open `https://localhost:1441` again\.
+
+           The local debug console shows information about the core device\.
    + If you disabled HTTPS in the local debug console, do the following:
 
      1. <a name="local-debug-console-component-usage-open-localhost-http"></a>Open `http://localhost:1441` on your core device, or open it on your development computer if you forwarded the port over SSH\.
@@ -245,6 +282,8 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.2\.2  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
+|  2\.2\.1  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  2\.2\.0  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 
 |  2\.1\.0  |  <a name="changelog-local-debug-console-2.1.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/local-debug-console-component.html)  | 
 |  2\.0\.3  |  Initial version\.  | 

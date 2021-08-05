@@ -4,7 +4,7 @@ In AWS IoT Greengrass, you can configure sample [machine learning components](pe
 
 **Using sample inference components**  
 + Modify the configuration of inference components when you deploy them\.
-+ Use a custom model with the sample inference component by replacing the sample model store component with a custom model component\. You custom model must be trained using the same runtime as the sample model\.
++ Use a custom model with the sample inference component by replacing the sample model store component with a custom model component\. Your custom model must be trained using the same runtime as the sample model\.
 
 **Using custom inference components**  
 + Use custom inference code with the sample models and runtimes by adding public model components and runtime components as dependencies of custom inference components\.

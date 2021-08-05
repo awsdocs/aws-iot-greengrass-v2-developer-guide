@@ -1,6 +1,6 @@
 # Machine learning components<a name="machine-learning-components"></a>
 
-AWS IoT Greengrass provides machine learning components that you can select and deploy to supported devices to [perform machine learning inference](ml-inference)\. AWS\-provided machine learning components are broadly categorized as follows:<a name="ml-component-types"></a>
+AWS IoT Greengrass provides machine learning components that you can select and deploy to supported devices to [perform machine learning inference](perform-machine-learning-inference.md)\. AWS\-provided machine learning components are broadly categorized as follows:<a name="ml-component-types"></a>
 + **Model component**—Contains machine learning models as Greengrass artifacts\.
 + **Runtime component**—Contains the script that installs the machine learning framework and its dependencies on the Greengrass core device\.
 + **Inference component**—Contains the inference code and includes component dependencies to install the machine learning framework and download pre\-trained machine learning models\.

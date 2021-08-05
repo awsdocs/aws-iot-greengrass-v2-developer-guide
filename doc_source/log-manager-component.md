@@ -59,6 +59,26 @@ The [Greengrass device role](device-service-role.md) that you create when you in
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#log-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
+#### [ 2\.1\.3 ]
+
+The following table lists the dependencies for version 2\.1\.3 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.1\.0 <2\.5\.0 | Soft | 
+
+------
+#### [ 2\.1\.2 ]
+
+The following table lists the dependencies for version 2\.1\.2 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.1\.0 <2\.4\.0 | Soft | 
+
+------
 #### [ 2\.1\.1 ]
 
 The following table lists the dependencies for version 2\.1\.1 of this component\.
@@ -102,10 +122,10 @@ This component provides the following configuration parameters that you can cust
 `logsUploaderConfiguration`  
 \(Optional\) The configuration for logs that the log manager component uploads\. This object contains the following information:    
 `systemLogsConfiguration`  
-\(Optional\) The configuration for AWS IoT Greengrass Core software system logs\. This object contains the following information:    
+\(Optional\) The configuration for AWS IoT Greengrass Core software system logs\. Specify this configuration to enable the log manager component to manage system logs\. This object contains the following information:    
 `uploadToCloudWatch`  <a name="log-manager-component-configuration-system-upload-to-cloud-watch"></a>
 \(Optional\) You can upload system logs to CloudWatch Logs\.  
-Default: `true`  
+Default: `false`  
 `minimumLogLevel`  <a name="log-manager-component-configuration-system-minimum-log-level"></a>
 \(Optional\) The minimum level of information to upload\. Choose from the following log levels, listed here in level order:  
 + `DEBUG`
@@ -115,16 +135,16 @@ Default: `true`
 Default: `INFO`  
 `diskSpaceLimit`  <a name="log-manager-component-configuration-system-disk-space-limit"></a>
 \(Optional\) The maximum total size of all system log files, in the unit you specify in `diskSpaceLimitUnit`\. After the total size of all log files exceeds this maximum total size, the AWS IoT Greengrass Core software deletes the oldest log files\.  
-This parameter is equivalent to the [system logs disk space limit](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-system-logs-limit) parameter of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. If you specify this parameter on both components, the AWS IoT Greengrass Core software uses the minimum of the two values as the maximum total log size\.  
+This parameter is equivalent to the [system logs disk space limit](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-system-logs-limit) parameter \(`totalLogsSizeKB`\) of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. If you specify this parameter on both components, the AWS IoT Greengrass Core software uses the minimum of the two values as the maximum total log size\.  
 `diskSpaceLimitUnit`  <a name="log-manager-component-configuration-disk-space-limit-unit"></a>
 \(Optional\) The unit for the `diskSpaceLimit`\. Choose from the following options:  
 + `KB` – kilobytes
 + `MB` – megabytes
 + `GB` – gigabytes
-Default: `MB`  
+Default: `KB`  
 `deleteLogFileAfterCloudUpload`  <a name="log-manager-component-configuration-delete-log-file-after-cloud-upload"></a>
 \(Optional\) You can delete a log file after the log manager component uploads the logs to CloudWatch Logs\.  
-Default: `true`  
+Default: `false`  
 `componentLogsConfiguration`  
 \(Optional\) A list of log configurations for components on the core device\. Each configuration in this list defines the log configuration for a component or application\. The log manager component uploads these component logs to CloudWatch Logs  
 Each object contains the following information:    
@@ -155,10 +175,10 @@ Default: `componentName\\w*.log`, where *componentName* is the name of the compo
 + `KB` – kilobytes
 + `MB` – megabytes
 + `GB` – gigabytes
-Default: `MB`  
+Default: `KB`  
 `deleteLogFileAfterCloudUpload`  <a name="log-manager-component-configuration-delete-log-file-after-cloud-upload"></a>
 \(Optional\) You can delete a log file after the log manager component uploads the logs to CloudWatch Logs\.  
-Default: `true`
+Default: `false`
 
 `periodicUploadIntervalSec`  <a name="log-manager-component-configuration-periodic-upload-interval-sec"></a>
 \(Optional\) The period in seconds at which the log manager component checks for new log files to upload\.  
@@ -197,10 +217,10 @@ The following example configuration specifies to upload system logs and `com.exa
 `logsUploaderConfiguration`  
 \(Optional\) The configuration for logs that the log manager component uploads\. This object contains the following information:    
 `systemLogsConfiguration`  
-\(Optional\) The configuration for AWS IoT Greengrass Core software system logs\. This object contains the following information:    
+\(Optional\) The configuration for AWS IoT Greengrass Core software system logs\. Specify this configuration to enable the log manager component to manage system logs\. This object contains the following information:    
 `uploadToCloudWatch`  <a name="log-manager-component-configuration-system-upload-to-cloud-watch"></a>
 \(Optional\) You can upload system logs to CloudWatch Logs\.  
-Default: `true`  
+Default: `false`  
 `minimumLogLevel`  <a name="log-manager-component-configuration-system-minimum-log-level"></a>
 \(Optional\) The minimum level of information to upload\. Choose from the following log levels, listed here in level order:  
 + `DEBUG`
@@ -210,16 +230,16 @@ Default: `true`
 Default: `INFO`  
 `diskSpaceLimit`  <a name="log-manager-component-configuration-system-disk-space-limit"></a>
 \(Optional\) The maximum total size of all system log files, in the unit you specify in `diskSpaceLimitUnit`\. After the total size of all log files exceeds this maximum total size, the AWS IoT Greengrass Core software deletes the oldest log files\.  
-This parameter is equivalent to the [system logs disk space limit](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-system-logs-limit) parameter of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. If you specify this parameter on both components, the AWS IoT Greengrass Core software uses the minimum of the two values as the maximum total log size\.  
+This parameter is equivalent to the [system logs disk space limit](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-system-logs-limit) parameter \(`totalLogsSizeKB`\) of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. If you specify this parameter on both components, the AWS IoT Greengrass Core software uses the minimum of the two values as the maximum total log size\.  
 `diskSpaceLimitUnit`  <a name="log-manager-component-configuration-disk-space-limit-unit"></a>
 \(Optional\) The unit for the `diskSpaceLimit`\. Choose from the following options:  
 + `KB` – kilobytes
 + `MB` – megabytes
 + `GB` – gigabytes
-Default: `MB`  
+Default: `KB`  
 `deleteLogFileAfterCloudUpload`  <a name="log-manager-component-configuration-delete-log-file-after-cloud-upload"></a>
 \(Optional\) You can delete a log file after the log manager component uploads the logs to CloudWatch Logs\.  
-Default: `true`  
+Default: `false`  
 `componentLogsConfiguration`  
 \(Optional\) A list of log configurations for components on the core device\. Each configuration in this list defines the log configuration for a component or application\. The log manager component uploads these component logs to CloudWatch Logs  
 Each object contains the following information:    
@@ -247,10 +267,10 @@ To upload a Greengrass component's logs, specify a regex that matches the rotate
 + `KB` – kilobytes
 + `MB` – megabytes
 + `GB` – gigabytes
-Default: `MB`  
+Default: `KB`  
 `deleteLogFileAfterCloudUpload`  <a name="log-manager-component-configuration-delete-log-file-after-cloud-upload"></a>
 \(Optional\) You can delete a log file after the log manager component uploads the logs to CloudWatch Logs\.  
-Default: `true`
+Default: `false`
 
 `periodicUploadIntervalSec`  <a name="log-manager-component-configuration-periodic-upload-interval-sec"></a>
 \(Optional\) The period in seconds at which the log manager component checks for new log files to upload\.  
@@ -356,6 +376,8 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.1\.3  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
+|  2\.1\.2  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  2\.1\.1  |  <a name="changelog-log-manager-2.1.1"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/log-manager-component.html)  | 
 |  2\.1\.0  |  <a name="changelog-log-manager-2.1.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/log-manager-component.html)  | 
 |  2\.0\.x  |  Initial version\.  | 

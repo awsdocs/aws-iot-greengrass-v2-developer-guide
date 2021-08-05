@@ -2,7 +2,7 @@
 
 With AWS IoT Greengrass, you can perform machine learning \(ML\) inference on your edge devices on locally generated data using cloud\-trained models\. You benefit from the low latency and cost savings of running local inference, yet still take advantage of cloud computing power for training models and complex processing\.
 
-AWS IoT Greengrass simplifies the steps required to perform inference\. You can train your inference models anywhere and deploy them locally as *machine learning components*\. For example, you can build and train deep\-learning models in [Amazon SageMaker](https://console.aws.amazon.com/sagemaker) and store them in an [Amazon S3](https://docs.aws.amazon.com/https://console.aws.amazon.com/s3) bucket\. You can then use these models as artifacts in your components to perform inference on your core devices\.
+AWS IoT Greengrass simplifies the steps required to perform inference\. You can train your inference models anywhere and deploy them locally as *machine learning components*\. For example, you can build and train deep\-learning models in [Amazon SageMaker](https://console.aws.amazon.com/sagemaker) and store them in an [Amazon S3](https://console.aws.amazon.com/s3) bucket\. You can then use these models as artifacts in your components to perform inference on your core devices\.
 
 **Topics**
 + [How AWS IoT Greengrass ML inference works](#how-ml-inference-works)

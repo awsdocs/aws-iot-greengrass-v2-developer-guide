@@ -117,6 +117,8 @@ Use the following information to troubleshoot deployment issues on Greengrass co
 + [Error: com\.aws\.greengrass\.componentmanager\.exceptions\.ArtifactChecksumMismatchException: Integrity check for downloaded artifact failed\. Probably due to file corruption\.](#core-error-failed-to-download-artifact-checksum-mismatch-exception)
 + [Error: com\.aws\.greengrass\.componentmanager\.exceptions\.NoAvailableComponentVersionException: Failed to negotiate component <name> version with cloud and no local applicable version satisfying requirement <requirements>](#core-error-no-available-component-version)
 + [software\.amazon\.awssdk\.services\.secretsmanager\.model\.SecretsManagerException: User: <user> is not authorized to perform: secretsmanager:GetSecretValue on resource: <arn>](#secret-manager-error-not-authorized-to-perform-get-secret-value)
++ [Info: com\.aws\.greengrass\.deployment\.exceptions\.RetryableDeploymentDocumentDownloadException: Greengrass Cloud Service returned an error when getting full deployment configuration](#core-error-getting-full-deployment-configuration)
++ [Info: com\.aws\.greengrass\.deployment\.DeploymentDocumentDownloader: Calling Greengrass cloud to get full deployment configuration](#core-info-repetitive-get-full-deployment-configuration)
 
 ### Error: com\.aws\.greengrass\.componentmanager\.exceptions\.PackageDownloadException: Failed to download artifact<a name="core-error-failed-to-download-artifact-package-download-exception"></a>
 
@@ -176,6 +178,16 @@ This error can occur when you use the [secret manager component](secret-manager-
    + Restart the AWS IoT Greengrass Core software to retry the deployment\. For more information, see [Run the AWS IoT Greengrass Core software](run-greengrass-core-v2.md)
 
    The deployment succeeds if secret manager downloads the secret successfully\.
+
+### Info: com\.aws\.greengrass\.deployment\.exceptions\.RetryableDeploymentDocumentDownloadException: Greengrass Cloud Service returned an error when getting full deployment configuration<a name="core-error-getting-full-deployment-configuration"></a>
+
+You might see this error when the core device receives a large deployment document, which is a deployment document larger than 7 KB \(for deployments that target things\) or 31 KB \(for deployments that target thing groups\)\. To retrieve a large deployment document, a core device's AWS IoT policy must allow the `greengrass:GetDeploymentConfiguration` permission\. This error can occur when the core device doesn't have this permission\. When this error occurs, the deployment retries indefinitely, and its status is **In progress** \(`IN_PROGRESS`\)\.
+
+To resolve this issue, add the `greengrass:GetDeploymentConfiguration` permission to the core device's AWS IoT policy\. For more information, see [Update a core device's AWS IoT policy](device-auth.md#update-core-device-iot-policy)\.
+
+### Info: com\.aws\.greengrass\.deployment\.DeploymentDocumentDownloader: Calling Greengrass cloud to get full deployment configuration<a name="core-info-repetitive-get-full-deployment-configuration"></a>
+
+You might see this information message printed multiple times without an error, because the core device logs the error at the `DEBUG` log level\. This issue can occur when the core device receives a large deployment document\. When this issue occurs, the deployment retries indefinitely, and its status is **In progress** \(`IN_PROGRESS`\)\. For more information about how to resolve this issue, see [this troubleshooting entry](#core-error-getting-full-deployment-configuration)\.
 
 ## Core device component issues<a name="greengrass-core-component-issues"></a>
 

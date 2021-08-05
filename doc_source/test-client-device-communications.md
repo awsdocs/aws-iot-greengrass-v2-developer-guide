@@ -99,7 +99,7 @@ To use the AWS IoT Device SDK v2 for Python, a device must run Python 3\.6 or la
 
 In this section, you use Greengrass discovery sample in the [AWS IoT Device SDK v2 for C\+\+](https://github.com/aws/aws-iot-device-sdk-cpp-v2) to test communications between a client device and a core device\.
 
-**Important**  
+**Important**  <a name="iot-device-sdk-cpp-v2-build-requirements"></a>
 To build the AWS IoT Device SDK v2 for C\+\+, a device must have the following tools:  
 C\+\+ 11 or later
 CMake 3\.1 or later

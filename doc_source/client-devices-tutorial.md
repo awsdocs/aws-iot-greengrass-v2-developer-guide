@@ -27,7 +27,7 @@ To complete this tutorial, you must meet the following prerequisites:
   + The client device must run [Python 3](https://www.python.org/)\.
   + The client device must run [Git](https://git-scm.com/)\.
 
-## Review and update the core device AWS IoT policy<a name="update-core-device-iot-policy"></a>
+## Review and update the core device AWS IoT policy<a name="update-core-device-iot-policy-client-devices"></a>
 
 To support client devices, a core device's AWS IoT policy must allow the following permissions:
 + `greengrass:PutCertificateAuthorities`
@@ -45,23 +45,23 @@ In this section, you review the AWS IoT policies for your core device and add an
 
 **To review and update a core device's AWS IoT policy**
 
-1. In the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass) navigation menu, choose **Core devices**\.
+1. <a name="update-iot-policy-open-greengrass-console"></a>In the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass) navigation menu, choose **Core devices**\.
 
-1. On the **Core devices** page, choose the core device to update\.
+1. <a name="update-iot-policy-choose-core-device"></a>On the **Core devices** page, choose the core device to update\.
 
-1. On the core device details page, choose the link to the core device's **Thing**\. This link opens the thing details page in the AWS IoT console\.
+1. <a name="update-iot-policy-choose-core-device-thing"></a>On the core device details page, choose the link to the core device's **Thing**\. This link opens the thing details page in the AWS IoT console\.
 
-1. On the thing details page, choose **Security**\.
+1. <a name="update-iot-policy-choose-thing-security"></a>On the thing details page, choose **Certificates**\.
 
-1. In the **Security** tab, choose the thing's active certificate\.
+1. <a name="update-iot-policy-choose-thing-certificate"></a>In the **Certificates** tab, choose the thing's active certificate\.
 
-1. On the certificate details page, choose **Policies**\.
+1. <a name="update-iot-policy-choose-certificate-policies"></a>On the certificate details page, choose **Policies**\.
 
-1. In the **Policies** tab, choose the AWS IoT policy to review and update\. You can add the required permissions to any policy that is attached to the core device's active certificate\.
+1. <a name="update-iot-policy-choose-policy"></a>In the **Policies** tab, choose the AWS IoT policy to review and update\. You can add the required permissions to any policy that is attached to the core device's active certificate\.
 **Note**  
-If you used the [AWS IoT Greengrass Core software installer to provision resources](quick-installation.md), you have two AWS IoT policies\. We recommend that you choose the policy named **GreengrassV2IoTThingPolicy**\. Core devices that you create with the quick installer use this policy\. If you add permissions to this policy, you are also granting these permissions to other core devices that use this policy\.
+If you used the [AWS IoT Greengrass Core software installer to provision resources](quick-installation.md), you have two AWS IoT policies\. We recommend that you choose the policy named **GreengrassV2IoTThingPolicy**, if it exists\. Core devices that you create with the quick installer use this policy name by default\. If you add permissions to this policy, you are also granting these permissions to other core devices that use this policy\.
 
-1. In the policy overview, choose **Edit policy document**\.
+1. <a name="update-iot-policy-edit-policy"></a>In the policy overview, choose **Edit policy document**\.
 
 1. Review the policy for the required permissions, and add any required permissions that are missing\.
 
@@ -114,7 +114,7 @@ If you used the [AWS IoT Greengrass Core software installer to provision resourc
    }
    ```
 
-1. Choose **Save as new version**\.
+1. <a name="update-iot-policy-save-policy"></a>Choose **Save as new version**\.
 
 ## Enable client device support<a name="enable-client-device-support"></a>
 
@@ -125,10 +125,10 @@ To enable client devices to securely connect to a core device and communicate wi
 
   Deploy the client device auth component to authenticate client devices and authorize client device actions\. This component allows your AWS IoT things to connect to a core device\.
 
-  This component requires configuration to use\. You must specify groups of client devices and the operations that each group is authorized to perform, such as to connect and communicate over MQTT\. For more information, see [client device auth component configuration](client-device-auth-component.md#client-device-auth-component-configuration)\.
+  This component requires some configuration to use it\. You must specify groups of client devices and the operations that each group is authorized to perform, such as to connect and communicate over MQTT\. For more information, see [client device auth component configuration](client-device-auth-component.md#client-device-auth-component-configuration)\.
 + [MQTT broker \(Moquette\)](mqtt-broker-moquette-component.md) \(`aws.greengrass.clientdevices.mqtt.Moquette`\)
 
-  Deploy the Moquette MQTT broker component to run the open source Moquette MQTT broker\. The Moquette MQTT broker is compliant with MQTT 3\.1 and includes local support for QoS 0, QoS 1, QoS 2, retained messages, and persistent subscriptions\.
+  Deploy the Moquette MQTT broker component to run the open source Moquette MQTT broker\. The Moquette MQTT broker is compliant with MQTT 3\.1\.1 and includes local support for QoS 0, QoS 1, QoS 2, retained messages, last will messages, and persistent subscriptions\.
 
   You aren't required to configure this component to use it\. However, you can configure the port where this component operates the MQTT broker\. By default, it uses port 8883\.
 + [MQTT bridge](mqtt-bridge-component.md) \(`aws.greengrass.clientdevices.mqtt.Bridge`\)
@@ -138,7 +138,7 @@ To enable client devices to securely connect to a core device and communicate wi
   This component requires configuration to use\. You must specify the topic mappings where this component relays messages\. For more information, see [MQTT bridge component configuration](mqtt-bridge-component.md#mqtt-bridge-component-configuration)\.
 + [IP detector](ip-detector-component.md) \(`aws.greengrass.clientdevices.IPDetector`\)
 
-  \(Optional\) Deploy the IP detector component to automatically report the core device's MQTT broker endpoints to the AWS IoT Greengrass cloud service\. You can use this component unless you have a complex network setup, such as one where a router forwards the MQTT broker port to the core device\.
+  \(Optional\) Deploy the IP detector component to automatically report the core device's MQTT broker endpoints to the AWS IoT Greengrass cloud service\. You cannot use this component if you have a complex network setup, such as one where a router forwards the MQTT broker port to the core device\.
 
   You aren't required to configure this component to use it\.
 

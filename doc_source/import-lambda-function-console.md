@@ -109,7 +109,7 @@ Under **Lambda function configuration, Additional parameters, Component dependen
 
 1. For each component dependency that you add, specify the following options: 
    + **Component name** – The component name\. For example, enter **aws\.greengrass\.StreamManager** to include the [stream manager component](stream-manager-component.md)\.
-   + **Version requirement** – The semantic version constraint that identifies the compatible versions of this component dependency\. You can specify a single version or a range of versions\. For example, enter **^1\.0\.0** to specify that this Lambda function depends on any version in the first major version of the stream manager component\. For more information about semantic version constraints, see the [npm semver calculator](https://semver.npmjs.com/)\. 
+   + **Version requirement** – The npm\-style semantic version constraint that identifies the compatible versions of this component dependency\. You can specify a single version or a range of versions\. For example, enter **^1\.0\.0** to specify that this Lambda function depends on any version in the first major version of the stream manager component\. For more information about semantic version constraints, see the [npm semver calculator](https://semver.npmjs.com/)\. 
    + **Type** – The type of dependency\. Choose from the following options:
      + **Hard** – The Lambda function component restarts if the dependency changes state\. This is the default selection\.
      + **Soft** – The Lambda function component doesn't restart if the dependency changes state\.

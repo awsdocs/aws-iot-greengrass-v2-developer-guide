@@ -11,7 +11,7 @@ By default, the `greengrass-cli` executable in the `/greengrass/v2/bin/` folder 
 + Add the `--ggcRootPath /greengrass/v2` argument to your command as shown here:
 
   ```
-  $ greengrass-cli --ggcRootPath /greengrass/v2 <command> <subcommand> [arguments]
+  $ sudo greengrass-cli --ggcRootPath /greengrass/v2 <command> <subcommand> [arguments]
   ```
 
 You can use the following arguments with any command:

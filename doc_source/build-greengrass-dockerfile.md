@@ -31,7 +31,7 @@ Environment variables enable you to customize how AWS IoT Greengrass Core softwa
 You can configure the following environment variables for the AWS IoT Greengrass Docker image\.
 
 **Note**  
-Don't modify the `TINI_KILL_PROCESS_GROUP` variable in the Dockerfile\. This variable allows forwarding `SIGTERM` to all PIDs in the PID group so AWS IoT Greengrass Core software can shut down correctly when the Docker container is stopped\.
+Don't modify the `TINI_KILL_PROCESS_GROUP` variable in the Dockerfile\. This variable allows forwarding `SIGTERM` to all PIDs in the PID group so that AWS IoT Greengrass Core software can shut down correctly when the Docker container is stopped\.
 
 `GGC_ROOT_PATH`  
 \(Optional\) The path to the folder within the container to use as the root for AWS IoT Greengrass Core software\.  
@@ -78,6 +78,9 @@ Use local development tools in development environments only\. Don't specify thi
 
 `INIT_CONFIG`  
 \(Optional\) The path to the configuration file to use to install the AWS IoT Greengrass Core software\. You can use this option to set up new Greengrass core devices with a specific nucleus configuration, or to specify manually provisioned resources, for example\. You must mount your configuration file to the path that you specify in this argument\. 
+
+`TRUSTED_PLUGIN`  
+\(Optional\) The path to a JAR file to load as a trusted plugin\. Use this option to provide provisioning plugin JAR files, such as to install with [fleet provisioning](fleet-provisioning.md) or [custom provisioning](custom-provisioning.md)\. 
 
 ## Specify the dependencies to install<a name="dockerfile-run-instruction"></a>
 
