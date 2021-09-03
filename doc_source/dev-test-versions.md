@@ -13,22 +13,22 @@ You can use this version of IDT for AWS IoT Greengrass V2 with the AWS IoT Green
 
 **IDT v4\.2\.0 for AWS IoT Greengrass**    
 Supported AWS IoT Greengrass versions:   
-+ [Greengrass nucleus](greengrass-nucleus-component.md) v2\.3\.0 and v2\.2\.0  
++ [Greengrass nucleus](greengrass-nucleus-component.md) v2\.4\.0, v2\.3\.0, v2\.2\.0, and v2\.1\.0  
 IDT software downloads:  
-+ IDT v4\.2\.0 with test suite GGV2Q\_2\.0\.0 for [Linux](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.2.0_testsuite_2.0.0_linux.zip)
-+ IDT v4\.2\.0 with test suite GGV2Q\_2\.0\.0 for [macOS](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.2.0_testsuite_2.0.0_mac.zip)
-+ IDT v4\.2\.0 with test suite GGV2Q\_2\.0\.0 for [Windows](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.2.0_testsuite_2.0.0_win.zip)  
++ IDT v4\.2\.0 with test suite GGV2Q\_2\.0\.1 for [Linux](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.2.0_testsuite_2.0.1_linux.zip)
++ IDT v4\.2\.0 with test suite GGV2Q\_2\.0\.1 for [macOS](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.2.0_testsuite_2.0.1_mac.zip)
++ IDT v4\.2\.0 with test suite GGV2Q\_2\.0\.1 for [Windows](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.2.0_testsuite_2.0.1_win.zip)  
 Release notes:  
 + Includes support for qualification of the following features on devices running AWS IoT Greengrass Core software v2\.2\.0 and later versions: 
   + Docker—Validates that devices can download a Docker container image from Amazon Elastic Container Registry \(Amazon ECR\)\.
-  + Machine learning—Validates that devices can perform machine learning \(ML\) inference using the [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) or [TensorFlow Lite](https://www.tensorflow.org/lite) ML frameworks\.
+  + Machine learning—Validates that devices can perform machine learning \(ML\) inference using the [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) or [TensorFlow Lite](https://www.tensorflow.org/lite/guide/python) ML frameworks\.
   + Stream manager—Validates that devices can download, install, and run the AWS IoT Greengrass stream manager\.
-+ Enables you to validate and qualify devices running AWS IoT Greengrass Core software v2\.3\.0 and v2\.2\.0\.
++ Enables you to validate and qualify devices running AWS IoT Greengrass Core software v2\.4\.0, v2\.3\.0, v2\.2\.0, and v2\.1\.0\.
 + Groups the test logs for each test case in a separate *<test\-case\-id>* folder within the `<device-tester-extract-location>/results/<execution-id>/logs/<test-group-id>` directory\.
 + Additional minor bug fixes\.  
 Test suite version:    
-`GGV2Q_2.0.0`  
-+ Released 2021\.07\.14
+`GGV2Q_2.0.1`  
++ Released 2021\.08\.31
 
 ## Earlier IDT versions for AWS IoT Greengrass<a name="idt-earlier-versions"></a>
 

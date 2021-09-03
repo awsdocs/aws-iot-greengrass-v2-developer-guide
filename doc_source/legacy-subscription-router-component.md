@@ -14,6 +14,7 @@ This component is required only if your Lambda function uses the `publish()` fun
 + [Type](#legacy-subscription-router-component-type)
 + [Dependencies](#legacy-subscription-router-component-dependencies)
 + [Configuration](#legacy-subscription-router-component-configuration)
++ [Local log file](#legacy-subscription-router-component-log-file)
 + [Changelog](#legacy-subscription-router-component-changelog)
 
 ## Versions<a name="legacy-subscription-router-component-versions"></a>
@@ -205,6 +206,10 @@ The following example specifies that the `Greengrass_HelloWorld` function publis
 ```
 
 ------
+
+## Local log file<a name="legacy-subscription-router-component-log-file"></a>
+
+This component doesn't output logs\.
 
 ## Changelog<a name="legacy-subscription-router-component-changelog"></a>
 

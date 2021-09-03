@@ -1,11 +1,19 @@
 # Develop custom provisioning plugins<a name="develop-custom-provisioning-plugins"></a>
 
-To develop a custom provisioning plugin, create a Java class that implements the `com.aws.greengrass.provisioning.DeviceIdentityInterace` interface\. You can include the Greengrass nucleus JAR file in your project to access this interface and its classes\. This interface defines a method that inputs a plugin configuration and outputs a provisioning configuration\. The provisioning configuration defines configurations for the system and the [Greengrass nucleus component](greengrass-nucleus-component.md)\. The AWS IoT Greengrass Core software installer uses this provisioning configuration to configure the AWS IoT Greengrass Core software on a device\.
+To develop a custom provisioning plugin, create a Java class that implements the `com.aws.greengrass.provisioning.DeviceIdentityInterface` interface\. You can include the Greengrass nucleus JAR file in your project to access this interface and its classes\. This interface defines a method that inputs a plugin configuration and outputs a provisioning configuration\. The provisioning configuration defines configurations for the system and the [Greengrass nucleus component](greengrass-nucleus-component.md)\. The AWS IoT Greengrass Core software installer uses this provisioning configuration to configure the AWS IoT Greengrass Core software on a device\.
 
 After you develop a custom provisioning plugin, build it as a JAR file that you can provide to the AWS IoT Greengrass Core software installer to run your plugin during installation\. The installer runs your custom provisioning plugin in the same JVM that the installer uses, so you can create a JAR that contains only your plugin code\.
 
 **Topics**
++ [Requirements](#custom-provisioning-plugin-requirements)
 + [Implement the DeviceIdentityInterface interface](#implement-device-identity-interface)
+
+## Requirements<a name="custom-provisioning-plugin-requirements"></a>
+
+To develop a custom provisioning plugin, you must create a Java class that meets the following requirements:
++ Uses the `com.aws.greengrass` package, or a package within the `com.aws.greengrass` package\.
++ Has a constructor without any arguments\.
++ Implements the `DeviceIdentityInterface` interface\. For more information, see [Implement the DeviceIdentityInterface interface](#implement-device-identity-interface)\.
 
 ## Implement the DeviceIdentityInterface interface<a name="implement-device-identity-interface"></a>
 
@@ -46,7 +54,7 @@ To use the `com.aws.greengrass.provisioning.DeviceIdentityInterface` interface i
 The `com.aws.greengrass.provisioning.DeviceIdentityInterface` interface has the following shape\.
 
 **Note**  
-You can also explore these classes in the [Greengrass nucleus source code](https://github.com/aws-greengrass/aws-greengrass-nucleus/tree/main/src/main/java/com/aws/greengrass/provisioning) on GitHub\.
+You can also explore these classes in the [com\.aws\.greengrass\.provisioning package](https://github.com/aws-greengrass/aws-greengrass-nucleus/tree/main/src/main/java/com/aws/greengrass/provisioning) of the [Greengrass nucleus source code](https://github.com/aws-greengrass/aws-greengrass-nucleus) on GitHub\.
 
 ```
 public interface com.aws.greengrass.provisioning.DeviceIdentityInterface {

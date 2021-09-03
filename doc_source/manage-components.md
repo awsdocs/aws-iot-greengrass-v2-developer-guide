@@ -52,7 +52,7 @@ The *component type* specifies how the AWS IoT Greengrass Core software runs the
   The Greengrass nucleus is the component that provides the minimum functionality of the AWS IoT Greengrass Core software\. For more information, see [Greengrass nucleus](greengrass-nucleus-component.md)\.
 + **Plugin** \(`aws.greengrass.plugin`\)
 
-  The Greengrass nucleus runs a plugin component in the same Java Virtual Machine \(JVM\) as the nucleus\. The nucleus restarts when you install or restart a plugin component\. To install and run plugin components, you must configure the Greengrass nucleus to run as a system service\. For more information, see [Configure AWS IoT Greengrass as a system service](configure-greengrass-core-v2.md#configure-system-service)\.
+  The Greengrass nucleus runs a plugin component in the same Java Virtual Machine \(JVM\) as the nucleus\. The nucleus restarts when you change the version of a plugin component on a core device\. To install and run plugin components, you must configure the Greengrass nucleus to run as a system service\. For more information, see [Configure AWS IoT Greengrass as a system service](configure-greengrass-core-v2.md#configure-system-service)\.
 
   Several components that are provided by AWS are plugin components, which enables them to interface directly with the Greengrass nucleus\. Plugin components use the same log file as the Greengrass nucleus\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)\.
 + **Generic** \(`aws.greengrass.generic`\)

@@ -16,6 +16,7 @@ This component provides similar functionality to the Modbus RTU protocol adapter
 + [Input data](#modbus-rtu-protocol-adapter-component-input-data)
 + [Output data](#modbus-rtu-protocol-adapter-component-output-data)
 + [Modbus RTU requests and responses](#modbus-rtu-protocol-adapter-component-requests-responses)
++ [Local log file](#modbus-rtu-protocol-adapter-component-log-file)
 + [Licenses](#modbus-rtu-protocol-adapter-component-licenses)
 + [Changelog](#modbus-rtu-protocol-adapter-component-changelog)
 
@@ -732,6 +733,21 @@ If the request targets a nonexistent device or if the Modbus RTU network is not 
   "id": "TestRequest"
 }
 ```
+
+## Local log file<a name="modbus-rtu-protocol-adapter-component-log-file"></a>
+
+This component uses the following log file\.
+
+```
+/greengrass/v2/logs/aws.greengrass.Modbus.log
+```
+
+**To view this component's logs**
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
+
+  ```
+  sudo tail -f /greengrass/v2/logs/aws.greengrass.Modbus.log
+  ```
 
 ## Licenses<a name="modbus-rtu-protocol-adapter-component-licenses"></a>
 

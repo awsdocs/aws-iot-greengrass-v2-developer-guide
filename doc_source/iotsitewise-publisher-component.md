@@ -11,6 +11,7 @@ For more information about AWS IoT SiteWise gateways, see [Using AWS IoT SiteWis
 + [Dependencies](#iotsitewise-publisher-component-dependencies)
 + [Configuration](#iotsitewise-publisher-component-configuration)
 + [Input data](#iotsitewise-publisher-component-input-data)
++ [Local log file](#iotsitewise-publisher-component-log-file)
 + [Licenses](#iotsitewise-publisher-component-licenses)
 + [Changelog](#iotsitewise-publisher-component-changelog)
 + [See also](#iotsitewise-publisher-component-see-also)
@@ -69,6 +70,21 @@ This component provides the following configuration parameters that you can cust
 
 
 This component reads `BatchPutAssetPropertyValue` messages from AWS IoT Greengrass stream manager\. For more information, see [BatchPutAssetPropertyValue](https://docs.aws.amazon.com/iot-sitewise/latest/APIReference/API_BatchPutAssetPropertyValue.html) in the *AWS IoT SiteWise API Reference*\.
+
+## Local log file<a name="iotsitewise-publisher-component-log-file"></a>
+
+This component uses the following log file\.
+
+```
+/greengrass/v2/logs/aws.iot.SiteWiseEdgePublisher.log
+```
+
+**To view this component's logs**
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
+
+  ```
+  sudo tail -f /greengrass/v2/logs/aws.iot.SiteWiseEdgePublisher.log
+  ```
 
 ## Licenses<a name="iotsitewise-publisher-component-licenses"></a>
 

@@ -12,6 +12,7 @@ Support to acquire AWS credentials in this way was added to the AWS SDKs on July
 + [Type](#token-exchange-service-component-type)
 + [Dependencies](#token-exchange-service-component-dependencies)
 + [Configuration](#token-exchange-service-component-configuration)
++ [Local log file](#token-exchange-service-component-log-file)
 + [Changelog](#token-exchange-service-component-changelog)
 
 ## Versions<a name="token-exchange-service-component-versions"></a>
@@ -33,6 +34,21 @@ This component doesn't have any dependencies\.
 
 This component doesn't have any configuration parameters\.
 
+## Local log file<a name="token-exchange-service-component-log-file"></a>
+
+This component uses the same log file as the [Greengrass nucleus](greengrass-nucleus-component.md) component\.
+
+```
+/greengrass/v2/logs/greengrass.log
+```
+
+**To view this component's logs**
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
+
+  ```
+  sudo tail -f /greengrass/v2/logs/greengrass.log
+  ```
+
 ## Changelog<a name="token-exchange-service-component-changelog"></a>
 
 The following table describes the changes in each version of the component\.
@@ -40,5 +56,4 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
-|  2\.0\.4  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  2\.0\.3  |  Initial version\.  | 

@@ -9,6 +9,7 @@ For more information about how to configure and use stream manager in custom com
 + [Type](#stream-manager-component-type)
 + [Dependencies](#stream-manager-component-dependencies)
 + [Configuration](#stream-manager-component-configuration)
++ [Local log file](#stream-manager-component-log-file)
 + [Changelog](#stream-manager-component-changelog)
 
 ## Versions<a name="stream-manager-component-versions"></a>
@@ -17,13 +18,11 @@ This component has the following versions:
 + 2\.0\.x
 
 **Note**  <a name="stream-manager-upgrade-note"></a>
-If you use stream manager to export data to the cloud, you can't upgrade version 2\.0\.7 of the stream manager component to a later v2\.0\.x version\. If you are deploying stream manager for the first time, we strongly recommend that you deploy v2\.0\.8 or later versions of the stream manager component\.
+If you use stream manager to export data to the cloud, you can't upgrade version 2\.0\.7 of the stream manager component to a version between v2\.0\.8 and v2\.0\.11\. If you are deploying stream manager for the first time, we strongly recommend that you deploy the latest version of the stream manager component\.
 
 ## Type<a name="stream-manager-component-type"></a>
 
-<a name="public-component-type-plugin-para1"></a>This component is a plugin component \(`aws.greengrass.plugin`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component in the same Java Virtual Machine \(JVM\) as the nucleus\. The nucleus restarts when you install or restart this component\.
-
-<a name="public-component-type-plugin-para2"></a>This component uses the same log file as the Greengrass nucleus\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)\.
+<a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
 
 <a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
@@ -32,7 +31,7 @@ If you use stream manager to export data to the cloud, you can't upgrade version
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#stream-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ 2\.0\.11 ]
+#### [ 2\.0\.12 and 2\.0\.11 ]
 
 The following table lists the dependencies for version 2\.0\.11 of this component\.
 
@@ -136,6 +135,21 @@ The following example configuration specifies to use a non\-default port\.
 }
 ```
 
+## Local log file<a name="stream-manager-component-log-file"></a>
+
+This component uses the following log file\.
+
+```
+/greengrass/v2/logs/aws.greengrass.StreamManager.log
+```
+
+**To view this component's logs**
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
+
+  ```
+  sudo tail -f /greengrass/v2/logs/aws.greengrass.StreamManager.log
+  ```
+
 ## Changelog<a name="stream-manager-component-changelog"></a>
 
 The following table describes the changes in each version of the component\.
@@ -143,6 +157,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+| 2\.0\.12 | [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/stream-manager-component.html) | 
 |  2\.0\.11  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  2\.0\.10  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  2\.0\.9  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 

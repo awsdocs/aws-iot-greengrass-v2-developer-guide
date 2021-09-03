@@ -59,13 +59,13 @@ This operation's request has the following parameters:
 `topic`  
 The topic to which to publish the message\.
 
-`publishMessage`  
+`publishMessage` \(Python: `publish_message`\)  
 The message to publish\. This object, `PublishMessage`, contains the following information\. You must specify one of `jsonMessage` and `binaryMessage`\.  <a name="ipc-publish-subscribe-message-shape"></a>  
-`jsonMessage`  
+`jsonMessage` \(Python: `json_message`\)  
 \(Optional\) A JSON message\. This object, `JsonMessage`, contains the following information:    
 `message`  
 The JSON message as an object\.  
-`binaryMessage`  
+`binaryMessage` \(Python: `binary_message`\)  
 \(Optional\) A binary message\. This object, `BinaryMessage`, contains the following information:    
 `message`  
 The binary message as a blob\.
@@ -230,16 +230,16 @@ This topic doesn't support MQTT topic wildcards \(`#` and `+`\)\.
 
 This operation's response has the following information:
 
-`topicName`  
+`topicName` \(Python: `topic_name`\)  
 The topic to which the message was published\.
 
 `messages`  
 The stream of messages\. This object, `SubscriptionResponseMessage`, contains the following information\. Each message contains `jsonMessage` or `binaryMessage`\.  <a name="ipc-publish-subscribe-message-shape"></a>  
-`jsonMessage`  
+`jsonMessage` \(Python: `json_message`\)  
 \(Optional\) A JSON message\. This object, `JsonMessage`, contains the following information:    
 `message`  
 The JSON message as an object\.  
-`binaryMessage`  
+`binaryMessage` \(Python: `binary_message`\)  
 \(Optional\) A binary message\. This object, `BinaryMessage`, contains the following information:    
 `message`  
 The binary message as a blob\.

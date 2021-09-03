@@ -12,6 +12,7 @@ Don't use this component in production environments\. This component is intended
 + [Dependencies](#local-debug-console-component-dependencies)
 + [Configuration](#local-debug-console-component-configuration)
 + [Usage](#local-debug-console-component-usage)
++ [Local log file](#local-debug-console-component-log-file)
 + [Changelog](#local-debug-console-component-changelog)
 
 ## Versions<a name="local-debug-console-component-versions"></a>
@@ -23,7 +24,7 @@ This component has the following versions:
 
 ## Type<a name="local-debug-console-component-type"></a>
 
-<a name="public-component-type-plugin-para1"></a>This component is a plugin component \(`aws.greengrass.plugin`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component in the same Java Virtual Machine \(JVM\) as the nucleus\. The nucleus restarts when you install or restart this component\.
+<a name="public-component-type-plugin-para1"></a>This component is a plugin component \(`aws.greengrass.plugin`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component in the same Java Virtual Machine \(JVM\) as the nucleus\. The nucleus restarts when you change this component's version on the core device\.
 
 <a name="public-component-type-plugin-para2"></a>This component uses the same log file as the Greengrass nucleus\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)\.
 
@@ -274,6 +275,21 @@ You can change the default ports from `1441` and `1442`\. For more information, 
    The local debug console opens\.
 
 ------
+
+## Local log file<a name="local-debug-console-component-log-file"></a>
+
+This component uses the same log file as the [Greengrass nucleus](greengrass-nucleus-component.md) component\.
+
+```
+/greengrass/v2/logs/greengrass.log
+```
+
+**To view this component's logs**
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
+
+  ```
+  sudo tail -f /greengrass/v2/logs/greengrass.log
+  ```
 
 ## Changelog<a name="local-debug-console-component-changelog"></a>
 

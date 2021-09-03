@@ -20,7 +20,7 @@ Gets a configuration value for a component on the core device\. You specify the 
 
 This operation's request has the following parameters:
 
-`componentName`  <a name="ipc-configuration-request-component-name"></a>
+`componentName` \(Python: `component_name`\)  <a name="ipc-configuration-request-component-name"></a>
 \(Optional\) The name of the component\.  
 Defaults to the name of the component that makes the request\.
 
@@ -39,7 +39,7 @@ The key path to the configuration value\. Specify a list where each entry is the
 
 This operation's response has the following information:
 
-`componentName`  <a name="ipc-configuration-response-component-name"></a>
+`componentName` \(Python: `component_name`\)  <a name="ipc-configuration-response-component-name"></a>
 The name of the component\.
 
 `value`  
@@ -53,7 +53,7 @@ Updates a configuration value for a component on the core device\.
 
 This operation's request has the following parameters:
 
-`keyPath`  
+`keyPath` \(Python: `key_path`\)  
 \(Optional\) The key path to the container node \(the object\) to update\. Specify a list where each entry is the key for a single level in the configuration object\. For example, specify the key path `["mqtt"]` and the merge value `{ "port": 443 }` to set the value of `port` in the following configuration\.  
 
 ```
@@ -69,7 +69,7 @@ Defaults to the root of the configuration object\.
 `timestamp`  
 The current Unix epoch time in milliseconds\. This operation uses this timestamp to resolve concurrent updates to the key\. If the key in the component configuration has a greater timestamp than the timestamp in the request, then the request fails\.
 
-`valueToMerge`  
+`valueToMerge` \(Python: `value_to_merge`\)  
 The configuration object to merge at the location that you specify in `keyPath`\. For more information, see [Update component configurations](update-component-configurations.md)\.
 
 ### Response<a name="ipc-operation-updateconfiguration-response"></a>
@@ -88,11 +88,11 @@ Subscribe to receive notifications when a component's configuration updates\. Wh
 
 This operation's request has the following parameters:
 
-`componentName`  <a name="ipc-configuration-request-component-name"></a>
+`componentName` \(Python: `component_name`\)  <a name="ipc-configuration-request-component-name"></a>
 \(Optional\) The name of the component\.  
 Defaults to the name of the component that makes the request\.
 
-`keyPath`  
+`keyPath` \(Python: `key_path`\)  
 The key path to the configuration value for which to subscribe\. Specify a list where each entry is the key for a single level in the configuration object\. For example, specify `["mqtt", "port"]` to get the value of `port` in the following configuration\.  
 
 ```
@@ -109,11 +109,11 @@ This operation's response has the following information:
 
 `messages`  
 The stream of notification messages\. This object, `ConfigurationUpdateEvents`, contains the following information:    
-`configurationUpdateEvent`  
+`configurationUpdateEvent` \(Python: `configuration_update_event`\)  
 The configuration update event\. This object, `ConfigurationUpdateEvent`, contains the following information:    
-`componentName`  <a name="ipc-configuration-response-component-name"></a>
+`componentName` \(Python: `component_name`\)  <a name="ipc-configuration-response-component-name"></a>
 The name of the component\.  
-`keyPath`  
+`keyPath` \(Python: `key_path`\)  
 The key path to the configuration value that updated\.
 
 ## SubscribeToValidateConfigurationUpdates<a name="ipc-operation-subscribetovalidateconfigurationupdates"></a>
@@ -137,9 +137,9 @@ This operation's response has the following information:
 
 `messages`  
 The stream of notification messages\. This object, `ValidateConfigurationUpdateEvents`, contains the following information:    
-`validateConfigurationUpdateEvent`  
+`validateConfigurationUpdateEvent` \(Python: `validate_configuration_update_event`\)  
 The configuration update event\. This object, `ValidateConfigurationUpdateEvent`, contains the following information:    
-`deploymentId`  
+`deploymentId` \(Python: `deployment_id`\)  
 The ID of the AWS IoT Greengrass deployment that updates the component\.  
 `configuration`  
 The object that contains the new configuration\.
@@ -154,13 +154,13 @@ If a component doesn't respond to a validate configuration update notification, 
 
 This operation's request has the following parameters:
 
-`configurationValidityReport`  
+`configurationValidityReport` \(Python: `configuration_validity_report`\)  
 The report that tells the nucleus whether or not the configuration update is valid\. This object, `ConfigurationValidityReport`, contains the following information:    
 `status`  
 The validity status\. This enum, `ConfigurationValidityStatus`, has the following values:  
 + `ACCEPTED` – The configuration is valid and the nucleus can apply it to this component\.
 + `REJECTED` – The configuration isn't valid and the deployment fails\.  
-`deploymentId`  
+`deploymentId` \(Python: `deployment_id`\)  
 The ID of the AWS IoT Greengrass deployment that requested the configuration update\.  
 `message`  
 \(Optional\) A message that reports why the configuration isn't valid\.

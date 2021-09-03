@@ -7,14 +7,15 @@ To [install the AWS IoT Greengrass Core software with fleet provisioning](fleet-
 
   You can use a single AWS IoT policy for all core devices in your fleet, or you can configure your fleet provisioning template to create an AWS IoT policy for each core device\.
 + An AWS IoT fleet provisioning template\. This template must specify the following:<a name="installation-fleet-provisioning-template-requirements"></a>
-  + An AWS IoT thing resource\. You can specify a list of thing groups to deploy components to each device when it comes online\.
+  + An AWS IoT thing resource\. You can specify a list of existing thing groups to deploy components to each device when it comes online\.
   + An AWS IoT policy resource\. This resource can define one of the following properties:
     + The name of an existing AWS IoT policy\. If you choose this option, the core devices that you create from this template use the same AWS IoT policy, and you can manage their permissions as a fleet\.
     + An AWS IoT policy document\. If you choose this option, each core device that you create from this template uses a unique AWS IoT policy, and you can manage permissions for each individual core device\.
   + An AWS IoT certificate resource\. This certificate resource must use the `AWS::IoT::Certificate::Id` parameter to attach the certificate to the core device\. For more information, see [Just\-in\-time provisioning](https://docs.aws.amazon.com/iot/latest/developerguide/jit-provisioning.html) in the *AWS IoT Developer Guide*\.
 + An AWS IoT provisioning claim certificate and private key for the fleet provisioning template\. You can embed this certificate and private key in devices during manufacturing, so the devices can register and provision themselves when they come online\.
 **Important**  <a name="installation-fleet-provisioning-secure-claim-private-keys"></a>
-Provisioning claim private keys should be secured at all times, including on Greengrass core devices\. We recommend that you use Amazon CloudWatch metrics and logs to monitor for indications of misuse, such as unauthorized use of the claim certificate to provision devices\. If you detect misuse, disable the provisioning claim certificate so that it can't be used for device provisioning\. For more information, see [Monitoring AWS IoT](https://docs.aws.amazon.com/iot/latest/developerguide/monitoring_overview.html) in the *AWS IoT Core Developer Guide*\.
+Provisioning claim private keys should be secured at all times, including on Greengrass core devices\. We recommend that you use Amazon CloudWatch metrics and logs to monitor for indications of misuse, such as unauthorized use of the claim certificate to provision devices\. If you detect misuse, disable the provisioning claim certificate so that it can't be used for device provisioning\. For more information, see [Monitoring AWS IoT](https://docs.aws.amazon.com/iot/latest/developerguide/monitoring_overview.html) in the *AWS IoT Core Developer Guide*\.  
+To help you better manage the number of devices, and which devices, that register themselves in your AWS account, you can specify a pre\-provisioning hook when you create a fleet provisioning template\. A pre\-provisioning hook is an AWS Lambda function that validates template parameters that devices provide during registration\. For example, you might create a pre\-provisioning hook that checks a device ID against a database to verify that the device has permission to provision\. For more information, see [Pre\-provisioning hooks](https://docs.aws.amazon.com/iot/latest/developerguide/pre-provisioning-hook.html) in the *AWS IoT Core Developer Guide*\.
 + An AWS IoT policy that you attach to the provisioning claim certificate to allow devices to register and use the fleet provisioning template\.
 
 **Topics**
@@ -271,13 +272,13 @@ In this section, you create an AWS IoT policy that AWS IoT attaches to all devic
 ## Create a fleet provisioning template<a name="create-provisioning-template"></a>
 
 AWS IoT fleet provisioning templates define how to provision AWS IoT things, policies, and certificates\. To provision Greengrass core devices with the fleet provisioning plugin, you must create a template that specifies that following:<a name="installation-fleet-provisioning-template-requirements"></a>
-+ An AWS IoT thing resource\. You can specify a list of thing groups to deploy components to each device when it comes online\.
++ An AWS IoT thing resource\. You can specify a list of existing thing groups to deploy components to each device when it comes online\.
 + An AWS IoT policy resource\. This resource can define one of the following properties:
   + The name of an existing AWS IoT policy\. If you choose this option, the core devices that you create from this template use the same AWS IoT policy, and you can manage their permissions as a fleet\.
   + An AWS IoT policy document\. If you choose this option, each core device that you create from this template uses a unique AWS IoT policy, and you can manage permissions for each individual core device\.
 + An AWS IoT certificate resource\. This certificate resource must use the `AWS::IoT::Certificate::Id` parameter to attach the certificate to the core device\. For more information, see [Just\-in\-time provisioning](https://docs.aws.amazon.com/iot/latest/developerguide/jit-provisioning.html) in the *AWS IoT Developer Guide*\.
 
-In the template, you can specify to add the AWS IoT thing to a list of thing groups\. When the core device connects to AWS IoT Greengrass for the first time, it receives Greengrass deployments for each thing group where it's a member\. You can use thing groups to deploy the latest software to each device as soon as it comes online\. For more information, see [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)\.
+In the template, you can specify to add the AWS IoT thing to a list of existing thing groups\. When the core device connects to AWS IoT Greengrass for the first time, it receives Greengrass deployments for each thing group where it's a member\. You can use thing groups to deploy the latest software to each device as soon as it comes online\. For more information, see [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)\.
 
 The AWS IoT service requires permissions to create and update AWS IoT resources in your AWS account when provisioning devices\. To give the AWS IoT service access, you create an IAM role and provide it when you create the template\. AWS IoT provides an managed policy, [AWSIoTThingsRegistration](https://console.aws.amazon.com/iam/home#/policies/arn:aws:iam::aws:policy/service-role/AWSIoTThingsRegistration), that allows access to all permissions that AWS IoT might use when provisioning devices\. You can use this managed policy, or create a custom policy that scopes down the permissions in the managed policy for your use case\.
 
@@ -367,7 +368,7 @@ In this section, you create an IAM role that allows AWS IoT to provision resourc
 
       Write the provisioning template document\. You can start from the following example provisioning template, which specifies to create an AWS IoT thing with the following properties:
       + The thing's name is the value that you specify in the `ThingName` template parameter\.
-      + The thing is a member of the thing group that you specify in the `ThingGroupName` template parameter\.
+      + The thing is a member of the thing group that you specify in the `ThingGroupName` template parameter\. The thing group must exist in your AWS account\.
       + The thing's certificate has the AWS IoT policy named `GreengrassV2IoTThingPolicy` attached to it\.
 
       For more information, see [Provisioning templates](https://docs.aws.amazon.com/iot/latest/developerguide/provision-template.html) in the *AWS IoT Core Developer Guide*\.
@@ -461,7 +462,8 @@ Claim certificates are X\.509 certificates that allow devices to register as AWS
 In this section, you create the claim certificate and configure it for devices to use with the fleet provisioning template that you created in the previous section\.
 
 **Important**  <a name="installation-fleet-provisioning-secure-claim-private-keys"></a>
-Provisioning claim private keys should be secured at all times, including on Greengrass core devices\. We recommend that you use Amazon CloudWatch metrics and logs to monitor for indications of misuse, such as unauthorized use of the claim certificate to provision devices\. If you detect misuse, disable the provisioning claim certificate so that it can't be used for device provisioning\. For more information, see [Monitoring AWS IoT](https://docs.aws.amazon.com/iot/latest/developerguide/monitoring_overview.html) in the *AWS IoT Core Developer Guide*\.
+Provisioning claim private keys should be secured at all times, including on Greengrass core devices\. We recommend that you use Amazon CloudWatch metrics and logs to monitor for indications of misuse, such as unauthorized use of the claim certificate to provision devices\. If you detect misuse, disable the provisioning claim certificate so that it can't be used for device provisioning\. For more information, see [Monitoring AWS IoT](https://docs.aws.amazon.com/iot/latest/developerguide/monitoring_overview.html) in the *AWS IoT Core Developer Guide*\.  
+To help you better manage the number of devices, and which devices, that register themselves in your AWS account, you can specify a pre\-provisioning hook when you create a fleet provisioning template\. A pre\-provisioning hook is an AWS Lambda function that validates template parameters that devices provide during registration\. For example, you might create a pre\-provisioning hook that checks a device ID against a database to verify that the device has permission to provision\. For more information, see [Pre\-provisioning hooks](https://docs.aws.amazon.com/iot/latest/developerguide/pre-provisioning-hook.html) in the *AWS IoT Core Developer Guide*\.
 
 **To create a provisioning claim certificate and private key**
 

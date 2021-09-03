@@ -15,6 +15,7 @@ This component provides similar functionality to the Kinesis Data Firehose conne
 + [Configuration](#kinesis-firehose-component-configuration)
 + [Input data](#kinesis-firehose-component-input-data)
 + [Output data](#kinesis-firehose-component-output-data)
++ [Local log file](#kinesis-firehose-component-log-file)
 + [Licenses](#kinesis-firehose-component-licenses)
 + [Changelog](#kinesis-firehose-component-changelog)
 + [See also](#kinesis-firehose-component-see-also)
@@ -319,6 +320,21 @@ The response contains the status of each data record sent in the batch\.
 
 **Note**  <a name="connector-component-retryable-error"></a>
 If the component detects a retryable error, such as a connection error, it retries the publish in the next batch\.
+
+## Local log file<a name="kinesis-firehose-component-log-file"></a>
+
+This component uses the following log file\.
+
+```
+/greengrass/v2/logs/aws.greengrass.KinesisFirehose.log
+```
+
+**To view this component's logs**
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
+
+  ```
+  sudo tail -f /greengrass/v2/logs/aws.greengrass.KinesisFirehose.log
+  ```
 
 ## Licenses<a name="kinesis-firehose-component-licenses"></a>
 

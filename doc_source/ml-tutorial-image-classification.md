@@ -4,7 +4,7 @@ This tutorial shows you how to use the [TensorFlow Lite image classification](te
 + TensorFlow Lite image classification model store component
 + TensorFlow Lite component
 
-When you deploy this component, it downloads a pre\-trained MobileNet v1 model and installs the [TensorFlow Lite](https://www.tensorflow.org/lite) runtime and its dependencies\. This component publishes inference results on the `ml/tflite/image-classification` topic\. To view these inference results, use the AWS IoT MQTT client in the AWS IoT console to subscribe to this topic\. 
+When you deploy this component, it downloads a pre\-trained MobileNet v1 model and installs the [TensorFlow Lite](https://www.tensorflow.org/lite/guide/python) runtime and its dependencies\. This component publishes inference results on the `ml/tflite/image-classification` topic\. To view these inference results, use the AWS IoT MQTT client in the AWS IoT console to subscribe to this topic\. 
 
 In this tutorial you deploy the sample inference component to perform image classification on the sample image that is provided by AWS IoT Greengrass\. After you complete this tutorial, you can complete [Perform sample image classification inference on images from a camera using TensorFlow Lite](ml-tutorial-image-classification-camera.md), which shows you how to modify the sample inference component to perform image classification on images from a camera locally on a Greengrass core device\.
 

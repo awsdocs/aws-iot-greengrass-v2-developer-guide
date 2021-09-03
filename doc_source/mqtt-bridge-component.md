@@ -14,14 +14,24 @@ The MQTT bridge uses QoS 1 to publish and subscribe to AWS IoT Core, even when a
 
 **Topics**
 + [Versions](#mqtt-bridge-component-versions)
++ [Type](#mqtt-bridge-component-type)
 + [Dependencies](#mqtt-bridge-component-dependencies)
 + [Configuration](#mqtt-bridge-component-configuration)
++ [Local log file](#mqtt-bridge-component-log-file)
 + [Changelog](#mqtt-bridge-component-changelog)
 
 ## Versions<a name="mqtt-bridge-component-versions"></a>
 
 This component has the following versions:
 + 2\.0\.x
+
+## Type<a name="mqtt-bridge-component-type"></a>
+
+<a name="public-component-type-plugin-para1"></a>This component is a plugin component \(`aws.greengrass.plugin`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component in the same Java Virtual Machine \(JVM\) as the nucleus\. The nucleus restarts when you change this component's version on the core device\.
+
+<a name="public-component-type-plugin-para2"></a>This component uses the same log file as the Greengrass nucleus\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Dependencies<a name="mqtt-bridge-component-dependencies"></a>
 
@@ -91,6 +101,21 @@ The following example configuration update specifies to sync the `clients/MyClie
   }
 }
 ```
+
+## Local log file<a name="mqtt-bridge-component-log-file"></a>
+
+This component uses the same log file as the [Greengrass nucleus](greengrass-nucleus-component.md) component\.
+
+```
+/greengrass/v2/logs/greengrass.log
+```
+
+**To view this component's logs**
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
+
+  ```
+  sudo tail -f /greengrass/v2/logs/greengrass.log
+  ```
 
 ## Changelog<a name="mqtt-bridge-component-changelog"></a>
 

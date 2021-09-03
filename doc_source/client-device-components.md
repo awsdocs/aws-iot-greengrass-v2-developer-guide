@@ -3,7 +3,7 @@
 AWS IoT Greengrass provides the following public components that you can deploy to core devices\. These components enable client devices to connect and communicate with a core device\.
 
 **Note**  <a name="component-nucleus-dependency-update-note"></a>
-Several public components depend on specific minor versions of the Greengrass nucleus\. Because of this dependency, you need to update these public components when you update the Greengrass nucleus to a new minor version\. For information about the specific versions of the nucleus that each component depends on, see the corresponding component topic\. For more information about updating the nucleus, see [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)\.
+Several AWS\-provided components depend on specific minor versions of the Greengrass nucleus\. Because of this dependency, you need to update these components when you update the Greengrass nucleus to a new minor version\. For information about the specific versions of the nucleus that each component depends on, see the corresponding component topic\. For more information about updating the nucleus, see [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)\.
 
 
 | Component | Description | Depends on nucleus | [Component type](manage-components.md#component-types) | [Open source](open-source.md) | 

@@ -29,6 +29,32 @@ The role allows the following service to assume the role:
 
 If you use the AWS IoT Greengrass Core software to create this role, it uses the following permissions policy to allow core devices to connect and send logs to AWS\. The policy's name defaults to the name of the IAM role ending with `Access`\. For example, if you use the default IAM role name, then this policy's name is `GreengrassV2TokenExchangeRoleAccess`\.
 
+------
+#### [ Greengrass nucleus v2\.4\.0 and later ]
+
+```
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:DescribeCertificate",
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "logs:DescribeLogStreams",
+        "s3:GetBucketLocation"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+
+------
+#### [ Earlier than v2\.4\.0 ]
+
 ```
 {
   "Version": "2012-10-17",
@@ -52,6 +78,8 @@ If you use the AWS IoT Greengrass Core software to create this role, it uses the
   ]
 }
 ```
+
+------
 
 ## Allow access to S3 buckets for component artifacts<a name="device-service-role-access-s3-bucket"></a>
 

@@ -248,7 +248,7 @@ This section describes how you can create a custom component that runs a Docker 
      - Platform:
          os: all
        Lifecycle:
-           Run: account-id.dkr.ecr.region.amazonaws.com/repository[:tag|@digest]
+           Run: docker run account-id.dkr.ecr.region.amazonaws.com/repository[:tag|@digest]
        Artifacts:
          - URI: "docker:account-id.dkr.ecr.region.amazonaws.com/repository[:tag|@digest]"
    ```

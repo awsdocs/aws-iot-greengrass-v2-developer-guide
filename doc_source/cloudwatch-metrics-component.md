@@ -18,6 +18,7 @@ This component provides similar functionality to the CloudWatch metrics connecto
 + [Input data](#cloudwatch-metrics-component-input-data)
 + [Output data](#cloudwatch-metrics-component-output-data)
 + [Licenses](#cloudwatch-metrics-component-licenses)
++ [Local log file](#cloudwatch-metrics-component-log-file)
 + [Changelog](#cloudwatch-metrics-component-changelog)
 + [See also](#cloudwatch-metrics-component-see-also)
 
@@ -280,7 +281,7 @@ Type: `string`
  `timestamp`   
 \(Optional\) The time at which the metric data was received, expressed in seconds in Unix epoch time\.  
 Defaults to the time at which the component receives the message\.  
-Type: `integer`  
+Type: `double`  
 When you send multiple metrics within a single Lambda function, we recommend that you retrieve the timestamp separately for each metric\. Don't use a variable to store the timestamp\.  
  `unit`   
 \(Optional\) The unit of the metric\.  
@@ -364,6 +365,21 @@ This component includes the following third\-party software/licensing:<a name="b
 + [urllib3](https://pypi.org/project/urllib3/)/MIT License
 
 <a name="component-core-software-license"></a>This component is released under the [Greengrass Core Software License Agreement](https://greengrass-release-license.s3.us-west-2.amazonaws.com/greengrass-license-v1.pdf)\.
+
+## Local log file<a name="cloudwatch-metrics-component-log-file"></a>
+
+This component uses the following log file\.
+
+```
+/greengrass/v2/logs/aws.greengrass.Cloudwatch.log
+```
+
+**To view this component's logs**
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
+
+  ```
+  sudo tail -f /greengrass/v2/logs/aws.greengrass.Cloudwatch.log
+  ```
 
 ## Changelog<a name="cloudwatch-metrics-component-changelog"></a>
 

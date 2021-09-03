@@ -13,8 +13,8 @@ The IDT test logs directory is `<device-tester-extract-location>/results/<execut
 | --- | --- | 
 | test\_manager\.log |  The logs written to the console while the test was running\. The summary of the results at the end of this file includes a list of which tests failed\. The warning and error logs in this file can give you some information about the failures\.   | 
 | test\-group\-id/test\-case\-id/test\-name\.log | Detailed logs for the specific test in a test group\. For tests that deploy Greengrass components, the test case log file is called greengrass\-test\-run\.log\. | 
-| test\-group\-id/test\-case\-id/greengrass\.log | Detailed logs for AWS IoT Greengrass Core software\. IDT copies this file from the device under test when it runs tests that install AWS IoT Greengrass Core software on the device\. For more information about the messages in this log file, see [Troubleshooting](troubleshooting.md)\. | 
-| test\-group\-id/test\-case\-id/component\-name\.log | Detailed logs for Greengrass components that are deployed during test runs\. IDT copies component log files from the device under test when it runs tests that deploys specific components\. The name of each component log file corresponds to the name of the deployed component\. For more information about the messages in this log file, see [Troubleshooting](troubleshooting.md)\. | 
+| test\-group\-id/test\-case\-id/greengrass\.log | Detailed logs for AWS IoT Greengrass Core software\. IDT copies this file from the device under test when it runs tests that install AWS IoT Greengrass Core software on the device\. For more information about the messages in this log file, see [Troubleshooting AWS IoT Greengrass V2](troubleshooting.md)\. | 
+| test\-group\-id/test\-case\-id/component\-name\.log | Detailed logs for Greengrass components that are deployed during test runs\. IDT copies component log files from the device under test when it runs tests that deploys specific components\. The name of each component log file corresponds to the name of the deployed component\. For more information about the messages in this log file, see [Troubleshooting AWS IoT Greengrass V2](troubleshooting.md)\. | 
 
 ## Resolving IDT for AWS IoT Greengrass V2 errors<a name="idt-gg-resolve-errors"></a>
 
@@ -178,6 +178,16 @@ To use the timeout multiplier, use the flag `--timeout-multiplier` when running 
 ```
 
 For more information, run `run-suite --help`\.
+
+Some timeout errors occur when IDT test cases can’t be completed because of configuration issues\. You can’t resolve these errors by increasing the timeout multiplier\. Use the logs from the test run to troubleshoot the underlying configuration issues\. 
++ If the MQTT or Lambda component logs contain `Access denied` errors, your Greengrass installation folder might not have the correct file permissions\. Run the following command for each folder in the installation path that you defined in your `userdata.json` file\. 
+
+  ```
+  sudo chmod 755 folder-name
+  ```
++ If the Greengrass logs indicate that the Greengrass CLI deployment isn't complete, do the following:
+  + Verify that `bash` is installed on the device under test\. 
+  + If your `userdata.json` file includes the `GreengrassCliVersion` configuration parameter, remove it\. This parameter is deprecated in IDT v4\.1\.0 and later versions\. For more information, see [Configure userdata\.json](set-config.md#userdata-config)\.
 
 ### Version check errors<a name="version-compatibility-check-failure"></a>
 

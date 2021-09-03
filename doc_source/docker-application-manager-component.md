@@ -10,6 +10,7 @@ When you develop a custom component that runs a Docker container, include the Do
 + [Requirements](#docker-application-manager-component-requirements)
 + [Dependencies](#docker-application-manager-component-dependencies)
 + [Configuration](#docker-application-manager-component-configuration)
++ [Local log file](#docker-application-manager-component-log-file)
 + [Changelog](#docker-application-manager-component-changelog)
 + [See also](#docker-application-manager-component-see-also)
 
@@ -115,6 +116,21 @@ For more information about component dependencies, see the [component recipe ref
 ## Configuration<a name="docker-application-manager-component-configuration"></a>
 
 This component doesn't have any configuration parameters\.
+
+## Local log file<a name="docker-application-manager-component-log-file"></a>
+
+This component uses the following log file\.
+
+```
+/greengrass/v2/logs/aws.greengrass.DockerApplicationManager.log
+```
+
+**To view this component's logs**
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
+
+  ```
+  sudo tail -f /greengrass/v2/logs/aws.greengrass.DockerApplicationManager.log
+  ```
 
 ## Changelog<a name="docker-application-manager-component-changelog"></a>
 

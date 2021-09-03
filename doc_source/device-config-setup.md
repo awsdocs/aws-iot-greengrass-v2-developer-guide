@@ -114,11 +114,11 @@ To run Docker qualification tests, your devices under test must meet the followi
 
 ### ML qualification requirements<a name="idt-config-ml-components"></a>
 
-IDT for AWS IoT Greengrass V2 provides ML qualification tests to validate that your devices can use the AWS\-provided [machine learning components](machine-learning-components.md) to perform ML inference locally using the [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) or [TensorFlow Lite](https://www.tensorflow.org/lite) ML frameworks\. For more information about running ML inference on Greengrass devices, see [Perform machine learning inference](perform-machine-learning-inference.md)\.
+IDT for AWS IoT Greengrass V2 provides ML qualification tests to validate that your devices can use the AWS\-provided [machine learning components](machine-learning-components.md) to perform ML inference locally using the [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) or [TensorFlow Lite](https://www.tensorflow.org/lite/guide/python) ML frameworks\. For more information about running ML inference on Greengrass devices, see [Perform machine learning inference](perform-machine-learning-inference.md)\.
 
 To run ML qualification tests, your devices under test must meet the following requirements to deploy the machine learning components\.<a name="ml-component-requirements"></a>
 + <a name="ml-req-glibc"></a>On Greengrass core devices running Amazon Linux 2 or Ubuntu 18\.04, [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.27 or later installed on the device\.
-+ On Armv7l devices, such as Raspberry Pi, dependencies for OpenCV Python installed on the device\. Run the following command to install the dependencies: 
++ On Armv7l devices, such as Raspberry Pi, dependencies for OpenCV\-Python installed on the device\. Run the following command to install the dependencies: 
 
   ```
   sudo apt-get install libopenjp2-7 libilmbase23 libopenexr-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libgtk-3-0 libwebp-dev

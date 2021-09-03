@@ -60,7 +60,7 @@ The request contains the standard HTTP headers and is sent to the Greengrass dis
 The port number depends on whether the core device is configured to send HTTPS traffic over port 8443 or port 443\. For more information, see [Connect on port 443 or through a network proxy](configure-greengrass-core-v2.md#configure-alpn-network-proxy)\.
 
 **Note**  
-These examples use the Amazon Trust Services \(ATS\) endpoint, which works with the recommended ATS root CA certificates\. Endpoints must match the root CA certificate type\. For more information, see [Use service endpoints that match the root CA certificate type](configure-greengrass-core-v2.md#certificate-endpoints)\.
+These examples use the Amazon Trust Services \(ATS\) endpoint, which works with the recommended ATS root CA certificates\. Endpoints must match the root CA certificate type\.
 
 Port 8443  
 

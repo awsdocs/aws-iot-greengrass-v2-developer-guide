@@ -1,6 +1,6 @@
 # TensorFlow Lite object detection model store<a name="tensorflow-lite-object-detection-model-store-component"></a>
 
-The TensorFlow Lite object detection model store \(`variant.TensorFlowLite.ObjectDetection.ModelStore`\) is a machine learning model component that contains a pre\-trained Single Shot Detection \(SSD\) MobileNet model as a Greengrass artifact\. The sample model used in this component is fetched from the [TensorFlow Hub](https://tfhub.dev/) and implemented using [TensorFlow Lite](https://www.tensorflow.org/lite)\.
+The TensorFlow Lite object detection model store \(`variant.TensorFlowLite.ObjectDetection.ModelStore`\) is a machine learning model component that contains a pre\-trained Single Shot Detection \(SSD\) MobileNet model as a Greengrass artifact\. The sample model used in this component is fetched from the [TensorFlow Hub](https://tfhub.dev/) and implemented using [TensorFlow Lite](https://www.tensorflow.org/lite/guide/python)\.
 
 The [TensorFlow Lite object detection](tensorflow-lite-object-detection-component.md) inference component uses this component as a dependency for the model source\. To use a custom\-trained TensorFlow Lite model, [create a custom version](ml-customization.md#override-public-model-store) of this model component, and include your custom model as a component artifact\. You can use the recipe of this component as a template to create custom model components\. 
 
@@ -10,6 +10,7 @@ The [TensorFlow Lite object detection](tensorflow-lite-object-detection-componen
 + [Requirements](#tensorflow-lite-object-detection-model-store-component-requirements)
 + [Dependencies](#tensorflow-lite-object-detection-model-store-component-dependencies)
 + [Configuration](#tensorflow-lite-object-detection-model-store-component-configuration)
++ [Local log file](#tensorflow-lite-object-detection-model-store-component-log-file)
 + [Changelog](#tensorflow-lite-object-detection-model-store-component-changelog)
 
 ## Versions<a name="tensorflow-lite-object-detection-model-store-component-versions"></a>
@@ -27,7 +28,7 @@ This component has the following versions:
 
 This component has the following requirements:<a name="ml-component-requirements"></a>
 + <a name="ml-req-glibc"></a>On Greengrass core devices running Amazon Linux 2 or Ubuntu 18\.04, [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.27 or later installed on the device\.
-+ On Armv7l devices, such as Raspberry Pi, dependencies for OpenCV Python installed on the device\. Run the following command to install the dependencies: 
++ On Armv7l devices, such as Raspberry Pi, dependencies for OpenCV\-Python installed on the device\. Run the following command to install the dependencies: 
 
   ```
   sudo apt-get install libopenjp2-7 libilmbase23 libopenexr-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libgtk-3-0 libwebp-dev
@@ -82,6 +83,10 @@ The following table lists the dependencies for version 2\.1\.0 of this component
 ## Configuration<a name="tensorflow-lite-object-detection-model-store-component-configuration"></a>
 
 This component doesn't have any configuration parameters\.
+
+## Local log file<a name="tensorflow-lite-object-detection-model-store-component-log-file"></a>
+
+This component doesn't output logs\.
 
 ## Changelog<a name="tensorflow-lite-object-detection-model-store-component-changelog"></a>
 

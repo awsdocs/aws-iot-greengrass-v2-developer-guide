@@ -11,6 +11,7 @@ When you deploy a Lambda function component to a core device, the deployment als
 + [Requirements](#lambda-launcher-component-requirements)
 + [Dependencies](#lambda-launcher-component-dependencies)
 + [Configuration](#lambda-launcher-component-configuration)
++ [Local log file](#lambda-launcher-component-log-file)
 + [Changelog](#lambda-launcher-component-changelog)
 
 ## Versions<a name="lambda-launcher-component-versions"></a>
@@ -60,6 +61,21 @@ For more information about component dependencies, see the [component recipe ref
 ## Configuration<a name="lambda-launcher-component-configuration"></a>
 
 This component doesn't have any configuration parameters\.
+
+## Local log file<a name="lambda-launcher-component-log-file"></a>
+
+This component uses the following log file\.
+
+```
+/greengrass/v2/logs/lambdaFunctionComponentName.log
+```
+
+**To view this component's logs**
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder, and replace *lambdaFunctionComponentName* with the name of the Lambda function component that this component launches\.
+
+  ```
+  sudo tail -f /greengrass/v2/logs/lambdaFunctionComponentName.log
+  ```
 
 ## Changelog<a name="lambda-launcher-component-changelog"></a>
 

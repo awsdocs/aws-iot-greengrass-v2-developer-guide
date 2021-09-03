@@ -46,10 +46,10 @@ $ sudo greengrass-cli deployment create
   `MERGE` and `RESET` are case\-sensitive and must be in upper case\.
 + `--groupId`, `-g`\. The target thing group for the deployment\.
 + `--merge`, `-m`\. The name and version of the target component that you want to add or update\. You must provide the component information in the format `<component>=<version>`\. Use a separate argument for each additional component to specify\. If needed, use the `--runWith` argument to provide the `posixUser` and `posixGroup` information for running the component\.
-+ `--runWith`\. The `posixUser` and `posixGroup` information for running a component\. You must provide this information in the format `<component>:posixUser=<user>[:<group>]`\. For example, `HelloWorld:posixUser=ggc_user:ggc_group`\. Use a separate argument for each additional option to specify\.
++ `--runWith`\. The `posixUser` and `posixGroup` information for running a generic or Lambda component\. You must provide this information in the format `<component>:posixUser=<user>[:<group>]`\. For example, `HelloWorld:posixUser=ggc_user:ggc_group`\. Use a separate argument for each additional option to specify\.
 
   For more information, see [Configure the user and group that run components](configure-greengrass-core-v2.md#configure-component-user)\.
-+ `--systemLimits`\. The system resource limits to apply to components' processes on the core device\. You can configure the maximum amount of CPU and RAM usage that each component's processes can use on the core device\. Specify a serialized JSON object or a file path to a JSON file\. The JSON object must have the following format\.
++ `--systemLimits`\. The system resource limits to apply to generic and non\-containerized Lambda components' processes on the core device\. You can configure the maximum amount of CPU and RAM usage that each component's processes can use on the core device\. Specify a serialized JSON object or a file path to a JSON file\. The JSON object must have the following format\.
 
   ```
   {  \

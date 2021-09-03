@@ -4,7 +4,7 @@ The secure tunneling component \(`aws.greengrass.SecureTunneling`\) enables you 
 
 For example, a Greengrass core device is behind a firewall that prohibits all incoming connections, which blocks SSH connections to the device\. Secure tunneling uses MQTT over WebSockets to make these connections so that you can open an SSH connection to the device by using a tunnel that is managed by AWS IoT\. For more information about using AWS IoT secure tunneling to connect to remote devices, see [AWS IoT secure tunneling](https://docs.aws.amazon.com/iot/latest/developerguide/secure-tunneling.html) in the *AWS IoT Developer Guide*\.
 
-By default, this component subscribes to the `things/greengrass-core-device/tunnels/notify` MQTT topic for secure tunneling notifications for the IoT thing that corresponds to your Greengrass core device\. 
+This component subscribes to the AWS IoT Core MQTT message broker on the `$aws/things/greengrass-core-device/tunnels/notify` topic to receive secure tunneling notifications\.
 
 
 
@@ -14,6 +14,7 @@ By default, this component subscribes to the `things/greengrass-core-device/tunn
 + [Requirements](#secure-tunneling-component-requirements)
 + [Dependencies](#secure-tunneling-component-dependencies)
 + [Configuration](#secure-tunneling-component-configuration)
++ [Local log file](#secure-tunneling-component-log-file)
 + [Licenses](#secure-tunneling-component-licenses)
 + [See also](#secure-tunneling-component-see-also)
 + [Changelog](#secure-tunneling-component-changelog)
@@ -146,6 +147,21 @@ The following example configuration specifies to allow this component to open se
   }
 }
 ```
+
+## Local log file<a name="secure-tunneling-component-log-file"></a>
+
+This component uses the following log file\.
+
+```
+/greengrass/v2/logs/aws.greengrass.SecureTunneling.log
+```
+
+**To view this component's logs**
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
+
+  ```
+  sudo tail -f /greengrass/v2/logs/aws.greengrass.SecureTunneling.log
+  ```
 
 ## Licenses<a name="secure-tunneling-component-licenses"></a>
 

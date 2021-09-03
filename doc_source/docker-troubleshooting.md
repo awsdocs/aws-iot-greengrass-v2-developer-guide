@@ -93,4 +93,4 @@ When you use `docker exec` to run commands inside the Docker container, those co
   docker exec -it container-id sh -c "command > /proc/1/fd/1"
   ```
 
-For general AWS IoT Greengrass troubleshooting, see [Troubleshooting](troubleshooting.md)\.
+For general AWS IoT Greengrass troubleshooting, see [Troubleshooting AWS IoT Greengrass V2](troubleshooting.md)\.

@@ -56,7 +56,7 @@ Publishes an MQTT message to AWS IoT Core on a topic\.
 
 This operation's request has the following parameters:
 
-`topicName`  
+`topicName` \(Python: `topic_name`\)  
 The topic to which to publish the message\.
 
 `qos`  <a name="ipc-iot-core-mqtt-qos"></a>
@@ -217,7 +217,7 @@ Subscribe to MQTT messages from AWS IoT Core on a topic or topic filter\. The AW
 
 This operation's request has the following parameters:
 
-`topicName`  
+`topicName` \(Python: `topic_name`\)  
 The topic to which to subscribe\. You can use MQTT topic wildcards \(`#` and `+`\) to subscribe to multiple topics\.
 
 `qos`  <a name="ipc-iot-core-mqtt-qos"></a>
@@ -233,7 +233,7 @@ This operation's response has the following information:
 The stream of MQTT messages\. This object, `IoTCoreMessage`, contains the following information:    
 `message`  
 The MQTT message\. This object, `MQTTMessage`, contains the following information:    
-`topicName`  
+`topicName` \(Python: `topic_name`\)  
 The topic to which the message was published\.  
 `payload`  
 \(Optional\) The message payload as a blob\.
@@ -260,6 +260,7 @@ StreamResponseHandler<IoTCoreMessage> streamResponseHandler = new StreamResponse
     public void onStreamEvent(IoTCoreMessage ioTCoreMessage) {
         try {
             String message = new String(ioTCoreMessage.getMessage().getPayload(), StandardCharsets.UTF_8);
+            String topicName = ioTCoreMessage.getMessage().getTopicName();
             // Handle message.
         } catch (Exception e) {
             e.printStackTrace();
@@ -324,6 +325,7 @@ class StreamHandler(client.SubscribeToIoTCoreStreamHandler):
     def on_stream_event(self, event: IoTCoreMessage) -> None:
         try:
             message = str(event.message.payload, "utf-8")
+            topic_name = event.message.topic_name
             # Handle message.
         except:
             traceback.print_exc()
@@ -376,6 +378,7 @@ class IoTCoreResponseHandler : public SubscribeToIoTCoreStreamHandler {
         if (message.has_value() && message.value().GetPayload().has_value()) {
             auto messageBytes = message.value().GetPayload().value();
             std::string messageString(messageBytes.begin(), messageBytes.end());
+            std::string topicName = message.value().GetTopicName().value().c_str();
             // Handle message.
         }
     }
@@ -727,7 +730,9 @@ class IoTCoreResponseHandler : public SubscribeToIoTCoreStreamHandler {
         if (message.has_value() && message.value().GetPayload().has_value()) {
             auto messageBytes = message.value().GetPayload().value();
             std::string messageString(messageBytes.begin(), messageBytes.end());
-            std::cout << "Received new message: " << messageString << std::endl;
+            std::string messageTopic = message.value().GetTopicName().value().c_str();
+            std::cout << "Received new message on topic: " << messageTopic << std::endl;
+            std::cout << "Message: " << messageString << std::endl;
         }
     }
 

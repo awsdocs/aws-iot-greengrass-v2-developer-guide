@@ -11,6 +11,7 @@ When you deploy a Lambda function component to a core device, the deployment als
 + [Requirements](#lambda-manager-component-requirements)
 + [Dependencies](#lambda-manager-component-dependencies)
 + [Configuration](#lambda-manager-component-configuration)
++ [Local log file](#lambda-manager-component-log-file)
 + [Changelog](#lambda-manager-component-changelog)
 
 ## Versions<a name="lambda-manager-component-versions"></a>
@@ -21,7 +22,7 @@ This component has the following versions:
 
 ## Type<a name="lambda-manager-component-type"></a>
 
-<a name="public-component-type-plugin-para1"></a>This component is a plugin component \(`aws.greengrass.plugin`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component in the same Java Virtual Machine \(JVM\) as the nucleus\. The nucleus restarts when you install or restart this component\.
+<a name="public-component-type-plugin-para1"></a>This component is a plugin component \(`aws.greengrass.plugin`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component in the same Java Virtual Machine \(JVM\) as the nucleus\. The nucleus restarts when you change this component's version on the core device\.
 
 <a name="public-component-type-plugin-para2"></a>This component uses the same log file as the Greengrass nucleus\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)\.
 
@@ -97,6 +98,21 @@ This component provides the following configuration parameters that you can cust
 `getResultTimeoutInSecond`  
 \(Optional\) The maximum amount of time in seconds that Lambda functions can run before they time out\.  
 Default: `60`
+
+## Local log file<a name="lambda-manager-component-log-file"></a>
+
+This component uses the same log file as the [Greengrass nucleus](greengrass-nucleus-component.md) component\.
+
+```
+/greengrass/v2/logs/greengrass.log
+```
+
+**To view this component's logs**
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
+
+  ```
+  sudo tail -f /greengrass/v2/logs/greengrass.log
+  ```
 
 ## Changelog<a name="lambda-manager-component-changelog"></a>
 

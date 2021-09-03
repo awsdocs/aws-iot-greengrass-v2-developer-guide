@@ -238,7 +238,7 @@ Default: 60 seconds\.
 \(Optional\) A list of selection keys that specify sections of the [global lifecycle](#global-lifecycle-definition) to run for this manifest\. In the global lifecycle, you can define lifecycle steps with selection keys at any level to select sub\-sections of the lifecycle\. Then, the core device uses those sections that match the selection keys in this manifest\. For more information, see the [global lifecycle examples](#global-lifecycle-definition)\.  
 The core device uses the selections from the global lifecycle only if this manifest doesn't define a lifecycle\.
 You can specify the `all` selection key to run sections of the global lifecycle that don't have selection keys\.  
-`Artifacts`  
+  `Artifacts`   
 \(Optional\) A list of objects that each define a binary artifact for the component on the platform that this manifest defines\. For example, you can define code or images as artifacts\.  
 When the component deploys, the AWS IoT Greengrass Core software downloads the artifact to a folder on the core device\. You can also define artifacts as archive files that the software extracts after it downloads them\.  
 You can use [recipe variables](#recipe-variables) to get the paths to the folders where the artifacts install on the core device\.  

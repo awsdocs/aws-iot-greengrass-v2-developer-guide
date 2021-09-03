@@ -11,6 +11,7 @@ With this component, AWS IoT SiteWise gateways can connect to multiple OPC\-UA s
 + [Dependencies](#iotsitewise-opcua-collector-component-dependencies)
 + [Configuration](#iotsitewise-opcua-collector-component-configuration)
 + [Output data](#iotsitewise-opcua-collector-component-output-data)
++ [Local log file](#iotsitewise-opcua-collector-component-log-file)
 + [Licenses](#iotsitewise-opcua-collector-component-licenses)
 + [Changelog](#iotsitewise-opcua-collector-component-changelog)
 + [See also](#iotsitewise-opcua-collector-component-see-also)
@@ -55,6 +56,21 @@ This component doesn't have any configuration parameters\.
 
 
 This component writes `BatchPutAssetPropertyValue` messages to AWS IoT Greengrass stream manager\. For more information, see [BatchPutAssetPropertyValue](https://docs.aws.amazon.com/iot-sitewise/latest/APIReference/API_BatchPutAssetPropertyValue.html) in the *AWS IoT SiteWise API Reference*\.
+
+## Local log file<a name="iotsitewise-opcua-collector-component-log-file"></a>
+
+This component uses the following log file\.
+
+```
+/greengrass/v2/logs/aws.iot.SiteWiseEdgeCollectorOpcua.log
+```
+
+**To view this component's logs**
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
+
+  ```
+  sudo tail -f /greengrass/v2/logs/aws.iot.SiteWiseEdgeCollectorOpcua.log
+  ```
 
 ## Licenses<a name="iotsitewise-opcua-collector-component-licenses"></a>
 

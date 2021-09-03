@@ -9,8 +9,7 @@ You can complete this getting started tutorial to learn about the basic features
 **Note**  
 This tutorial describes how to set up a development environment and explore the features of AWS IoT Greengrass\. For more information about how to set up and configure production devices, see the following:  
 [Setting up AWS IoT Greengrass core devices](setting-up.md)
-[Install AWS IoT Greengrass Core software with automatic resource provisioning](quick-installation.md)
-[Install AWS IoT Greengrass Core software with manual resource provisioning](manual-installation.md)
+[Install the AWS IoT Greengrass Core software](install-greengrass-core-v2.md)
 
 You can expect to spend 20\-30 minutes on this tutorial\.
 
@@ -19,14 +18,20 @@ You can expect to spend 20\-30 minutes on this tutorial\.
 To complete this getting started tutorial, you need the following:
 + An AWS account\. If you don't have one, see [Set up an AWS account](setting-up.md#set-up-aws-account)\.
 + An AWS Identity and Access Management \(IAM\) user with administrator permissions\.
-+ A Windows, Mac, or Unix\-like development computer with an internet connection\.
++ A Windows, macOS, or Unix\-like development computer with an internet connection\.
 + A device with a Linux operating system and an internet connection to the same network as your development computer\. We recommend that you use a Raspberry Pi with [Raspberry Pi OS](https://www.raspberrypi.org/downloads/) \(previously called Raspbian\)\. For more information, see [Requirements to install and run the AWS IoT Greengrass Core software v2\.0](setting-up.md#greengrass-v2-requirements)\.
 + [Python](https://www.python.org/downloads/) 3\.5 or later installed on the device\.
-+ AWS Command Line Interface \(AWS CLI\) installed and configured with credentials on your development computer and on your device\. Make sure you use the same AWS Region to configure the AWS CLI on your development computer and on your device\.
-
-  For more information, see [Installing the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and [Configuring the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)\.
++ AWS Command Line Interface \(AWS CLI\) installed and configured with credentials on your development computer and on your device\. Make sure you use the same AWS Region to configure the AWS CLI on your development computer and on your device\. To use AWS IoT Greengrass V2 with the AWS CLI, you must have one of the following versions or later:<a name="minimum-aws-cli-versions"></a>
   + Minimum AWS CLI V1 version: v1\.18\.197
   + Minimum AWS CLI V2 version: v2\.1\.11
+**Tip**  <a name="tip-check-aws-cli-version"></a>
+You can run the following command to check the version of the AWS CLI that you have\.  
+
+  ```
+  aws --version
+  ```
+
+  For more information, see [Installing, updating, and uninstalling the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and [Configuring the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) in the *AWS Command Line Interface User Guide*\.
 **Note**  
 If you use a Raspberry Pi or another 32\-bit ARM device, install AWS CLI V1\. AWS CLI V2 isn't available for 32\-bit ARM devices\. For more information, see [Installing, updating, and uninstalling the AWS CLI version 1](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv1.html)\.
 
@@ -193,7 +198,7 @@ If your system doesn't have systemd, the installer won't set up the software as 
    /greengrass/v2/bin/greengrass-cli help
    ```
 
-   The command outputs help information for the Greengrass CLI\. If the `greengrass-cli` isn't found, the deployment might have failed to install the Greengrass CLI\. For more information, see [Troubleshooting](troubleshooting.md)\.
+   The command outputs help information for the Greengrass CLI\. If the `greengrass-cli` isn't found, the deployment might have failed to install the Greengrass CLI\. For more information, see [Troubleshooting AWS IoT Greengrass V2](troubleshooting.md)\.
 
    You can also run the following command to manually deploy the AWS IoT Greengrass CLI to your device\.
    + Replace *region* with the AWS Region that you use\. Make sure that you use the same AWS Region that you used to configure the AWS CLI on your device\.
@@ -441,7 +446,7 @@ You can also view the log file for your Hello World component\.
    ```
    sudo tail -f /greengrass/v2/logs/com.example.HelloWorld.log
    ```
-For more information, see [Troubleshooting](troubleshooting.md)\.
+For more information, see [Troubleshooting AWS IoT Greengrass V2](troubleshooting.md)\.
 
 1. Modify the local component to iterate and test your code\.
 
@@ -865,7 +870,7 @@ If the log messages don't change, the deployment failed or didn't reach the core
    ```
    sudo tail -f /greengrass/v2/logs/greengrass.log
    ```
-For more information, see [Troubleshooting](troubleshooting.md)\.
+For more information, see [Troubleshooting AWS IoT Greengrass V2](troubleshooting.md)\.
 
 You've completed this tutorial\. The AWS IoT Greengrass Core software and your Hello World component run on your device\. Also, your Hello World component is available in AWS IoT Greengrass to deploy to other devices\. For more information about the topics that this tutorial explores, see the following:
 + [Create custom AWS IoT Greengrass components](create-components.md)

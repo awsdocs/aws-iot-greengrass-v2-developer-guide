@@ -16,15 +16,25 @@ The IP detector component detects only IPv4 addresses\.
 
 **Topics**
 + [Versions](#ip-detector-component-versions)
++ [Type](#ip-detector-component-type)
 + [Requirements](#ip-detector-component-requirements)
 + [Dependencies](#ip-detector-component-dependencies)
 + [Configuration](#ip-detector-component-configuration)
++ [Local log file](#ip-detector-component-log-file)
 + [Changelog](#ip-detector-component-changelog)
 
 ## Versions<a name="ip-detector-component-versions"></a>
 
 This component has the following versions:
 + 2\.0\.x
+
+## Type<a name="ip-detector-component-type"></a>
+
+<a name="public-component-type-plugin-para1"></a>This component is a plugin component \(`aws.greengrass.plugin`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component in the same Java Virtual Machine \(JVM\) as the nucleus\. The nucleus restarts when you change this component's version on the core device\.
+
+<a name="public-component-type-plugin-para2"></a>This component uses the same log file as the Greengrass nucleus\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Requirements<a name="ip-detector-component-requirements"></a>
 
@@ -82,6 +92,21 @@ Default: `false`
 `includeIPv4LinkLocalAddrs`  
 \(Optional\) You can enable this option to detect and report IPv4 [link\-local addresses](https://en.wikipedia.org/wiki/Link-local_address)\. Use this option if the core device's network doesn't have Dynamic Host Configuration Protocol \(DHCP\) or statically assigned IP addresses\.  
 Default: `false`
+
+## Local log file<a name="ip-detector-component-log-file"></a>
+
+This component uses the same log file as the [Greengrass nucleus](greengrass-nucleus-component.md) component\.
+
+```
+/greengrass/v2/logs/greengrass.log
+```
+
+**To view this component's logs**
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
+
+  ```
+  sudo tail -f /greengrass/v2/logs/greengrass.log
+  ```
 
 ## Changelog<a name="ip-detector-component-changelog"></a>
 

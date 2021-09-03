@@ -35,13 +35,10 @@ To support client devices, a core device's AWS IoT policy must allow the followi
 + `greengrass:VerifyClientDeviceIoTCertificateAssociation`
 + `greengrass:GetConnectivityInfo`
 + `greengrass:UpdateConnectivityInfo` – \(Optional\) This permission is required to use the [IP detector component](ip-detector-component.md), which reports the core device's network connectivity information to the AWS IoT Greengrass cloud service\.
-+ `iot:GetThingShadow`, `iot:UpdateThingShadow`, and `iot:DeleteThingShadow` – \(Optional\) These permissions are required to use the shadow manager component to sync client device shadows with AWS IoT Core\.
-**Note**  
-This tutorial doesn't cover client device shadows, so these permissions aren't required to complete this tutorial\. However, you might want to grant these permissions to your core device now if you plan to work with client device shadows later\. For more information, see [Sync and interact with client device shadows](work-with-client-device-shadows.md)\.
 
 For more information, see [AWS IoT policies for data plane operations](device-auth.md#iot-policies) and [Minimal AWS IoT policy to support client devices](device-auth.md#client-device-support-minimal-iot-policy)\.
 
-In this section, you review the AWS IoT policies for your core device and add any required permissions that are missing\. If you used the [AWS IoT Greengrass Core software installer to provision resources](quick-installation.md), your core device has an AWS IoT policy that allows access to all AWS IoT Greengrass actions \(`greengrass:*`\)\. In this case, you must update the AWS IoT policy only if you plan to deploy the shadow manager component to sync device shadows with AWS IoT Core\. Otherwise, you can skip this section\.
+In this section, you review the AWS IoT policies for your core device and add any required permissions that are missing\. If you used the [AWS IoT Greengrass Core software installer to provision resources](quick-installation.md), your core device has an AWS IoT policy that allows access to all AWS IoT Greengrass actions \(`greengrass:*`\)\. 
 
 **To review and update a core device's AWS IoT policy**
 
@@ -64,55 +61,6 @@ If you used the [AWS IoT Greengrass Core software installer to provision resourc
 1. <a name="update-iot-policy-edit-policy"></a>In the policy overview, choose **Edit policy document**\.
 
 1. Review the policy for the required permissions, and add any required permissions that are missing\.
-
-1. \(Optional\) To add support for shadows, add the following statement to the policy\. Replace *region* and *account\-id* with the Region that you use and your AWS account number\.
-   + This example statement allows access to all things' device shadows\. To follow best security practices, you can restrict access to only the core device and the client devices that you connect to the core device\. For more information, see [Minimal AWS IoT policy to support client devices](device-auth.md#client-device-support-minimal-iot-policy)\.
-
-   ```
-   {
-     "Effect": "Allow",
-     "Action": [
-       "iot:GetThingShadow",
-       "iot:UpdateThingShadow",
-       "iot:DeleteThingShadow"
-     ],
-     "Resource": [
-       "arn:aws:iot:region:account-id:thing/*"
-     ]
-   }
-   ```
-
-   After you add this statement, the policy document might look similar to the following example\.
-
-   ```
-   {
-     "Version": "2012-10-17",
-     "Statement": [
-       {
-         "Effect": "Allow",
-         "Action": [
-           "iot:Connect",
-           "iot:Publish",
-           "iot:Subscribe",
-           "iot:Receive",
-           "greengrass:*"
-         ],
-         "Resource": "*"
-       },
-       {
-         "Effect": "Allow",
-         "Action": [
-           "iot:GetThingShadow",
-           "iot:UpdateThingShadow",
-           "iot:DeleteThingShadow"
-         ],
-         "Resource": [
-           "arn:aws:iot:region:account-id:thing/*"
-         ]
-       }
-     ]
-   }
-   ```
 
 1. <a name="update-iot-policy-save-policy"></a>Choose **Save as new version**\.
 
@@ -576,5 +524,3 @@ You've completed this tutorial\. The client device connects to the core device a
 + [Greengrass discovery RESTful API](greengrass-discover-api.md)
 + [Relay MQTT messages between client devices and AWS IoT Core](relay-client-device-messages.md)
 + [Interact with client devices in components](interact-with-client-devices-in-components.md)
-
-You can also configure the core device to sync and interact with client device shadows\. For more information, see [Sync and interact with client device shadows](work-with-client-device-shadows.md)\.

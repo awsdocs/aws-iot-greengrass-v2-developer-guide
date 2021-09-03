@@ -9,15 +9,25 @@ Client devices are local IoT devices that connect to a Greengrass core device to
 
 **Topics**
 + [Versions](#mqtt-broker-moquette-component-versions)
++ [Type](#mqtt-broker-moquette-component-type)
 + [Requirements](#mqtt-broker-moquette-component-requirements)
 + [Dependencies](#mqtt-broker-moquette-component-dependencies)
 + [Configuration](#mqtt-broker-moquette-component-configuration)
++ [Local log file](#mqtt-broker-moquette-component-log-file)
 + [Changelog](#mqtt-broker-moquette-component-changelog)
 
 ## Versions<a name="mqtt-broker-moquette-component-versions"></a>
 
 This component has the following versions:
 + 2\.0\.x
+
+## Type<a name="mqtt-broker-moquette-component-type"></a>
+
+<a name="public-component-type-plugin-para1"></a>This component is a plugin component \(`aws.greengrass.plugin`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component in the same Java Virtual Machine \(JVM\) as the nucleus\. The nucleus restarts when you change this component's version on the core device\.
+
+<a name="public-component-type-plugin-para2"></a>This component uses the same log file as the Greengrass nucleus\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)\.
+
+<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
 
 ## Requirements<a name="mqtt-broker-moquette-component-requirements"></a>
 
@@ -68,6 +78,21 @@ The following example configuration specifies to operate the MQTT broker on port
   }
 }
 ```
+
+## Local log file<a name="mqtt-broker-moquette-component-log-file"></a>
+
+This component uses the same log file as the [Greengrass nucleus](greengrass-nucleus-component.md) component\.
+
+```
+/greengrass/v2/logs/greengrass.log
+```
+
+**To view this component's logs**
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
+
+  ```
+  sudo tail -f /greengrass/v2/logs/greengrass.log
+  ```
 
 ## Changelog<a name="mqtt-broker-moquette-component-changelog"></a>
 

@@ -53,7 +53,7 @@ The following example authorization policy allows the component `com.example.MyS
 {
   "accessControl": {
     "aws.greengrass.ShadowManager": {
-      "policyId1": {
+      "com.example.MyShadowInteractionComponent:shadow:1": {
         "policyDescription": "Allows access to shadows",
         "operations": [
           "aws.greengrass#GetThingShadow",
@@ -65,7 +65,7 @@ The following example authorization policy allows the component `com.example.MyS
           "$aws/things/MyThingName/shadow/name/myNamedShadow"
         ]
       },
-      "policyId2": {
+      "com.example.MyShadowInteractionComponent:shadow:2": {
         "policyDescription": "Allows access to things with shadows",
         "operations": [
           "aws.greengrass#ListNamedShadowsForThing"
@@ -94,7 +94,7 @@ The following example authorization policy allows the component `com.example.MyS
 ```
 accessControl:
   aws.greengrass.ShadowManager:
-    policyId1:
+    'com.example.MyShadowInteractionComponent:shadow:1':
       policyDescription: 'Allows access to shadows'
       operations:
         - 'aws.greengrass#GetThingShadow'
@@ -103,7 +103,7 @@ accessControl:
       resources:
         - $aws/things/MyThingName/shadow
         - $aws/things/MyThingName/shadow/name/myNamedShadow
-    policyId2:
+    'com.example.MyShadowInteractionComponent:shadow:2':
       policyDescription: 'Allows access to things with shadows'
       operations:
         - 'aws.greengrass#ListNamedShadowsForThing'
@@ -127,12 +127,12 @@ Get the shadow for a specified thing\.
 
 This operation's request has the following parameters:
 
-`thingName`  
-The name of the thing for which to get the shadow\.   
+`thingName` \(Python: `thing_name`\)  <a name="ipc-local-shadows-thing-name"></a>
+The name of the thing\.  
 Type: `string`
 
-`shadowName`  
-\(Optional\) The name of the shadow to get\. This parameter is required only for named shadows\.  
+`shadowName` \(Python: `shadow_name`\)  <a name="ipc-local-shadows-shadow-name"></a>
+The name of the shadow\. To specify the thing's classic shadow, set this parameter to an empty string \(`""`\)\.  
 Type: `string`
 
 ### Response<a name="ipc-operation-getthingshadow-response"></a>
@@ -160,7 +160,7 @@ Type: `string`
 `timestamp`  
 The epoch date and time that the response was generated\.  
 Type: `integer`  
-`clientToken`  
+`clientToken` \(Python: `clientToken`\)  
 The token that is used to match the request and corresponding response  
 Type: `string`  
 `version`  
@@ -265,12 +265,12 @@ Update the shadow for the specified thing\.
 
 This operation's request has the following parameters:
 
-`thingName`  
-The name of the thing for which to update the shadow\.   
+`thingName` \(Python: `thing_name`\)  <a name="ipc-local-shadows-thing-name"></a>
+The name of the thing\.  
 Type: `string`
 
-`shadowName`  
-\(Optional\) The name of the shadow to update\. This parameter is required only for named shadows\.  
+`shadowName` \(Python: `shadow_name`\)  <a name="ipc-local-shadows-shadow-name"></a>
+The name of the shadow\. To specify the thing's classic shadow, set this parameter to an empty string \(`""`\)\.  
 Type: `string`
 
 `payload`  
@@ -285,7 +285,7 @@ Type: `map` of key\-value pairs
 `reported`  
 The state properties and values reported by the device\.  
 Type: `map` of key\-value pairs  
-`clientToken`  
+`clientToken` \(Python: `client_token`\)  
 \(Optional\) The token that is used to match the request and corresponding response by the client token\.  
 Type: `string`  
 `version`  
@@ -317,7 +317,7 @@ Type: `string`
 `timestamp`  
 The epoch date and time that the response was generated\.  
 Type: `integer`  
-`clientToken`  
+`clientToken` \(Python: `client_token`\)  
 The token that is used to match the request and corresponding response\.  
 Type: `string`  
 `version`  
@@ -430,12 +430,12 @@ Deletes the shadow for the specified thing\.
 
 This operation's request has the following parameters:
 
-`thingName`  
-The name of the thing for which to delete the shadow\.   
+`thingName` \(Python: `thing_name`\)  <a name="ipc-local-shadows-thing-name"></a>
+The name of the thing\.  
 Type: `string`
 
-`shadowName`  
-\(Optional\) The name of the shadow to delete\. This parameter is required only for named shadows\.  
+`shadowName` \(Python: `shadow_name`\)  <a name="ipc-local-shadows-shadow-name"></a>
+The name of the shadow\. To specify the thing's classic shadow, set this parameter to an empty string \(`""`\)\.  
 Type: `string`
 
 ### Response<a name="ipc-operation-deletethingshadow-response"></a>
@@ -543,17 +543,17 @@ List the named shadows for the specified thing\.
 
 This operation's request has the following parameters:
 
-`thingName`  
-The name of the thing for which to list the named shadows\.   
+`thingName` \(Python: `thing_name`\)  <a name="ipc-local-shadows-thing-name"></a>
+The name of the thing\.  
 Type: `string`
 
-`pageSize`  
+`pageSize` \(Python: `page_size`\)  
 \(Optional\) The number of shadow names to return in each call\.   
 Type: `integer`  
 Default: 25  
 Maximum: 100
 
-`nextToken`  
+`nextToken` \(Python: `next_token`\)  
 \(Optional\) The token to retrieve the next set of results\. This value is returned on paged results and is used in the call that returns the next page\.  
 Type: `string`
 
@@ -569,7 +569,7 @@ Type: `array`
 \(Optional\) The date and time that the response was generated\.   
 Type: `integer`
 
-`nextToken`  
+`nextToken` \(Python: `next_token`\)  
 \(Optional\) The token value to use in paged requests to retrieve the next page in the sequence\. This token isn't present when there are no more shadow names to return\.  
 Type: `string`  
 If the requested page size exactly matches the number of shadow names in the response, then this token is present; however, when used, it returns an empty list\.

@@ -44,7 +44,7 @@ In the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass), 
 }
 ```
 
-When you deploy a public inference component, you can modify the default configuration to customize your deployment\. For information about the available configuration parameters for each public inference component, see the component topic in [Sample machine learning components](perform-machine-learning-inference.md#ml-components)\.
+When you deploy a public inference component, you can modify the default configuration to customize your deployment\. For information about the available configuration parameters for each public inference component, see the component topic in [AWS\-provided machine learning components](perform-machine-learning-inference.md#ml-components)\.
 
 This section describes how to deploy a modified component from the AWS IoT Greengrass console\. For information about deploying components using the AWS CLI, see [Create deployments](create-deployments.md)\.<a name="modify-ml-component-config-console"></a>
 

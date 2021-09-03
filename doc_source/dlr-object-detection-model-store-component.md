@@ -13,6 +13,7 @@ The name of the DLR object detection model store component varies depending on i
 + [Requirements](#dlr-object-detection-model-store-component-requirements)
 + [Dependencies](#dlr-object-detection-model-store-component-dependencies)
 + [Configuration](#dlr-object-detection-model-store-component-configuration)
++ [Local log file](#dlr-object-detection-model-store-component-log-file)
 + [Changelog](#dlr-object-detection-model-store-component-changelog)
 
 ## Versions<a name="dlr-object-detection-model-store-component-versions"></a>
@@ -31,7 +32,7 @@ This component has the following versions:
 
 This component has the following requirements:<a name="ml-component-requirements"></a>
 + <a name="ml-req-glibc"></a>On Greengrass core devices running Amazon Linux 2 or Ubuntu 18\.04, [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.27 or later installed on the device\.
-+ On Armv7l devices, such as Raspberry Pi, dependencies for OpenCV Python installed on the device\. Run the following command to install the dependencies: 
++ On Armv7l devices, such as Raspberry Pi, dependencies for OpenCV\-Python installed on the device\. Run the following command to install the dependencies: 
 
   ```
   sudo apt-get install libopenjp2-7 libilmbase23 libopenexr-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libgtk-3-0 libwebp-dev
@@ -96,6 +97,10 @@ The following table lists the dependencies for version 2\.0\.x of this component
 ## Configuration<a name="dlr-object-detection-model-store-component-configuration"></a>
 
 This component doesn't have any configuration parameters\.
+
+## Local log file<a name="dlr-object-detection-model-store-component-log-file"></a>
+
+This component doesn't output logs\.
 
 ## Changelog<a name="dlr-object-detection-model-store-component-changelog"></a>
 

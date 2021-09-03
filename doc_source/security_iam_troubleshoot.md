@@ -8,7 +8,7 @@ Use the following information to help you diagnose and fix common issues that yo
 + [I'm an administrator and want to allow others to access AWS IoT Greengrass](#security_iam_troubleshoot-admin-delegate)
 + [I want to allow people outside of my AWS account to access my AWS IoT Greengrass resources](#security_iam_troubleshoot-cross-account-access)
 
-For general troubleshooting help, see [Troubleshooting](troubleshooting.md)\.
+For general troubleshooting help, see [Troubleshooting AWS IoT Greengrass V2](troubleshooting.md)\.
 
 ## I'm not authorized to perform an action in AWS IoT Greengrass<a name="security_iam_troubleshoot-no-permissions"></a>
 

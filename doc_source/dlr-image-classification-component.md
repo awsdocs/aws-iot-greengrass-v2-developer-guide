@@ -1,6 +1,6 @@
 # DLR image classification<a name="dlr-image-classification-component"></a>
 
-The DLR image classification component \(`aws.greengrass.DLRImageClassification`\) contains sample inference code to perform image classification inference using [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) and resnet\-50 models\. This component uses the variant [DLR image classification model store](dlr-image-classification-model-store-component.md) and the [DLR](dlr-component.md) components as dependencies to download DLR and the sample models\. 
+The DLR image classification component \(`aws.greengrass.DLRImageClassification`\) contains sample inference code to perform image classification inference using [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) and resnet\-50 models\. This component uses the variant [DLR image classification model store](dlr-image-classification-model-store-component.md) and the [DLR installer](dlr-component.md) components as dependencies to download DLR and the sample models\. 
 
 To use this inference component with a custom\-trained DLR model, [create a custom version](ml-customization.md#override-public-model-store) of the dependent model store component\. To use your own custom inference code, you can use the recipe of this component as a template to [create a custom inference component](ml-customization.md#create-inference-component)\.
 
@@ -10,6 +10,7 @@ To use this inference component with a custom\-trained DLR model, [create a cust
 + [Requirements](#dlr-image-classification-component-requirements)
 + [Dependencies](#dlr-image-classification-component-dependencies)
 + [Configuration](#dlr-image-classification-component-config)
++ [Local log file](#dlr-image-classification-component-log-file)
 + [Changelog](#dlr-image-classification-component-changelog)
 
 ## Versions<a name="dlr-image-classification-component-versions"></a>
@@ -28,7 +29,7 @@ This component has the following versions:
 
 This component has the following requirements:<a name="ml-component-requirements"></a>
 + <a name="ml-req-glibc"></a>On Greengrass core devices running Amazon Linux 2 or Ubuntu 18\.04, [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.27 or later installed on the device\.
-+ On Armv7l devices, such as Raspberry Pi, dependencies for OpenCV Python installed on the device\. Run the following command to install the dependencies: 
++ On Armv7l devices, such as Raspberry Pi, dependencies for OpenCV\-Python installed on the device\. Run the following command to install the dependencies: 
 
   ```
   sudo apt-get install libopenjp2-7 libilmbase23 libopenexr-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libgtk-3-0 libwebp-dev
@@ -174,7 +175,8 @@ When you set `UseCamera` to `true`, you must also create a symlink to enable the
 
 `MLRootPath`  <a name="ml-config-mlrootpath"></a>
 <a name="ml-config-mlrootpath-desc"></a>\(Optional\) The path of the folder on the device where inference components read images and write inference results\. You can modify this value to any location on your device to which the user running this component has read/write access\.  
-Default: `/greengrass/v2/work/<component-name>/greengrass_ml`
+<a name="ml-config-mlrootpath-default-dlr"></a>Default: `/greengrass/v2/work/variant.DLR/greengrass_ml`  
+<a name="ml-config-mlrootpath-default-tfl"></a>Default: `/greengrass/v2/work/variant.TensorFlowLite/greengrass_ml`
 
 `Accelerator`  <a name="ml-config-accelerator"></a>
 The accelerator that you want to use\. Supported values are `cpu` and `gpu`\.  
@@ -199,6 +201,21 @@ x86_64: "DLR-resnet50-x86_64-cpu-ImageClassification"
 ```
 
 ------
+
+## Local log file<a name="dlr-image-classification-component-log-file"></a>
+
+This component uses the following log file\.
+
+```
+/greengrass/v2/logs/aws.greengrass.DLRImageClassification.log
+```
+
+**To view this component's logs**
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
+
+  ```
+  sudo tail -f /greengrass/v2/logs/aws.greengrass.DLRImageClassification.log
+  ```
 
 ## Changelog<a name="dlr-image-classification-component-changelog"></a>
 

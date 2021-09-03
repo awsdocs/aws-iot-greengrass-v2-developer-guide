@@ -1,6 +1,6 @@
 # TensorFlow Lite image classification<a name="tensorflow-lite-image-classification-component"></a>
 
-The TensorFlow Lite image classification component \(`aws.greengrass.TensorFlowLiteImageClassification`\) contains sample inference code to perform image classification inference using the [TensorFlow Lite](https://www.tensorflow.org/lite) runtime and a sample pre\-trained MobileNet 1\.0 quantized model\. This component uses the variant [TensorFlow Lite image classification model store](tensorflow-lite-image-classification-model-store-component.md) and the [TensorFlow Lite](tensorflow-lite-component.md) components as dependencies to download the TensorFlow Lite runtime and the sample model\.
+The TensorFlow Lite image classification component \(`aws.greengrass.TensorFlowLiteImageClassification`\) contains sample inference code to perform image classification inference using the [TensorFlow Lite](https://www.tensorflow.org/lite/guide/python) runtime and a sample pre\-trained MobileNet 1\.0 quantized model\. This component uses the variant [TensorFlow Lite image classification model store](tensorflow-lite-image-classification-model-store-component.md) and the [TensorFlow Lite installer](tensorflow-lite-component.md) components as dependencies to download the TensorFlow Lite runtime and the sample model\.
 
 To use this inference component with a custom\-trained TensorFlow Lite model, [create a custom version](ml-customization.md#override-public-model-store) of the dependent model store component\. To use your own custom inference code, you can use the recipe of this component as a template to [create a custom inference component](ml-customization.md#create-inference-component)\.
 
@@ -10,6 +10,7 @@ To use this inference component with a custom\-trained TensorFlow Lite model, [c
 + [Requirements](#tensorflow-lite-image-classification-component-requirements)
 + [Dependencies](#tensorflow-lite-image-classification-component-dependencies)
 + [Configuration](#tensorflow-lite-image-classification-component-config)
++ [Local log file](#tensorflow-lite-image-classification-component-log-file)
 + [Changelog](#tensorflow-lite-image-classification-component-changelog)
 
 ## Versions<a name="tensorflow-lite-image-classification-component-versions"></a>
@@ -27,7 +28,7 @@ This component has the following versions:
 
 This component has the following requirements:<a name="ml-component-requirements"></a>
 + <a name="ml-req-glibc"></a>On Greengrass core devices running Amazon Linux 2 or Ubuntu 18\.04, [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.27 or later installed on the device\.
-+ On Armv7l devices, such as Raspberry Pi, dependencies for OpenCV Python installed on the device\. Run the following command to install the dependencies: 
++ On Armv7l devices, such as Raspberry Pi, dependencies for OpenCV\-Python installed on the device\. Run the following command to install the dependencies: 
 
   ```
   sudo apt-get install libopenjp2-7 libilmbase23 libopenexr-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libgtk-3-0 libwebp-dev
@@ -150,6 +151,21 @@ When you set this value to `true`, the sample inference code accesses the camera
 Default: `false`  
 When you view the recipe of this component, the `UseCamera` configuration parameter doesn't appear in the default configuration\. However, you can modify the value of this parameter in a [configuration merge update](update-component-configurations.md) when you deploy the component\.   
 When you set `UseCamera` to `true`, you must also create a symlink to enable the inference component to access your camera from the virtual environment that is created by the runtime component\. For more information about using a camera with the sample inference components, see [Update component configurations](ml-tutorial-image-classification-camera.md)\.
+
+## Local log file<a name="tensorflow-lite-image-classification-component-log-file"></a>
+
+This component uses the following log file\.
+
+```
+/greengrass/v2/logs/aws.greengrass.TensorFlowLiteImageClassification.log
+```
+
+**To view this component's logs**
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
+
+  ```
+  sudo tail -f /greengrass/v2/logs/aws.greengrass.TensorFlowLiteImageClassification.log
+  ```
 
 ## Changelog<a name="tensorflow-lite-image-classification-component-changelog"></a>
 

@@ -91,15 +91,15 @@ This operation's response has the following information:
 
 `messages`  
 The stream of notification messages\. This object, `ComponentUpdatePolicyEvents`, contains the following information:    
-`preUpdateEvent`  
+`preUpdateEvent` \(Python: `pre_update_event`\)  
 \(Optional\) An event that indicates that the nucleus wants to update a component\. You can respond with the [DeferComponentUpdate](#ipc-operation-defercomponentupdate) operation to acknowledge or defer the update until your component is ready to restart\. This object, `PreComponentUpdateEvent`, contains the following information:    
-`deploymentId`  
+`deploymentId` \(Python: `deployment_id`\)  
 The ID of the AWS IoT Greengrass deployment that updates the component\.  
-`isGgcRestarting`  
+`isGgcRestarting` \(Python: `is_ggc_restarting`\)  
 Whether or not the nucleus needs to restart to apply the update\.  
-`postUpdateEvent`  
+`postUpdateEvent` \(Python: `post_update_event`\)  
 \(Optional\) An event that indicates that the nucleus updated a component\. This object, `PostComponentUpdateEvent`, contains the following information:    
-`deploymentId`  
+`deploymentId` \(Python: `deployment_id`\)  
 The ID of the AWS IoT Greengrass deployment that updated the component\.
 
 ## DeferComponentUpdate<a name="ipc-operation-defercomponentupdate"></a>
@@ -112,14 +112,14 @@ If a component doesn't respond to the component update notification, the nucleus
 
 This operation's request has the following parameters:
 
-`deploymentId`  
+`deploymentId` \(Python: `deployment_id`\)  
 The ID of the AWS IoT Greengrass deployment to defer\.
 
 `message`  
 \(Optional\) The name of the component for which to defer updates\.  
 Defaults to the name of the component that makes the request\.
 
-`recheckAfterMs`  
+`recheckAfterMs` \(Python: `recheck_after_ms`\)  
 The amount of time in milliseconds for which to defer the update\. The nucleus waits for this amount of time and then sends another `PreComponentUpdateEvent` that you can discover with [SubscribeToComponentUpdates](#ipc-operation-subscribetocomponentupdates)\.  
 Specify `0` to acknowledge the update\. This tells the nucleus that your component is ready for the update\.  
 Defaults to zero milliseconds, which means to acknowledge the update\.
@@ -153,15 +153,15 @@ The following table lists the minimum versions of the AWS IoT Device SDK that yo
 
 | SDK | Minimum version | 
 | --- | --- | 
-|  [AWS IoT Device SDK for Java v2](https://github.com/aws/aws-iot-device-sdk-java-v2)  |  v1\.5\.0  | 
-|  [AWS IoT Device SDK for Python v2](https://github.com/aws/aws-iot-device-sdk-python-v2)  |  v1\.7\.0  | 
-|  [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2)  |  v1\.14\.0  | 
+|  [AWS IoT Device SDK for Java v2](https://github.com/aws/aws-iot-device-sdk-java-v2)  |  v1\.4\.3  | 
+|  [AWS IoT Device SDK for Python v2](https://github.com/aws/aws-iot-device-sdk-python-v2)  |  v1\.6\.2  | 
+|  [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2)  |  v1\.13\.1  | 
 
 ### Request<a name="ipc-operation-defercomponentupdate-request"></a>
 
 This operation's request has the following parameters:
 
-`componentName`  
+`componentName` \(Python: `component_name`\)  
 The name of the component to pause, which must be a generic component\. For more information, see [Component types](manage-components.md#component-types)\.
 
 ### Response<a name="ipc-operation-defercomponentupdate-response"></a>
@@ -186,15 +186,15 @@ The following table lists the minimum versions of the AWS IoT Device SDK that yo
 
 | SDK | Minimum version | 
 | --- | --- | 
-|  [AWS IoT Device SDK for Java v2](https://github.com/aws/aws-iot-device-sdk-java-v2)  |  v1\.5\.0  | 
-|  [AWS IoT Device SDK for Python v2](https://github.com/aws/aws-iot-device-sdk-python-v2)  |  v1\.7\.0  | 
-|  [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2)  |  v1\.14\.0  | 
+|  [AWS IoT Device SDK for Java v2](https://github.com/aws/aws-iot-device-sdk-java-v2)  |  v1\.4\.3  | 
+|  [AWS IoT Device SDK for Python v2](https://github.com/aws/aws-iot-device-sdk-python-v2)  |  v1\.6\.2  | 
+|  [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2)  |  v1\.13\.1  | 
 
 ### Request<a name="ipc-operation-defercomponentupdate-request"></a>
 
 This operation's request has the following parameters:
 
-`componentName`  
+`componentName` \(Python: `component_name`\)  
 The name of the component to resume\.
 
 ### Response<a name="ipc-operation-defercomponentupdate-response"></a>

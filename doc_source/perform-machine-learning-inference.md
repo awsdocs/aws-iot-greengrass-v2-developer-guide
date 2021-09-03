@@ -10,7 +10,7 @@ AWS IoT Greengrass simplifies the steps required to perform inference\. You can 
 + [Requirements](#ml-requirements)
 + [Supported model sources](#ml-model-sources)
 + [Supported machine learning runtimes](#ml-runtime-libraries)
-+ [Sample machine learning components](#ml-components)
++ [AWS\-provided machine learning components](#ml-components)
 + [Tutorial: Perform sample image classification inference using TensorFlow Lite](ml-tutorial-image-classification.md)
 + [Perform sample image classification inference on images from a camera using TensorFlow Lite](ml-tutorial-image-classification-camera.md)
 + [Use Amazon SageMaker Edge Manager on Greengrass core devices](use-sagemaker-edge-manager.md)
@@ -19,20 +19,22 @@ AWS IoT Greengrass simplifies the steps required to perform inference\. You can 
 
 ## How AWS IoT Greengrass ML inference works<a name="how-ml-inference-works"></a>
 
-AWS provides [machine learning components](#ml-components) that you can use as\-is to create one\-click deployments to perform machine learning inference on your device\. You can also use these components as templates to create custom components to meet your specific requirements\. Machine learning inference in AWS IoT Greengrass uses the following types of components:<a name="ml-component-types"></a>
+AWS provides [machine learning components](#ml-components) that you can use as\-is to create one\-click deployments to perform machine learning inference on your device\. You can also use these components as templates to create custom components to meet your specific requirements\.<a name="ml-component-types"></a>
+
+AWS\-provided machine learning components are broadly categorized as follows:
 + **Model component**—Contains machine learning models as Greengrass artifacts\.
 + **Runtime component**—Contains the script that installs the machine learning framework and its dependencies on the Greengrass core device\.
 + **Inference component**—Contains the inference code and includes component dependencies to install the machine learning framework and download pre\-trained machine learning models\.
 
-Each deployment that you create to perform machine learning inference consists of at least one inference component that uses a model component and a runtime component, as dependencies\. To perform sample inference with AWS\-provided components, you deploy an inference component to your core device, which automatically includes the model and runtime dependencies as needed\. To customize your deployments, you can plug in or swap out the public model components with custom model components, or you can use the component recipes for the public components as templates to create your own custom inference, model, and runtime components\. 
+Each deployment that you create to perform machine learning inference consists of at least one component that runs your inference application, installs the machine learning framework, and downloads your machine learning models\. To perform sample inference with AWS\-provided components, you deploy an inference component to your core device, which automatically includes the corresponding model and runtime components as dependencies\. To customize your deployments, you can plug in or swap out the sample model components with custom model components, or you can use the component recipes for the AWS\-provided components as templates to create your own custom inference, model, and runtime components\. 
 
-At a high level, you complete the following basic steps to perform machine learning inference using custom components:
+At a high level, you can complete the following steps to perform machine learning inference using custom components:
 
 1. Create a model component\. This component contains the machine learning models that you want to use to perform inference\. AWS provides sample pre\-trained DLR and TensorFlow Lite models\. To use custom model, create your own model component\.
 
-1. Create a runtime component\. This component contains the scripts required to install the machine learning runtime for your models\. AWS provides sample runtime components for [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) \(DLR\) and [TensorFlow Lite](https://www.tensorflow.org/lite)\. To use other runtimes with your custom models and inference code, create your own runtime components\.
+1. Create a runtime component\. This component contains the scripts required to install the machine learning runtime for your models\. AWS provides sample runtime components for [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) \(DLR\) and [TensorFlow Lite](https://www.tensorflow.org/lite/guide/python)\. To use other runtimes with your custom models and inference code, create your own runtime components\.
 
-1. Create an inference component\. This component contains your inference code\. AWS\-provides sample inference components for image classification and object detection using DLR and TensorFlow Lite\. To perform other types of inference, or to use custom models and runtimes, create your own inference component\.
+1. Create an inference component\. This component contains your inference code, and includes your model and runtime components as dependencies\. AWS\-provides sample inference components for image classification and object detection using DLR and TensorFlow Lite\. To perform other types of inference, or to use custom models and runtimes, create your own inference component\.
 
 1. Deploy the inference component\. When you deploy this component, AWS IoT Greengrass also automatically deploys the model and runtime component dependencies\.
 
@@ -68,38 +70,26 @@ AWS IoT Greengrass enables you to create custom components to use any machine le
 
 To simplify the process of getting started with machine learning, AWS IoT Greengrass provides sample inference, model, and runtime components that use the following machine learning runtimes: 
 +  [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) \(DLR\) v1\.6\.0 and v1\.3\.0
-+  [TensorFlow Lite](https://www.tensorflow.org/lite) v2\.5\.0 
++  [TensorFlow Lite](https://www.tensorflow.org/lite/guide/python) v2\.5\.0 
 
-## Sample machine learning components<a name="ml-components"></a>
+## AWS\-provided machine learning components<a name="ml-components"></a>
 
-The AWS\-provided machine learning components described in this section enable you to perform machine learning inference with sample inference code and pre\-trained models using DLR or TensorFlow Lite\.
+The following table lists the AWS\-provided components used for machine learning\. 
 
-**Topics**
-+ [Machine learning components for DLR](#ml-components-dlr)
-+ [Machine learning components for TensorFlow Lite](#ml-components-tensorflow-lite)
-
-### Machine learning components for DLR<a name="ml-components-dlr"></a>
-
-AWS IoT Greengrass provides the following public components to support machine learning inference using [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) \(DLR\)\. 
+**Note**  <a name="component-nucleus-dependency-update-note"></a>
+Several AWS\-provided components depend on specific minor versions of the Greengrass nucleus\. Because of this dependency, you need to update these components when you update the Greengrass nucleus to a new minor version\. For information about the specific versions of the nucleus that each component depends on, see the corresponding component topic\. For more information about updating the nucleus, see [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)\.
 
 
 | Component | Description | Depends on nucleus | [Component type](manage-components.md#component-types) | [Open source](open-source.md) | 
 | --- | --- | --- | --- | --- | 
+| [SageMaker Edge Manager](sagemaker-edge-manager-component.md) | Deploys the Amazon SageMaker Edge Manager agent on the Greengrass core device\. | Yes | Generic | No | 
 | [DLR image classification](dlr-image-classification-component.md) | Inference component that uses the DLR image classification model store and the DLR runtime component as dependencies to install DLR, download sample image classification models, and perform image classification inference on supported devices\. | Yes | Generic | No | 
 | [DLR object detection](dlr-object-detection-component.md) | Inference component that uses the DLR object detection model store and the DLR runtime component as dependencies to install DLR, download sample object detection models, and perform object detection inference on supported devices\. | Yes | Generic | No | 
 | [DLR image classification model store](dlr-image-classification-model-store-component.md) | Model component that contains sample ResNet\-50 image classification models as Greengrass artifacts\. | Yes | Generic | No | 
 | [DLR object detection model store](dlr-object-detection-model-store-component.md) | Model component that contains sample YOLOv3 object detection models as Greengrass artifacts\. | Yes | Generic | No | 
-| [DLR](dlr-component.md) | Runtime component that contains an installation script that is used to install DLR and its dependencies on the Greengrass core device\. | Yes | Generic | No | 
-
-### Machine learning components for TensorFlow Lite<a name="ml-components-tensorflow-lite"></a>
-
-AWS IoT Greengrass provides the following public components to support machine learning inference using [TensorFlow Lite](https://www.tensorflow.org/lite)\.
-
-
-| Component | Description | Depends on nucleus | [Component type](manage-components.md#component-types) | [Open source](open-source.md) | 
-| --- | --- | --- | --- | --- | 
+| [DLR installer](dlr-component.md) | Runtime component that contains an installation script that is used to install DLR and its dependencies on the Greengrass core device\. | Yes | Generic | No | 
 | [TensorFlow Lite image classification](tensorflow-lite-image-classification-component.md) | Inference component that uses the TensorFlow Lite image classification model store and the TensorFlow Lite runtime component as dependencies to install TensorFlow Lite, download sample image classification models, and perform image classification inference on supported devices\. | Yes | Generic | No | 
 | [TensorFlow Lite object detection](tensorflow-lite-object-detection-component.md) | Inference component that uses the TensorFlow Lite object detection model store and the TensorFlow Lite runtime component as dependencies to install TensorFlow Lite, download sample object detection models, and perform object detection inference on supported devices\. | Yes | Generic | No | 
 | [TensorFlow Lite image classification model store](tensorflow-lite-image-classification-model-store-component.md) | Model component that contains a sample MobileNet v1 model as a Greengrass artifact\. | Yes | Generic | No | 
 | [TensorFlow Lite object detection model store](tensorflow-lite-object-detection-model-store-component.md) | Model component that contains a sample Single Shot Detection \(SSD\) MobileNet model as a Greengrass artifact\. | Yes | Generic | No | 
-| [TensorFlow Lite](tensorflow-lite-component.md) | Runtime component that contains an installation script that is used to install TensorFlow Lite and its dependencies on the Greengrass core device\. | Yes | Generic | No | 
+| [TensorFlow Lite installer](tensorflow-lite-component.md) | Runtime component that contains an installation script that is used to install TensorFlow Lite and its dependencies on the Greengrass core device\. | Yes | Generic | No | 

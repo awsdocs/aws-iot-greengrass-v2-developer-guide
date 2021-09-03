@@ -102,3 +102,5 @@ Commands:
   get-debug-password  Generate a password for use with the HTTP debug view
                         component.
 ```
+
+If the `greengrass-cli` isn't found, the deployment might have failed to install the Greengrass CLI\. For more information, see [Troubleshooting AWS IoT Greengrass V2](troubleshooting.md)\.

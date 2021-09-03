@@ -10,8 +10,6 @@ Greengrass components use the [local publish/subscribe interface](ipc-publish-su
 + Relay MQTT messages from client devices to local publish/subscribe\.
 + Relay MQTT messages from local publish/subscribe to client devices\.
 
-You can also interact with client device shadows in Greengrass components\. For more information, see [Sync and interact with client device shadows](work-with-client-device-shadows.md)\.
-
 **Topics**
 + [Configure and deploy the MQTT bridge component](#deploy-mqtt-bridge-pubsub)
 + [Receive MQTT messages from client devices](#receive-client-device-messages)

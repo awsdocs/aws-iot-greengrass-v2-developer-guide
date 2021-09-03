@@ -15,6 +15,7 @@ This component provides similar functionality to the Device Defender connector i
 + [Configuration](#device-defender-component-configuration)
 + [Input data](#device-defender-component-input-data)
 + [Output data](#device-defender-component-output-data)
++ [Local log file](#device-defender-component-log-file)
 + [Licenses](#device-defender-component-licenses)
 + [Changelog](#device-defender-component-changelog)
 
@@ -306,6 +307,21 @@ This component publishes security metrics to the following reserved topic for AW
 ```
 
 For more information about the metrics that this component reports, see [Device metrics document specification](https://docs.aws.amazon.com/iot/latest/developerguide/detect-device-side-metrics.html#DetectMetricsMessagesSpec) in the *AWS IoT Core Developer Guide*\.
+
+## Local log file<a name="device-defender-component-log-file"></a>
+
+This component uses the following log file\.
+
+```
+/greengrass/v2/logs/aws.greengrass.DeviceDefender.log
+```
+
+**To view this component's logs**
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
+
+  ```
+  sudo tail -f /greengrass/v2/logs/aws.greengrass.DeviceDefender.log
+  ```
 
 ## Licenses<a name="device-defender-component-licenses"></a>
 

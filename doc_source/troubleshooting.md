@@ -1,4 +1,4 @@
-# Troubleshooting<a name="troubleshooting"></a>
+# Troubleshooting AWS IoT Greengrass V2<a name="troubleshooting"></a>
 
 Use the troubleshooting information and solutions in this section to help resolve issues with AWS IoT Greengrass Version 2\.
 
@@ -9,6 +9,7 @@ Use the troubleshooting information and solutions in this section to help resolv
 + [AWS IoT Greengrass cloud issues](#greengrass-cloud-issues)
 + [Core device deployment issues](#greengrass-core-deployment-issues)
 + [Core device component issues](#greengrass-core-component-issues)
++ [AWS Command Line Interface issues](#aws-cli-issues)
 
 ## View AWS IoT Greengrass Core software logs<a name="view-greengrass-core-logs"></a>
 
@@ -39,7 +40,7 @@ The AWS IoT Greengrass Core software doesn't create component log files for plug
 
 ## AWS IoT Greengrass Core software issues<a name="greengrass-core-issues"></a>
 
-Use the following information to troubleshoot AWS IoT Greengrass Core software issues\. 
+Troubleshoot AWS IoT Greengrass Core software issues\. 
 
 **Topics**
 + [Unable to set up core device](#unable-to-set-up-core-device)
@@ -110,7 +111,7 @@ This error indicates that your recipe isn't valid JSON or YAML\. Check the synta
 
 ## Core device deployment issues<a name="greengrass-core-deployment-issues"></a>
 
-Use the following information to troubleshoot deployment issues on Greengrass core devices\. Each entry corresponds to a log message that you might see on your core device\.
+Troubleshoot deployment issues on Greengrass core devices\. Each entry corresponds to a log message that you might see on your core device\.
 
 **Topics**
 + [Error: com\.aws\.greengrass\.componentmanager\.exceptions\.PackageDownloadException: Failed to download artifact](#core-error-failed-to-download-artifact-package-download-exception)
@@ -191,7 +192,7 @@ You might see this information message printed multiple times without an error, 
 
 ## Core device component issues<a name="greengrass-core-component-issues"></a>
 
-Use the following information to troubleshoot Greengrass component issues on core devices\.
+Troubleshoot Greengrass component issues on core devices\.
 
 **Topics**
 + [Python script doesn't log messages](#python-component-no-log-output)
@@ -223,3 +224,27 @@ Greengrass core devices collect logs that you can use to identify issues with co
     ```
 
 For more information about how to verify that your Python script outputs log messages, see [View component logs](#view-component-logs)\.
+
+## AWS Command Line Interface issues<a name="aws-cli-issues"></a>
+
+Troubleshoot AWS CLI issues for AWS IoT Greengrass V2\.
+
+**Topics**
++ [Error: Invalid choice: 'greengrassv2'](#aws-cli-invalid-choice-greengrassv2)
+
+### Error: Invalid choice: 'greengrassv2'<a name="aws-cli-invalid-choice-greengrassv2"></a>
+
+You might see this error when you run an AWS IoT Greengrass V2 command with the AWS CLI \(for example, `aws greengrassv2 list-core-devices`\)\.
+
+This error indicates that you have a version of the AWS CLI that doesn't support AWS IoT Greengrass V2\. To use AWS IoT Greengrass V2 with the AWS CLI, you must have one of the following versions or later:<a name="minimum-aws-cli-versions"></a>
++ Minimum AWS CLI V1 version: v1\.18\.197
++ Minimum AWS CLI V2 version: v2\.1\.11
+
+**Tip**  <a name="tip-check-aws-cli-version"></a>
+You can run the following command to check the version of the AWS CLI that you have\.  
+
+```
+aws --version
+```
+
+To resolve this issue, update the AWS CLI to a later version that supports AWS IoT Greengrass V2\. For more information, see [Installing, updating, and uninstalling the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) in the *AWS Command Line Interface User Guide*\.

@@ -192,11 +192,9 @@ To import a Lambda function that you created to run on AWS IoT Greengrass V1, yo
             }
           ],
           "componentDependencies": {
-            {
-              "aws.greengrass.StreamManager": {
-                "versionRequirement": "^1.0.0",
-                "dependencyType": "HARD"
-              }
+            "aws.greengrass.StreamManager": {
+              "versionRequirement": "^1.0.0",
+              "dependencyType": "HARD"
             }
           },
           "componentLambdaParameters": {
@@ -226,11 +224,9 @@ To import a Lambda function that you created to run on AWS IoT Greengrass V1, yo
                }
              ],
              "componentDependencies": {
-               {
-                 "aws.greengrass.StreamManager": {
-                   "versionRequirement": "^1.0.0",
-                   "dependencyType": "HARD"
-                 }
+               "aws.greengrass.StreamManager": {
+                 "versionRequirement": "^1.0.0",
+                 "dependencyType": "HARD"
                }
              },
              "componentLambdaParameters": {
@@ -275,11 +271,9 @@ To import a Lambda function that you created to run on AWS IoT Greengrass V1, yo
                  }
                ],
                "componentDependencies": {
-                 {
-                   "aws.greengrass.StreamManager": {
-                     "versionRequirement": "^1.0.0",
-                     "dependencyType": "HARD"
-                   }
+                 "aws.greengrass.StreamManager": {
+                   "versionRequirement": "^1.0.0",
+                   "dependencyType": "HARD"
                  }
                },
                "componentLambdaParameters": {
@@ -331,11 +325,9 @@ To import a Lambda function that you created to run on AWS IoT Greengrass V1, yo
             }
           ],
           "componentDependencies": {
-            {
-              "aws.greengrass.StreamManager": {
-                "versionRequirement": "^1.0.0",
-                "dependencyType": "HARD"
-              }
+            "aws.greengrass.StreamManager": {
+              "versionRequirement": "^1.0.0",
+              "dependencyType": "HARD"
             }
           },
           "componentLambdaParameters": {
@@ -383,11 +375,9 @@ To import a Lambda function that you created to run on AWS IoT Greengrass V1, yo
                }
              ],
              "componentDependencies": {
-               {
-                 "aws.greengrass.StreamManager": {
-                   "versionRequirement": "^1.0.0",
-                   "dependencyType": "HARD"
-                 }
+               "aws.greengrass.StreamManager": {
+                 "versionRequirement": "^1.0.0",
+                 "dependencyType": "HARD"
                }
              },
              "componentLambdaParameters": {
@@ -444,11 +434,9 @@ To import a Lambda function that you created to run on AWS IoT Greengrass V1, yo
                   }
                 ],
                 "componentDependencies": {
-                  {
-                    "aws.greengrass.StreamManager": {
-                      "versionRequirement": "^1.0.0",
-                      "dependencyType": "HARD"
-                    }
+                  "aws.greengrass.StreamManager": {
+                    "versionRequirement": "^1.0.0",
+                    "dependencyType": "HARD"
                   }
                 },
                 "componentLambdaParameters": {
@@ -505,11 +493,9 @@ To import a Lambda function that you created to run on AWS IoT Greengrass V1, yo
                      }
                    ],
                    "componentDependencies": {
-                     {
-                       "aws.greengrass.StreamManager": {
-                         "versionRequirement": "^1.0.0",
-                         "dependencyType": "HARD"
-                       }
+                     "aws.greengrass.StreamManager": {
+                       "versionRequirement": "^1.0.0",
+                       "dependencyType": "HARD"
                      }
                    },
                    "componentLambdaParameters": {
@@ -574,11 +560,9 @@ To import a Lambda function that you created to run on AWS IoT Greengrass V1, yo
                      }
                    ],
                    "componentDependencies": {
-                     {
-                       "aws.greengrass.StreamManager": {
-                         "versionRequirement": "^1.0.0",
-                         "dependencyType": "HARD"
-                       }
+                     "aws.greengrass.StreamManager": {
+                       "versionRequirement": "^1.0.0",
+                       "dependencyType": "HARD"
                      }
                    },
                    "componentLambdaParameters": {
@@ -640,11 +624,9 @@ To import a Lambda function that you created to run on AWS IoT Greengrass V1, yo
                      }
                    ],
                    "componentDependencies": {
-                     {
-                       "aws.greengrass.StreamManager": {
-                         "versionRequirement": "^1.0.0",
-                         "dependencyType": "HARD"
-                       }
+                     "aws.greengrass.StreamManager": {
+                       "versionRequirement": "^1.0.0",
+                       "dependencyType": "HARD"
                      }
                    },
                    "componentLambdaParameters": {
@@ -716,11 +698,9 @@ To import a Lambda function that you created to run on AWS IoT Greengrass V1, yo
                   }
                 ],
                 "componentDependencies": {
-                  {
-                    "aws.greengrass.StreamManager": {
-                      "versionRequirement": "^1.0.0",
-                      "dependencyType": "HARD"
-                    }
+                  "aws.greengrass.StreamManager": {
+                    "versionRequirement": "^1.0.0",
+                    "dependencyType": "HARD"
                   }
                 },
                 "componentLambdaParameters": {

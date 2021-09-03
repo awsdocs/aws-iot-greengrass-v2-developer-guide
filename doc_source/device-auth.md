@@ -29,12 +29,9 @@ AWS IoT Greengrass core devices store certificates in the Greengrass root folder
 
 Greengrass core devices and client devices download a root CA certificate used for authentication with the AWS IoT Core and AWS IoT Greengrass services\. We recommend that you use an Amazon Trust Services \(ATS\) root CA certificate, such as [Amazon Root CA 1](https://www.amazontrust.com/repository/AmazonRootCA1.pem)\. For more information, see [CA certificates for server authentication](https://docs.aws.amazon.com/iot/latest/developerguide/server-authentication.html#server-authentication-certs) in the *AWS IoT Core Developer Guide*\.
 
-**Note**  
-Your root CA certificate type must match your endpoint\. Use an ATS root CA certificate with an ATS endpoint \(preferred\) or a VeriSign root CA certificate with a legacy endpoint\. Only some AWS Regions support legacy endpoints\. For more information, see [Use service endpoints that match the root CA certificate type](configure-greengrass-core-v2.md#certificate-endpoints)\.
-
 Client devices also download a Greengrass core device CA certificate\. They use this certificate to validate the MQTT server certificate on the core device during mutual authentication\.
 
-### Certificate rotation on the local MQTT broker<a name="mqtt-certificate-expiration"></a>
+### Certificate rotation on the local MQTT broker<a name="mqtt-expiration"></a>
 
 Greengrass core devices generate a local MQTT server certificate that client devices use for mutual authentication\. This certificate is signed by the core device CA certificate, which the core device stores in the AWS IoT Greengrass cloud\. The MQTT server certificate expires every 7 days\. This limited period is based on security best practices\. This rotation helps mitigate the threat of an attacker stealing the MQTT server certificate and private key to impersonate the Greengrass core device\.
 

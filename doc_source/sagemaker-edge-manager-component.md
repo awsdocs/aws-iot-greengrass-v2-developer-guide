@@ -4,7 +4,7 @@ The Amazon SageMaker Edge Manager component \(`aws.greengrass.SageMakerEdgeManag
 
 SageMaker Edge Manager provides model management for edge devices so you can optimize, secure, monitor, and maintain machine learning models on fleets of edge devices\. The SageMaker Edge Manager component installs and manages the lifecycle of the SageMaker Edge Manager agent on your core device\. You can also use SageMaker Edge Manager to package and use SageMaker Neo\-compiled models as model components on Greengrass core devices\. For more information about using SageMaker Edge Manager agent on your core device, see [Use Amazon SageMaker Edge Manager on Greengrass core devices](use-sagemaker-edge-manager.md)\.
 
-SageMaker Edge Manager component v1\.0\.0 installs Edge Manager agent binary v1\.20210512\.96da6cc\. For more information about Edge Manager agent binary versions, see [Edge Manager Agent](https://docs.aws.amazon.com/sagemaker/latest/dg/edge-device-fleet-about)\.
+SageMaker Edge Manager component v1\.0\.x installs Edge Manager agent binary v1\.20210512\.96da6cc\. For more information about Edge Manager agent binary versions, see [Edge Manager Agent](https://docs.aws.amazon.com/sagemaker/latest/dg/edge-device-fleet-about)\.
 
 **Note**  
 The SageMaker Edge Manager component is available only in the following AWS Regions:  
@@ -21,6 +21,7 @@ Asia Pacific \(Tokyo\)
 + [Requirements](#sagemaker-edge-manager-component-requirements)
 + [Dependencies](#sagemaker-edge-manager-component-dependencies)
 + [Configuration](#sagemaker-edge-manager-component-config)
++ [Local log file](#sagemaker-edge-manager-component-log-file)
 + [Changelog](#sagemaker-edge-manager-component-changelog)
 
 ## Versions<a name="sagemaker-edge-manager-component-versions"></a>
@@ -201,6 +202,21 @@ The following example configuration specifies that the core device is part of th
     "SagemakerEdgeLogVerbose": "true"    
 }
 ```
+
+## Local log file<a name="sagemaker-edge-manager-component-log-file"></a>
+
+This component uses the following log file\.
+
+```
+/greengrass/v2/logs/aws.greengrass.SageMakerEdgeManager.log
+```
+
+**To view this component's logs**
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
+
+  ```
+  sudo tail -f /greengrass/v2/logs/aws.greengrass.SageMakerEdgeManager.log
+  ```
 
 ## Changelog<a name="sagemaker-edge-manager-component-changelog"></a>
 

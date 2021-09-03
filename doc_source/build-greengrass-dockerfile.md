@@ -80,7 +80,14 @@ Use local development tools in development environments only\. Don't specify thi
 \(Optional\) The path to the configuration file to use to install the AWS IoT Greengrass Core software\. You can use this option to set up new Greengrass core devices with a specific nucleus configuration, or to specify manually provisioned resources, for example\. You must mount your configuration file to the path that you specify in this argument\. 
 
 `TRUSTED_PLUGIN`  
+This feature is available for v2\.4\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.  
 \(Optional\) The path to a JAR file to load as a trusted plugin\. Use this option to provide provisioning plugin JAR files, such as to install with [fleet provisioning](fleet-provisioning.md) or [custom provisioning](custom-provisioning.md)\. 
+
+`THING_POLICY_NAME`  
+This feature is available for v2\.4\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.  
+\(Optional\) The name of the AWS IoT policy to attach to this core device's AWS IoT thing certificate\. If the AWS IoT policy with this name doesn't exist in your AWS account the AWS IoT Greengrass Core software creates it\.   
+You must specify `PROVISION=true` to apply this argument\.  
+The AWS IoT Greengrass Core software creates a permissive AWS IoT policy by default\. You can scope down this policy, or create a custom policy where you restrict permissions for your use case\. For more information, see [Minimal AWS IoT policy for AWS IoT Greengrass V2 core devices](device-auth.md#greengrass-core-minimal-iot-policy)\. 
 
 ## Specify the dependencies to install<a name="dockerfile-run-instruction"></a>
 

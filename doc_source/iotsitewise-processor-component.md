@@ -10,6 +10,7 @@ With this component, AWS IoT SiteWise gateways can use asset models and assets t
 + [Requirements](#iotsitewise-processor-component-requirements)
 + [Dependencies](#iotsitewise-processor-component-dependencies)
 + [Configuration](#iotsitewise-processor-component-configuration)
++ [Local log file](#iotsitewise-processor-component-log-file)
 + [Licenses](#iotsitewise-processor-component-licenses)
 + [Changelog](#iotsitewise-processor-component-changelog)
 + [See also](#iotsitewise-processor-component-see-also)
@@ -40,7 +41,7 @@ This component has the following requirements:
     Architecture: x86\_64 \(AMD64\)
 + The Greengrass core device must allow inbound traffic on port 443\.
 + The Greengrass core device must allow outbound traffic on port 443 and 8883\.
-+ The following ports are reserved for use by AWS IoT SiteWise: 80, 443, 3001, 8000, 8081, 8082, 8084, 8085, 8445, 8086, 9000, 9500, and 11080\. Using a reserved port dor traffic can result in a terminated connection\.
++ The following ports are reserved for use by AWS IoT SiteWise: 80, 443, 3001, 8000, 8081, 8082, 8084, 8085, 8445, 8086, 9000, 9500, and 11080\. Using a reserved port for traffic can result in a terminated connection\.
 + The [Greengrass device role](https://docs.aws.amazon.com/greengrass/v2/developerguide/device-service-role.html) must use the `AWSIoTSiteWiseEdgeAccess` policy\. For more information, see [AWS managed policy: AWSIoTSiteWiseEdgeAccess](https://docs.aws.amazon.com/iot-sitewise/latest/userguide/security-iam-awsmanpol.html#security-iam-awsmanpol-AWSIoTSiteWiseEdgeAccess) in the *AWS IoT SiteWise User Guide*\.
 
 ## Dependencies<a name="iotsitewise-processor-component-dependencies"></a>
@@ -63,11 +64,26 @@ For more information about component dependencies, see the [component recipe ref
 
 This component doesn't have any configuration parameters\.
 
+## Local log file<a name="iotsitewise-processor-component-log-file"></a>
+
+This component uses the following log file\.
+
+```
+/greengrass/v2/logs/aws.iot.SiteWiseEdgeProcessor.log
+```
+
+**To view this component's logs**
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
+
+  ```
+  sudo tail -f /greengrass/v2/logs/aws.iot.SiteWiseEdgeProcessor.log
+  ```
+
 ## Licenses<a name="iotsitewise-processor-component-licenses"></a>
 
 This component includes the following third\-party software/licensing:
 
-### <a name="w548aac13c23c63c19b5b1b1"></a>
+### <a name="w591aac14c23c61c21b5b1b1"></a>
 + Apache\-2\.0
 + MIT
 + BSD\-2\-Clause

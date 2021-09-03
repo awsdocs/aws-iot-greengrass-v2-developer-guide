@@ -11,6 +11,7 @@ When you deploy a Lambda function component to a core device, the deployment als
 + [Requirements](#lambda-runtimes-component-requirements)
 + [Dependencies](#lambda-runtimes-component-dependencies)
 + [Configuration](#lambda-runtimes-component-configuration)
++ [Local log file](#lambda-runtimes-component-log-file)
 + [Changelog](#lambda-runtimes-component-changelog)
 
 ## Versions<a name="lambda-runtimes-component-versions"></a>
@@ -36,6 +37,10 @@ This component doesn't have any dependencies\.
 ## Configuration<a name="lambda-runtimes-component-configuration"></a>
 
 This component doesn't have any configuration parameters\.
+
+## Local log file<a name="lambda-runtimes-component-log-file"></a>
+
+This component doesn't output logs\.
 
 ## Changelog<a name="lambda-runtimes-component-changelog"></a>
 

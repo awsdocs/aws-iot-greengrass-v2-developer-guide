@@ -17,6 +17,7 @@ This component provides similar functionality to the Amazon SNS connector in AWS
 + [Configuration](#sns-component-configuration)
 + [Input data](#sns-component-input-data)
 + [Output data](#sns-component-output-data)
++ [Local log file](#sns-component-log-file)
 + [Licenses](#sns-component-licenses)
 + [Changelog](#sns-component-changelog)
 
@@ -329,6 +330,21 @@ The message size can be a maximum of 256 KB\.
   "id": "request123"
 }
 ```
+
+## Local log file<a name="sns-component-log-file"></a>
+
+This component uses the following log file\.
+
+```
+/greengrass/v2/logs/aws.greengrass.SNS.log
+```
+
+**To view this component's logs**
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
+
+  ```
+  sudo tail -f /greengrass/v2/logs/aws.greengrass.SNS.log
+  ```
 
 ## Licenses<a name="sns-component-licenses"></a>
 

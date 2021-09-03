@@ -10,6 +10,7 @@ This component encrypts secrets on the core device to keep your credentials and 
 + [Requirements](#secret-manager-component-requirements)
 + [Dependencies](#secret-manager-component-dependencies)
 + [Configuration](#secret-mananger-component-configuration)
++ [Local log file](#secret-manager-component-log-file)
 + [Changelog](#secret-manager-component-changelog)
 
 ## Versions<a name="secret-manager-component-versions"></a>
@@ -19,7 +20,7 @@ This component has the following versions:
 
 ## Type<a name="secret-manager-component-type"></a>
 
-<a name="public-component-type-plugin-para1"></a>This component is a plugin component \(`aws.greengrass.plugin`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component in the same Java Virtual Machine \(JVM\) as the nucleus\. The nucleus restarts when you install or restart this component\.
+<a name="public-component-type-plugin-para1"></a>This component is a plugin component \(`aws.greengrass.plugin`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component in the same Java Virtual Machine \(JVM\) as the nucleus\. The nucleus restarts when you change this component's version on the core device\.
 
 <a name="public-component-type-plugin-para2"></a>This component uses the same log file as the Greengrass nucleus\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)\.
 
@@ -136,6 +137,21 @@ Each label must be a string\.
   ]
 }
 ```
+
+## Local log file<a name="secret-manager-component-log-file"></a>
+
+This component uses the same log file as the [Greengrass nucleus](greengrass-nucleus-component.md) component\.
+
+```
+/greengrass/v2/logs/greengrass.log
+```
+
+**To view this component's logs**
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
+
+  ```
+  sudo tail -f /greengrass/v2/logs/greengrass.log
+  ```
 
 ## Changelog<a name="secret-manager-component-changelog"></a>
 

@@ -52,8 +52,8 @@ The following errors indicate that the runtime component was unable to set up th
 + `numpy not found `
 
 Check the logs to make sure that all runtime dependencies were installed correctly\. For more information about the libraries installed by the installer script, see the following topics:
-+ [DLR](dlr-component.md)
-+ [TensorFlow Lite](tensorflow-lite-component.md)
++ [DLR installer](dlr-component.md)
++ [TensorFlow Lite installer](tensorflow-lite-component.md)
 
 ## No CUDA\-capable device is detected<a name="troubleshooting-cuda-error"></a>
 
@@ -72,10 +72,10 @@ The following errors indicate that the runtime component was unable to set up th
 + `MLRootPath/greengrass_ml_tflite_venv/bin/activate: No such file or directory `
 
 Check the logs to make sure that all runtime dependencies were installed correctly\. For more information about the libraries installed by the installer script, see the following topics:
-+ [DLR](dlr-component.md)
-+ [TensorFlow Lite](tensorflow-lite-component.md)
++ [DLR installer](dlr-component.md)
++ [TensorFlow Lite installer](tensorflow-lite-component.md)
 
-By default *MLRootPath* is set to `/greengrass/v2/work/component-name/greengrass_ml`\. To change this location, include the [DLR](dlr-component.md) or [TensorFlow Lite](tensorflow-lite-component.md) runtime component directly in your deployment, and specify a modified value for the `MLRootPath` parameter in a configuration merge update\. For more information about configuring component, see [Update component configurations](update-component-configurations.md)\.
+By default *MLRootPath* is set to `/greengrass/v2/work/component-name/greengrass_ml`\. To change this location, include the [DLR installer](dlr-component.md) or [TensorFlow Lite installer](tensorflow-lite-component.md) runtime component directly in your deployment, and specify a modified value for the `MLRootPath` parameter in a configuration merge update\. For more information about configuring component, see [Update component configurations](update-component-configurations.md)\.
 
 **Note**  
 For the DLR component v1\.3\.x, you set the `MLRootPath` parameter in the configuration of the inference component, and the default value is `$HOME/greengrass_ml`\.

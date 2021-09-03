@@ -13,6 +13,7 @@ When the version of the nucleus component changes, or when you change certain co
 + [Dependencies](#greengrass-nucleus-component-dependencies)
 + [Installation](#greengrass-nucleus-component-install)
 + [Configuration](#greengrass-nucleus-component-configuration)
++ [Local log file](#greengrass-nucleus-component-log-file)
 + [Changelog](#greengrass-nucleus-component-changelog)
 
 ## Versions<a name="greengrass-nucleus-component-versions"></a>
@@ -133,12 +134,12 @@ The system user and group to use to run components\.
 <a name="nucleus-component-parameter-restart-para"></a>When you deploy a change to this configuration parameter, the AWS IoT Greengrass Core software restarts for the change to take effect\.
 This object contains the following information:    
 `posixUser`  
-The name or ID of the system user and system group that the core device uses to run components\. Specify the user and group separated by a colon \(`:`\), where the group is optional\. If you omit the group, the AWS IoT Greengrass Core software defaults to the primary group of the user that you specify\. For example, you can specify `ggc_user` or `ggc_user:ggc_group`\. For more information, see [Configure the user and group that run components](configure-greengrass-core-v2.md#configure-component-user)\.  
+The name or ID of the system user and system group that the core device uses to run generic and Lambda components\. Specify the user and group separated by a colon \(`:`\), where the group is optional\. If you omit the group, the AWS IoT Greengrass Core software defaults to the primary group of the user that you specify\. For example, you can specify `ggc_user` or `ggc_user:ggc_group`\. For more information, see [Configure the user and group that run components](configure-greengrass-core-v2.md#configure-component-user)\.  
 When you run the AWS IoT Greengrass Core software with the `--component-default-user ggc_user:ggc_group` option, the software sets this parameter in the nucleus component\.  
 You can't specify `root` or `0` for the user or the group\.  
 `systemResourceLimits`  
 This feature is available in v2\.4\.0 and later of this component\.  
-The system resource limits to apply to component processes by default\. You can override system resource limits for individual components when you create a deployment\. For more information, see [Configure system resource limits for components](configure-greengrass-core-v2.md#configure-component-system-resource-limits)\.  
+The system resource limits to apply to generic and non\-containerized Lambda component processes by default\. You can override system resource limits for individual components when you create a deployment\. For more information, see [Configure system resource limits for components](configure-greengrass-core-v2.md#configure-component-system-resource-limits)\.  
 This object contains the following information:    
 `cpus`  
 <a name="system-resource-limits-cpu-definition-each"></a>The maximum amount of CPU time that each component's processes can use on the core device\. A core device's total CPU time is equivalent to the device's number of CPU cores\. For example, on a core device with 4 CPU cores, you can set this value to `2` to limit each component's processes to 50 percent usage of each CPU core\. On a device with 1 CPU core, you can set this value to `0.25` to limit each component's processes to 25 percent usage of the CPU\. If you set this value to a number greater than the number of CPU cores, the AWS IoT Greengrass Core software doesn't limit the components' CPU usage\.  
@@ -239,6 +240,21 @@ You can also use this parameter to override the `os` and `architecture` platform
   }
 }
 ```
+
+## Local log file<a name="greengrass-nucleus-component-log-file"></a>
+
+This component uses the following log file\.
+
+```
+/greengrass/v2/logs/greengrass.log
+```
+
+**To view this component's logs**
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
+
+  ```
+  sudo tail -f /greengrass/v2/logs/greengrass.log
+  ```
 
 ## Changelog<a name="greengrass-nucleus-component-changelog"></a>
 

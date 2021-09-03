@@ -145,7 +145,7 @@ The supported operating system architectures that the test run validates\. Valid
 + `aarch64`  
 `ml`  
 <a name="description-ml"></a>Validates that the device meets all of the required technical dependencies to use the AWS\-provided machine learning \(ML\) components\.  
-Enabling this feature also validates <a name="description-ml-inference-phrase"></a>that the device can perform ML inference using the [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) and [TensorFlow Lite](https://www.tensorflow.org/lite) ML frameworks\.  
+Enabling this feature also validates <a name="description-ml-inference-phrase"></a>that the device can perform ML inference using the [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) and [TensorFlow Lite](https://www.tensorflow.org/lite/guide/python) ML frameworks\.  
 Valid values are any combination of `dlr` and `tensorflowlite`, or `no`\.  
 `docker`  
 <a name="description-docker"></a>Validates that the device meets all required technical dependencies to use the AWS\-provided Docker application manager \(`aws.greengrass.DockerApplicationManager`\) component\.  
@@ -214,10 +214,15 @@ The full path to a temporary folder on the device under test in which to store t
 The contents of this folder are deleted when IDT finishes running a test\.
 
 `InstallationDirRootOnDevice`  
-The full path to a folder on the device in which to install AWS IoT Greengrass\.
+The full path to a folder on the device in which to install AWS IoT Greengrass\.  
+You must set the required file permissions for this folder\. Run the following command for each folder in the installation path\.   
+
+```
+sudo chmod 755 folder-name
+```
 
 `GreengrassNucleusZip`  
 The full path to the Greengrass nucleus ZIP \(`greengrass-nucleus-latest.zip`\) file on your host computer\.
 
 **Note**  
-For information about the supported versions of the Greengrass nucleus and Greengrass CLI for IDT for AWS IoT Greengrass, see [Latest IDT version for AWS IoT Greengrass V2](dev-test-versions.md#idt-latest-version)\.
+For information about the supported versions of the Greengrass nucleus for IDT for AWS IoT Greengrass, see [Latest IDT version for AWS IoT Greengrass V2](dev-test-versions.md#idt-latest-version)\.
