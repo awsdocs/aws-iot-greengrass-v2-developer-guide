@@ -141,8 +141,8 @@ The following example specifies that the `com.example.HelloWorldLambda` Lambda f
 ```
 {
   "subscriptions": {
-    "Greengrass_HelloWorld_to_cloud": {
-      "id": "Greengrass_HelloWorld_to_cloud",
+    "Greengrass_HelloWorld_to_MessageRelay": {
+      "id": "Greengrass_HelloWorld_to_MessageRelay",
       "source": "component:com.example.HelloWorldLambda",
       "subject": "hello/world",
       "target": "component:com.example.MessageRelay"
@@ -196,8 +196,8 @@ The following example specifies that the `Greengrass_HelloWorld` function publis
 
 ```
 "subscriptions": {
-  "Greengrass_HelloWorld_to_cloud": {
-    "id": "Greengrass_HelloWorld_to_cloud",
+  "Greengrass_HelloWorld_to_MessageRelay": {
+    "id": "Greengrass_HelloWorld_to_MessageRelay",
     "source": "arn:aws:lambda:us-west-2:123456789012:function:Greengrass_HelloWorld:5",
     "subject": "hello/world",
     "target": "arn:aws:lambda:us-west-2:123456789012:function:Greengrass_MessageRelay:5"
