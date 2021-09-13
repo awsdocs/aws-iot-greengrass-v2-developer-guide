@@ -9,7 +9,7 @@ You can uninstall the AWS IoT Greengrass Core software to remove it from a devic
    ```
    sudo systemctl stop greengrass.service && sudo systemctl disable greengrass.service
    sudo rm /etc/systemd/system/greengrass.service
-   systemctl daemon-reload && systemctl reset-failed
+   sudo systemctl daemon-reload && sudo systemctl reset-failed
    ```
 
 1. Remove the root folder from the device\. Replace */greengrass/v2* with the path to the root folder\.
