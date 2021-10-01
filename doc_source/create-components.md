@@ -1,14 +1,6 @@
-# Create custom AWS IoT Greengrass components<a name="create-components"></a>
+# Create local AWS IoT Greengrass components<a name="create-components"></a>
 
-With AWS IoT Greengrass, you can develop and test components on your Greengrass core device\.
-
-**Topics**
-+ [Develop a custom component](#develop-component)
-+ [Test a custom component](#test-component)
-
-## Develop a custom component<a name="develop-component"></a>
-
-To develop a new component or a new version of a component, create a recipe and artifacts for your new component version\.
+With AWS IoT Greengrass, you can develop and test components on your Greengrass core device\. To develop a new component or a new version of a component, create a recipe and artifacts for your new component version\.
 
 **To develop a component on a Greengrass core device\.**
 
@@ -36,6 +28,8 @@ To develop a new component or a new version of a component, create a recipe and 
    ```
 
 ------
+**Note**  <a name="semver-note"></a>
+<a name="semver-para"></a>AWS IoT Greengrass uses semantic versions for components\. Semantic versions follow a *major*\.*minor*\.*patch* number system\. For example, version `1.0.0` represents the first major release for a component\. For more information, see the [semantic version specification](https://semver.org/)\.
 
 1. Define the recipe for your component\. For more information, see [AWS IoT Greengrass component recipe reference](component-recipe-reference.md)\.
 
@@ -122,35 +116,4 @@ You must use the following format for the artifact folder path\. Include the com
 
 1. Create the artifacts for your component in the folder that you created in the previous step\. Artifacts can include software, images, and any other binaries that your component uses\.
 
-   When your component is ready, [test your component](#test-component)\.
-
-## Test a custom component<a name="test-component"></a>
-
-When you are ready to test your component, you can install it to your Greengrass core device\.
-
-**To test a component on an Greengrass core device**
-
-1. The core device logs events such as component updates\. You can view this log file to discover and troubleshoot errors with your component, such as an invalid recipe\. This log file also displays messages that your component prints to standard out \(stdout\)\. We recommend that you open an additional terminal session on your core device to observe new log messages in real time\. Open a new terminal session, such as through SSH, and run the following command to view the logs\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
-
-   ```
-   sudo tail -f /greengrass/v2/logs/greengrass.log
-   ```
-
-   You can also view the log file for your component\.
-
-   ```
-   sudo tail -f /greengrass/v2/logs/com.example.HelloWorld.log
-   ```
-
-1. In your original terminal session, run the following command to update the core device with your component\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder, and replace *\~/greengrassv2* with the path to your local development folder\.
-
-   ```
-   sudo /greengrass/v2/bin/greengrass-cli deployment create \
-     --recipeDir ~/greengrassv2/recipes \
-     --artifactDir ~/greengrassv2/artifacts \
-     --merge "com.example.HelloWorld=1.0.0"
-   ```
-**Note**  
-You can also use the `greengrass-cli deployment create` command to set the value of your component's configuration parameters\. For more information, see [create](gg-cli-deployment.md#deployment-create)\.
-
-1. Test your component as it runs on the Greengrass core device\. When you finish this version of your component, you can upload it to the AWS IoT Greengrass service\. Then, you can deploy the component to other core devices\. For more information, see [Upload components to deploy to your core devicesUpload components to deploy](upload-components.md)\.
+   When your component is ready, [test your component](test-components.md)\.

@@ -18,13 +18,13 @@ With this component, AWS IoT SiteWise gateways can use asset models and assets t
 ## Versions<a name="iotsitewise-processor-component-versions"></a>
 
 This component has the following versions:
-+ 2\.0\.2
++ 2\.0\.x
 
 ## Type<a name="iotsitewise-processor-component-type"></a>
 
 <a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
 
-<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
+<a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
 
 ## Requirements<a name="iotsitewise-processor-component-requirements"></a>
 
@@ -42,21 +42,34 @@ This component has the following requirements:
 + The Greengrass core device must allow inbound traffic on port 443\.
 + The Greengrass core device must allow outbound traffic on port 443 and 8883\.
 + The following ports are reserved for use by AWS IoT SiteWise: 80, 443, 3001, 8000, 8081, 8082, 8084, 8085, 8445, 8086, 9000, 9500, and 11080\. Using a reserved port for traffic can result in a terminated connection\.
-+ The [Greengrass device role](https://docs.aws.amazon.com/greengrass/v2/developerguide/device-service-role.html) must use the `AWSIoTSiteWiseEdgeAccess` policy\. For more information, see [AWS managed policy: AWSIoTSiteWiseEdgeAccess](https://docs.aws.amazon.com/iot-sitewise/latest/userguide/security-iam-awsmanpol.html#security-iam-awsmanpol-AWSIoTSiteWiseEdgeAccess) in the *AWS IoT SiteWise User Guide*\.
++ The [Greengrass device role](https://docs.aws.amazon.com/greengrass/v2/developerguide/device-service-role.html) must have permissions that allow you to use AWS IoT SiteWise gateways on your AWS IoT Greengrass V2 devices\. For more information, see [Requirements](https://docs.aws.amazon.com/iot-sitewise/latest/userguide/configure-gateway-ggv2.html#gateway-requirements) in the *AWS IoT SiteWise User Guide*\.
+
+### Endpoints and ports<a name="iotsitewise-processor-component-endpoints"></a>
+
+This component must be able to perform outbound requests to the following endpoints and ports, in addition to endpoints and ports required for basic operation\. For more information, see [Allow device traffic through a proxy or firewall](allow-device-traffic.md)\.
+
+
+| Endpoint | Port | Required | Description | 
+| --- | --- | --- | --- | 
+|  `model.iotsitewise.region.amazonaws.com`  | 443 | Yes |  Get information about your AWS IoT SiteWise assets and asset models\.  | 
+|  `edge.iotsitewise.region.amazonaws.com`  | 443 | Yes |  Get information about the core device's AWS IoT SiteWise gateway configuration\.  | 
+|  `ecr.region.amazonaws.com`  | 443 | Yes |  Download AWS IoT SiteWise Edge gateway Docker images from Amazon Elastic Container Registry\.  | 
+|  `iot.region.amazonaws.com`  | 443 | Yes |  Get device endpoints for your AWS account\.  | 
+|  `sts.region.amazonaws.com`  | 443 | Yes |  Get the ID of your AWS account\.  | 
+|  `monitor.iotsitewise.region.amazonaws.com`  | 443 | No |  Required if you access AWS IoT SiteWise Monitor portals on the core device\.  | 
 
 ## Dependencies<a name="iotsitewise-processor-component-dependencies"></a>
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#iotsitewise-processor-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
-The following table lists the dependencies for version 2\.0\.2 of this component\.
+The following table lists the dependencies for versions 2\.0\.x of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
 | --- | --- | --- | 
-| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.x\.0 <2\.x\.0 | Hard \| Soft | 
-| [Token exchange service](token-exchange-service-component.md) | ^2\.0\.0 | Hard | 
-| [Stream manager](stream-manager-component.md) | ^2\.0\.0 | Hard | 
-| [Greengrass CLI](greengrass-cli-component.md) | ^2\.0\.0 | Hard | 
+| [Token exchange service](token-exchange-service-component.md) | >=2\.0\.3 <3\.0\.0 | Hard | 
+| [Stream manager](stream-manager-component.md) | >=2\.0\.10 <3\.0\.0 | Hard | 
+| [Greengrass CLI](greengrass-cli-component.md) | >=2\.3\.0 <3\.0\.0 | Hard | 
 
 For more information about component dependencies, see the [component recipe reference](component-recipe-reference.md#recipe-reference-component-dependencies)\.
 
@@ -83,7 +96,7 @@ This component uses the following log file\.
 
 This component includes the following third\-party software/licensing:
 
-### <a name="w591aac14c23c61c21b5b1b1"></a>
+### <a name="w600aac14c63c21b5b1b1"></a>
 + Apache\-2\.0
 + MIT
 + BSD\-2\-Clause

@@ -38,20 +38,20 @@ You must meet the following requirements to use the SageMaker Edge Manager agent
     { 
       "Version": "2012-10-17",
       "Statement": [ 
-      { 
-        "Effect": "Allow", 
-        "Principal": {
-          "Service": "credentials.iot.amazonaws.com"
-         }, 
-        "Action": "sts:AssumeRole" 
-      }, 
-      { 
-        "Effect": "Allow", 
-        "Principal": {
-          "Service": "sagemaker.amazonaws.com"
-        }, 
-        "Action": "sts:AssumeRole" 
-      } 
+        { 
+          "Effect": "Allow", 
+          "Principal": {
+            "Service": "credentials.iot.amazonaws.com"
+           }, 
+          "Action": "sts:AssumeRole" 
+        },
+        { 
+          "Effect": "Allow", 
+          "Principal": {
+            "Service": "sagemaker.amazonaws.com"
+          }, 
+          "Action": "sts:AssumeRole" 
+        } 
       ] 
     }
     ```
@@ -62,15 +62,15 @@ You must meet the following requirements to use the SageMaker Edge Manager agent
     {
       "Version": "2012-10-17",
       "Statement": [
-      {
-        "Action": [
-          "s3:PutObject"
-        ],
-        "Resource": [
-          "*"
-        ],
-        "Effect": "Allow"
-      }
+        {
+          "Action": [
+            "s3:PutObject"
+          ],
+          "Resource": [
+            "*"
+          ],
+          "Effect": "Allow"
+        }
       ]
     }
     ```

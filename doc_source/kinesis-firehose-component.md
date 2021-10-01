@@ -1,6 +1,6 @@
 # Kinesis Data Firehose<a name="kinesis-firehose-component"></a>
 
-The Kinesis Data Firehose component \(`aws.greengrass.KinesisFirehose`\) publishes data through Amazon Kinesis Data Firehose delivery streams to destinations, such as Amazon S3, Amazon Redshift, and Amazon Elasticsearch Service\. For more information, see [What is Amazon Kinesis Data Firehose?](https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html) in the *Amazon Kinesis Data Firehose Developer Guide*\.
+The Kinesis Data Firehose component \(`aws.greengrass.KinesisFirehose`\) publishes data through Amazon Kinesis Data Firehose delivery streams to destinations, such as Amazon S3, Amazon Redshift, and Amazon OpenSearch Service\. For more information, see [What is Amazon Kinesis Data Firehose?](https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html) in the *Amazon Kinesis Data Firehose Developer Guide*\.
 
 To publish to a Kinesis delivery stream with this component, publish a message to a topic where this component subscribes\. By default, this component subscribes to the `kinesisfirehose/message` and `kinesisfirehose/message/binary/#` [local publish/subscribe](ipc-publish-subscribe.md) topics\. You can specify other topics, including AWS IoT Core MQTT topics, when you deploy this component\.
 
@@ -29,7 +29,7 @@ This component has the following versions:
 
 <a name="public-component-type-lambda"></a>This component is a Lambda component \(`aws.greengrass.lambda`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component's Lambda function using the [Lambda launcher component](lambda-launcher-component.md)\.
 
-<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
+<a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
 
 ## Requirements<a name="kinesis-firehose-component-requirements"></a>
 
@@ -99,6 +99,15 @@ You must update the Lambda function version on the legacy subscription router ev
 ------
 
   <a name="connector-component-create-deployments"></a>For more information, see [Create deployments](create-deployments.md)\.
+
+### Endpoints and ports<a name="kinesis-firehose-component-endpoints"></a>
+
+This component must be able to perform outbound requests to the following endpoints and ports, in addition to endpoints and ports required for basic operation\. For more information, see [Allow device traffic through a proxy or firewall](allow-device-traffic.md)\.
+
+
+| Endpoint | Port | Required | Description | 
+| --- | --- | --- | --- | 
+|  `firehose.region.amazonaws.com`  | 443 | Yes |  Upload data to Kinesis Data Firehose\.  | 
 
 ## Dependencies<a name="kinesis-firehose-component-dependencies"></a>
 
@@ -197,7 +206,7 @@ This value must be at least 2,000 records\.
 Default: 5,000 records
 
 `containerMode`  <a name="connector-component-container-mode-parameter"></a>
-\(Optional\) The containerization mode for this component\. Choose from the following options:  
+\(Optional\) The containerization mode for this component\. Choose from the following options:  <a name="lambda-function-component-container-mode-parameter"></a>
 + `NoContainer` – The component doesn't run in an isolated runtime environment\.
 + `GreengrassContainer` – The component runs in an isolated runtime environment inside the AWS IoT Greengrass container\.
 Default: `GreengrassContainer`

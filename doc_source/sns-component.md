@@ -30,7 +30,7 @@ This component has the following versions:
 
 <a name="public-component-type-lambda"></a>This component is a Lambda component \(`aws.greengrass.lambda`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component's Lambda function using the [Lambda launcher component](lambda-launcher-component.md)\.
 
-<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
+<a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
 
 ## Requirements<a name="sns-component-requirements"></a>
 
@@ -100,6 +100,15 @@ You must update the Lambda function version on the legacy subscription router ev
 ------
 
   <a name="connector-component-create-deployments"></a>For more information, see [Create deployments](create-deployments.md)\.
+
+### Endpoints and ports<a name="sns-component-endpoints"></a>
+
+This component must be able to perform outbound requests to the following endpoints and ports, in addition to endpoints and ports required for basic operation\. For more information, see [Allow device traffic through a proxy or firewall](allow-device-traffic.md)\.
+
+
+| Endpoint | Port | Required | Description | 
+| --- | --- | --- | --- | 
+|  `sns.region.amazonaws.com`  | 443 | Yes |  Publish messages to Amazon SNS\.  | 
 
 ## Dependencies<a name="sns-component-dependencies"></a>
 
@@ -189,7 +198,7 @@ An object that contains the Lambda function's parameters\. This object contains 
 The ARN of the default Amazon SNS topic where this component publishes messages\. You can override the destination topic with the `sns_topic_arn` property in the input message payload\.
 
 `containerMode`  <a name="connector-component-container-mode-parameter"></a>
-\(Optional\) The containerization mode for this component\. Choose from the following options:  
+\(Optional\) The containerization mode for this component\. Choose from the following options:  <a name="lambda-function-component-container-mode-parameter"></a>
 + `NoContainer` – The component doesn't run in an isolated runtime environment\.
 + `GreengrassContainer` – The component runs in an isolated runtime environment inside the AWS IoT Greengrass container\.
 Default: `GreengrassContainer`

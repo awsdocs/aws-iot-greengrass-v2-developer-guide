@@ -9,7 +9,7 @@ Use the `logs` command to analyze Greengrass logs on your core device\.
 
 ## get<a name="logs-get"></a>
 
-Collect, filter, and visualize Greengrass log files\. This command supports only JSON\-formatted log files\. You can specify the logging format in the nucleus configuration\.
+Collect, filter, and visualize Greengrass log files\. This command supports only JSON\-formatted log files\. You can specify the [logging format](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-logging-format) in the nucleus configuration\.
 
 **Synopsis**  
 

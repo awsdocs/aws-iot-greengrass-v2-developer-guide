@@ -23,7 +23,7 @@ This component has the following versions:
 
 <a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
 
-<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
+<a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
 
 ## Requirements<a name="tensorflow-lite-component-requirements"></a>
 
@@ -34,6 +34,19 @@ This component has the following requirements:<a name="ml-component-requirements
   ```
   sudo apt-get install libopenjp2-7 libilmbase23 libopenexr-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libgtk-3-0 libwebp-dev
   ```
+
+### Endpoints and ports<a name="tensorflow-lite-component-endpoints"></a>
+
+By default, this component uses an installer script to install packages using the `apt`, `yum`, `brew`, and `pip` commands, depending on what platform the core device uses\. This component must be able to perform outbound requests to various package indexes and repositories to run the installer script\. To allow this component's outbound traffic through a proxy or firewall, you must identify the endpoints for the package indexes and repositories where your core device connects to install\.
+
+Consider the following when you identify endpoints required for this component's install script:
++ The endpoints depend on the core device's platform\. For example, a core device that runs Ubuntu uses `apt` rather than `yum` or `brew`\. Additionally, devices that use the same package index might have different source lists, so they might retrieve packages from different repositories\.
++ The endpoints might differ between multiple devices that use the same package index, because each device has its own source lists that define where to retrieve packages\.
++ The endpoints might change over time\. Each package index provides the URLs of the repositories where you download packages, and the owner of a package can change what URLs the package index provides\.
+
+For more information about the dependencies that this component installs, and how to disable the installer script, see the [UseInstaller](#tensorflow-lite-component-config-useinstaller-term) configuration parameter\.
+
+For more information about endpoints and ports required for basic operation, see [Allow device traffic through a proxy or firewall](allow-device-traffic.md)\.
 
 ## Dependencies<a name="tensorflow-lite-component-dependencies"></a>
 
@@ -91,7 +104,7 @@ This component provides the following configuration parameters that you can cust
 <a name="ml-config-mlrootpath-desc"></a>\(Optional\) The path of the folder on the device where inference components read images and write inference results\. You can modify this value to any location on your device to which the user running this component has read/write access\.  
 <a name="ml-config-mlrootpath-default-tfl"></a>Default: `/greengrass/v2/work/variant.TensorFlowLite/greengrass_ml`
 
-`UseInstaller`  
+  `UseInstaller`   
 <a name="ml-config-useinstaller-desc-tfl"></a>\(Optional\) String value that defines whether to use the installer script in this component to install TensorFlow Lite and its dependencies\. Supported values are `true` and `false`\.   <a name="ml-config-useinstaller-libraries-tfl"></a>
 
 Set this value to `false` if you want to use a custom script for TensorFlow Lite installation, or if you want to include runtime dependencies in a pre\-built Linux image\. To use this component with the AWS\-provided TensorFlow Lite inference components, you will need to install the following libraries, including any dependencies, and make them available the to default Greengrass system user\.

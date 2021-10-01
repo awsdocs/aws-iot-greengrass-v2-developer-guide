@@ -1,32 +1,28 @@
 # Gather system health telemetry data from AWS IoT Greengrass core devices<a name="telemetry"></a>
 
-System health telemetry data is diagnostic data that can help you monitor the performance of critical operations on your Greengrass core devices\. The telemetry agent on Greengrass core devices collects local telemetry data and publishes it to Amazon EventBridge without requiring any customer interaction\. Core devices publish telemetry data to EventBridge on a best effort basis\. For example, core devices might fail to deliver telemetry data while offline\.
+System health telemetry data is diagnostic data that can help you monitor the performance of critical operations on your Greengrass core devices\. You can create projects and applications to retrieve, analyze, transform, and report telemetry data from your edge devices\. Domain experts, such as process engineers, can use these applications to gain insights into fleet health\.
+
+You can use the following methods to gather telemetry data from your Greengrass core devices:
++ **Nucleus emitter component**—The nucleus emitter component \(`aws.greengrass.telemetry.NucleusEmitter`\) on your Greengrass core device publishes telemetry data to the `$local/greengrass/telemetry` topic by default\. You can use the data that is published to this topic to act locally on your core device, even when your device has limited connectivity to the cloud\. Optionally, you can also configure the component to publish telemetry data to an AWS IoT Core MQTT topic of your choice\.
+
+  You must deploy the nucleus emitter component to your core device to publish telemetry data\. There are no costs associated with publishing telemetry data to the local topic\. However, the use of an MQTT topic to publish data to the cloud is subject to [AWS IoT Core pricing](https://aws.amazon.com/iot-core/pricing/)\.
++ **Telemetry agent**—The telemetry agent on Greengrass core devices collects local telemetry data and publishes it to Amazon EventBridge without requiring any customer interaction\. Core devices publish telemetry data to EventBridge on a best effort basis\. For example, core devices might fail to deliver telemetry data while offline\. 
+
+  The telemetry agent feature is enabled by default for all Greengrass core devices\. You automatically start to receive data as soon as you set up a Greengrass core device\. Aside from your data link costs, the data transfer from the core device to AWS IoT Core is without charge\. This is because the agent publishes to an AWS reserved topic\. However, depending on your use case, you might incur costs when you receive or process the data\.
 
 **Note**  
 Amazon EventBridge is an event bus service that you can use to connect your applications with data from a variety of sources, such as Greengrass core devices\. For more information, see [What is Amazon EventBridge?](https://docs.aws.amazon.com/eventbridge/latest/userguide/what-is-amazon-eventbridge.html) in the *Amazon EventBridge User Guide*\.
 
-You can create projects and applications to retrieve, analyze, transform, and report telemetry data from your edge devices\. Domain experts, such as process engineers, can use these applications to gain insights into fleet health\.
-
-To ensure that the Greengrass components function properly, AWS IoT Greengrass uses the data for development and quality improvement purposes\. This feature also helps inform new and enhanced edge capabilities\. AWS IoT Greengrass retains telemetry data for only up to seven days\.
-
-This feature is enabled by default for all Greengrass core devices\. You automatically start to receive data as soon as you set up a Greengrass core device\.
-
-AWS IoT Greengrass telemetry uses the following default settings:
-+ The telemetry agent aggregates telemetry data every hour\.
-+ The telemetry agent publishes a telemetry message every 24 hours\.
-
-The telemetry agent publishes data using the MQTT protocol with a quality of service \(QoS\) level of 0, which means that it doesn't confirm delivery or retry publishing attempts\. Telemetry messages share an MQTT connection with other messages for subscriptions destined for AWS IoT Core\.
-
-Aside from your data link costs, the data transfer from the core to AWS IoT Core is without charge\. This is because the agent publishes to an AWS reserved topic\. However, depending on your use case, you might incur costs when you receive or process the data\.
+This section describes how to configure and use the telemetry agent\. For information about configuring the nucleus emitter component, see [Nucleus telemetry emitter](nucleus-emitter-component.md)\.
 
 **Topics**
 + [Telemetry metrics](#telemetry-metrics)
-+ [Configure telemetry settings](#configure-telemetry-settings)
-+ [Subscribe to telemetry data](#subscribe-for-telemetry-data)
++ [Configure telemetry agent settings](#configure-telemetry-agent-settings)
++ [Subscribe to telemetry data in EventBridge](#subscribe-for-telemetry-data)
 
 ## Telemetry metrics<a name="telemetry-metrics"></a>
 
-The telemetry agent collects and publishes the following system metrics\.
+The following table describes the metrics that are published by the telemetry agent\.
 
 
 | Name | Description | Source | 
@@ -34,23 +30,31 @@ The telemetry agent collects and publishes the following system metrics\.
 |  `SystemMemUsage`  |  The amount of memory currently in use by all applications on the Greengrass core device, including the operating system\.  |  System  | 
 |  `CpuUsage`  |  The amount of CPU currently in use by all applications on the Greengrass core device, including the operating system\.  |  System  | 
 |  `TotalNumberOfFDs`  |  The number of file descriptors stored by the operating system of the Greengrass core device\. One file descriptor uniquely identifies one open file\.  |  System  | 
-|  `NumberOfComponentsRunning`  |  The number of components that are running on the Greengrass core device\.  |  AWS IoT Greengrass Core  | 
-|  `NumberOfComponentsErrored`  |  The number of components that are in error state on the Greengrass core device\.  |  AWS IoT Greengrass Core  | 
-|  `NumberOfComponentsInstalled`  |  The number of components that are installed on the Greengrass core device\.  |  AWS IoT Greengrass Core  | 
-|  `NumberOfComponentsStarting`  |  The number of components that are starting on the Greengrass core device\.  |  AWS IoT Greengrass Core  | 
-|  `NumberOfComponentsNew`  |  The number of components that are new on the Greengrass core device\.  |  AWS IoT Greengrass Core  | 
-|  `NumberOfComponentsStopping`  |  The number of components that are stopping on the Greengrass core device\.  |  AWS IoT Greengrass Core  | 
-|  `NumberOfComponentsFinished`  |  The number of components that are finished on the Greengrass core device\.  |  AWS IoT Greengrass Core  | 
-|  `NumberOfComponentsBroken`  |  The number of components that are broken on the Greengrass core device\.  |  AWS IoT Greengrass Core  | 
-|  `NumberOfComponentsStateless`  |  The number of components that are stateless on the Greengrass core device\.  |  AWS IoT Greengrass Core  | 
+|  `NumberOfComponentsRunning`  |  The number of components that are running on the Greengrass core device\.  |  Greengrass nucleus  | 
+|  `NumberOfComponentsErrored`  |  The number of components that are in error state on the Greengrass core device\.  |  Greengrass nucleus  | 
+|  `NumberOfComponentsInstalled`  |  The number of components that are installed on the Greengrass core device\.  |  Greengrass nucleus  | 
+|  `NumberOfComponentsStarting`  |  The number of components that are starting on the Greengrass core device\.  |  Greengrass nucleus  | 
+|  `NumberOfComponentsNew`  |  The number of components that are new on the Greengrass core device\.  |  Greengrass nucleus  | 
+|  `NumberOfComponentsStopping`  |  The number of components that are stopping on the Greengrass core device\.  |  Greengrass nucleus  | 
+|  `NumberOfComponentsFinished`  |  The number of components that are finished on the Greengrass core device\.  |  Greengrass nucleus  | 
+|  `NumberOfComponentsBroken`  |  The number of components that are broken on the Greengrass core device\.  |  Greengrass nucleus  | 
+|  `NumberOfComponentsStateless`  |  The number of components that are stateless on the Greengrass core device\.  |  Greengrass nucleus  | 
 
-## Configure telemetry settings<a name="configure-telemetry-settings"></a>
+## Configure telemetry agent settings<a name="configure-telemetry-agent-settings"></a>
 
-You can enable or disable the telemetry feature for each Greengrass core device\. You can also configure the intervals over which the core device aggregates and publishes data\. To configure telemetry, customize the [telemetry configuration parameter](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-telemetry) when you deploy the [Greengrass nucleus component](greengrass-nucleus-component.md)\.
+The telemetry agent uses the following default settings:
++ The telemetry agent aggregates telemetry data every hour\.
++ The telemetry agent publishes a telemetry message every 24 hours\.
 
-## Subscribe to telemetry data<a name="subscribe-for-telemetry-data"></a>
+The telemetry agent publishes data using the MQTT protocol with a quality of service \(QoS\) level of 0, which means that it doesn't confirm delivery or retry publishing attempts\. Telemetry messages share an MQTT connection with other messages for subscriptions destined for AWS IoT Core\.
 
-You can create rules in Amazon EventBridge that define how to process telemetry data published from the Greengrass core device\. When EventBridge receives the data, it invokes the target actions defined in your rules\. For example, you can create event rules that send notifications, store event information, take corrective action, or invoke other events\.
+Aside from your data link costs, the data transfer from the core to AWS IoT Core is without charge\. This is because the agent publishes to an AWS reserved topic\. However, depending on your use case, you might incur costs when you receive or process the data\.
+
+You can enable or disable the telemetry agent feature for each Greengrass core device\. You can also configure the intervals over which the core device aggregates and publishes data\. To configure telemetry, customize the [telemetry configuration parameter](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-telemetry) when you deploy the [Greengrass nucleus component](greengrass-nucleus-component.md)\.
+
+## Subscribe to telemetry data in EventBridge<a name="subscribe-for-telemetry-data"></a>
+
+You can create rules in Amazon EventBridge that define how to process telemetry data published from the telemetry agent on the Greengrass core device\. When EventBridge receives the data, it invokes the target actions defined in your rules\. For example, you can create event rules that send notifications, store event information, take corrective action, or invoke other events\.
 
 ### Telemetry events<a name="events-message-format"></a>
 
@@ -58,99 +62,99 @@ Telemetry events use the following format\.
 
 ```
 {
-    "version": "0",
-    "id": "a09d303e-2f6e-3d3c-a693-8e33f4fe3955",
-    "detail-type": "Greengrass Telemetry Data",
-    "source": "aws.greengrass",
-    "account": "123456789012",
-    "time": "2020-11-30T20:45:53Z",
-    "region": "us-east-1",
-    "resources": [],
-    "detail": {
-        "ThingName": "MyGreengrassCore",
-        "Schema": "2020-07-30",
-        "ADP": [
-            {
-                "TS": 1602186483234,
-                "NS": "SystemMetrics",
-                "M": [
-                    {
-                        "N": "TotalNumberOfFDs",
-                        "Sum": 6447.0,
-                        "U": "Count"
-                    },
-                    {
-                        "N": "CpuUsage",
-                        "Sum": 15.458333333333332,
-                        "U": "Percent"
-                    },
-                    {
-                        "N": "SystemMemUsage",
-                        "Sum": 10201.0,
-                        "U": "Megabytes"
-                    }
-                ]
-            },
-            {
-                "TS": 1602186483234,
-                "NS": "GreengrassComponents",
-                "M": [
-                    {
-                        "N": "NumberOfComponentsStopping",
-                        "Sum": 0.0,
-                        "U": "Count"
-                    },
-                    {
-                        "N": "NumberOfComponentsStarting",
-                        "Sum": 0.0,
-                        "U": "Count"
-                    },
-                    {
-                        "N": "NumberOfComponentsBroken",
-                        "Sum": 0.0,
-                        "U": "Count"
-                    },
-                    {
-                        "N": "NumberOfComponentsFinished",
-                        "Sum": 1.0,
-                        "U": "Count"
-                    },
-                    {
-                        "N": "NumberOfComponentsInstalled",
-                        "Sum": 0.0,
-                        "U": "Count"
-                    },
-                    {
-                        "N": "NumberOfComponentsRunning",
-                        "Sum": 7.0,
-                        "U": "Count"
-                    },
-                    {
-                        "N": "NumberOfComponentsNew",
-                        "Sum": 0.0,
-                        "U": "Count"
-                    },
-                    {
-                        "N": "NumberOfComponentsErrored",
-                        "Sum": 0.0,
-                        "U": "Count"
-                    },
-                    {
-                        "N": "NumberOfComponentsStateless",
-                        "Sum": 0.0,
-                        "U": "Count"
-                    }
-                ]
-            }
+  "version": "0",
+  "id": "a09d303e-2f6e-3d3c-a693-8e33f4fe3955",
+  "detail-type": "Greengrass Telemetry Data",
+  "source": "aws.greengrass",
+  "account": "123456789012",
+  "time": "2020-11-30T20:45:53Z",
+  "region": "us-east-1",
+  "resources": [],
+  "detail": {
+    "ThingName": "MyGreengrassCore",
+    "Schema": "2020-07-30",
+    "ADP": [
+      {
+        "TS": 1602186483234,
+        "NS": "SystemMetrics",
+        "M": [
+          {
+            "N": "TotalNumberOfFDs",
+            "Sum": 6447.0,
+            "U": "Count"
+          },
+          {
+            "N": "CpuUsage",
+            "Sum": 15.458333333333332,
+            "U": "Percent"
+          },
+          {
+            "N": "SystemMemUsage",
+            "Sum": 10201.0,
+            "U": "Megabytes"
+          }
         ]
-    }
+      },
+      {
+        "TS": 1602186483234,
+        "NS": "GreengrassComponents",
+        "M": [
+          {
+            "N": "NumberOfComponentsStopping",
+            "Sum": 0.0,
+            "U": "Count"
+          },
+          {
+            "N": "NumberOfComponentsStarting",
+            "Sum": 0.0,
+            "U": "Count"
+          },
+          {
+            "N": "NumberOfComponentsBroken",
+            "Sum": 0.0,
+            "U": "Count"
+          },
+          {
+            "N": "NumberOfComponentsFinished",
+            "Sum": 1.0,
+            "U": "Count"
+          },
+          {
+            "N": "NumberOfComponentsInstalled",
+            "Sum": 0.0,
+            "U": "Count"
+          },
+          {
+            "N": "NumberOfComponentsRunning",
+            "Sum": 7.0,
+            "U": "Count"
+          },
+          {
+            "N": "NumberOfComponentsNew",
+            "Sum": 0.0,
+            "U": "Count"
+          },
+          {
+            "N": "NumberOfComponentsErrored",
+            "Sum": 0.0,
+            "U": "Count"
+          },
+          {
+            "N": "NumberOfComponentsStateless",
+            "Sum": 0.0,
+            "U": "Count"
+          }
+        ]
+      }
+    ]
+  }
 }
-```
+```<a name="telemetry-agent-adp-array-config"></a>
 
 The `ADP` array contains a list of aggregated data points that have the following properties:
 
 `TS`  
-The timestamp of when the data was aggregated\.
+The timestamp of when the data was gathered\.
 
 `NS`  
 The metric namespace\.
@@ -158,11 +162,13 @@ The metric namespace\.
 `M`  
 The list of metrics\. A metric contains the following properties:    
 `N`  
-The name of the [metric](#telemetry-metrics)\.  
+The name of the metric\.  
 `Sum`  
-The aggregated metric value\. The telemetry agent adds new values to the previous total, so the sum is a value that increases constantly\. You can use the timestamp to find the value of a specific aggregation\. For example, to find the latest aggregated value, subtract the previous timestamped value from the latest timestamped value\.  
+The aggregated metric value\. The telemetry agent adds new values to the previous total, so the sum is a value that increases constantly\. You can use the timestamp to find the value of a specific aggregation\. For example, to find the latest aggregated value, subtract the previous timestamped value from the latest timestamped value\.   
 `U`  
 The unit of the metric value\.
+
+For more information about each metric, see [Telemetry metrics](#telemetry-metrics)\.
 
 ### Prerequisites to create EventBridge rules<a name="create-events-rule-prerequisites-telemetry"></a>
 

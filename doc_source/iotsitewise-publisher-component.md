@@ -19,13 +19,13 @@ For more information about AWS IoT SiteWise gateways, see [Using AWS IoT SiteWis
 ## Versions<a name="iotsitewise-publisher-component-versions"></a>
 
 This component has the following versions:
-+ 2\.0\.1
++ 2\.0\.x
 
 ## Type<a name="iotsitewise-publisher-component-type"></a>
 
 <a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
 
-<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
+<a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
 
 ## Requirements<a name="iotsitewise-publisher-component-requirements"></a>
 
@@ -47,6 +47,15 @@ This component has the following requirements:
   }
   ```
 
+### Endpoints and ports<a name="iotsitewise-publisher-component-endpoints"></a>
+
+This component must be able to perform outbound requests to the following endpoints and ports, in addition to endpoints and ports required for basic operation\. For more information, see [Allow device traffic through a proxy or firewall](allow-device-traffic.md)\.
+
+
+| Endpoint | Port | Required | Description | 
+| --- | --- | --- | --- | 
+|  `data.iotsitewise.region.amazonaws.com`  | 443 | Yes |  Publish data to AWS IoT SiteWise\.  | 
+
 ## Dependencies<a name="iotsitewise-publisher-component-dependencies"></a>
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#iotsitewise-publisher-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
@@ -57,7 +66,7 @@ The following table lists the dependencies for version 2\.0\.1 of this component
 | Dependency | Compatible versions | Dependency type | 
 | --- | --- | --- | 
 | [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.3\.0<3\.0\.0 | Hard | 
-| [Stream manager](stream-manager-component.md) | >2\.0\.10<3\.0\.0 | Hard | 
+| [Stream manager](stream-manager-component.md) | >=2\.0\.10<3\.0\.0 | Hard | 
 
 For more information about component dependencies, see the [component recipe reference](component-recipe-reference.md#recipe-reference-component-dependencies)\.
 

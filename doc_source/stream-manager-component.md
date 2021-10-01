@@ -7,6 +7,7 @@ For more information about how to configure and use stream manager in custom com
 **Topics**
 + [Versions](#stream-manager-component-versions)
 + [Type](#stream-manager-component-type)
++ [Requirements](#stream-manager-component-requirements)
 + [Dependencies](#stream-manager-component-dependencies)
 + [Configuration](#stream-manager-component-configuration)
 + [Local log file](#stream-manager-component-log-file)
@@ -24,7 +25,28 @@ If you use stream manager to export data to the cloud, you can't upgrade version
 
 <a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
 
-<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
+<a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
+
+## Requirements<a name="stream-manager-component-requirements"></a>
+
+This component has the following requirements:
++ The [Authorize core devices to interact with AWS services](device-service-role.md) must allow access to the AWS Cloud destinations that you use with stream manager\. For more information, see:<a name="export-destinations-links"></a>
+  + [AWS IoT Analytics channels](stream-export-configurations.md#export-to-iot-analytics)
+  + [Amazon Kinesis data streams](stream-export-configurations.md#export-to-kinesis)
+  + [AWS IoT SiteWise asset properties](stream-export-configurations.md#export-to-iot-sitewise)
+  + [Amazon S3 objects](stream-export-configurations.md#export-to-s3)
+
+### Endpoints and ports<a name="stream-manager-component-endpoints"></a>
+
+This component must be able to perform outbound requests to the following endpoints and ports, in addition to endpoints and ports required for basic operation\. For more information, see [Allow device traffic through a proxy or firewall](allow-device-traffic.md)\.
+
+
+| Endpoint | Port | Required | Description | 
+| --- | --- | --- | --- | 
+|  `iotanalytics.region.amazonaws.com`  | 443 | No |  Required if you publish data to AWS IoT Analytics\.  | 
+|  `kinesis.region.amazonaws.com`  | 443 | No |  Required if you publish data to Kinesis Data Firehose\.  | 
+|  `data.iotsitewise.region.amazonaws.com`  | 443 | No |  Required if you publish data to AWS IoT SiteWise\.  | 
+|  `*.s3.amazonaws.com`  | 443 | No |  Required if you publish data to S3 buckets\. You can replace `*` with the name of each bucket where you publish data\.  | 
 
 ## Dependencies<a name="stream-manager-component-dependencies"></a>
 

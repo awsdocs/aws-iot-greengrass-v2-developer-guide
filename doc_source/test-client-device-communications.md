@@ -93,7 +93,7 @@ To use the AWS IoT Device SDK v2 for Python, a device must run Python 3\.6 or la
 
    <a name="test-client-device-communications-application-troubleshooting"></a>If the application outputs an error instead, see [Troubleshooting Greengrass discovery issues](troubleshooting-client-devices.md#greengrass-discovery-issues)\.
 
-   <a name="test-client-device-communications-application-view-core-logs"></a>You can also view the Greengrass logs on the core device to verify if the client device successfully connects and sends messages\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)\.
+   <a name="test-client-device-communications-application-view-core-logs"></a>You can also view the Greengrass logs on the core device to verify if the client device successfully connects and sends messages\. For more information, see [Monitor AWS IoT Greengrass logs](monitor-logs.md)\.
 
 ## Test communications \(C\+\+\)<a name="test-client-device-communications-cpp"></a>
 
@@ -208,7 +208,7 @@ MSVC 2015 or later
    Hello World!
    ```
 
-   <a name="test-client-device-communications-application-view-core-logs"></a>You can also view the Greengrass logs on the core device to verify if the client device successfully connects and sends messages\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)\.
+   <a name="test-client-device-communications-application-view-core-logs"></a>You can also view the Greengrass logs on the core device to verify if the client device successfully connects and sends messages\. For more information, see [Monitor AWS IoT Greengrass logs](monitor-logs.md)\.
 
 ## Test communications \(JavaScript\)<a name="test-client-device-communications-javascript"></a>
 
@@ -300,7 +300,7 @@ To use the AWS IoT Device SDK v2 for JavaScript, a device must run Node v10\.0 o
 
    <a name="test-client-device-communications-application-troubleshooting"></a>If the application outputs an error instead, see [Troubleshooting Greengrass discovery issues](troubleshooting-client-devices.md#greengrass-discovery-issues)\.
 
-   <a name="test-client-device-communications-application-view-core-logs"></a>You can also view the Greengrass logs on the core device to verify if the client device successfully connects and sends messages\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)\.
+   <a name="test-client-device-communications-application-view-core-logs"></a>You can also view the Greengrass logs on the core device to verify if the client device successfully connects and sends messages\. For more information, see [Monitor AWS IoT Greengrass logs](monitor-logs.md)\.
 
 ## Test communications \(Java\)<a name="test-client-device-communications-java"></a>
 
@@ -376,4 +376,4 @@ Apache Maven
    Message received on topic clients/MyClientDevice1/hello/world: Hello World!
    ```
 
-   <a name="test-client-device-communications-application-view-core-logs"></a>You can also view the Greengrass logs on the core device to verify if the client device successfully connects and sends messages\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)\.
+   <a name="test-client-device-communications-application-view-core-logs"></a>You can also view the Greengrass logs on the core device to verify if the client device successfully connects and sends messages\. For more information, see [Monitor AWS IoT Greengrass logs](monitor-logs.md)\.

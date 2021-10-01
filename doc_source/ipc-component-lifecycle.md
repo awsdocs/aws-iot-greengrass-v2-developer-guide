@@ -162,7 +162,7 @@ The following table lists the minimum versions of the AWS IoT Device SDK that yo
 This operation's request has the following parameters:
 
 `componentName` \(Python: `component_name`\)  
-The name of the component to pause, which must be a generic component\. For more information, see [Component types](manage-components.md#component-types)\.
+The name of the component to pause, which must be a generic component\. For more information, see [Component types](develop-greengrass-components.md#component-types)\.
 
 ### Response<a name="ipc-operation-defercomponentupdate-response"></a>
 

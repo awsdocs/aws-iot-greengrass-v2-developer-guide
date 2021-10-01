@@ -185,9 +185,9 @@ Do not change the name of the component\.
        --inline-recipe fileb://path/to/component/recipe
    ```
 **Note**  
-This step creates the component in the AWS IoT Greengrass service in the AWS Cloud\. You can use the Greengrass CLI to develop, test, and deploy your component locally before you upload it to the cloud\. For more information, see [Develop a custom component](create-components.md#develop-component)\.
+This step creates the component in the AWS IoT Greengrass service in the AWS Cloud\. You can use the Greengrass CLI to develop, test, and deploy your component locally before you upload it to the cloud\. For more information, see [Develop AWS IoT Greengrass components](develop-greengrass-components.md)\.
 
-For more information about creating components, see [Create custom AWS IoT Greengrass components](create-components.md)\.
+For more information about creating components, see [Develop AWS IoT Greengrass components](develop-greengrass-components.md)\.
 
 ## Create custom machine learning components<a name="create-private-ml-components"></a>
 
@@ -261,7 +261,7 @@ For information about uploading content to an S3 bucket, see [Working with Amazo
 
 You can use the artifacts and recipes that you retrieved to create your custom machine learning components\. For an example, see [Create a custom inference component](#create-inference-component)\.
 
-For detailed information about creating and deploying components to Greengrass devices, see [Manage AWS IoT Greengrass components](manage-components.md) and [Manage AWS IoT Greengrass components](manage-components.md)\.
+For detailed information about creating and deploying components to Greengrass devices, see [Develop AWS IoT Greengrass components](develop-greengrass-components.md) and [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)\.
 
 ## Create a custom inference component<a name="create-inference-component"></a>
 
@@ -536,4 +536,4 @@ aws greengrassv2 create-component-version \
 ```
 
 **Note**  
-This step creates the component in the AWS IoT Greengrass service in the AWS Cloud\. You can use the Greengrass CLI to develop, test, and deploy your component locally before you upload it to the cloud\. For more information, see [Develop a custom component](create-components.md#develop-component)\.
+This step creates the component in the AWS IoT Greengrass service in the AWS Cloud\. You can use the Greengrass CLI to develop, test, and deploy your component locally before you upload it to the cloud\. For more information, see [Develop AWS IoT Greengrass components](develop-greengrass-components.md)\.

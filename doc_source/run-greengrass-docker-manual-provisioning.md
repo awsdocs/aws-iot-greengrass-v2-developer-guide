@@ -341,10 +341,6 @@ In this section, you create a token exchange IAM role and an AWS IoT role alias 
               "logs:CreateLogStream",
               "logs:PutLogEvents",
               "logs:DescribeLogStreams",
-              "iot:Connect",
-              "iot:Publish",
-              "iot:Subscribe",
-              "iot:Receive",
               "s3:GetBucketLocation"
             ],
             "Resource": "*"

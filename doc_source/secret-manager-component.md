@@ -9,7 +9,7 @@ This component encrypts secrets on the core device to keep your credentials and 
 + [Type](#secret-manager-component-type)
 + [Requirements](#secret-manager-component-requirements)
 + [Dependencies](#secret-manager-component-dependencies)
-+ [Configuration](#secret-mananger-component-configuration)
++ [Configuration](#secret-manager-component-configuration)
 + [Local log file](#secret-manager-component-log-file)
 + [Changelog](#secret-manager-component-changelog)
 
@@ -22,9 +22,9 @@ This component has the following versions:
 
 <a name="public-component-type-plugin-para1"></a>This component is a plugin component \(`aws.greengrass.plugin`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component in the same Java Virtual Machine \(JVM\) as the nucleus\. The nucleus restarts when you change this component's version on the core device\.
 
-<a name="public-component-type-plugin-para2"></a>This component uses the same log file as the Greengrass nucleus\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)\.
+<a name="public-component-type-plugin-para2"></a>This component uses the same log file as the Greengrass nucleus\. For more information, see [Monitor AWS IoT Greengrass logs](monitor-logs.md)\.
 
-<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
+<a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
 
 ## Requirements<a name="secret-manager-component-requirements"></a>
 
@@ -54,6 +54,15 @@ If you use a customer\-managed AWS Key Management Service key to encrypt secrets
   + [Authentication and access control for AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/auth-and-access.html)
   + [Actions, resources, and context keys you can use in an IAM policy or secret policy for AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/reference_iam-permissions.html)
 + Custom components must define an authorization policy that allows `aws.greengrass#GetSecretValue` to get secrets that you store with this component\. In this authorization policy, you can restrict components' access to specific secrets\. For more information, see [secret manager IPC authorization](ipc-secret-manager.md#ipc-secret-manager-authorization)\.
+
+### Endpoints and ports<a name="secret-manager-component-endpoints"></a>
+
+This component must be able to perform outbound requests to the following endpoints and ports, in addition to endpoints and ports required for basic operation\. For more information, see [Allow device traffic through a proxy or firewall](allow-device-traffic.md)\.
+
+
+| Endpoint | Port | Required | Description | 
+| --- | --- | --- | --- | 
+|  `secretsmanager.region.amazonaws.com`  | 443 | Yes |  Download secrets to the core device\.  | 
 
 ## Dependencies<a name="secret-manager-component-dependencies"></a>
 
@@ -113,7 +122,7 @@ The following table lists the dependencies for versions 2\.0\.4 and 2\.0\.5 of t
 
 For more information about component dependencies, see the [component recipe reference](component-recipe-reference.md#recipe-reference-component-dependencies)\.
 
-## Configuration<a name="secret-mananger-component-configuration"></a>
+## Configuration<a name="secret-manager-component-configuration"></a>
 
 This component provides the following configuration parameters that you can customize when you deploy the component\.
 

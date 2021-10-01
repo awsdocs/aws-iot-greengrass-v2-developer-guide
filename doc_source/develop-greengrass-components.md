@@ -1,4 +1,4 @@
-# Manage AWS IoT Greengrass components<a name="manage-components"></a>
+# Develop AWS IoT Greengrass components<a name="develop-greengrass-components"></a>
 
 AWS IoT Greengrass *components* are software modules that you deploy to Greengrass core devices\. Components can represent applications, runtime installers, libraries, or any code that you would run on a device\. You can define components that depend on other components\. For example, you might define a component that installs Python, and then define that component as a dependency of your components that run Python applications\. When you deploy your components to your fleets of devices, Greengrass deploys only the software modules that your devices require\.
 
@@ -24,8 +24,8 @@ The AWS IoT Greengrass Core software runs components as the system user and grou
 **Topics**
 + [Component lifecycle](#component-lifecycle)
 + [Component types](#component-types)
-+ [AWS\-provided components](public-components.md)
-+ [Create custom AWS IoT Greengrass components](create-components.md)
++ [Create local AWS IoT Greengrass components](create-components.md)
++ [Test AWS IoT Greengrass components with local deployments](test-components.md)
 + [Upload components to deploy to your core devices](upload-components.md)
 + [Interact with AWS services](interact-with-aws-services.md)
 + [Run a Docker container](run-docker-container.md)
@@ -54,7 +54,7 @@ The *component type* specifies how the AWS IoT Greengrass Core software runs the
 
   The Greengrass nucleus runs a plugin component in the same Java Virtual Machine \(JVM\) as the nucleus\. The nucleus restarts when you change the version of a plugin component on a core device\. To install and run plugin components, you must configure the Greengrass nucleus to run as a system service\. For more information, see [Configure AWS IoT Greengrass as a system service](configure-greengrass-core-v2.md#configure-system-service)\.
 
-  Several components that are provided by AWS are plugin components, which enables them to interface directly with the Greengrass nucleus\. Plugin components use the same log file as the Greengrass nucleus\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)\.
+  Several components that are provided by AWS are plugin components, which enables them to interface directly with the Greengrass nucleus\. Plugin components use the same log file as the Greengrass nucleus\. For more information, see [Monitor AWS IoT Greengrass logs](monitor-logs.md)\.
 + **Generic** \(`aws.greengrass.generic`\)
 
   The Greengrass nucleus runs a generic component's lifecycle scripts, if the component defines a lifecycle\.

@@ -19,9 +19,9 @@ AWS IoT Greengrass provides the AWS IoT Greengrass Core software as a component 
 
 You must configure the AWS IoT Greengrass Core software as a system service in your device's init system to do the following:
 + Start the AWS IoT Greengrass Core software when the device boots\. This is a good practice if you manage large fleets of devices\.
-+ Install and run plugin components\. Several AWS\-provided components are plugin components, which enables them to interface directly with the Greengrass nucleus\. For more information about component types, see [Component types](manage-components.md#component-types)\.
++ Install and run plugin components\. Several AWS\-provided components are plugin components, which enables them to interface directly with the Greengrass nucleus\. For more information about component types, see [Component types](develop-greengrass-components.md#component-types)\.
 + Apply over\-the\-air \(OTA\) updates to the core device's AWS IoT Greengrass Core software\. For more information, see [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)\.
-+ Enable components to restart the AWS IoT Greengrass Core software or the core device when a deployment updates the component to a new version or updates certain configuration parameters\. For more information, see the [bootstrap lifecycle step](component-recipe-reference.md#bootstrap-lifecycle-definition)\.
++ Enable components to restart the AWS IoT Greengrass Core software when a deployment updates the component to a new version or updates certain configuration parameters\. For more information, see the [bootstrap lifecycle step](component-recipe-reference.md#bootstrap-lifecycle-definition)\.
 
 There are different init systems, such as initd, systemd, and SystemV\. AWS IoT Greengrass provides a built\-in option to configure the AWS IoT Greengrass Core software as a system service on a device with systemd\. Use the `--setup-system-service true` argument when you install the AWS IoT Greengrass Core software to start the nucleus as a system service and configure it to launch when the device boots\. 
 
@@ -130,7 +130,7 @@ For information about creating configuration merge updates, see [Update componen
 
 The AWS IoT Greengrass Core software can run component processes as a system user and group different from the one that runs the software\. This increases security, because you can run the AWS IoT Greengrass Core software as root without giving root permissions to components that run on the core device\.
 
-The following table indicates which types of components the AWS IoT Greengrass Core software can run as a system user and group that you specify\. For more information, see [Component types](manage-components.md#component-types)\.
+The following table indicates which types of components the AWS IoT Greengrass Core software can run as a system user and group that you specify\. For more information, see [Component types](develop-greengrass-components.md#component-types)\.
 
 
 | Component type | Configure system user/group | 
@@ -156,8 +156,6 @@ If you don't configure a user to run components and you run the AWS IoT Greengra
 If you don't configure a user to run components and you run the AWS IoT Greengrass Core software as a non\-root user, then the software runs components as that user\.
 
 You can also run components as a system user that doesn't exist, also called an unknown user, to increase security\. On Linux operating systems, a process can signal any other process that is run by the same user\. An unknown user doesn't run other processes, so you can run components as an unknown user to prevent components from signaling other components on the core device\. To run components as an unknown user, specify a user ID that doesn't exist on the core device\. You can also specify a group ID that doesn't exist to run as an unknown group\.
-
-You can't configure the AWS IoT Greengrass Core software to run components as the root user \(UID 0\) or group \(GID 0\)\.
 
 ### Configure the default user and group<a name="configure-default-component-user"></a>
 
@@ -197,7 +195,7 @@ This feature is available for v2\.4\.0 and later of the [Greengrass nucleus comp
 
 You can configure the maximum amount of CPU and RAM usage that each component's processes can use on the core device\.
 
-The following table shows the types of components that support system resource limits\. For more information, see [Component types](manage-components.md#component-types)\.
+The following table shows the types of components that support system resource limits\. For more information, see [Component types](develop-greengrass-components.md#component-types)\.
 
 
 | Component type | Configure system resource limits | 

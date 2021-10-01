@@ -24,9 +24,9 @@ This component has the following versions:
 
 <a name="public-component-type-plugin-para1"></a>This component is a plugin component \(`aws.greengrass.plugin`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component in the same Java Virtual Machine \(JVM\) as the nucleus\. The nucleus restarts when you change this component's version on the core device\.
 
-<a name="public-component-type-plugin-para2"></a>This component uses the same log file as the Greengrass nucleus\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)\.
+<a name="public-component-type-plugin-para2"></a>This component uses the same log file as the Greengrass nucleus\. For more information, see [Monitor AWS IoT Greengrass logs](monitor-logs.md)\.
 
-<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
+<a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
 
 ## Requirements<a name="log-manager-component-requirements"></a>
 
@@ -45,7 +45,7 @@ This component has the following requirements:
           "logs:DescribeLogStreams"
         ],
         "Effect": "Allow",
-        "Resource": "*"
+        "Resource": "arn:aws:logs:*:*:*"
       }
     ]
   }
@@ -54,6 +54,15 @@ This component has the following requirements:
 The [Greengrass device role](device-service-role.md) that you create when you install the AWS IoT Greengrass Core software includes the permissions in this example policy by default\.
 
   For more information, see [Using identity\-based policies \(IAM policies\) for CloudWatch Logs](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/iam-identity-based-access-control-cwl.html) in the *Amazon CloudWatch Logs User Guide*\.
+
+### Endpoints and ports<a name="log-manager-component-endpoints"></a>
+
+This component must be able to perform outbound requests to the following endpoints and ports, in addition to endpoints and ports required for basic operation\. For more information, see [Allow device traffic through a proxy or firewall](allow-device-traffic.md)\.
+
+
+| Endpoint | Port | Required | Description | 
+| --- | --- | --- | --- | 
+|  `logs.region.amazonaws.com`  | 443 | No |  Required if you write logs to CloudWatch Logs\.  | 
 
 ## Dependencies<a name="log-manager-component-dependencies"></a>
 
@@ -122,21 +131,22 @@ This component provides the following configuration parameters that you can cust
 
 `logsUploaderConfiguration`  
 \(Optional\) The configuration for logs that the log manager component uploads\. This object contains the following information:    
-`systemLogsConfiguration`  
-\(Optional\) The configuration for AWS IoT Greengrass Core software system logs\. Specify this configuration to enable the log manager component to manage system logs\. This object contains the following information:    
+  `systemLogsConfiguration`   
+\(Optional\) The configuration for AWS IoT Greengrass Core software system logs, which include logs from the [Greengrass nucleus](greengrass-nucleus-component.md) and [plugin components](develop-greengrass-components.md#component-types)\. Specify this configuration to enable the log manager component to manage system logs\. This object contains the following information:    
 `uploadToCloudWatch`  <a name="log-manager-component-configuration-system-upload-to-cloud-watch"></a>
 \(Optional\) You can upload system logs to CloudWatch Logs\.  
 Default: `false`  
 `minimumLogLevel`  <a name="log-manager-component-configuration-system-minimum-log-level"></a>
-\(Optional\) The minimum level of information to upload\. Choose from the following log levels, listed here in level order:  
+\(Optional\) The minimum level of log messages to upload\. This minimum level applies only if you configure the [Greengrass nucleus component](greengrass-nucleus-component.md) to output JSON format logs\. To enable JSON format logs, specify `JSON` for the [logging format](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-logging-format) parameter \(`logging.format`\)\.  
+Choose from the following log levels, listed here in level order:  <a name="nucleus-log-levels"></a>
 + `DEBUG`
 + `INFO`
 + `WARN`
 + `ERROR`
 Default: `INFO`  
 `diskSpaceLimit`  <a name="log-manager-component-configuration-system-disk-space-limit"></a>
-\(Optional\) The maximum total size of all system log files, in the unit you specify in `diskSpaceLimitUnit`\. After the total size of all log files exceeds this maximum total size, the AWS IoT Greengrass Core software deletes the oldest log files\.  
-This parameter is equivalent to the [system logs disk space limit](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-system-logs-limit) parameter \(`totalLogsSizeKB`\) of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. If you specify this parameter on both components, the AWS IoT Greengrass Core software uses the minimum of the two values as the maximum total log size\.  
+\(Optional\) The maximum total size of Greengrass system log files, in the unit you specify in `diskSpaceLimitUnit`\. After the total size of Greengrass system log files exceeds this maximum total size, the AWS IoT Greengrass Core software deletes the oldest Greengrass system log files\.  
+This parameter is equivalent to the [log size limit](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-system-logs-limit) parameter \(`totalLogsSizeKB`\) of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. The AWS IoT Greengrass Core software uses the minimum of the two values as the maximum total Greengrass system log size\.  
 `diskSpaceLimitUnit`  <a name="log-manager-component-configuration-disk-space-limit-unit"></a>
 \(Optional\) The unit for the `diskSpaceLimit`\. Choose from the following options:  
 + `KB` – kilobytes
@@ -146,13 +156,14 @@ Default: `KB`
 `deleteLogFileAfterCloudUpload`  <a name="log-manager-component-configuration-delete-log-file-after-cloud-upload"></a>
 \(Optional\) You can delete a log file after the log manager component uploads the logs to CloudWatch Logs\.  
 Default: `false`  
-`componentLogsConfiguration`  
+  `componentLogsConfiguration`   
 \(Optional\) A list of log configurations for components on the core device\. Each configuration in this list defines the log configuration for a component or application\. The log manager component uploads these component logs to CloudWatch Logs  
 Each object contains the following information:    
 `componentName`  <a name="log-manager-component-configuration-component-component-name"></a>
 The name of the component for this logs configuration\. You can specify the name of a Greengrass component or another value to identify this log group\.  
 `minimumLogLevel`  <a name="log-manager-component-configuration-component-minimum-log-level"></a>
-\(Optional\) The minimum level of information to upload\. Choose from the following log levels, listed here in level order:  
+\(Optional\) The minimum level of log messages to upload\. This minimum level applies only if this component's logs use a specific JSON format, which you can find in the [AWS IoT Greengrass logging module](https://github.com/aws-greengrass/aws-greengrass-logging-java) repository on GitHub\.  
+Choose from the following log levels, listed here in level order:  <a name="nucleus-log-levels"></a>
 + `DEBUG`
 + `INFO`
 + `WARN`
@@ -170,7 +181,8 @@ If your component or application rotates log files, specify a regex that matches
 + `hello_world_2020_12_15_17_0.log` – An older log file for the Hello World application\.
 Default: `componentName\\w*.log`, where *componentName* is the name of the component for this log configuration\.  
 `diskSpaceLimit`  <a name="log-manager-component-configuration-component-disk-space-limit"></a>
-\(Optional\) The maximum total size of all log files for this component, in the unit you specify in `diskSpaceLimitUnit`\. After the total size of this component's log files exceeds this maximum total size, the AWS IoT Greengrass Core software deletes the oldest log files\.  
+\(Optional\) The maximum total size of all log files for this component, in the unit you specify in `diskSpaceLimitUnit`\. After the total size of this component's log files exceeds this maximum total size, the AWS IoT Greengrass Core software deletes this component's oldest log files\.  
+This parameter is related to the [log size limit](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-system-logs-limit) parameter \(`totalLogsSizeKB`\) of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. The AWS IoT Greengrass Core software uses the minimum of the two values as the maximum total log size for this component\.  
 `diskSpaceLimitUnit`  <a name="log-manager-component-configuration-disk-space-limit-unit"></a>
 \(Optional\) The unit for the `diskSpaceLimit`\. Choose from the following options:  
 + `KB` – kilobytes
@@ -181,7 +193,7 @@ Default: `KB`
 \(Optional\) You can delete a log file after the log manager component uploads the logs to CloudWatch Logs\.  
 Default: `false`
 
-`periodicUploadIntervalSec`  <a name="log-manager-component-configuration-periodic-upload-interval-sec"></a>
+  `periodicUploadIntervalSec`   
 \(Optional\) The period in seconds at which the log manager component checks for new log files to upload\.  
 Default: `300` \(5 minutes\)
 
@@ -223,15 +235,16 @@ The following example configuration specifies to upload system logs and `com.exa
 \(Optional\) You can upload system logs to CloudWatch Logs\.  
 Default: `false`  
 `minimumLogLevel`  <a name="log-manager-component-configuration-system-minimum-log-level"></a>
-\(Optional\) The minimum level of information to upload\. Choose from the following log levels, listed here in level order:  
+\(Optional\) The minimum level of log messages to upload\. This minimum level applies only if you configure the [Greengrass nucleus component](greengrass-nucleus-component.md) to output JSON format logs\. To enable JSON format logs, specify `JSON` for the [logging format](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-logging-format) parameter \(`logging.format`\)\.  
+Choose from the following log levels, listed here in level order:  <a name="nucleus-log-levels"></a>
 + `DEBUG`
 + `INFO`
 + `WARN`
 + `ERROR`
 Default: `INFO`  
 `diskSpaceLimit`  <a name="log-manager-component-configuration-system-disk-space-limit"></a>
-\(Optional\) The maximum total size of all system log files, in the unit you specify in `diskSpaceLimitUnit`\. After the total size of all log files exceeds this maximum total size, the AWS IoT Greengrass Core software deletes the oldest log files\.  
-This parameter is equivalent to the [system logs disk space limit](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-system-logs-limit) parameter \(`totalLogsSizeKB`\) of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. If you specify this parameter on both components, the AWS IoT Greengrass Core software uses the minimum of the two values as the maximum total log size\.  
+\(Optional\) The maximum total size of Greengrass system log files, in the unit you specify in `diskSpaceLimitUnit`\. After the total size of Greengrass system log files exceeds this maximum total size, the AWS IoT Greengrass Core software deletes the oldest Greengrass system log files\.  
+This parameter is equivalent to the [log size limit](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-system-logs-limit) parameter \(`totalLogsSizeKB`\) of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. The AWS IoT Greengrass Core software uses the minimum of the two values as the maximum total Greengrass system log size\.  
 `diskSpaceLimitUnit`  <a name="log-manager-component-configuration-disk-space-limit-unit"></a>
 \(Optional\) The unit for the `diskSpaceLimit`\. Choose from the following options:  
 + `KB` – kilobytes
@@ -247,7 +260,8 @@ Each object contains the following information:
 `componentName`  <a name="log-manager-component-configuration-component-component-name"></a>
 The name of the component for this logs configuration\. You can specify the name of a Greengrass component or another value to identify this log group\.  
 `minimumLogLevel`  <a name="log-manager-component-configuration-component-minimum-log-level"></a>
-\(Optional\) The minimum level of information to upload\. Choose from the following log levels, listed here in level order:  
+\(Optional\) The minimum level of log messages to upload\. This minimum level applies only if this component's logs use a specific JSON format, which you can find in the [AWS IoT Greengrass logging module](https://github.com/aws-greengrass/aws-greengrass-logging-java) repository on GitHub\.  
+Choose from the following log levels, listed here in level order:  <a name="nucleus-log-levels"></a>
 + `DEBUG`
 + `INFO`
 + `WARN`
@@ -262,7 +276,8 @@ To upload a Greengrass component's logs, specify a regex that matches the rotate
 + `com.example.HelloWorld.log` – The most recent log file for the Hello World component\.
 + `com.example.HelloWorld_2020_12_15_17_0.log` – An older log file for the Hello World component\. The Greengrass nucleus adds a rotating timestamp to the log files\.  
 `diskSpaceLimit`  <a name="log-manager-component-configuration-component-disk-space-limit"></a>
-\(Optional\) The maximum total size of all log files for this component, in the unit you specify in `diskSpaceLimitUnit`\. After the total size of this component's log files exceeds this maximum total size, the AWS IoT Greengrass Core software deletes the oldest log files\.  
+\(Optional\) The maximum total size of all log files for this component, in the unit you specify in `diskSpaceLimitUnit`\. After the total size of this component's log files exceeds this maximum total size, the AWS IoT Greengrass Core software deletes this component's oldest log files\.  
+This parameter is related to the [log size limit](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-system-logs-limit) parameter \(`totalLogsSizeKB`\) of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. The AWS IoT Greengrass Core software uses the minimum of the two values as the maximum total log size for this component\.  
 `diskSpaceLimitUnit`  <a name="log-manager-component-configuration-disk-space-limit-unit"></a>
 \(Optional\) The unit for the `diskSpaceLimit`\. Choose from the following options:  
 + `KB` – kilobytes
@@ -273,7 +288,7 @@ Default: `KB`
 \(Optional\) You can delete a log file after the log manager component uploads the logs to CloudWatch Logs\.  
 Default: `false`
 
-`periodicUploadIntervalSec`  <a name="log-manager-component-configuration-periodic-upload-interval-sec"></a>
+`periodicUploadIntervalSec`  
 \(Optional\) The period in seconds at which the log manager component checks for new log files to upload\.  
 Default: `300` \(5 minutes\)
 
@@ -313,7 +328,7 @@ The following example configuration specifies to upload system logs and `com.exa
 The log manager component uploads to the following log groups and log streams\.
 
 ------
-#### [ 2\.1\.x ]
+#### [ 2\.1\.x ]<a name="log-manager-log-group-stream-format"></a>
 
 **Log group name**  
 
@@ -322,8 +337,10 @@ The log manager component uploads to the following log groups and log streams\.
 ```
 The log group name uses the following variables:  
 + `componentType` – The type of the component, which can be one of the following:
-  + `GreengrassSystemComponent` – The component is part of the [Greengrass nucleus](greengrass-nucleus-component.md)\.
-  + `UserComponent` – The component isn't part of the Greengrass nucleus\. The log manager uses this type for Greengrass components and other applications on the device\.
+  + `GreengrassSystemComponent` – The component is part of the [Greengrass nucleus](greengrass-nucleus-component.md)\. This log group includes logs for plugin components, which run in the same JVM as the Greengrass nucleus\.
+  + `UserComponent` – The component isn't part of the Greengrass nucleus\. This log group includes logs for generic components, Lambda components, and other applications on the device\.
+
+  For more information, see [Component types](develop-greengrass-components.md#component-types)\.
 + `region` – The AWS Region that the core device uses\.
 + `componentName` – The name of the component\. For system logs, this value is `System`\.
 

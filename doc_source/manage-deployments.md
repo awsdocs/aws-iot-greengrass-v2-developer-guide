@@ -17,7 +17,7 @@ Deployments provide several options that let you control which devices receive a
 
   Define the components to install and run on the target devices\. AWS IoT Greengrass components are software modules that you deploy and run on Greengrass core devices\. Devices receive components only if the component supports the device's platform\. This lets you deploy to groups of devices even if the target devices run on multiple platforms\. If a component doesn't support the device's platform, the component doesn't deploy to the device\.
 
-  You can deploy custom components and AWS\-provided components to your devices\. When you deploy a component, AWS IoT Greengrass identifies any component dependencies and deploys them too\. For more information, see [Manage AWS IoT Greengrass components](manage-components.md)\.
+  You can deploy custom components and AWS\-provided components to your devices\. When you deploy a component, AWS IoT Greengrass identifies any component dependencies and deploys them too\. For more information, see [Develop AWS IoT Greengrass components](develop-greengrass-components.md) and [AWS\-provided components](public-components.md)\.
 
   You define the version and configuration update to deploy for each component\. The *configuration update* specifies how to modify the component's existing configuration on the core device, or the component's default configuration if the component doesn't exist on the core device\. You can specify which configuration values to reset to default values and the new configuration values to merge onto the core device\. For more information, see [Update component configurations](update-component-configurations.md)\.
 **Important**  <a name="component-patch-update-note"></a>

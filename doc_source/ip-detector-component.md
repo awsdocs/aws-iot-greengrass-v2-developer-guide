@@ -32,13 +32,14 @@ This component has the following versions:
 
 <a name="public-component-type-plugin-para1"></a>This component is a plugin component \(`aws.greengrass.plugin`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component in the same Java Virtual Machine \(JVM\) as the nucleus\. The nucleus restarts when you change this component's version on the core device\.
 
-<a name="public-component-type-plugin-para2"></a>This component uses the same log file as the Greengrass nucleus\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)\.
+<a name="public-component-type-plugin-para2"></a>This component uses the same log file as the Greengrass nucleus\. For more information, see [Monitor AWS IoT Greengrass logs](monitor-logs.md)\.
 
-<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
+<a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
 
 ## Requirements<a name="ip-detector-component-requirements"></a>
 
 This component has the following requirements:
++ The [Greengrass service role](greengrass-service-role.md) must be associated to your AWS account and allow the `iot:GetThingShadow` and `iot:UpdateThingShadow` permissions\.
 + The core device's AWS IoT policy must allow the `greengrass:UpdateConnectivityInfo` permission\. For more information, see [AWS IoT policies for data plane operations](device-auth.md#iot-policies) and [Minimal AWS IoT policy to support client devices](device-auth.md#client-device-support-minimal-iot-policy)\.
 + The core device's MQTT broker component, such as the [Moquette MQTT broker](mqtt-broker-moquette-component.md), must run on port 8883\.
 + If you have a complex network setup, the IP detector component might not be able to identify the endpoints where client devices can connect to the core device\. If the IP detector component can't manage the endpoints, you must manually manage the core device endpoints instead\. For example, if the core device is behind a router that forwards the MQTT broker port to it, you must specify the router's IP address as an endpoint for the core device\. For more information, see [Manage core device endpoints](manage-core-device-endpoints.md)\.

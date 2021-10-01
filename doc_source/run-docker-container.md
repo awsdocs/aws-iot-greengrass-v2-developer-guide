@@ -95,7 +95,7 @@ This section describes how you can create a custom component that uses Docker Co
        image: "mysql:8.0"
    ```
 
-1. [Create a custom component](create-components.md#develop-component) on your AWS IoT Greengrass core device\. The example recipe shown in the following example has the following properties:
+1. [Create a custom component](create-components.md) on your AWS IoT Greengrass core device\. The example recipe shown in the following example has the following properties:
    + The Docker application manager component as a dependency\. This component enables AWS IoT Greengrass to download images from public Amazon ECR and Docker Hub repositories\.
    + A component artifact that specifies a Docker image in a public Amazon ECR repository\.
    + A component artifact that specifies a Docker image in a public Docker Hub repository\.
@@ -169,7 +169,7 @@ This section describes how you can create a custom component that uses Docker Co
 **Note**  
 To use interprocess communication \(IPC\) in a Docker container component, you must set AWS IoT Greengrass Core environment variables in the Docker container\. For more information, see [Use interprocess communication in Docker container components](#docker-container-ipc)\.
 
-1. [Test the component](create-components.md#test-component) to verify that it works as expected\.
+1. [Test the component](test-components.md) to verify that it works as expected\.
 **Important**  
 You must install and start the Docker daemon before you deploy the component\.
 
@@ -187,7 +187,7 @@ This section describes how you can create a custom component that runs a Docker 
 
 **To run a Docker container**
 
-1. [Create a custom component](create-components.md#develop-component) on your AWS IoT Greengrass core device\. Use the following example recipe, which has the following properties:
+1. [Create a custom component](create-components.md) on your AWS IoT Greengrass core device\. Use the following example recipe, which has the following properties:
    + The Docker application manager component as a dependency\. This component enables AWS IoT Greengrass to manage credentials to download images from private repositories\.
    + The token exchange service component as a dependency\. This component enables AWS IoT Greengrass to retrieve AWS credentials to interact with Amazon ECR\.
    + A component artifact that specifies a Docker image in a private Amazon ECR repository\.
@@ -257,7 +257,7 @@ This section describes how you can create a custom component that runs a Docker 
 **Note**  
 To use interprocess communication \(IPC\) in a Docker container component, you must set AWS IoT Greengrass Core environment variables in the Docker container\. For more information, see [Use interprocess communication in Docker container components](#docker-container-ipc)\.
 
-1. [Test the component](create-components.md#test-component) to verify that it works as expected\.
+1. [Test the component](test-components.md) to verify that it works as expected\.
 **Important**  
 You must install and start the Docker daemon before you deploy the component\.
 
@@ -281,7 +281,7 @@ This section describes how you can run a Docker container in a component from a 
    docker save hello-world > artifacts/com.example.MyDockerComponent/1.0.0/hello-world.tar
    ```
 
-1. [Create a custom component](create-components.md#develop-component) on your AWS IoT Greengrass core device\. Use the following example recipe, which has the following properties:
+1. [Create a custom component](create-components.md) on your AWS IoT Greengrass core device\. Use the following example recipe, which has the following properties:
    + A lifecycle install script that uses [docker load](https://docs.docker.com/engine/reference/commandline/load/) to load a Docker image from an archive\.
    + A lifecycle run script that uses [docker run](https://docs.docker.com/engine/reference/commandline/run/) to create and start a container from the image\. The `--rm` option cleans up the container when it exits\.
 
@@ -342,7 +342,7 @@ You can also configure AWS IoT Greengrass to install Docker Engine when the comp
    sudo apt-get install docker-ce docker-ce-cli containerd.io && sudo docker load -i {artifacts:path}/hello-world.tar
    ```
 
-1. [Test the component](create-components.md#test-component) to verify that it works as expected\.
+1. [Test the component](test-components.md) to verify that it works as expected\.
 
    After you deploy the component locally, you can run the [docker container ls](https://docs.docker.com/engine/reference/commandline/container_ls/) command to verify that your container runs\.
 

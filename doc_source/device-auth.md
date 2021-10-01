@@ -37,7 +37,7 @@ Greengrass core devices generate a local MQTT server certificate that client dev
 
 When the MQTT server certificate expires, the Greengrass core device generates a new certificate and restarts the local MQTT broker\. When this happens, all client devices connected to the Greengrass core device are disconnected\. Client devices can reconnect to the Greengrass core device after a short period of time\.
 
-The core device CA certificate doesn't expire or rotate\.
+The core device CA certificate expires after 5 years\.
 
 ## AWS IoT policies for data plane operations<a name="iot-policies"></a>
 

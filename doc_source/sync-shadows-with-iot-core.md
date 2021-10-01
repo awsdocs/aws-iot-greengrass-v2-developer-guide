@@ -18,7 +18,9 @@ To sync local shadows to the AWS IoT Core, you must configure the Greengrass cor
 
 For more information about these AWS IoT Core policies, see [AWS IoT Core policy actions](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policy-actions.html) in the *AWS IoT Developer Guide*\.
 
-For more information about the minimal AWS IoT policy, see [Minimal AWS IoT policy for AWS IoT Greengrass V2 core devices](device-auth.md#greengrass-core-minimal-iot-policy)
+For more information about the minimal AWS IoT policy for core devices, see [Minimal AWS IoT policy for AWS IoT Greengrass V2 core devices](device-auth.md#greengrass-core-minimal-iot-policy)\.
+
+For more information about how to update a core device's AWS IoT policy, see [Update a core device's AWS IoT policy](device-auth.md#update-core-device-iot-policy)\.
 
 ## Configure the shadow manager component<a name="configure-shadow-manager-for-sync"></a>
 

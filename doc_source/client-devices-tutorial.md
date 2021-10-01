@@ -208,13 +208,13 @@ If you upgrade the Greengrass nucleus from an earlier minor version, and the cor
 
 1. <a name="choose-review-and-deploy-configure-discovery-step"></a>Choose **Review and deploy** to review the deployment that this page creates for you\.
 
-1. If you haven't previously set up the [Greengrass service role](greengrass-service-role.md) in this Region, the console opens a modal to set up the service role for you\. The client device auth component uses this service role to verify the identity of client devices\. Choose **Grant permissions**\.
+1. If you haven't previously set up the [Greengrass service role](greengrass-service-role.md) in this Region, the console opens a modal to set up the service role for you\. The client device auth component uses this service role to verify the identity of client devices, and the IP detector component uses this service role to manage core device connectivity information\. Choose **Grant permissions**\.
 
 1. <a name="choose-deploy-configure-discovery-step"></a>On the **Review** page, choose **Deploy** to start the deployment to the core device\.
 
 1. <a name="verify-deployment-success-step"></a>To verify that the deployment succeeds, check the status of the deployment, and check the logs on the core device\. To check the status of the deployment on the core device, you can choose **Target** in the deployment **Overview**\. For more information, see the following:
    + [Check deployment status](check-deployment-status.md)
-   + [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)
+   + [Monitor AWS IoT Greengrass logs](monitor-logs.md)
 
 ## Connect client devices<a name="connect-client-devices"></a>
 
@@ -294,7 +294,7 @@ This topic is the same topic where you configured the MQTT bridge to relay messa
 
    <a name="test-client-device-communications-application-troubleshooting"></a>If the application outputs an error instead, see [Troubleshooting Greengrass discovery issues](troubleshooting-client-devices.md#greengrass-discovery-issues)\.
 
-   <a name="test-client-device-communications-application-view-core-logs"></a>You can also view the Greengrass logs on the core device to verify if the client device successfully connects and sends messages\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)\.
+   <a name="test-client-device-communications-application-view-core-logs"></a>You can also view the Greengrass logs on the core device to verify if the client device successfully connects and sends messages\. For more information, see [Monitor AWS IoT Greengrass logs](monitor-logs.md)\.
 
 1. Verify that the MQTT bridge relays the messages from the client device to AWS IoT Core\. You can use the MQTT test client in the AWS IoT Core console to subscribe to an MQTT topic filter\. Do the following:
 
@@ -365,9 +365,9 @@ In this section, you update the MQTT bridge component to relay messages from cli
 
    1. <a name="verify-deployment-success-step"></a>To verify that the deployment succeeds, check the status of the deployment, and check the logs on the core device\. To check the status of the deployment on the core device, you can choose **Target** in the deployment **Overview**\. For more information, see the following:
       + [Check deployment status](check-deployment-status.md)
-      + [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)
+      + [Monitor AWS IoT Greengrass logs](monitor-logs.md)
 
-1. Develop and deploy a Greengrass component that subscribes to Hello World messages from client devices\. For more information, see [Create custom AWS IoT Greengrass components](create-components.md)\.
+1. Develop and deploy a Greengrass component that subscribes to Hello World messages from client devices\. For more information, see [Create local AWS IoT Greengrass components](create-components.md)\.
 
    1. Create a component recipe with the following contents\. This recipe specifies installing the AWS IoT Device SDK v2 for Python and running a script that subscribes to the topic and prints messages\.
 

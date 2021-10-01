@@ -44,7 +44,7 @@ You can check the status of a group of core devices \(a thing group\)\.
 
 ## Check core device component status<a name="check-core-device-component-status"></a>
 
-You can check the status, such as lifecycle state, of the software components on a core device\. For more information about component lifecycle states, see [Manage AWS IoT Greengrass components](manage-components.md)\.
+You can check the status, such as lifecycle state, of the software components on a core device\. For more information about component lifecycle states, see [Develop AWS IoT Greengrass components](develop-greengrass-components.md)\.
 
 **To check the status of components on a core device \(AWS CLI\)**
 + Run the following command to retrieve the status of the components on a core device\. Replace *coreDeviceName* with the name of the core device to query\.

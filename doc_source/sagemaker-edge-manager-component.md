@@ -33,7 +33,7 @@ This component has the following versions:
 
 <a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
 
-<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
+<a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
 
 ## Requirements<a name="sagemaker-edge-manager-component-requirements"></a>
 
@@ -47,20 +47,20 @@ This component has the following requirements:<a name="sm-edge-manager-component
     { 
       "Version": "2012-10-17",
       "Statement": [ 
-      { 
-        "Effect": "Allow", 
-        "Principal": {
-          "Service": "credentials.iot.amazonaws.com"
-         }, 
-        "Action": "sts:AssumeRole" 
-      }, 
-      { 
-        "Effect": "Allow", 
-        "Principal": {
-          "Service": "sagemaker.amazonaws.com"
-        }, 
-        "Action": "sts:AssumeRole" 
-      } 
+        { 
+          "Effect": "Allow", 
+          "Principal": {
+            "Service": "credentials.iot.amazonaws.com"
+           }, 
+          "Action": "sts:AssumeRole" 
+        },
+        { 
+          "Effect": "Allow", 
+          "Principal": {
+            "Service": "sagemaker.amazonaws.com"
+          }, 
+          "Action": "sts:AssumeRole" 
+        } 
       ] 
     }
     ```
@@ -71,21 +71,31 @@ This component has the following requirements:<a name="sm-edge-manager-component
     {
       "Version": "2012-10-17",
       "Statement": [
-      {
-        "Action": [
-          "s3:PutObject"
-        ],
-        "Resource": [
-          "*"
-        ],
-        "Effect": "Allow"
-      }
+        {
+          "Action": [
+            "s3:PutObject"
+          ],
+          "Resource": [
+            "*"
+          ],
+          "Effect": "Allow"
+        }
       ]
     }
     ```
 + <a name="sm-req-s3-bucket"></a>An Amazon S3 bucket created in the same AWS account and AWS Region as your Greengrass core device\. SageMaker Edge Manager requires an S3 bucket to create an edge device fleet, and to store sample data from running inference on your device\. For information about creating S3 buckets, see [Getting started with Amazon S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/GetStartedWithS3.html)\.
 + <a name="sm-req-edge-device-fleet"></a>A SageMaker edge device fleet that uses the same AWS IoT role alias as your Greengrass core device\. For more information, see [Create an edge device fleet](get-started-with-edge-manager-on-greengrass.md#create-edge-device-fleet-for-greengrass)\.
 + <a name="sm-req-edge-device"></a>Your Greengrass core device registered as an edge device in your SageMaker Edge device fleet\. The edge device name must match the AWS IoT thing name for your core device\. For more information, see [Register your Greengrass core device](get-started-with-edge-manager-on-greengrass.md#register-greengrass-core-device-in-sme)\.
+
+### Endpoints and ports<a name="sagemaker-edge-manager-component-endpoints"></a>
+
+This component must be able to perform outbound requests to the following endpoints and ports, in addition to endpoints and ports required for basic operation\. For more information, see [Allow device traffic through a proxy or firewall](allow-device-traffic.md)\.
+
+
+| Endpoint | Port | Required | Description | 
+| --- | --- | --- | --- | 
+|  `edge.sagemaker.region.amazonaws.com`  | 443 | Yes |  Check device registration status and send metrics to SageMaker\.  | 
+|  `*.s3.amazonaws.com`  | 443 | Yes |  Upload capture data to the S3 bucket that you specify\. You can replace `*` with the name of each bucket where you upload data\.  | 
 
 ## Dependencies<a name="sagemaker-edge-manager-component-dependencies"></a>
 

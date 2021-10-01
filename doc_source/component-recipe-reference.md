@@ -74,14 +74,14 @@ The type can be one the following types:
   We don't recommend that you use this option, because it's set by AWS IoT Greengrass when you create a component from a Lambda function\. For more information, see [Run AWS Lambda functions](run-lambda-functions.md)\.
 + `aws.greengrass.plugin` – The component runs in the same Java Virtual Machine \(JVM\) as the Greengrass nucleus\. If you deploy or restart a plugin component, the Greengrass nucleus restarts\.
 
-  Plugin components use the same log file as the Greengrass nucleus\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs)\.
+  Plugin components use the same log file as the Greengrass nucleus\. For more information, see [Monitor AWS IoT Greengrass logs](monitor-logs.md)\.
 
   We don't recommend that you use this option in component recipes, because it's intended for AWS\-provided components written in Java that directly interface with the Greengrass nucleus\. For more information about which public components are plugins, see [AWS\-provided components](public-components.md)\.
 + `aws.greengrass.nucleus` – The nucleus component\. For more information, see [Greengrass nucleus](greengrass-nucleus-component.md)\.
 
   We don't recommend that you use this option in component recipes\. It is intended for the Greengrass nucleus component, which provides the minimum functionality of the AWS IoT Greengrass Core software\.
 Defaults to `aws.greengrass.generic` when you create a component from a recipe, or `aws.greengrass.lambda` when you create a component from a Lambda function\.  
-For more information, see [Component types](manage-components.md#component-types)\.
+For more information, see [Component types](develop-greengrass-components.md#component-types)\.
 
 `ComponentSource`  
 \(Optional\) The ARN of the Lambda function that a component runs\.  
@@ -127,15 +127,14 @@ This object contains the following information:
 + The component deploys to the core device for the first time\.
 + The component version changes\.
 + The bootstrap script changes as the result of a component configuration update\.
-You can use this lifecycle step to restart the AWS IoT Greengrass Core software or restart the core device\. This lets you develop a component that performs a restart after it installs operating system updates or runtime updates, for example\.  
+You can use this lifecycle step to restart the AWS IoT Greengrass Core software\. This lets you develop a component that performs a restart after it installs operating system updates or runtime updates, for example\.  
 After the AWS IoT Greengrass Core software completes the bootstrap step for all components that have a bootstrap step in a deployment, the software restarts\.  
-You must configure the AWS IoT Greengrass Core software as a system service to restart the AWS IoT Greengrass Core software or the core device\. If you don't configure the AWS IoT Greengrass Core software as a system service, the software won't restart\. For more information, see [Configure AWS IoT Greengrass as a system service](configure-greengrass-core-v2.md#configure-system-service)\.
+You must configure the AWS IoT Greengrass Core software as a system service to restart the AWS IoT Greengrass Core software\. If you don't configure the AWS IoT Greengrass Core software as a system service, the software won't restart\. For more information, see [Configure AWS IoT Greengrass as a system service](configure-greengrass-core-v2.md#configure-system-service)\.
 This object contains the following information:    
 `Script`  
 The script to run\. The exit code of this script defines the restart instruction\. Use the following exit codes:  
 + `0` – Don't restart the AWS IoT Greengrass Core software or the core device\. The AWS IoT Greengrass Core software still restarts after all components bootstrap\.
 + `100` – Request to restart the AWS IoT Greengrass Core software\.
-+ `101` – Request to restart the core device\.
 Exit codes 100 to 199 are reserved for special behavior\. Other exit codes represent script errors\.  
 `RequiresPrivilege`  <a name="recipe-lifecycle-requiresprivilege"></a>
 \(Optional\) You can run the script with root privileges\. If you set this option to `true`, then the AWS IoT Greengrass Core software runs this lifecycle script as root instead of as the system user that you configure to run this component\. Defaults to `false`\.  

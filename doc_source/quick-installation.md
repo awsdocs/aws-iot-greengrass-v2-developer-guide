@@ -65,10 +65,10 @@ https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-version.zip
 
    <a name="core-software-license"></a>By downloading this software, you agree to the [Greengrass Core Software License Agreement](https://greengrass-release-license.s3.us-west-2.amazonaws.com/greengrass-license-v1.pdf)\.
 
-1. Unzip the AWS IoT Greengrass Core software to a folder on your device\. Replace *GreengrassCore* with the folder that you want to use\.
+1. Unzip the AWS IoT Greengrass Core software to a folder on your device\. Replace *GreengrassInstaller* with the folder that you want to use\.
 
    ```
-   unzip greengrass-nucleus-latest.zip -d GreengrassCore && rm greengrass-nucleus-latest.zip
+   unzip greengrass-nucleus-latest.zip -d GreengrassInstaller && rm greengrass-nucleus-latest.zip
    ```
 **Important**  
 If you install a version of the Greengrass nucleus earlier than v2\.4\.0, don't remove this folder after you install the AWS IoT Greengrass Core software\. The AWS IoT Greengrass Core software uses the files in this folder to run\.  
@@ -77,7 +77,7 @@ If you downloaded the latest version of the software, you install v2\.4\.0 or la
 1. \(Optional\) Run the following command to see the version of the AWS IoT Greengrass Core software\.
 
    ```
-   java -jar ./GreengrassCore/lib/Greengrass.jar --version
+   java -jar ./GreengrassInstaller/lib/Greengrass.jar --version
    ```
 
 ## Install the AWS IoT Greengrass Core software<a name="run-greengrass-core-v2-installer"></a>
@@ -100,7 +100,7 @@ For more information about the arguments that you can specify, see [Installer ar
 
    1. */greengrass/v2*: The path to the root folder to use to install the AWS IoT Greengrass Core software\.
 
-   1. *GreengrassCore*\. The path to the folder where you unpacked the AWS IoT Greengrass Core software installer\.
+   1. *GreengrassInstaller*\. The path to the folder where you unpacked the AWS IoT Greengrass Core software installer\.
 
    1. *region*\. The AWS Region in which to find or create resources\.
 
@@ -120,7 +120,7 @@ The thing group name can't contain colon \(`:`\) characters\.
 
    ```
    sudo -E java -Droot="/greengrass/v2" -Dlog.store=FILE \
-     -jar ./GreengrassCore/lib/Greengrass.jar \
+     -jar ./GreengrassInstaller/lib/Greengrass.jar \
      --aws-region region \
      --thing-name MyGreengrassCore \
      --thing-group-name MyGreengrassCoreGroup \
@@ -154,6 +154,6 @@ If you don't yet have an S3 bucket for component artifacts, you can add these pe
 
 <a name="install-greengrass-core-next-steps-intro"></a>For more information about how to configure and use the software and AWS IoT Greengrass, see the following:<a name="install-greengrass-core-next-steps-links"></a>
 + [Configure the AWS IoT Greengrass Core software](configure-greengrass-core-v2.md)
-+ [Manage AWS IoT Greengrass components](manage-components.md)
++ [Develop AWS IoT Greengrass components](develop-greengrass-components.md)
 + [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)
 + [Greengrass Command Line Interface](gg-cli.md)

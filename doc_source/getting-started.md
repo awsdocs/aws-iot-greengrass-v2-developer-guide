@@ -17,9 +17,10 @@ You can expect to spend 20\-30 minutes on this tutorial\.
 
 To complete this getting started tutorial, you need the following:
 + An AWS account\. If you don't have one, see [Set up an AWS account](setting-up.md#set-up-aws-account)\.
++ <a name="requirement-supported-region"></a>The use of an [AWS Region](https://en.wikipedia.org/wiki/Amazon_Web_Services#Availability_and_topology) that supports AWS IoT Greengrass V2\. For the list of supported Regions, see [AWS IoT Greengrass V2 endpoints and quotas](https://docs.aws.amazon.com/general/latest/gr/greengrassv2.html) in the *AWS General Reference*
 + An AWS Identity and Access Management \(IAM\) user with administrator permissions\.
 + A Windows, macOS, or Unix\-like development computer with an internet connection\.
-+ A device with a Linux operating system and an internet connection to the same network as your development computer\. We recommend that you use a Raspberry Pi with [Raspberry Pi OS](https://www.raspberrypi.org/downloads/) \(previously called Raspbian\)\. For more information, see [Requirements to install and run the AWS IoT Greengrass Core software v2\.0](setting-up.md#greengrass-v2-requirements)\.
++ A device that meets the [Requirements to install and run the AWS IoT Greengrass Core software v2\.0](setting-up.md#greengrass-v2-requirements) and has an internet connection to the same network as your development computer\. We recommend that you use a Raspberry Pi with [Raspberry Pi OS](https://www.raspberrypi.org/downloads/) \(previously called Raspbian\)\.
 + [Python](https://www.python.org/downloads/) 3\.5 or later installed on the device\.
 + AWS Command Line Interface \(AWS CLI\) installed and configured with credentials on your development computer and on your device\. Make sure you use the same AWS Region to configure the AWS CLI on your development computer and on your device\. To use AWS IoT Greengrass V2 with the AWS CLI, you must have one of the following versions or later:<a name="minimum-aws-cli-versions"></a>
   + Minimum AWS CLI V1 version: v1\.18\.197
@@ -104,10 +105,10 @@ Follow the steps in this section to set up your Raspberry Pi as a AWS IoT Greeng
 
    <a name="core-software-license"></a>By downloading this software, you agree to the [Greengrass Core Software License Agreement](https://greengrass-release-license.s3.us-west-2.amazonaws.com/greengrass-license-v1.pdf)\.
 
-1. Run the following command to unzip the software and remove the ZIP file\. Replace *GreengrassCore* with the name of the destination folder\.
+1. Run the following command to unzip the software and remove the ZIP file\. Replace *GreengrassInstaller* with the name of the destination folder\.
 
    ```
-   unzip greengrass-nucleus-latest.zip -d GreengrassCore && rm greengrass-nucleus-latest.zip
+   unzip greengrass-nucleus-latest.zip -d GreengrassInstaller && rm greengrass-nucleus-latest.zip
    ```
 
 1. Provide your AWS credentials so that the installer can provision the AWS IoT and IAM resources for your core device\. To increase security, you can get credentials for an IAM role that allows only the minimum permissions necessary to provision\. For more information, see [Minimal IAM policy for installer to provision resources](provision-minimal-iam-policy.md)\.
@@ -141,7 +142,7 @@ Follow the steps in this section to set up your Raspberry Pi as a AWS IoT Greeng
 
    1. */greengrass/v2*: The path to the root folder to use to install the AWS IoT Greengrass Core software\.
 
-   1. *GreengrassCore*\. The path to the folder where you unpacked the AWS IoT Greengrass Core software installer\.
+   1. *GreengrassInstaller*\. The path to the folder where you unpacked the AWS IoT Greengrass Core software installer\.
 
    1. *region*\. The AWS Region in which to find or create resources\.
 
@@ -161,7 +162,7 @@ The thing group name can't contain colon \(`:`\) characters\.
 
    ```
    sudo -E java -Droot="/greengrass/v2" -Dlog.store=FILE \
-     -jar ./GreengrassCore/lib/Greengrass.jar \
+     -jar ./GreengrassInstaller/lib/Greengrass.jar \
      --aws-region region \
      --thing-name MyGreengrassCore \
      --thing-group-name MyGreengrassCoreGroup \
@@ -282,16 +283,16 @@ A component is a software module that runs on AWS IoT Greengrass core devices\. 
 
   Components can have any number of artifacts, which are component binaries\. Artifacts can include scripts, compiled code, static resources, and any other files that a component consumes\. Components can also consume artifacts from component dependencies\.
 
-With AWS IoT Greengrass, you can develop and test components on your Greengrass core device without interaction with the AWS Cloud\. When you complete your component, you can upload it to AWS IoT Greengrass to deploy it to other devices\. For more information, see [Manage AWS IoT Greengrass components](manage-components.md)\.
+With AWS IoT Greengrass, you can develop and test components on your Greengrass core device without interaction with the AWS Cloud\. When you complete your component, you can upload it to AWS IoT Greengrass to deploy it to other devices\. For more information, see [Develop AWS IoT Greengrass components](develop-greengrass-components.md)\.
 
 In this section, you learn how to create and run a basic Hello World component\.
 
 **To create a Hello World component**
 
-1. On your Greengrass core device, run the following command to change to the AWS IoT Greengrass installation folder to use for local development\. Replace *\~/GreengrassCore* with the path to the installation folder\.
+1. On your Greengrass core device, run the following command to change to the AWS IoT Greengrass installation folder to use for local development\. Replace *\~/GreengrassInstaller* with the path to the installation folder\.
 
    ```
-   cd ~/GreengrassCore
+   cd ~/GreengrassInstaller
    ```
 
 1. AWS IoT Greengrass expects that component recipes and artifacts are in separate folders\.
@@ -413,12 +414,12 @@ You must use the following format for the artifact folder path\. Include the com
 
 1. Use the local AWS IoT Greengrass CLI to manage components on your Greengrass core device\.
 
-   Run the following command to deploy the component to the AWS IoT Greengrass core\. Replace */greengrass/v2* with your AWS IoT Greengrass V2 root folder, and replace *\~/GreengrassCore* with your AWS IoT Greengrass V2 installation folder\.
+   Run the following command to deploy the component to the AWS IoT Greengrass core\. Replace */greengrass/v2* with your AWS IoT Greengrass V2 root folder, and replace *\~/GreengrassInstaller* with your AWS IoT Greengrass V2 installation folder\.
 
    ```
    sudo /greengrass/v2/bin/greengrass-cli deployment create \
-     --recipeDir ~/GreengrassCore/recipes \
-     --artifactDir ~/GreengrassCore/artifacts \
+     --recipeDir ~/GreengrassInstaller/recipes \
+     --artifactDir ~/GreengrassInstaller/artifacts \
      --merge "com.example.HelloWorld=1.0.0"
    ```
 
@@ -482,8 +483,8 @@ For more information, see [Troubleshooting AWS IoT Greengrass V2](troubleshootin
 
    ```
    sudo /greengrass/v2/bin/greengrass-cli deployment create \
-     --recipeDir ~/GreengrassCore/recipes \
-     --artifactDir ~/GreengrassCore/artifacts \
+     --recipeDir ~/GreengrassInstaller/recipes \
+     --artifactDir ~/GreengrassInstaller/artifacts \
      --merge "com.example.HelloWorld=1.0.0"
    ```
 
@@ -873,6 +874,6 @@ If the log messages don't change, the deployment failed or didn't reach the core
 For more information, see [Troubleshooting AWS IoT Greengrass V2](troubleshooting.md)\.
 
 You've completed this tutorial\. The AWS IoT Greengrass Core software and your Hello World component run on your device\. Also, your Hello World component is available in AWS IoT Greengrass to deploy to other devices\. For more information about the topics that this tutorial explores, see the following:
-+ [Create custom AWS IoT Greengrass components](create-components.md)
++ [Create local AWS IoT Greengrass components](create-components.md)
 + [Upload components to deploy to your core devicesUpload components to deploy](upload-components.md)
 + [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)

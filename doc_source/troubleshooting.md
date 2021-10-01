@@ -3,40 +3,16 @@
 Use the troubleshooting information and solutions in this section to help resolve issues with AWS IoT Greengrass Version 2\.
 
 **Topics**
-+ [View AWS IoT Greengrass Core software logs](#view-greengrass-core-logs)
-+ [View component logs](#view-component-logs)
++ [View AWS IoT Greengrass Core software and component logs](#troubleshoot-with-logs)
 + [AWS IoT Greengrass Core software issues](#greengrass-core-issues)
 + [AWS IoT Greengrass cloud issues](#greengrass-cloud-issues)
 + [Core device deployment issues](#greengrass-core-deployment-issues)
 + [Core device component issues](#greengrass-core-component-issues)
 + [AWS Command Line Interface issues](#aws-cli-issues)
 
-## View AWS IoT Greengrass Core software logs<a name="view-greengrass-core-logs"></a>
+## View AWS IoT Greengrass Core software and component logs<a name="troubleshoot-with-logs"></a>
 
-The AWS IoT Greengrass Core software log file provides real\-time information about the core device\. This can help you identify issues with components and deployments\.
-
-This log file also includes logs for plugin components, such as [log manager](log-manager-component.md) and [secret manager](secret-manager-component.md)\. For more information, see [Component types](manage-components.md#component-types)\.
-
-**To view the core device log file**
-+ Run the following command to view the log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
-
-  ```
-  sudo tail -f /greengrass/v2/logs/greengrass.log
-  ```
-
-## View component logs<a name="view-component-logs"></a>
-
-Component log files provide real\-time information about a component that runs on the Greengrass core device\. This can help you identify issues with components\.
-
-**Note**  
-The AWS IoT Greengrass Core software doesn't create component log files for plugin components, such as [log manager](log-manager-component.md) and [secret manager](secret-manager-component.md)\. For more information, see [Component types](manage-components.md#component-types)\. For more information about how to view plugin component logs, see [View AWS IoT Greengrass Core software logs](#view-greengrass-core-logs)\.
-
-**To view the log file for a component**
-+ Run the following command to view the log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder, and replace *com\.example\.HelloWorld* with the name of the component\.
-
-  ```
-  sudo tail -f /greengrass/v2/logs/com.example.HelloWorld.log
-  ```
+The AWS IoT Greengrass Core software writes logs to the local file system that you can use to view real\-time information about the core device\. You can also configure core devices to write logs to CloudWatch Logs, so you can remotely troubleshoot core devices\. These logs can help you identify issues with components, deployments, and core devices\. For more information, see [Monitor AWS IoT Greengrass logs](monitor-logs.md)\.
 
 ## AWS IoT Greengrass Core software issues<a name="greengrass-core-issues"></a>
 
@@ -223,7 +199,7 @@ Greengrass core devices collect logs that you can use to identify issues with co
     sys.stderr.flush()
     ```
 
-For more information about how to verify that your Python script outputs log messages, see [View component logs](#view-component-logs)\.
+For more information about how to verify that your Python script outputs log messages, see [Monitor AWS IoT Greengrass logs](monitor-logs.md)\.
 
 ## AWS Command Line Interface issues<a name="aws-cli-issues"></a>
 

@@ -352,6 +352,6 @@ You can use this example component with the [secret manager component](secret-ma
    }
    ```
 
-   For more information, see [Create custom AWS IoT Greengrass components](create-components.md)
+   For more information, see [Create local AWS IoT Greengrass components](create-components.md)
 
-1. View the AWS IoT Greengrass Core software logs to verify that the deployments succeed, and view the `com.example.PrintSecret` component log to see the secret value printed\. For more information, see [View AWS IoT Greengrass Core software logs](troubleshooting.md#view-greengrass-core-logs) and [View component logs](troubleshooting.md#view-component-logs)\.
+1. View the AWS IoT Greengrass Core software logs to verify that the deployments succeed, and view the `com.example.PrintSecret` component log to see the secret value printed\. For more information, see [Monitor AWS IoT Greengrass logs](monitor-logs.md)\.

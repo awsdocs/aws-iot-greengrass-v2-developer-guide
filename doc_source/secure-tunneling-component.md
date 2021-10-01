@@ -28,7 +28,7 @@ This component has the following versions:
 
 <a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
 
-<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
+<a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
 
 ## Requirements<a name="secure-tunneling-component-requirements"></a>
 
@@ -37,6 +37,15 @@ This component has the following requirements:
 + `libcrypto.so.1.1` installed on the Greengrass core device and added to the PATH environment variable\.
 + The Greengrass core device must allow outbound traffic on port 443\. 
 + The Greengrass core device must have enabled the service that you want to use to communicate with the device\. For example, to open an SSH connection to the device, the device must have SSH enabled\. 
+
+### Endpoints and ports<a name="secure-tunneling-component-endpoints"></a>
+
+This component must be able to perform outbound requests to the following endpoints and ports, in addition to endpoints and ports required for basic operation\. For more information, see [Allow device traffic through a proxy or firewall](allow-device-traffic.md)\.
+
+
+| Endpoint | Port | Required | Description | 
+| --- | --- | --- | --- | 
+|  `data.tunneling.iot.region.amazonaws.com`  | 443 | Yes |  Establish secure tunnels\.  | 
 
 ## Dependencies<a name="secure-tunneling-component-dependencies"></a>
 

@@ -324,10 +324,6 @@ In this section, you create a token exchange IAM role and an AWS IoT role alias 
               "logs:CreateLogStream",
               "logs:PutLogEvents",
               "logs:DescribeLogStreams",
-              "iot:Connect",
-              "iot:Publish",
-              "iot:Subscribe",
-              "iot:Receive",
               "s3:GetBucketLocation"
             ],
             "Resource": "*"
@@ -517,10 +513,10 @@ https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-version.zip
 
    <a name="core-software-license"></a>By downloading this software, you agree to the [Greengrass Core Software License Agreement](https://greengrass-release-license.s3.us-west-2.amazonaws.com/greengrass-license-v1.pdf)\.
 
-1. Unzip the AWS IoT Greengrass Core software to a folder on your device\. Replace *GreengrassCore* with the folder that you want to use\.
+1. Unzip the AWS IoT Greengrass Core software to a folder on your device\. Replace *GreengrassInstaller* with the folder that you want to use\.
 
    ```
-   unzip greengrass-nucleus-latest.zip -d GreengrassCore && rm greengrass-nucleus-latest.zip
+   unzip greengrass-nucleus-latest.zip -d GreengrassInstaller && rm greengrass-nucleus-latest.zip
    ```
 **Important**  
 If you install a version of the Greengrass nucleus earlier than v2\.4\.0, don't remove this folder after you install the AWS IoT Greengrass Core software\. The AWS IoT Greengrass Core software uses the files in this folder to run\.  
@@ -529,7 +525,7 @@ If you downloaded the latest version of the software, you install v2\.4\.0 or la
 1. \(Optional\) Run the following command to see the version of the AWS IoT Greengrass Core software\.
 
    ```
-   java -jar ./GreengrassCore/lib/Greengrass.jar --version
+   java -jar ./GreengrassInstaller/lib/Greengrass.jar --version
    ```
 
 ## Install the AWS IoT Greengrass Core software<a name="run-greengrass-core-v2-installer-manual"></a>
@@ -547,18 +543,18 @@ For more information about the arguments that you can specify, see [Installer ar
 **To install the AWS IoT Greengrass Core software \(Linux\)**
 
 1. <a name="installer-check-greengrass-core-software-version"></a>Check the version of the AWS IoT Greengrass Core software\.
-   + Replace *GreengrassCore* with the path to the folder that contains the software\.
+   + Replace *GreengrassInstaller* with the path to the folder that contains the software\.
 
    ```
-   java -jar ./GreengrassCore/lib/Greengrass.jar --version
+   java -jar ./GreengrassInstaller/lib/Greengrass.jar --version
    ```
 
 1. Use a text editor to create a configuration file named `config.yaml` to provide to the installer\.
 
-   For example, on a Linux\-based system, you can run the following command to use GNU nano to create `config.yaml` in the *GreengrassCore* folder\.
+   For example, on a Linux\-based system, you can run the following command to use GNU nano to create `config.yaml` in the *GreengrassInstaller* folder\.
 
    ```
-   nano GreengrassCore/config.yaml
+   nano GreengrassInstaller/config.yaml
    ```
 
    Copy the following YAML content into the file\. This partial configuration file specifies system parameters and Greengrass nucleus parameters\.
@@ -623,12 +619,12 @@ In this configuration file, you can customize other nucleus configuration option
 
 1. Run the installer, and specify `--init-config` to provide the configuration file\.
    + Replace */greengrass/v2* with the Greengrass root folder\.
-   + Replace each instance of *GreengrassCore* with the folder where you unpacked the installer\.
+   + Replace each instance of *GreengrassInstaller* with the folder where you unpacked the installer\.
 
    ```
    sudo -E java -Droot="/greengrass/v2" -Dlog.store=FILE \
-     -jar ./GreengrassCore/lib/Greengrass.jar \
-     --init-config ./GreengrassCore/config.yaml \
+     -jar ./GreengrassInstaller/lib/Greengrass.jar \
+     --init-config ./GreengrassInstaller/config.yaml \
      --component-default-user ggc_user:ggc_group \
      --setup-system-service true
    ```
@@ -649,6 +645,6 @@ You can't use the `deploy-dev-tools` argument to deploy local development tools 
 
 <a name="install-greengrass-core-next-steps-intro"></a>For more information about how to configure and use the software and AWS IoT Greengrass, see the following:<a name="install-greengrass-core-next-steps-links"></a>
 + [Configure the AWS IoT Greengrass Core software](configure-greengrass-core-v2.md)
-+ [Manage AWS IoT Greengrass components](manage-components.md)
++ [Develop AWS IoT Greengrass components](develop-greengrass-components.md)
 + [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)
 + [Greengrass Command Line Interface](gg-cli.md)

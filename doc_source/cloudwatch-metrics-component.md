@@ -33,7 +33,7 @@ For information about changes in each version of the component, see the [changel
 
 <a name="public-component-type-lambda"></a>This component is a Lambda component \(`aws.greengrass.lambda`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component's Lambda function using the [Lambda launcher component](lambda-launcher-component.md)\.
 
-<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
+<a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
 
 ## Requirements<a name="cloudwatch-metrics-component-requirements"></a>
 
@@ -100,6 +100,15 @@ You must update the Lambda function version on the legacy subscription router ev
 ------
 
   <a name="connector-component-create-deployments"></a>For more information, see [Create deployments](create-deployments.md)\.
+
+### Endpoints and ports<a name="cloudwatch-metrics-component-endpoints"></a>
+
+This component must be able to perform outbound requests to the following endpoints and ports, in addition to endpoints and ports required for basic operation\. For more information, see [Allow device traffic through a proxy or firewall](allow-device-traffic.md)\.
+
+
+| Endpoint | Port | Required | Description | 
+| --- | --- | --- | --- | 
+|  `monitoring.region.amazonaws.com`  | 443 | Yes |  Upload CloudWatch metrics\.  | 
 
 ## Dependencies<a name="cloudwatch-metrics-component-dependencies"></a>
 
@@ -201,7 +210,7 @@ Default: 5,000 metrics
 \(Optional\) The AWS Region to which to publish CloudWatch metrics\. This value overrides the default Region for the core device\. This parameter is required only for cross\-Region metrics\.
 
 `containerMode`  <a name="connector-component-container-mode-parameter"></a>
-\(Optional\) The containerization mode for this component\. Choose from the following options:  
+\(Optional\) The containerization mode for this component\. Choose from the following options:  <a name="lambda-function-component-container-mode-parameter"></a>
 + `NoContainer` – The component doesn't run in an isolated runtime environment\.
 + `GreengrassContainer` – The component runs in an isolated runtime environment inside the AWS IoT Greengrass container\.
 Default: `GreengrassContainer`

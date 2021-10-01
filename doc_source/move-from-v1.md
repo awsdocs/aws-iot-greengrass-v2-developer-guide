@@ -15,7 +15,7 @@ AWS IoT Greengrass V2 introduces new fundamental concepts for devices, fleets, a
 
   In AWS IoT Greengrass V2, you use *deployments* to define the software components and configurations that run on core devices\. Each deployment targets a single core device or an AWS IoT thing group that can contain multiple core devices\. Deployments to thing groups are continuous, so when you add a core device to a thing group, it receives the software configuration for that fleet\. For more information, see [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)\.
 
-  You can also create local deployments to develop and test custom software components\. For more information, see [Create custom AWS IoT Greengrass components](create-components.md)\.
+  You can also create local deployments to develop and test custom software components\. For more information, see [Create local AWS IoT Greengrass components](create-components.md)\.
 + **AWS IoT Greengrass Core software and connectors**
 
   In AWS IoT Greengrass V1, the AWS IoT Greengrass Core software is a single package that contains the software and all of its features\. AWS IoT Greengrass connectors are modules that you deploy to AWS IoT Greengrass V1 core devices\.
@@ -25,7 +25,7 @@ AWS IoT Greengrass V2 introduces new fundamental concepts for devices, fleets, a
 
   In AWS IoT Greengrass V1, Lambda functions define the software that runs on core devices\. In each Greengrass group, you define subscriptions and local resources that the function uses\. You also define the container parameters for functions that the AWS IoT Greengrass Core software runs in a containerized Lambda runtime environment\.
 
-  In AWS IoT Greengrass V2, *components* are the software that run on core devices\. Components can consist of any software applications, and each component has a *recipe* that defines the component's metadata, parameters, dependencies, and scripts to run at each step in the component lifecycle\. The recipe also defines the component's *artifacts*, which are binary files such as scripts, compiled code, and static resources\. When you deploy a component to a core device, the core device downloads the component recipe and artifacts to run the component\. For more information, see [Manage AWS IoT Greengrass components](manage-components.md)\.
+  In AWS IoT Greengrass V2, *components* are the software that run on core devices\. Components can consist of any software applications, and each component has a *recipe* that defines the component's metadata, parameters, dependencies, and scripts to run at each step in the component lifecycle\. The recipe also defines the component's *artifacts*, which are binary files such as scripts, compiled code, and static resources\. When you deploy a component to a core device, the core device downloads the component recipe and artifacts to run the component\. For more information, see [Develop AWS IoT Greengrass components](develop-greengrass-components.md)\.
 
   You can import Lambda functions as components that run in a Lambda runtime environment in AWS IoT Greengrass V2\. When you import the Lambda function, you specify the subscriptions, local resources, and container parameters for the function\. For more information, see [Run AWS IoT Greengrass V1 applications on AWS IoT Greengrass V2](#run-v1-applications)\.\.
 + **Subscriptions**
@@ -76,7 +76,7 @@ AWS IoT Greengrass provides features that you can use to run your AWS IoT Greeng
   + C
 + The C and C\+\+ Lambda function runtimes\.
 
-You can [develop custom components](manage-components.md) to build any feature or runtime to run on Greengrass core devices\.
+You can [develop custom components](develop-greengrass-components.md) to build any feature or runtime to run on Greengrass core devices\.
 
 ### Run V1 Lambda functions<a name="run-v1-lambda-functions"></a>
 

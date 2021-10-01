@@ -19,13 +19,13 @@ With this component, AWS IoT SiteWise gateways can connect to multiple OPC\-UA s
 ## Versions<a name="iotsitewise-opcua-collector-component-versions"></a>
 
 This component has the following versions:
-+ 2\.0\.1
++ 2\.0\.x
 
 ## Type<a name="iotsitewise-opcua-collector-component-type"></a>
 
 <a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
 
-<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
+<a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
 
 ## Requirements<a name="iotsitewise-opcua-collector-component-requirements"></a>
 
@@ -36,7 +36,7 @@ This component has the following requirements:
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#iotsitewise-opcua-collector-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
-The following table lists the dependencies for version 2\.0\.1 of this component\.
+The following table lists the dependencies for version 2\.0\.x of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 

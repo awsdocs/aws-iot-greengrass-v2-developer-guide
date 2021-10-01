@@ -1,13 +1,13 @@
 # Greengrass service role<a name="greengrass-service-role"></a>
 
-The Greengrass service role is an AWS Identity and Access Management \(IAM\) service role that authorizes AWS IoT Greengrass to access resources from AWS services on your behalf\. This role makes it possible for AWS IoT Greengrass to verify the identity of client devices\.
+The Greengrass service role is an AWS Identity and Access Management \(IAM\) service role that authorizes AWS IoT Greengrass to access resources from AWS services on your behalf\. This role makes it possible for AWS IoT Greengrass to verify the identity of client devices and manage core device connectivity information\.
 
 **Note**  
 AWS IoT Greengrass V1 also uses this role to perform essential tasks\. For more information, see [Greengrass service role](https://docs.aws.amazon.com/greengrass/v1/developerguide/service-role.html) in the *AWS IoT Greengrass V1 Developer Guide*\.
 
 To allow AWS IoT Greengrass to access your resources, the Greengrass service role must be associated with your AWS account and specify AWS IoT Greengrass as a trusted entity\. The role must include the [AWSGreengrassResourceAccessRolePolicy](https://console.aws.amazon.com/iam/home#/policies/arn:aws:iam::aws:policy/service-role/AWSGreengrassResourceAccessRolePolicy) managed policy or a custom policy that defines equivalent permissions for the AWS IoT Greengrass features that you use\. AWS maintains this policy, which defines the set of permissions that AWS IoT Greengrass uses to access your AWS resources\.
 
-You can reuse the same Greengrass service role across AWS Regions, but you must associate it with your account in every AWS Region where you use AWS IoT Greengrass\. Core devices fail to verify client devices that use local discovery if the service role isn't configured in the current AWS Region\.
+You can reuse the same Greengrass service role across AWS Regions, but you must associate it with your account in every AWS Region where you use AWS IoT Greengrass\. If the service role isn't configured in the current AWS Region, core devices fail to verify client devices and fail to update connectivity information\.
 
 The following sections describe how to create and manage the Greengrass service role with the AWS Management Console or AWS CLI\.
 

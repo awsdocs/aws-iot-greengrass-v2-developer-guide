@@ -1,6 +1,6 @@
 # Create custom components that use stream manager<a name="use-stream-manager-in-custom-components"></a>
 
-Use stream manager in custom Greengrass components to store, process, and export IoT device data\. Use the procedures and examples in this section to create component recipes, artifacts, and applications that work with stream manager\. For more information about how to develop and test components, see [Create custom AWS IoT Greengrass components](create-components.md)\.
+Use stream manager in custom Greengrass components to store, process, and export IoT device data\. Use the procedures and examples in this section to create component recipes, artifacts, and applications that work with stream manager\. For more information about how to develop and test components, see [Create local AWS IoT Greengrass components](create-components.md)\.
 
 **Topics**
 + [Define component recipes that use stream manager](#stream-manager-recipes)
@@ -76,7 +76,7 @@ The Stream Manager SDK for Java is available as a JAR file that you can use to c
 
 ------
 
-   For more information about how to develop and test components, see [Create custom AWS IoT Greengrass components](create-components.md)\.
+   For more information about how to develop and test components, see [Create local AWS IoT Greengrass components](create-components.md)\.
 
 ### Use the Stream Manager SDK for Python<a name="use-stream-manager-sdk-python"></a>
 
@@ -217,7 +217,7 @@ The Stream Manager SDK for Python is available as source code that you can inclu
 
 ------
 
-   For more information about how to develop and test components, see [Create custom AWS IoT Greengrass components](create-components.md)\.
+   For more information about how to develop and test components, see [Create local AWS IoT Greengrass components](create-components.md)\.
 
 ### Use the Stream Manager SDK for JavaScript<a name="use-stream-manager-sdk-javascript"></a>
 
@@ -355,7 +355,7 @@ The Stream Manager SDK for JavaScript is available as source code that you can i
 
 ------
 
-   For more information about how to develop and test components, see [Create custom AWS IoT Greengrass components](create-components.md)\.
+   For more information about how to develop and test components, see [Create local AWS IoT Greengrass components](create-components.md)\.
 
 ## Connect to stream manager in application code<a name="connect-to-stream-manager"></a>
 

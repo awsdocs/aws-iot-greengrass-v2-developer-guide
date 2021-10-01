@@ -30,17 +30,11 @@ Test suite version:
 `GGV2Q_2.0.1`  
 + Released 2021\.08\.31
 
-## Earlier IDT versions for AWS IoT Greengrass<a name="idt-earlier-versions"></a>
+## Unsupported versions of AWS IoT Device Tester for AWS IoT Greengrass V2<a name="idt-unsupported-versions"></a>
 
-The following earlier versions of IDT for AWS IoT Greengrass V2 are also supported\. 
+This topic lists unsupported versions of IDT for AWS IoT Greengrass V2\. Unsupported versions do not receive bug fixes or updates\. For more information, see [Support policy for AWS IoT Device Tester for AWS IoT Greengrass](idt-support-policy.md)\.
 
 **IDT v4\.1\.0 for AWS IoT Greengrass**    
-Supported AWS IoT Greengrass component versions:   
-+ [Greengrass nucleus](greengrass-nucleus-component.md) v2\.3\.0, v2\.2\.0, v2\.1\.0, and v2\.0\.5  
-IDT software downloads:  
-+ IDT v4\.1\.0 with test suite GGV2Q\_1\.1\.1 for [Linux](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.1.0_testsuite_1.1.1_linux.zip)
-+ IDT v4\.1\.0 with test suite GGV2Q\_1\.1\.1 for [macOS](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.1.0_testsuite_1.1.1_mac.zip)
-+ IDT v4\.1\.0 with test suite GGV2Q\_1\.1\.1 for [Windows](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.1.0_testsuite_1.1.1_win.zip)  
 Release notes:  
 + Enables you to validate and qualify devices running AWS IoT Greengrass Core software v2\.3\.0, v2\.2\.0, v2\.1\.0, and v2\.0\.5\.
 + Improves the `userdata.json` configuration by removing the requirement to specify the `GreengrassNucleusVersion` and `GreengrassCLIVersion` properties\. 
@@ -50,10 +44,6 @@ Release notes:
 Test suite version:    
 `GGV2Q_1.1.1`  
 + Released 2021\.06\.18
-
-## Unsupported versions of AWS IoT Device Tester for AWS IoT Greengrass V2<a name="idt-unsupported-versions"></a>
-
-This topic lists unsupported versions of IDT for AWS IoT Greengrass V2\. Unsupported versions do not receive bug fixes or updates\. For more information, see [Support policy for AWS IoT Device Tester for AWS IoT Greengrass](idt-support-policy.md)\.
 
 **IDT v4\.0\.2 for AWS IoT Greengrass**    
 Release notes:  

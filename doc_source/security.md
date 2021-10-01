@@ -13,8 +13,8 @@ This documentation helps you understand how to apply the shared responsibility m
 **Topics**
 + [Data protection in AWS IoT Greengrass](data-protection.md)
 + [Device authentication and authorization for AWS IoT Greengrass](device-auth.md)
-+ [Allow device traffic through a proxy or firewall](allow-device-traffic.md)
 + [Identity and access management for AWS IoT Greengrass](security-iam.md)
++ [Allow device traffic through a proxy or firewall](allow-device-traffic.md)
 + [Compliance validation for AWS IoT Greengrass](compliance-validation.md)
 + [Resilience in AWS IoT Greengrass](disaster-recovery-resiliency.md)
 + [Infrastructure security in AWS IoT Greengrass](infrastructure-security.md)

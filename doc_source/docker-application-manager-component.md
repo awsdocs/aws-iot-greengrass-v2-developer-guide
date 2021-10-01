@@ -23,7 +23,7 @@ This component has the following versions:
 
 <a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
 
-<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
+<a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
 
 ## Requirements<a name="docker-application-manager-component-requirements"></a>
 
@@ -50,20 +50,30 @@ If you don't specify the image tag or image digest in the artifact URI for an im
   {
     "Version": "2012-10-17",
     "Statement": [
-    {
-      "Action": [
-        "ecr:GetAuthorizationToken",
-        "ecr:BatchGetImage",
-        "ecr:GetDownloadUrlForLayer"
-      ],
-      "Resource": [
-        "*"
-      ],
-      "Effect": "Allow"
-    }
+      {
+        "Action": [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchGetImage",
+          "ecr:GetDownloadUrlForLayer"
+        ],
+        "Resource": [
+          "*"
+        ],
+        "Effect": "Allow"
+      }
     ]
   }
   ```
+
+### Endpoints and ports<a name="docker-application-manager-component-endpoints"></a>
+
+This component must be able to perform outbound requests to the following endpoints and ports, in addition to endpoints and ports required for basic operation\. For more information, see [Allow device traffic through a proxy or firewall](allow-device-traffic.md)\.
+
+
+| Endpoint | Port | Required | Description | 
+| --- | --- | --- | --- | 
+|  `ecr.region.amazonaws.com`  | 443 | No |  Required if you download Docker images from Amazon ECR\.  | 
+|  `hub.docker.com` `registry.hub.docker.com/v1`  | 443 | No |  Required if you download Docker images from Docker Hub\.  | 
 
 ## Dependencies<a name="docker-application-manager-component-dependencies"></a>
 

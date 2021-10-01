@@ -69,9 +69,21 @@ $ sudo greengrass-cli deployment create
   This feature is available for v2\.4\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md) and Greengrass CLI\.
 + `--remove`\. The name of the target component that you want to remove from a local deployment\. To remove a component that was merged from a cloud deployment, you must provide the group ID of the target thing group in the following format:
 
+------
+#### [ Greengrass nucleus v2\.4\.0 and later ]
+
+  ```
+  --remove <component-name> --groupId <group-name>
+  ```
+
+------
+#### [ Earlier than v2\.4\.0 ]
+
   ```
   --remove <component-name> --groupId thinggroup/<group-name>
   ```
+
+------
 
 **Output**  
 The following example shows the output produced when you run this command\.  

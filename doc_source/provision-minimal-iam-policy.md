@@ -28,13 +28,22 @@ The `DeployDevTools` policy statement is required only if you specify the `--dep
         "iot:GetPolicy",
         "iam:GetRole",
         "iam:CreateRole",
-        "iam:PassRole",
         "iam:CreatePolicy",
         "iam:AttachRolePolicy",
         "iam:GetPolicy",
         "sts:GetCallerIdentity"
       ],
       "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": "iam:PassRole",
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "iam:PassedToService": "iot.amazonaws.com"
+        }
+      }
     },
     {
       "Sid": "DeployDevTools",

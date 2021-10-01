@@ -54,7 +54,7 @@ When you run the AWS IoT Greengrass Core software with the `--provision true` op
 <a name="nucleus-component-parameter-restart-para"></a>When you deploy a change to this configuration parameter, the AWS IoT Greengrass Core software restarts for the change to take effect\.
 This object contains the following information:    
 `noProxyAddresses`  
-\(Optional\) A comma\-separated list of IP addresses or host names that are exempt from the proxy\.  
+\(Optional\) A comma\-separated list of IP addresses or hostnames that are exempt from the proxy\.  
 `proxy`  
 The proxy to which to connect\. This object contains the following information:    
 `url`  
@@ -99,7 +99,7 @@ Default: `100`
 `spooler`  
 \(Optional\) The MQTT spooler configuration for the Greengrass core device\. This object contains the following information:    
 `maxSizeInBytes`  
-\(Optional\) The maximum size of the cache where the core device stores unprocessed MQTT messages in memory\. If the cache is full, the core device discards the oldest messages to add new mesasges\.  
+\(Optional\) The maximum size of the cache where the core device stores unprocessed MQTT messages in memory\. If the cache is full, the core device discards the oldest messages to add new messages\.  
 Default: `2621440` \(2\.5 MB\)  
 `keepQos0WhenOffline`  
 \(Optional\) You can spool MQTT QoS 0 messages that the core device receives while its offline\. If you set this option to `true`, the core device spools QoS 0 messages that it can't send while it's offline\. If you set this option to `false`, the core device discards these messages\. The core device always spools QoS 1 messages unless the spool is full\.  
@@ -136,7 +136,6 @@ This object contains the following information:
 `posixUser`  
 The name or ID of the system user and system group that the core device uses to run generic and Lambda components\. Specify the user and group separated by a colon \(`:`\), where the group is optional\. If you omit the group, the AWS IoT Greengrass Core software defaults to the primary group of the user that you specify\. For example, you can specify `ggc_user` or `ggc_user:ggc_group`\. For more information, see [Configure the user and group that run components](configure-greengrass-core-v2.md#configure-component-user)\.  
 When you run the AWS IoT Greengrass Core software with the `--component-default-user ggc_user:ggc_group` option, the software sets this parameter in the nucleus component\.  
-You can't specify `root` or `0` for the user or the group\.  
 `systemResourceLimits`  
 This feature is available in v2\.4\.0 and later of this component\.  
 The system resource limits to apply to generic and non\-containerized Lambda component processes by default\. You can override system resource limits for individual components when you create a deployment\. For more information, see [Configure system resource limits for components](configure-greengrass-core-v2.md#configure-component-system-resource-limits)\.  
@@ -147,34 +146,36 @@ This object contains the following information:
 <a name="system-resource-limits-memory-definition-each"></a>The maximum amount of RAM \(in kilobytes\) that each component's processes can use on the core device\.
 
 `logging`  
-\(Optional\) The logging configuration for the core device\. This object contains the following information:    
-`level`  
-\(Optional\) The minimum level of information to upload\. Choose from the following log levels, listed here in level order:  
+\(Optional\) The logging configuration for the core device\. For more information about how to configure and use Greengrass logs, see [Monitor AWS IoT Greengrass logs](monitor-logs.md)\.  
+This object contains the following information:    
+  `level`   
+\(Optional\) The minimum level of log messages to output\.  
+Choose from the following log levels, listed here in level order:  <a name="nucleus-log-levels"></a>
 + `DEBUG`
 + `INFO`
 + `WARN`
 + `ERROR`
 Default: `INFO`  
-`format`  
+  `format`   
 \(Optional\) The data format of the logs\. Choose from the following options:  
-+ `TEXT`
-+ `JSON`
++ `TEXT` – Choose this option if you want to view logs in text form\.
++ `JSON` – Choose this option if you want to view logs with the [Greengrass CLI logs command](gg-cli-logs.md) or interact with logs programmatically\.
 Default: `TEXT`  
 `outputType`  
 \(Optional\) The output type for logs\. Choose from the following options:  
 + `FILE` – The AWS IoT Greengrass Core software outputs logs to files in the directory that you specify in `outputDirectory`\.
 + `CONSOLE` – The AWS IoT Greengrass Core software prints logs to `stdout`\. Choose this option to view logs as the core device prints them\.
 Default: `FILE`  
-`fileSizeKB`  
-\(Optional\) The maximum size of each log file \(in kilobytes\)\. After a log file reaches exceeds this maximum file size, the AWS IoT Greengrass Core software creates a new log file\.  
+  `fileSizeKB`   
+\(Optional\) The maximum size of each log file \(in kilobytes\)\. After a log file exceeds this maximum file size, the AWS IoT Greengrass Core software creates a new log file\.  
 <a name="nucleus-component-logging-parameter-file-only"></a>This parameter applies only when you specify `FILE` for `outputType`\.  
 Default: `1024`  
   `totalLogsSizeKB`   
-\(Optional\) The maximum total size of all log files \(in kilobytes\)\. After the total size of all log files exceeds this maximum total size, the AWS IoT Greengrass Core software deletes the oldest log files\.  
-This parameter is equivalent to the [system logs disk space limit](log-manager-component.md#log-manager-component-configuration) parameter \(`diskSpaceLimit`\) of the [log manager component](log-manager-component.md)\. If you specify this parameter on both components, the AWS IoT Greengrass Core software uses the minimum of the two values as the maximum total log size\.  
+\(Optional\) The maximum total size of log files \(in kilobytes\) for each component, including the Greengrass nucleus\. The Greengrass nucleus' log files also include logs from [plugin components](develop-greengrass-components.md#component-types)\. After a component's total size of log files exceeds this maximum size, the AWS IoT Greengrass Core software deletes that component's oldest log files\.  
+This parameter is equivalent to the [log manager component's](log-manager-component.md) [disk space limit](log-manager-component.md#log-manager-component-configuration) parameter \(`diskSpaceLimit`\), which you can specify for the Greengrass nucleus \(system\) and each component\. The AWS IoT Greengrass Core software uses the minimum of the two values as the maximum total log size for the Greengrass nucleus and each component\.  
 <a name="nucleus-component-logging-parameter-file-only"></a>This parameter applies only when you specify `FILE` for `outputType`\.  
 Default: `10240`  
-`outputDirectory`  
+  `outputDirectory`   
 \(Optional\) The output directory for log files\.  
 <a name="nucleus-component-logging-parameter-file-only"></a>This parameter applies only when you specify `FILE` for `outputType`\.  
 Default: `/greengrass/v2/logs`, where */greengrass/v2* is the AWS IoT Greengrass root folder\.

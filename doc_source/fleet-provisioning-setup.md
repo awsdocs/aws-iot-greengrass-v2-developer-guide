@@ -111,10 +111,6 @@ In this section, you create a token exchange IAM role and an AWS IoT role alias 
               "logs:CreateLogStream",
               "logs:PutLogEvents",
               "logs:DescribeLogStreams",
-              "iot:Connect",
-              "iot:Publish",
-              "iot:Subscribe",
-              "iot:Receive",
               "s3:GetBucketLocation"
             ],
             "Resource": "*"
@@ -424,6 +420,8 @@ In this section, you create an IAM role that allows AWS IoT to provision resourc
         }
       }
       ```
+**Note**  
+*MyThing*, *MyPolicy*, and *MyCertificate* are arbitrary names that identify each resource specification in the fleet provisioning template\. AWS IoT doesn't use these names in the resources that it creates from the template\. You can use these names or replace them with values that help you identify each resource in the template\.
 
    1. Create the fleet provisioning template from the provisioning template document\.
       + Replace *GreengrassFleetProvisioningTemplate* with the name of the template to create\.
@@ -467,13 +465,19 @@ To help you better manage the number of devices, and which devices, that registe
 
 **To create a provisioning claim certificate and private key**
 
+1. Create a folder where you download the claim certificate and private key\.
+
+   ```
+   mkdir claim-certs
+   ```
+
 1. Create and save a certificate and private key to use for provisioning\. AWS IoT provides client certificates that are signed by the Amazon Root certificate authority \(CA\)\.
 
    ```
    aws iot create-keys-and-certificate \
-     --certificate-pem-outfile "claim.pem.crt" \
-     --public-key-outfile "claim.public.pem.key" \
-     --private-key-outfile "claim.private.pem.key" \
+     --certificate-pem-outfile "claim-certs/claim.pem.crt" \
+     --public-key-outfile "claim-certs/claim.public.pem.key" \
+     --private-key-outfile "claim-certs/claim.private.pem.key" \
      --set-as-active
    ```
 

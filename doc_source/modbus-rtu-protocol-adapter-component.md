@@ -29,7 +29,7 @@ This component has the following versions:
 
 <a name="public-component-type-lambda"></a>This component is a Lambda component \(`aws.greengrass.lambda`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component's Lambda function using the [Lambda launcher component](lambda-launcher-component.md)\.
 
-<a name="public-component-type-more-information"></a>For more information, see [Component types](manage-components.md#component-types)\.
+<a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
 
 ## Requirements<a name="modbus-rtu-protocol-adapter-component-requirements"></a>
 
@@ -481,7 +481,7 @@ Read input registers
     "operation": "ReadInputRegistersRequest",
     "device": 1,
     "address": 1,
-    "value": 1
+    "count": 1
   },
   "id": "TestRequest"
 }
