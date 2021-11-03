@@ -6,7 +6,7 @@ Devices and services can create, update, and delete cloud shadows by using MQTT 
 
 The [shadow manager](shadow-manager-component.md) component enables your Greengrass components to create, update, and delete local shadows by using the [local shadow service](ipc-local-shadows.md) and the local publish/subscribe shadow topics\. The shadow manager also manages the storage of these local shadow documents on your core device, and handles the synchronization of shadow state information with cloud shadows\.
 
-For more information about AWS IoT device shadow concepts, see [AWS IoT Device Shadow service](iot/latest/developerguide/iot-device-shadows.html) in the *AWS IoT Developer Guide*\.
+For more information about AWS IoT device shadow concepts, see [AWS IoT Device Shadow service](https://docs.aws.amazon.com/iot/latest/developerguide/iot-device-shadows.html) in the *AWS IoT Developer Guide*\.
 
 **Topics**
 + [Interact with shadows in components](interact-with-shadows-in-components.md)
