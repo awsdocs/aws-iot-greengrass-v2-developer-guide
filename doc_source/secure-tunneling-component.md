@@ -11,6 +11,7 @@ This component subscribes to the AWS IoT Core MQTT message broker on the `$aws/t
 **Topics**
 + [Versions](#secure-tunneling-component-versions)
 + [Type](#secure-tunneling-component-type)
++ [Operating system](#secure-tunneling-component-os-support)
 + [Requirements](#secure-tunneling-component-requirements)
 + [Dependencies](#secure-tunneling-component-dependencies)
 + [Configuration](#secure-tunneling-component-configuration)
@@ -26,9 +27,13 @@ This component has the following versions:
 
 ## Type<a name="secure-tunneling-component-type"></a>
 
-<a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
+<a name="public-component-type-generic"></a>This <a name="public-component-type-generic-phrase"></a>component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
 
 <a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
+
+## Operating system<a name="secure-tunneling-component-os-support"></a>
+
+This component can be installed on Linux core devices only\.
 
 ## Requirements<a name="secure-tunneling-component-requirements"></a>
 
@@ -50,6 +55,16 @@ This component must be able to perform outbound requests to the following endpoi
 ## Dependencies<a name="secure-tunneling-component-dependencies"></a>
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#secure-tunneling-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+
+------
+#### [ 1\.0\.5 ]
+
+The following table lists the dependencies for version 1\.0\.5 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.0\.0 <2\.6\.0  | Soft | 
 
 ------
 #### [ 1\.0\.4 ]
@@ -110,7 +125,7 @@ For more information about component dependencies, see the [component recipe ref
 This component provides the following configuration parameters that you can customize when you deploy the component\.
 
 `OS_DIST_INFO`  
-\(Optional\) The operating system of your core device\. By default, the component attempts to automatically identify the operating system running on your core device\. If the component fails to start with the default value, then use this value to specify the operating system\. For a list of supported operating systems for this component, see [Requirements](setting-up.md#greengrass-v2-requirements)\.  
+\(Optional\) The operating system of your core device\. By default, the component attempts to automatically identify the operating system running on your core device\. If the component fails to start with the default value, then use this value to specify the operating system\. For a list of supported operating systems for this component, see [Device requirements](setting-up.md#greengrass-v2-requirements)\.  
 This value can be one of the following: `auto`, `ubuntu`, `amzn2`, `raspberrypi`\.  
 Default: `auto`
 
@@ -140,7 +155,7 @@ The following example configuration specifies to allow this component to open se
 
 ```
 {
-  "OS_DIST": "ubuntu",
+  "OS_DIST_INFO": "ubuntu",
   "accessControl": {
     "aws.greengrass.ipc.mqttproxy": {
       "aws.iot.SecureTunneling:mqttproxy:1": {
@@ -161,16 +176,40 @@ The following example configuration specifies to allow this component to open se
 
 This component uses the following log file\.
 
+------
+#### [ Linux ]
+
 ```
 /greengrass/v2/logs/aws.greengrass.SecureTunneling.log
 ```
 
+------
+#### [ Windows ]
+
+```
+C:\greengrass\v2\logs\aws.greengrass.SecureTunneling.log
+```
+
+------
+
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
+
+------
+#### [ Linux ]
 
   ```
   sudo tail -f /greengrass/v2/logs/aws.greengrass.SecureTunneling.log
   ```
+
+------
+#### [ Windows \(PowerShell\) ]
+
+  ```
+  Get-Content C:\greengrass\v2\logs\aws.greengrass.SecureTunneling.log -Tail 10 -Wait
+  ```
+
+------
 
 ## Licenses<a name="secure-tunneling-component-licenses"></a>
 
@@ -191,6 +230,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  1\.0\.5  |  Version updated for Greengrass nucleus version 2\.5\.0 release\.  | 
 |  1\.0\.4  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  1\.0\.3  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  1\.0\.2  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 

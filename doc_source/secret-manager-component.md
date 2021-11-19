@@ -2,11 +2,14 @@
 
 The secret manager component \(`aws.greengrass.SecretManager`\) deploys secrets from AWS Secrets Manager to Greengrass core devices\. Use this component to securely use credentials, such as passwords, in custom components on your Greengrass core devices\. For more information about Secrets Manager, see [What is AWS Secrets Manager?](https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html) in the *AWS Secrets Manager User Guide*\.
 
+To access this component's secrets in your custom Greengrass components, use the [GetSecretValue](ipc-secret-manager.md#ipc-operation-getsecretvalue) operation in the AWS IoT Device SDK\. For more information, see [Use the AWS IoT Device SDK to communicate with the Greengrass nucleus, other components, and AWS IoT CoreCommunicate with the Greengrass nucleus, other components, and AWS IoT Core](interprocess-communication.md) and [Retrieve secret values](ipc-secret-manager.md)\.
+
 This component encrypts secrets on the core device to keep your credentials and passwords secure until you need to use them\.
 
 **Topics**
 + [Versions](#secret-manager-component-versions)
 + [Type](#secret-manager-component-type)
++ [Operating system](#secret-manager-component-os-support)
 + [Requirements](#secret-manager-component-requirements)
 + [Dependencies](#secret-manager-component-dependencies)
 + [Configuration](#secret-manager-component-configuration)
@@ -16,6 +19,7 @@ This component encrypts secrets on the core device to keep your credentials and 
 ## Versions<a name="secret-manager-component-versions"></a>
 
 This component has the following versions:
++ 2\.1\.x
 + 2\.0\.x
 
 ## Type<a name="secret-manager-component-type"></a>
@@ -25,6 +29,12 @@ This component has the following versions:
 <a name="public-component-type-plugin-para2"></a>This component uses the same log file as the Greengrass nucleus\. For more information, see [Monitor AWS IoT Greengrass logs](monitor-logs.md)\.
 
 <a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
+
+## Operating system<a name="secret-manager-component-os-support"></a>
+
+This component can be installed on core devices that run the following operating systems:
++ Linux
++ Windows
 
 ## Requirements<a name="secret-manager-component-requirements"></a>
 
@@ -69,6 +79,16 @@ This component must be able to perform outbound requests to the following endpoi
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#secret-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
+#### [ 2\.1\.0 ]
+
+The following table lists the dependencies for version 2\.1\.0 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.5\.0 <2\.6\.0 | Soft | 
+
+------
 #### [ 2\.0\.9 ]
 
 The following table lists the dependencies for version 2\.0\.9 of this component\.
@@ -109,7 +129,7 @@ The following table lists the dependencies for version 2\.0\.6 of this component
 | [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.0\.0 <2\.2\.0  | Soft | 
 
 ------
-#### [ 2\.0\.4 \- 2\.0\.5 ]
+#### [ 2\.0\.4 and 2\.0\.5 ]
 
 The following table lists the dependencies for versions 2\.0\.4 and 2\.0\.5 of this component\.
 
@@ -151,16 +171,40 @@ Each label must be a string\.
 
 This component uses the same log file as the [Greengrass nucleus](greengrass-nucleus-component.md) component\.
 
+------
+#### [ Linux ]
+
 ```
 /greengrass/v2/logs/greengrass.log
 ```
 
+------
+#### [ Windows ]
+
+```
+C:\greengrass\v2\logs\greengrass.log
+```
+
+------
+
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
+
+------
+#### [ Linux ]
 
   ```
   sudo tail -f /greengrass/v2/logs/greengrass.log
   ```
+
+------
+#### [ Windows \(PowerShell\) ]
+
+  ```
+  Get-Content C:\greengrass\v2\logs\greengrass.log -Tail 10 -Wait
+  ```
+
+------
 
 ## Changelog<a name="secret-manager-component-changelog"></a>
 
@@ -169,6 +213,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.1\.0  |  Version updated for Greengrass nucleus version 2\.5\.0 release\.  | 
 |  2\.0\.9  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  2\.0\.8  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  2\.0\.7  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 

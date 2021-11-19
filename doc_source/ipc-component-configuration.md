@@ -24,7 +24,7 @@ This operation's request has the following parameters:
 \(Optional\) The name of the component\.  
 Defaults to the name of the component that makes the request\.
 
-`keyPath`  
+`keyPath` \(Python: `key_path`\)  
 The key path to the configuration value\. Specify a list where each entry is the key for a single level in the configuration object\. For example, specify `["mqtt", "port"]` to get the value of `port` in the following configuration\.  
 
 ```

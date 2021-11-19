@@ -69,12 +69,12 @@ Default: `GreengrassV2TokenExchangeRoleAlias`
 + If you run as root, this defaults to the user and group that the configuration file defines\. If the configuration file doesn't define a user and group, this defaults to `ggc_user:ggc_group`\. If `ggc_user` or `ggc_group` don't exist, the software creates them\.
 + If you run as a non\-root user, the AWS IoT Greengrass Core software uses that user to run components\.
 + If you don't specify a group, the AWS IoT Greengrass Core software uses the primary group of the system user\.
-For more information, see [Configure the user and group that run components](configure-greengrass-core-v2.md#configure-component-user)\.
+For more information, see [Configure the user that runs components](configure-greengrass-core-v2.md#configure-component-user)\.
 
 `DEPLOY_DEV_TOOLS`  
-\(Optional\) Defines whether to download and deploy the Greengrass CLI component in the container image\. You can use the Greengrass CLI to develop and debug components locally\.  
-Default: `false`  
-Use local development tools in development environments only\. Don't specify this option on production devices\. 
+\(Optional\) Defines whether to download and deploy the [Greengrass CLI component](greengrass-cli-component.md) in the container image\. You can use the Greengrass CLI to develop and debug components locally\.  
+<a name="local-dev-tools-production-environment-warning"></a>We recommend that you use this component in only development environments, not production environments\. This component provides access to information and operations that you typically won't need in a production environment\. Follow the principle of least privilege by deploying this component to only core devices where you need it\.
+Default: `false`
 
 `INIT_CONFIG`  
 \(Optional\) The path to the configuration file to use to install the AWS IoT Greengrass Core software\. You can use this option to set up new Greengrass core devices with a specific nucleus configuration, or to specify manually provisioned resources, for example\. You must mount your configuration file to the path that you specify in this argument\. 

@@ -14,7 +14,7 @@ Create or update a local deployment using specified component recipes, artifacts
 **Synopsis**  
 
 ```
-$ sudo greengrass-cli deployment create 
+greengrass-cli deployment create 
     --recipeDir path/to/component/recipe
     [--artifactDir path/to/artifact/folder ]
     [--update-config {component-configuration}]
@@ -45,10 +45,10 @@ $ sudo greengrass-cli deployment create
 
   `MERGE` and `RESET` are case\-sensitive and must be in upper case\.
 + `--groupId`, `-g`\. The target thing group for the deployment\.
-+ `--merge`, `-m`\. The name and version of the target component that you want to add or update\. You must provide the component information in the format `<component>=<version>`\. Use a separate argument for each additional component to specify\. If needed, use the `--runWith` argument to provide the `posixUser` and `posixGroup` information for running the component\.
-+ `--runWith`\. The `posixUser` and `posixGroup` information for running a generic or Lambda component\. You must provide this information in the format `<component>:posixUser=<user>[:<group>]`\. For example, `HelloWorld:posixUser=ggc_user:ggc_group`\. Use a separate argument for each additional option to specify\.
++ `--merge`, `-m`\. The name and version of the target component that you want to add or update\. You must provide the component information in the format `<component>=<version>`\. Use a separate argument for each additional component to specify\. If needed, use the `--runWith` argument to provide the `posixUser`, `posixGroup`, and `windowsUser` information for running the component\.
++ `--runWith`\. The `posixUser`, `posixGroup`, and `windowsUser` information for running a generic or Lambda component\. You must provide this information in the format `<component>:{posixUser|windowsUser}=<user>[:<=posixGroup>]`\. For example, you might specify **HelloWorld:posixUser=ggc\_user:ggc\_group** or **HelloWorld:windowsUser=ggc\_user**\. Use a separate argument for each additional option to specify\.
 
-  For more information, see [Configure the user and group that run components](configure-greengrass-core-v2.md#configure-component-user)\.
+  For more information, see [Configure the user that runs components](configure-greengrass-core-v2.md#configure-component-user)\.
 + `--systemLimits`\. The system resource limits to apply to generic and non\-containerized Lambda components' processes on the core device\. You can configure the maximum amount of CPU and RAM usage that each component's processes can use on the core device\. Specify a serialized JSON object or a file path to a JSON file\. The JSON object must have the following format\.
 
   ```
@@ -66,7 +66,7 @@ $ sudo greengrass-cli deployment create
 
   For more information, see [Configure system resource limits for components](configure-greengrass-core-v2.md#configure-component-system-resource-limits)\.
 
-  This feature is available for v2\.4\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md) and Greengrass CLI\.
+  This feature is available for v2\.4\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md) and Greengrass CLI on Linux core devices\. AWS IoT Greengrass doesn't currently support this feature on Windows core devices\. 
 + `--remove`\. The name of the target component that you want to remove from a local deployment\. To remove a component that was merged from a cloud deployment, you must provide the group ID of the target thing group in the following format:
 
 ------
@@ -106,7 +106,7 @@ Retrieve the status of the last 10 local deployments\.
 **Synopsis**  
 
 ```
-$ sudo greengrass-cli deployment list
+greengrass-cli deployment list
 ```
 
 **Arguments**  
@@ -128,7 +128,7 @@ Retrieve the status of a specific deployment\.
 **Synopsis**  
 
 ```
-$ sudo greengrass-cli deployment status -i <deployment-id>
+greengrass-cli deployment status -i <deployment-id>
 ```
 
 **Arguments**  

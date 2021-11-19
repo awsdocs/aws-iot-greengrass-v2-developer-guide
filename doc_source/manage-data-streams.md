@@ -50,7 +50,7 @@ When you use stream manager, be aware of the following security considerations\.
 ### Local data security<a name="stream-manager-security-stream-data"></a>
 
 AWS IoT Greengrass does not encrypt stream data at rest or in transit between local components on the core device\.
-+ **Data at rest**\. Stream data is stored locally in a storage directory\. For data security, AWS IoT Greengrass relies on Unix file permissions and full\-disk encryption, if enabled\. You can use the optional [STREAM\_MANAGER\_STORE\_ROOT\_DIR](configure-stream-manager.md#STREAM_MANAGER_STORE_ROOT_DIR) parameter to specify the storage directory\. If you change this parameter later to use a different storage directory, AWS IoT Greengrass does not delete the previous storage directory or its contents\.
++ **Data at rest**\. Stream data is stored locally in a storage directory\. For data security, AWS IoT Greengrass relies on file permissions and full\-disk encryption, if enabled\. You can use the optional [STREAM\_MANAGER\_STORE\_ROOT\_DIR](configure-stream-manager.md#STREAM_MANAGER_STORE_ROOT_DIR) parameter to specify the storage directory\. If you change this parameter later to use a different storage directory, AWS IoT Greengrass does not delete the previous storage directory or its contents\.
 + **Data in transit locally**\. AWS IoT Greengrass does not encrypt stream data in local transit between data sources, AWS IoT Greengrass components, the Stream Manager SDK, and stream manager\.
 + **Data in transit to the AWS Cloud**\. Data streams exported by stream manager to the AWS Cloud use standard AWS service client encryption with Transport Layer Security \(TLS\)\.
 

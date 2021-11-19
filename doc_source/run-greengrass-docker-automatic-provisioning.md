@@ -73,18 +73,17 @@ This tutorial uses an environment file to set the environment variables that wil
    TES_ROLE_NAME=GreengrassV2TokenExchangeRole
    TES_ROLE_ALIAS_NAME=GreengrassCoreTokenExchangeRoleAlias
    COMPONENT_DEFAULT_USER=ggc_user:ggc_group
-   DEPLOY_DEV_TOOLS=true
    ```
 
    Then, replace the following values\.
    + */greengrass/v2*\. The Greengrass root folder that you want to use for installation\. You use the `GGC_ROOT` environment variable to set this value\.
    + *region*\. The AWS Region where you created the resources\.
    + *MyGreengrassCore*\. The name of the AWS IoT thing\. If the thing doesn't exist, the installer creates it\. The installer downloads the certificates to authenticate as the AWS IoT thing\. 
-   + *MyGreengrassCore*\. The name of the AWS IoT thing group\. If the thing group doesn't exist, the installer creates it and adds the thing to it\. If the thing group exists and has an active deployment, the core device downloads and runs the software that the deployment specifies\.
+   + *MyGreengrassCoreGroup*\. The name of the AWS IoT thing group\. If the thing group doesn't exist, the installer creates it and adds the thing to it\. If the thing group exists and has an active deployment, the core device downloads and runs the software that the deployment specifies\.
    +  *GreengrassV2TokenExchangeRole*\. Replace with the name of the IAM token exchange role that allows the Greengrass core device to get temporary AWS credentials\. If the role doesn't exist, the installer creates it and creates and attaches a policy named *GreengrassV2TokenExchangeRole*Access\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
    + *GreengrassCoreTokenExchangeRoleAlias*\. The token exchange role alias\. If the role alias doesn't exist, the installer creates it and points it to the IAM token exchange role that you specify\. For more information, see 
-**Note**  
-Setting the `DEPLOY_DEV_TOOLS` environment variable to `true` deploys local development tools that enable custom component development inside of the Docker container\. Don't use this environment variable for production devices\.
+**Note**  <a name="docker-local-dev-tools-production-environment-warning"></a>
+You can set the `DEPLOY_DEV_TOOLS` environment variable to `true` to deploy the [Greengrass CLI component](greengrass-cli-component.md), which enables you to develop custom components inside of the Docker container\. <a name="local-dev-tools-production-environment-warning"></a>We recommend that you use this component in only development environments, not production environments\. This component provides access to information and operations that you typically won't need in a production environment\. Follow the principle of least privilege by deploying this component to only core devices where you need it\.
 
 ## Run the AWS IoT Greengrass Core software in a container<a name="run-greengrass-image-automatic-provisioning"></a>
 
@@ -186,7 +185,7 @@ You can then run the following command to access the container and explore AWS I
 docker exec -it container-id /bin/bash
 ```
 
-For information about creating a simple component, see [Create your first component](getting-started.md#create-first-component) in [Getting started with AWS IoT Greengrass V2](getting-started.md)
+For information about creating a simple component, see [Step 4: Develop and test a component on your device](getting-started.md#create-first-component) in [Getting started with AWS IoT Greengrass V2](getting-started.md)
 
 **Note**  <a name="run-greengrass-commands-in-docker-note"></a>
 When you use `docker exec` to run commands inside the Docker container, those commands are not logged in the Docker logs\. To log your commands in the Docker logs, attach an interactive shell to the Docker container\. For more information, see [Attach an interactive shell to the Docker container](docker-troubleshooting.md#debugging-docker-attach-shell)\.

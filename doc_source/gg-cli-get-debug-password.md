@@ -5,7 +5,7 @@ Use the `get-debug-password` command to print a randomly generated password for 
 **Synopsis**  
 
 ```
-$ sudo greengrass-cli get-debug-password
+greengrass-cli get-debug-password
 ```
 
 **Arguments**  

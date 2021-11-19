@@ -7,9 +7,10 @@ To use a different runtime, you can use the recipe of this component as a templa
 **Topics**
 + [Versions](#dlr-component-versions)
 + [Type](#dlr-component-type)
++ [Operating system](#dlr-component-os-support)
 + [Requirements](#dlr-component-requirements)
 + [Dependencies](#dlr-component-dependencies)
-+ [Configuration](#dlr-component-config)
++ [Configuration](#dlr-component-configuration)
 + [Usage](#dlr-component-usage)
 + [Local log file](#dlr-component-log-file)
 + [Changelog](#dlr-component-changelog)
@@ -22,18 +23,29 @@ This component has the following versions:
 
 ## Type<a name="dlr-component-type"></a>
 
-<a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
+<a name="public-component-type-generic"></a>This <a name="public-component-type-generic-phrase"></a>component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
 
 <a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
+
+## Operating system<a name="dlr-component-os-support"></a>
+
+This component can be installed on core devices that run the following operating systems:
++ Linux
++ Windows
 
 ## Requirements<a name="dlr-component-requirements"></a>
 
 This component has the following requirements:<a name="ml-component-requirements"></a>
 + <a name="ml-req-glibc"></a>On Greengrass core devices running Amazon Linux 2 or Ubuntu 18\.04, [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.27 or later installed on the device\.
-+ On Armv7l devices, such as Raspberry Pi, dependencies for OpenCV\-Python installed on the device\. Run the following command to install the dependencies: 
++ On Armv7l devices, such as Raspberry Pi, dependencies for OpenCV\-Python installed on the device\. Run the following command to install the dependencies\.
 
   ```
   sudo apt-get install libopenjp2-7 libilmbase23 libopenexr-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libgtk-3-0 libwebp-dev
+  ```
++ On Raspberry Pi devices, OpenCV\-Python installed on the device\. Run the following command to install OpenCV\-Python\.
+
+  ```
+  pip3 install opencv-python
   ```
 
 ### Endpoints and ports<a name="dlr-component-endpoints"></a>
@@ -54,9 +66,19 @@ For more information about endpoints and ports required for basic operation, see
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#dlr-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
+#### [ 1\.6\.6 ]
+
+The following table lists the dependencies for version 1\.6\.6 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.6\.0 | Soft | 
+
+------
 #### [ 1\.6\.5 and 1\.6\.4 ]
 
-The following table lists the dependencies for version 1\.6\.5 and 1\.6\.4 of this component\.
+The following table lists the dependencies for versions 1\.6\.5 and 1\.6\.4 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -107,13 +129,18 @@ The following table lists the dependencies for version 1\.3\.x of this component
 
 For more information about component dependencies, see the [component recipe reference](component-recipe-reference.md#recipe-reference-component-dependencies)\.
 
-## Configuration<a name="dlr-component-config"></a>
+## Configuration<a name="dlr-component-configuration"></a>
 
 This component provides the following configuration parameters that you can customize when you deploy the component\.
 
 `MLRootPath`  
-<a name="ml-config-mlrootpath-desc"></a>\(Optional\) The path of the folder on the device where inference components read images and write inference results\. You can modify this value to any location on your device to which the user running this component has read/write access\.  
+<a name="ml-config-mlrootpath-desc"></a>\(Optional\) The path of the folder on Linux core devices where inference components read images and write inference results\. You can modify this value to any location on your device to which the user running this component has read/write access\.  
 <a name="ml-config-mlrootpath-default-dlr"></a>Default: `/greengrass/v2/work/variant.DLR/greengrass_ml`
+
+`WindowsMLRootPath`  
+This feature is available in v1\.6\.6 and later of this component\.  
+<a name="ml-config-windowsmlrootpath-desc"></a>\(Optional\) The path of the folder on Windows core device where inference components read images and write inference results\. You can modify this value to any location on your device to which the user running this component has read/write access\.  
+<a name="ml-config-windowsmlrootpath-default-dlr"></a>Default: `C:\greengrass\v2\work\variant.DLR\greengrass_ml`
 
   `UseInstaller`   
 <a name="ml-config-useinstaller-desc-dlr"></a>\(Optional\) String value that defines whether to use the installer script in this component to install DLR and its dependencies\. Supported values are `true` and `false`\.   <a name="ml-config-useinstaller-libraries-dlr"></a>
@@ -149,16 +176,40 @@ When you deploy your inference component, this runtime component first verifies 
 
 This component uses the following log file\.
 
+------
+#### [ Linux ]
+
 ```
 /greengrass/v2/logs/variant.DLR.log
 ```
 
+------
+#### [ Windows ]
+
+```
+C:\greengrass\v2\logs\variant.DLR.log
+```
+
+------
+
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
+
+------
+#### [ Linux ]
 
   ```
   sudo tail -f /greengrass/v2/logs/variant.DLR.log
   ```
+
+------
+#### [ Windows \(PowerShell\) ]
+
+  ```
+  Get-Content C:\greengrass\v2\logs\variant.DLR.log -Tail 10 -Wait
+  ```
+
+------
 
 ## Changelog<a name="dlr-component-changelog"></a>
 
@@ -167,6 +218,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  1\.6\.6  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/dlr-component.html)  | 
 |  1\.6\.5  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/dlr-component.html)  | 
 |  1\.6\.4  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  1\.6\.3  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 

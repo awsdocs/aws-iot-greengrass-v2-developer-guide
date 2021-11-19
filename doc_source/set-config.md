@@ -28,13 +28,13 @@ To configure IDT for AWS IoT Greengrass V2 to use AWS credentials from your `cre
 
 ```
 {
-	"awsRegion": "region",
-	"auth": {
-		"method": "file",
-		"credentials": {
-			"profile": "default"
-		}
-	}
+  "awsRegion": "region",
+  "auth": {
+    "method": "file",
+    "credentials": {
+      "profile": "default"
+    }
+  }
 }
 ```
 
@@ -63,10 +63,10 @@ To configure IDT to use the environment variables, edit the `auth` section in yo
 
 ```
 {
-	"awsRegion": "region",
-	"auth": {
-		"method": "environment"
-	}
+  "awsRegion": "region",
+  "auth": {
+    "method": "environment"
+  }
 }
 ```
 
@@ -102,11 +102,12 @@ You must provide this information using the `device.json` template located in ` 
     "devices": [
       {
         "id": "<device-id>",
-        "operatingSystem": "linux",
+        "operatingSystem": "Linux | Windows",
         "connectivity": {
           "protocol": "ssh",
           "ip": "<ip-address>",
           "port": 22,
+          "publicKeyPath": "<public-key-path>",
           "auth": {
             "method": "pki | password",
             "credentials": {
@@ -160,7 +161,7 @@ IDT v4\.2\.0 and later versions support testing the `ml`, `docker`, and `streamM
 A user\-defined unique identifier for the device being tested\.
 
 `devices.operatingSystem`  
-The device operating system\. Currently, the only supported value is `linux`\.
+The device operating system\. Supported values are `Linux` and `Windows`\.
 
 `connectivity.protocol`  
 The communication protocol used to communicate with this device\. Currently, the only supported value is `ssh` for physical devices\.
@@ -173,6 +174,11 @@ The IP address of the device being tested\.
 Optional\. The port number to use for SSH connections\.  
 The default value is 22\.  
 This property applies only if `connectivity.protocol` is set to `ssh`\.
+
+`connectivity.publicKeyPath`  
+Optional\. The full path to the public key used to authenticate connections to the device under test\.   
+When you specify the `publicKeyPath`, IDT validates the device’s public key when it establishes an SSH connection to the device under test\. If this value is not specified, IDT creates an SSH connection, but doesn’t validate the device’s public key\.   
+We strongly recommend that you specify the path to the public key, and that you use a secure method to fetch this public key\. For standard command line\-based SSH clients, the public key is provided in the `known_hosts` file\. If you specify a separate public key file, this file must use the same format as the `known_hosts` file, that is, ` ip-address key-type public-key`\.
 
 `connectivity.auth`  
 Authentication information for the connection\.  

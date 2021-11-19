@@ -1,10 +1,22 @@
 # Troubleshooting machine learning inference<a name="ml-troubleshooting"></a>
 
 Use the troubleshooting information and solutions in this section to help resolve issues with your machine learning components\. For the public machine learning inference components, you can see error messages in the following component logs:
+
+------
+#### [ Linux or Unix ]
 + `/greengrass/v2/logs/aws.greengrass.DLRImageClassification.log`
 + `/greengrass/v2/logs/aws.greengrass.DLRObjectDetection.log`
 + `/greengrass/v2/logs/aws.greengrass.TensorFlowLiteImageClassification.log`
 + `/greengrass/v2/logs/aws.greengrass.TensorFlowLiteObjectDetection.log`
+
+------
+#### [ Windows ]
++ `C:\greengrass\v2\logs\aws.greengrass.DLRImageClassification.log`
++ `C:\greengrass\v2\logs\aws.greengrass.DLRObjectDetection.log`
++ `C:\greengrass\v2\logs\aws.greengrass.TensorFlowLiteImageClassification.log`
++ `C:\greengrass\v2\logs\aws.greengrass.TensorFlowLiteObjectDetection.log`
+
+------
 
 If a component is installed correctly, then the component log contains the location of the library that it uses for inference\.
 

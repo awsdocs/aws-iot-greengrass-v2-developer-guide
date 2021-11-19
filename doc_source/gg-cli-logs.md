@@ -14,7 +14,7 @@ Collect, filter, and visualize Greengrass log files\. This command supports only
 **Synopsis**  
 
 ```
-$ sudo greengrass-cli logs get
+greengrass-cli logs get
     [--log-dir path/to/a/log/folder]
     [--log-file path/to/a/log/file]
     [--follow true | false ]
@@ -29,7 +29,7 @@ $ sudo greengrass-cli logs get
 ```
 
 **Arguments**  
-+ `--log-dir`, `-ld`\. The path to the directory to check for log files\. Do not use with `--syslog`\. Use a separate argument for each additional directory to specify\. You must use at least one of `--log-dir` or `--log-file`\. You can also use both arguments in a single command\. 
++ `--log-dir`, `-ld`\. The path to the directory to check for log files, such as ***/greengrass/v2*/logs**\. Do not use with `--syslog`\. Use a separate argument for each additional directory to specify\. You must use at least one of `--log-dir` or `--log-file`\. You can also use both arguments in a single command\. 
 + `--log-file`, `-lf`\. The paths to the log directories you want to use\. Use a separate argument for each additional directory to specify\. You must use at least one of `--log-dir` or `--log-file`\. You can also use both arguments in a single command\.
 + `--follow`, `-fol`\. Show log updates as they occur\. Greengrass CLI continues to run and reads from the specified logs\. If you specify a time window, then Greengrass CLI stops monitoring logs after all of the time windows end\.
 + `--filter`, `-f`\. The keyword, regular expressions, or key\-value pair to use as a filter\. Provide this value as a string, a regular expression, or as a key\-value pair\. Use a separate argument for each additional filter to specify\. 
@@ -60,6 +60,8 @@ $ sudo greengrass-cli logs get
 + `--before`, `-b`\. The number of lines to show preceding a matched log entry\. Default is 0\.
 + `--after`, `-a`\. The number of lines to show following a matched log entry\. Default is 0\.
 + `--syslog`\. Process all log files using the syslog protocol defined by RFC3164\. Do not use with `--log-dir` and `--verbose`\. The syslog protocol uses the following format: `"<$Priority>$Timestamp $Host $Logger ($Class): $Message"`\. If you do not specify a log file, then Greengrass CLI reads log messages from the following locations: `/var/log/messages`, `/var/log/syslog`, or the `/var/log/system.log`\. 
+
+  AWS IoT Greengrass doesn't currently support this feature on Windows core devices\. 
 + `--max-log-queue-size`, `-m`\. The maximum number of log entries to allocate to memory\. Use this option to optimize memory usage\. Default is 100\.
 
 **Output**  
@@ -83,7 +85,7 @@ Show suggested keywords that you can use to filter log files\.
 **Synopsis**  
 
 ```
-$ sudo greengrass-cli logs list-keywords [arguments]
+greengrass-cli logs list-keywords [arguments]
 ```
 
 **Arguments**  
@@ -121,14 +123,14 @@ Show log files located in a specified directory\.
 **Synopsis**  
 
 ```
-$ sudo greengrass-cli logs list-log-files [arguments]
+greengrass-cli logs list-log-files [arguments]
 ```
 
 **Arguments**  
 `--log-dir`, `-ld`\. The path to the directory to check for log files\. 
 
 **Output**  
-The following examples show the output produced when you run this command\.  
+The following example shows the output produced when you run this command\.  
 
 ```
 $ sudo greengrass-cli logs list-log-files -ld /greengrass/v2/logs/
@@ -137,10 +139,4 @@ $ sudo greengrass-cli logs list-log-files -ld /greengrass/v2/logs/
 /greengrass/v2/logs/main.log
 /greengrass/v2/logs/greengrass.log
 Total 3 files found.
-```
-
-```
-$ sudo greengrass-cli logs list-log-files
-
-No log file found.
 ```

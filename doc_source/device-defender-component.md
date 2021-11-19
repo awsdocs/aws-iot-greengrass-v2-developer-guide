@@ -1,8 +1,8 @@
-# Device Defender<a name="device-defender-component"></a>
+# AWS IoT Device Defender<a name="device-defender-component"></a>
 
-The Device Defender component \(`aws.greengrass.DeviceDefender`\) notifies administrators about changes in the state of Greengrass core devices\. This can help identify unusual behavior that might indicate a compromised device\. For more information, see [AWS IoT Device Defender](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender.html) in the *AWS IoT Core Developer Guide*\.
+The AWS IoT Device Defender component \(`aws.greengrass.DeviceDefender`\) notifies administrators about changes in the state of Greengrass core devices\. This can help identify unusual behavior that might indicate a compromised device\. For more information, see [AWS IoT Device Defender](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender.html) in the *AWS IoT Core Developer Guide*\.
 
-This component reads system metrics from the `/proc` directory on the core device\. Then, it publishes the metrics to AWS IoT Device Defender\. For more information about how to read and interpret the metrics that this component reports, see [Device metrics document specification](https://docs.aws.amazon.com/iot/latest/developerguide/detect-device-side-metrics.html#DetectMetricsMessagesSpec) in the *AWS IoT Core Developer Guide*\.
+This component reads system metrics on the core device\. Then, it publishes the metrics to AWS IoT Device Defender\. For more information about how to read and interpret the metrics that this component reports, see [Device metrics document specification](https://docs.aws.amazon.com/iot/latest/developerguide/detect-device-side-metrics.html#DetectMetricsMessagesSpec) in the *AWS IoT Core Developer Guide*\.
 
 **Note**  
 This component provides similar functionality to the Device Defender connector in AWS IoT Greengrass V1\. For more information, see [Device Defender connector](https://docs.aws.amazon.com/greengrass/latest/developerguide/device-defender-connector.html) in the *AWS IoT Greengrass V1 Developer Guide*\.
@@ -10,6 +10,7 @@ This component provides similar functionality to the Device Defender connector i
 **Topics**
 + [Versions](#device-defender-component-versions)
 + [Type](#device-defender-component-type)
++ [Operating system](#device-defender-component-os-support)
 + [Requirements](#device-defender-component-requirements)
 + [Dependencies](#device-defender-component-dependencies)
 + [Configuration](#device-defender-component-configuration)
@@ -22,20 +23,57 @@ This component provides similar functionality to the Device Defender connector i
 ## Versions<a name="device-defender-component-versions"></a>
 
 This component has the following versions:
++ 3\.0\.x
 + 2\.0\.x
+
+For information about changes in each version of the component, see the [changelog](#device-defender-component-changelog)\.
 
 ## Type<a name="device-defender-component-type"></a>
 
-<a name="public-component-type-lambda"></a>This component is a Lambda component \(`aws.greengrass.lambda`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component's Lambda function using the [Lambda launcher component](lambda-launcher-component.md)\.
+------
+#### [ 3\.0\.x ]
+
+<a name="public-component-type-generic"></a>This <a name="public-component-type-generic-phrase"></a>component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
+
+------
+#### [ 2\.0\.x ]
+
+<a name="public-component-type-lambda"></a>This <a name="public-component-type-lambda-phrase"></a>component is a Lambda component \(`aws.greengrass.lambda`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component's Lambda function using the [Lambda launcher component](lambda-launcher-component.md)\.
+
+------
 
 <a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
+
+## Operating system<a name="device-defender-component-os-support"></a>
+
+------
+#### [ 3\.0\.x ]
+
+This component can be installed on core devices that run the following operating systems:
++ Linux
++ Windows
+
+------
+#### [ 2\.0\.x ]
+
+This component can be installed on Linux core devices only\.
+
+------
 
 ## Requirements<a name="device-defender-component-requirements"></a>
 
 This component has the following requirements:
-+ <a name="core-device-lambda-function-requirements"></a>Your core device must meet the requirements to run Lambda functions\. If you want the core device to run containerized Lambda functions, the device must meet the requirements to do so\. For more information, see [Requirements to run Lambda functions](setting-up.md#greengrass-v2-lambda-requirements)\.
+
+------
+#### [ 3\.0\.x ]
 + <a name="public-component-python3-requirement"></a>[Python](https://www.python.org/) version 3\.7 installed on the core device and added to the PATH environment variable\.
-+ AWS IoT Device Defender configured to use the Detect feature to keep track of violations\. For more information, see [Detect](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-detect.html) in the *AWS IoT Core Developer Guide*\.
++ AWS IoT Device Defender configured to use the Detect feature to monitor violations\. For more information, see [Detect](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-detect.html) in the *AWS IoT Core Developer Guide*\.
+
+------
+#### [ 2\.0\.x ]
++ <a name="core-device-lambda-function-requirements"></a>Your core device must meet the requirements to run Lambda functions\. If you want the core device to run containerized Lambda functions, the device must meet the requirements to do so\. For more information, see [Lambda function requirements](setting-up.md#greengrass-v2-lambda-requirements)\.
++ <a name="public-component-python3-requirement"></a>[Python](https://www.python.org/) version 3\.7 installed on the core device and added to the PATH environment variable\.
++ AWS IoT Device Defender configured to use the Detect feature to monitor violations\. For more information, see [Detect](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-detect.html) in the *AWS IoT Core Developer Guide*\.
 + The [psutil](https://pypi.org/project/psutil/) library installed on the core device\. Version 5\.7\.0 is the latest version that is verified to work with the component\.
 + The [cbor](https://pypi.org/project/cbor/) library installed on the core device\. Version 1\.0\.0 is the latest version that is verified to work with the component\.
 + <a name="connector-component-legacy-subscription-router-dependency"></a>To receive output data from this component, you must merge the following configuration update for the [legacy subscription router component](legacy-subscription-router-component.md) when you deploy this component\. The legacy subscription router component \(`aws.greengrass.LegacySubscriptionRouter`\) is a dependency of this component\. This configuration specifies the topic where this component publishes responses\.
@@ -81,9 +119,35 @@ You must update the Lambda function version on the legacy subscription router ev
 
   <a name="connector-component-create-deployments"></a>For more information, see [Create deployments](create-deployments.md)\.
 
+------
+
 ## Dependencies<a name="device-defender-component-dependencies"></a>
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#device-defender-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+
+------
+#### [ 3\.0\.0 ]
+
+The following table lists the dependencies for version 3\.0\.0 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <3\.0\.0 | Soft | 
+| [Token exchange service](token-exchange-service-component.md) | >=0\.0\.0 | Hard | 
+
+------
+#### [ 2\.0\.8 ]
+
+The following table lists the dependencies for version 2\.0\.8 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.6\.0  | Hard | 
+| [Lambda launcher](lambda-launcher-component.md) | ^2\.0\.0  | Hard | 
+| [Lambda runtimes](lambda-runtimes-component.md) | ^2\.0\.0  | Soft | 
+| [Token exchange service](token-exchange-service-component.md) | ^2\.0\.0  | Hard | 
 
 ------
 #### [ 2\.0\.7 ]
@@ -158,6 +222,26 @@ For more information about component dependencies, see the [component recipe ref
 
 This component provides the following configuration parameters that you can customize when you deploy the component\.
 
+------
+#### [ 3\.0\.x ]
+
+`SampleIntervalSeconds`  
+\(Optional\) The amount of time in seconds between each cycle where the component gathers and reports metrics\.  
+The minimum value is 300 seconds \(5 minutes\)\.  
+Default: 300 seconds
+
+ `UseInstaller`   
+\(Optional\) Boolean value that defines whether to use the installer script in this component to install this component's dependencies\.  
+
+Set this value to `false` if you want to use a custom script to install dependencies, or if you want to include runtime dependencies in a pre\-built Linux image\. To use this component, you will need to install the following libraries, including any dependencies, and make them available to the default Greengrass system user\.
++ [AWS IoT Device SDK v2 for Python](https://github.com/aws/aws-iot-device-sdk-python-v2)
++ [cbor](https://pypi.org/project/cbor/) library\. Version 1\.0\.0 is the latest version that is verified to work with the component\.
++ [psutil](https://pypi.org/project/psutil/) library\. Version 5\.7\.0 is the latest version that is verified to work with the component\.
+Default: `true`
+
+------
+#### [ 2\.0\.x ]
+
 **Note**  <a name="connector-component-lambda-parameters"></a>
 This component's default configuration includes Lambda function parameters\. We recommend that you edit only the following parameters to configure this component on your devices\.
 
@@ -229,6 +313,8 @@ Default: `Pubsub`
   "containerMode": "NoContainer"
 }
 ```
+
+------
 
 ## Input data<a name="device-defender-component-input-data"></a>
 
@@ -312,16 +398,40 @@ For more information about the metrics that this component reports, see [Device 
 
 This component uses the following log file\.
 
+------
+#### [ Linux ]
+
 ```
 /greengrass/v2/logs/aws.greengrass.DeviceDefender.log
 ```
 
+------
+#### [ Windows ]
+
+```
+C:\greengrass\v2\logs\aws.greengrass.DeviceDefender.log
+```
+
+------
+
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
+
+------
+#### [ Linux ]
 
   ```
   sudo tail -f /greengrass/v2/logs/aws.greengrass.DeviceDefender.log
   ```
+
+------
+#### [ Windows \(PowerShell\) ]
+
+  ```
+  Get-Content C:\greengrass\v2\logs\aws.greengrass.DeviceDefender.log -Tail 10 -Wait
+  ```
+
+------
 
 ## Licenses<a name="device-defender-component-licenses"></a>
 
@@ -334,6 +444,8 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.0\.8  |  Version updated for Greengrass nucleus version 2\.5\.0 release\.  | 
+|  3\.0\.0  |  <a name="changelog-device-defender-3.0.0-major-version-changes"></a>This version of the AWS IoT Device Defender component expects different configuration parameters than version 2\.x\. If you use a non\-default configuration for version 2\.x, and you want to upgrade from v2\.x to v3\.x, you must update the component's configuration\. For more information, see [AWS IoT Device Defender component configuration](#device-defender-component-configuration)\. <a name="changelog-device-defender-3.0.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/device-defender-component.html)  | 
 |  2\.0\.7  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  2\.0\.6  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  2\.0\.5  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 

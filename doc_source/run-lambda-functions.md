@@ -1,5 +1,8 @@
 # Run AWS Lambda functions<a name="run-lambda-functions"></a>
 
+**Note**  
+AWS IoT Greengrass doesn't currently support this feature on Windows core devices\. 
+
 You can import AWS Lambda functions as components that run on AWS IoT Greengrass core devices\. You might want to do this in the following cases:
 + You have application code in Lambda functions that you want to deploy to core devices\.
 + You have AWS IoT Greengrass V1 applications that you want to run on AWS IoT Greengrass V2 core devices\. For more information, see [Run AWS IoT Greengrass V1 applications on AWS IoT Greengrass V2](move-from-v1.md#run-v1-applications)\.
@@ -19,7 +22,7 @@ Lambda functions include dependencies on the following components\. You don't ne
 ## Requirements<a name="run-lambda-functions-requirements"></a>
 
 Your core devices and Lambda functions must meet the following requirements for you to run the functions on the AWS IoT Greengrass Core software:
-+ <a name="core-device-lambda-function-requirements"></a>Your core device must meet the requirements to run Lambda functions\. If you want the core device to run containerized Lambda functions, the device must meet the requirements to do so\. For more information, see [Requirements to run Lambda functions](setting-up.md#greengrass-v2-lambda-requirements)\.
++ <a name="core-device-lambda-function-requirements"></a>Your core device must meet the requirements to run Lambda functions\. If you want the core device to run containerized Lambda functions, the device must meet the requirements to do so\. For more information, see [Lambda function requirements](setting-up.md#greengrass-v2-lambda-requirements)\.
 + You must install the programming languages that the Lambda function uses on your core devices\.
 **Tip**  
 You can create a component that installs the programming language, and then specify that component as a dependency of your Lambda function component\.
@@ -29,7 +32,7 @@ You can create a component that installs the programming language, and then spec
   + Python 2\.7 – `python2.7` \*
   + Java 8 – `java8`
   + Node\.js 12 – `nodejs12.x`
-  + Node\.js 10 – `nodejs10.x`
+  + Node\.js 10 – `nodejs10.x` \*
 
   \* You can run Lambda functions that use this runtime on AWS IoT Greengrass, but you can't create them in AWS Lambda\. For more information, see [Runtime support policy](https://docs.aws.amazon.com/lambda/latest/dg/runtime-support-policy.html) in the *AWS Lambda Developer Guide*\.
 

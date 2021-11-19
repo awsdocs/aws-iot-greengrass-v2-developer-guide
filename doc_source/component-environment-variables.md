@@ -21,10 +21,10 @@ The AWS CLI uses this environment variable to identify the default Region to use
 The version of the [Greengrass nucleus component](greengrass-nucleus-component.md) that runs on this Greengrass core device\.
 
 `AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT`  
-The path to the IPC socket that components use to communicate with the AWS IoT Greengrass Core software\. For more information, see [Use the AWS IoT Device SDK for interprocess communication \(IPC\)Use interprocess communication \(IPC\)](interprocess-communication.md)\.
+The path to the IPC socket that components use to communicate with the AWS IoT Greengrass Core software\. For more information, see [Use the AWS IoT Device SDK to communicate with the Greengrass nucleus, other components, and AWS IoT CoreCommunicate with the Greengrass nucleus, other components, and AWS IoT Core](interprocess-communication.md)\.
 
 `SVCUID`  
-The secret token that components use to connect to the IPC socket and communicate with the AWS IoT Greengrass Core software\. For more information, see [Use the AWS IoT Device SDK for interprocess communication \(IPC\)Use interprocess communication \(IPC\)](interprocess-communication.md)\.
+The secret token that components use to connect to the IPC socket and communicate with the AWS IoT Greengrass Core software\. For more information, see [Use the AWS IoT Device SDK to communicate with the Greengrass nucleus, other components, and AWS IoT CoreCommunicate with the Greengrass nucleus, other components, and AWS IoT Core](interprocess-communication.md)\.
 
 `AWS_CONTAINER_AUTHORIZATION_TOKEN`  
 The secret token that components use to retrieve credentials from the [token exchange service component](token-exchange-service-component.md)\.

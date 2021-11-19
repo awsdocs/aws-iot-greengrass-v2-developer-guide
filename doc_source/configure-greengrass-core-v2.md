@@ -3,27 +3,33 @@
 The AWS IoT Greengrass Core software provides options that you can use to configure the software\. You can create deployments  to configure the AWS IoT Greengrass Core software on each core device\.
 
 **Topics**
-+ [Deploy the Greengrass core nucleus component](#configure-nucleus-component)
-+ [Configure AWS IoT Greengrass as a system service](#configure-system-service)
++ [Deploy the Greengrass nucleus component](#configure-nucleus-component)
++ [Configure the Greengrass nucleus as a system service](#configure-system-service)
 + [Control memory allocation with JVM options](#jvm-tuning)
-+ [Configure the user and group that run components](#configure-component-user)
++ [Configure the user that runs components](#configure-component-user)
 + [Configure system resource limits for components](#configure-component-system-resource-limits)
 + [Connect on port 443 or through a network proxy](#configure-alpn-network-proxy)
 + [Configure MQTT timeouts and cache settings](#configure-mqtt)
 
-## Deploy the Greengrass core nucleus component<a name="configure-nucleus-component"></a>
+## Deploy the Greengrass nucleus component<a name="configure-nucleus-component"></a>
 
 AWS IoT Greengrass provides the AWS IoT Greengrass Core software as a component that you can deploy to your Greengrass core devices\. You can create a deployment to apply the same configuration to multiple Greengrass core devices\. For more information, see [Greengrass nucleus](greengrass-nucleus-component.md) and [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)\.
 
-## Configure AWS IoT Greengrass as a system service<a name="configure-system-service"></a>
+## Configure the Greengrass nucleus as a system service<a name="configure-system-service"></a>
 
 You must configure the AWS IoT Greengrass Core software as a system service in your device's init system to do the following:
 + Start the AWS IoT Greengrass Core software when the device boots\. This is a good practice if you manage large fleets of devices\.
 + Install and run plugin components\. Several AWS\-provided components are plugin components, which enables them to interface directly with the Greengrass nucleus\. For more information about component types, see [Component types](develop-greengrass-components.md#component-types)\.
 + Apply over\-the\-air \(OTA\) updates to the core device's AWS IoT Greengrass Core software\. For more information, see [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)\.
-+ Enable components to restart the AWS IoT Greengrass Core software when a deployment updates the component to a new version or updates certain configuration parameters\. For more information, see the [bootstrap lifecycle step](component-recipe-reference.md#bootstrap-lifecycle-definition)\.
++ Enable components to restart the AWS IoT Greengrass Core software or the core device when a deployment updates the component to a new version or updates certain configuration parameters\. For more information, see the [bootstrap lifecycle step](component-recipe-reference.md#bootstrap-lifecycle-definition)\.
 
-There are different init systems, such as initd, systemd, and SystemV\. AWS IoT Greengrass provides a built\-in option to configure the AWS IoT Greengrass Core software as a system service on a device with systemd\. Use the `--setup-system-service true` argument when you install the AWS IoT Greengrass Core software to start the nucleus as a system service and configure it to launch when the device boots\. 
+**Topics**
++ [Configure the nucleus as a system service \(Linux\)](#configure-system-service-linux)
++ [Configure the nucleus as a system service \(Windows\)](#configure-system-service-windows)
+
+### Configure the nucleus as a system service \(Linux\)<a name="configure-system-service-linux"></a>
+
+Linux devices support different init systems, such as initd, systemd, and SystemV\. You use the `--setup-system-service true` argument when you install the AWS IoT Greengrass Core software to start the nucleus as a system service and configure it to launch when the device boots\. The installer configures the AWS IoT Greengrass Core software as a system service with systemd\.
 
 You can also manually configure the nucleus to run as a system service\. The following example is a service file for systemd\.
 
@@ -43,44 +49,102 @@ ExecStart=/bin/sh /greengrass/v2/alts/current/distro/bin/loader
 WantedBy=multi-user.target
 ```
 
-For information about how to create and enable a service file for systemd on a Raspberry Pi, see [SYSTEMD](https://www.raspberrypi.org/documentation/linux/usage/systemd.md) in the Raspberry Pi documentation\. 
+For information about how to create and enable a service file for systemd on a Raspberry Pi, see [systemd Daemon](https://www.raspberrypi.com/documentation/computers/using_linux.html#the-systemd-daemon) in the Raspberry Pi documentation\. 
 
-After you configure the system service, you can use the following commands to configure starting the device on boot and to start or stop the AWS IoT Greengrass Core software\.
-
-**To check the status of the service \(systemd\)**
-+ Run the following command to check the status of the system service\.
+After you configure the system service, you can run the following commands to configure starting the device on boot and to start or stop the AWS IoT Greengrass Core software\.
++ To check the status of the service \(systemd\)
 
   ```
   sudo systemctl status greengrass.service
   ```
-
-**To enable service start on device boot \(systemd\)**
-+ Run the following command to enable the nucleus to start when the device boots\.
++ To enable the nucleus to start when the device boots\.
 
   ```
   sudo systemctl enable greengrass.service
   ```
-
-**To disable service start on device boot \(systemd\)**
-+ Run the following command to stop the nucleus from starting when the device boots\.
++ To stop the nucleus from starting when the device boots\.
 
   ```
   sudo systemctl disable greengrass.service
   ```
-
-**To start the nucleus as a system service \(systemd\)**
-+ Run the following command to start the AWS IoT Greengrass Core software\.
++ To start the AWS IoT Greengrass Core software\.
 
   ```
   sudo systemctl start greengrass.service
   ```
-
-**To stop the nucleus as a system service \(systemd\)**
-+ Run the following command to stop the AWS IoT Greengrass Core software\.
++ To stop the AWS IoT Greengrass Core software\.
 
   ```
   sudo systemctl stop greengrass.service
   ```
+
+### Configure the nucleus as a system service \(Windows\)<a name="configure-system-service-windows"></a>
+
+You use the `--setup-system-service true` argument when you install the AWS IoT Greengrass Core software to start the nucleus as a Windows service and configure it to launch when the device boots\.
+
+After you configure the service, you can run the following commands to configure starting the device on boot and to start or stop the AWS IoT Greengrass Core software\. You must run Command Prompt or PowerShell as an administrator to run these commands\.
+
+------
+#### [ Windows Command Prompt \(CMD\) ]
++ To check the status of the service
+
+  ```
+  sc query "greengrass"
+  ```
++ To enable the nucleus to start when the device boots\.
+
+  ```
+  sc config "greengrass" start=enabled
+  ```
++ To stop the nucleus from starting when the device boots\.
+
+  ```
+  sc config "greengrass" start=disabled
+  ```
++ To start the AWS IoT Greengrass Core software\.
+
+  ```
+  sc start "greengrass"
+  ```
++ To stop the AWS IoT Greengrass Core software\.
+
+  ```
+  sc stop "greengrass"
+  ```
+**Note**  <a name="windows-ignore-shutdown-signal-behavior-note"></a>
+On Windows devices, the AWS IoT Greengrass Core software ignores this shutdown signal while it shuts down Greengrass component processes\. If the AWS IoT Greengrass Core software ignores the shutdown signal when you run this command, wait a few seconds, and try again\.
+
+------
+#### [ PowerShell ]
++ To check the status of the service
+
+  ```
+  Get-Service -Name "greengrass"
+  ```
++ To enable the nucleus to start when the device boots\.
+
+  ```
+  Set-Service -Name "greengrass" -Status stopped -StartupType enabled
+  ```
++ To stop the nucleus from starting when the device boots\.
+
+  ```
+  Set-Service -Name "greengrass" -Status stopped -StartupType disabled
+  ```
++ To start the AWS IoT Greengrass Core software\.
+
+  ```
+  Start-Service -Name "greengrass"
+  ```
++ To stop the AWS IoT Greengrass Core software\.
+
+  ```
+  Stop-Service -Name "greengrass"
+  ```
+**Note**  <a name="windows-ignore-shutdown-signal-behavior-note"></a>
+On Windows devices, the AWS IoT Greengrass Core software ignores this shutdown signal while it shuts down Greengrass component processes\. If the AWS IoT Greengrass Core software ignores the shutdown signal when you run this command, wait a few seconds, and try again\.
+
+------
 
 ## Control memory allocation with JVM options<a name="jvm-tuning"></a>
 
@@ -126,14 +190,14 @@ Instructs the JVM not to use the just\-in\-time \(JIT\) compiler\. Instead, the 
 
 For information about creating configuration merge updates, see [Update component configurations](update-component-configurations.md)\.
 
-## Configure the user and group that run components<a name="configure-component-user"></a>
+## Configure the user that runs components<a name="configure-component-user"></a>
 
-The AWS IoT Greengrass Core software can run component processes as a system user and group different from the one that runs the software\. This increases security, because you can run the AWS IoT Greengrass Core software as root without giving root permissions to components that run on the core device\.
+The AWS IoT Greengrass Core software can run component processes as a system user and group different from the one that runs the software\. This increases security, because you can run the AWS IoT Greengrass Core software as root, or as an administrator user, without giving those permissions to components that run on the core device\.
 
-The following table indicates which types of components the AWS IoT Greengrass Core software can run as a system user and group that you specify\. For more information, see [Component types](develop-greengrass-components.md#component-types)\.
+The following table indicates which types of components the AWS IoT Greengrass Core software can run as a user that you specify\. For more information, see [Component types](develop-greengrass-components.md#component-types)\.
 
 
-| Component type | Configure system user/group | 
+| Component type | Configure component user | 
 | --- | --- | 
 |  Nucleus  |  <a name="polaris-no-para"></a> ![\[Image NOT FOUND\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/images/icon-no.png) No   | 
 |  Plugin  |  <a name="polaris-no-para"></a> ![\[Image NOT FOUND\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/images/icon-no.png) No   | 
@@ -141,30 +205,59 @@ The following table indicates which types of components the AWS IoT Greengrass C
 |  Lambda \(non\-containerized\)  |  <a name="polaris-yes-para"></a> ![\[Image NOT FOUND\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/images/icon-yes.png) Yes   | 
 |  Lambda \(containerized\)  |  <a name="polaris-yes-para"></a> ![\[Image NOT FOUND\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/images/icon-yes.png) Yes   | 
 
-When you configure the user and group, you specify them separated by a colon \(`:`\) in the following format: `user:group`\. The group is optional\. If you don't specify a group, the AWS IoT Greengrass Core software defaults to the primary group of the user\. You can use name or ID to identify the user and group\.
+You must create the component user before you can specify it in a deployment configuration\. On Windows\-based devices, you must also store the user name and password for the user in the credential manager instance of the LocalSystem account\. For more information, see [Set up a component user on Windows devices](#create-component-user-windows)\.
 
-You can configure the user and group for each component and for each core device\.
+When you configure the component user on a Linux\-based device, you can optionally also specify a group\. You specify the user and group separated by a colon \(`:`\) in the following format: `user:group`\. If you don't specify a group, the AWS IoT Greengrass Core software defaults to the primary group of the user\. You can use either the name or the ID to identify the user and group\. 
+
+On Linux\-based devices, you can also run components as a system user that doesn't exist, also called an unknown user, to increase security\. A Linux process can signal any other process that is run by the same user\. An unknown user doesn't run other processes, so you can run components as an unknown user to prevent components from signaling other components on the core device\. To run components as an unknown user, specify a user ID that doesn't exist on the core device\. You can also specify a group ID that doesn't exist to run as an unknown group\.
+
+You can configure the user for each component and for each core device\.
 + **Configure for a component**
 
-  You can configure each component to run with a user and group specific to that component\. When you create a deployment, you can specify the user and group for each component in the deployment\. The AWS IoT Greengrass Core software runs components as this user and group if you specify them\. Otherwise, it defaults to run components as the default user and group that you configure for the core device\. For more information, see [Create deployments](create-deployments.md)\.
-+ **Configure defaults for a core device**
+  You can configure each component to run with a user specific to that component\. When you create a deployment, you can specify the user for each component in the `runWith` configuration for that component\. The AWS IoT Greengrass Core software runs components as the specified user if you configure them\. Otherwise, it defaults to run components as the default user that you configure for the core device\. For more information about specifying the component user in the deployment configuration, see the [`runWith`](create-deployments.md#component-run-with-config) configuration parameter in [Create deployments](create-deployments.md)\.
++ **Configure default user for a core device**
 
-  You can configure a default system user and group that the AWS IoT Greengrass Core software uses to run components\. When the AWS IoT Greengrass Core software runs a component, it uses the user and group that you specify for that component\. If that component doesn't specify a user and group, then the AWS IoT Greengrass Core software runs the component as the default user and group that you configure for the core device\. For more information, see [Configure the default user and group](#configure-default-component-user)\.
-
-**Note**  
-If you don't configure a user to run components and you run the AWS IoT Greengrass Core software as root, then the software won't run components\. You must specify a default user to run components if you run as root\.  
-If you don't configure a user to run components and you run the AWS IoT Greengrass Core software as a non\-root user, then the software runs components as that user\.
-
-You can also run components as a system user that doesn't exist, also called an unknown user, to increase security\. On Linux operating systems, a process can signal any other process that is run by the same user\. An unknown user doesn't run other processes, so you can run components as an unknown user to prevent components from signaling other components on the core device\. To run components as an unknown user, specify a user ID that doesn't exist on the core device\. You can also specify a group ID that doesn't exist to run as an unknown group\.
-
-### Configure the default user and group<a name="configure-default-component-user"></a>
-
-You can use a deployment to configure the default user and group on a core device\. In this deployment, you update the [nucleus component](greengrass-nucleus-component.md) configuration\.
+  You can configure a default user that the AWS IoT Greengrass Core software uses to run components\. When the AWS IoT Greengrass Core software runs a component, it checks if you specified a user for that component, and uses it to run the component\. If the component doesn't specify a user, then the AWS IoT Greengrass Core software runs the component as the default user that you configured for the core device\. For more information, see [Configure the default component user](#configure-default-component-user)\.
 
 **Note**  
-You can also set the default user and group when you run the AWS IoT Greengrass Core software with the `--component-default-user` option\. For more information, see [Install the AWS IoT Greengrass Core software](install-greengrass-core-v2.md)\.
+On Windows\-based devices, you must specify at least a default user to run components\.  
+On Linux\-based devices, the following considerations apply if you don't configure a user to run components:   
+If you run the AWS IoT Greengrass Core software as root, then the software won't run components\. You must specify a default user to run components if you run as root\.
+If you run the AWS IoT Greengrass Core software as a non\-root user, then the software runs components as that user\.
 
-To configure the default user and group, [create a deployment](create-deployments.md) that specifies the following configuration update for the `aws.greengrass.Nucleus` component\.
+**Topics**
++ [Set up a component user on Windows devices](#create-component-user-windows)
++ [Configure the default component user](#configure-default-component-user)
+
+### Set up a component user on Windows devices<a name="create-component-user-windows"></a>
+
+**To set up a component user on a Windows\-based device**
+
+1. Create the component user in the LocalSystem account on the device\.
+
+   ```
+   net user /add component-user password
+   ```
+
+1. Use [Microsoft's PsExec utility](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec) to store the user name and password for the component user in the Credential Manager instance for the LocalSystem account\.
+
+   ```
+   psexec -s cmd /c cmdkey /generic:component-user /user:component-user /pass:password
+   ```
+**Note**  
+On Windows\-based devices, the LocalSystem account runs the Greengrass nucleus, and you must use the PsExec utility to store the component user information in the LocalSystem account\. Using the Credential Manager application stores this information in the Windows account of the currently logged on user, instead of the LocalSystem account\.
+
+### Configure the default component user<a name="configure-default-component-user"></a>
+
+You can use a deployment to configure the default user on a core device\. In this deployment, you update the [nucleus component](greengrass-nucleus-component.md) configuration\.
+
+**Note**  
+You can also set the default user when you install the AWS IoT Greengrass Core software with the `--component-default-user` option\. For more information, see [Install the AWS IoT Greengrass Core software](install-greengrass-core-v2.md)\.
+
+[Create a deployment](create-deployments.md) that specifies the following configuration update for the `aws.greengrass.Nucleus` component\.
+
+------
+#### [ Linux ]
 
 ```
 {
@@ -174,13 +267,29 @@ To configure the default user and group, [create a deployment](create-deployment
 }
 ```
 
-The following example defines a deployment that configures `ggc_user` as the default user and `ggc_group` as the default group\. The `merge` configuration update requires a serialized JSON object\.
+------
+#### [ Windows ]
+
+```
+{
+  "runWithDefault": {
+    "windowsUser": "ggc_user"
+  }
+}
+```
+
+**Note**  
+The user that you specify must exist, and the user name and password for this user must be stored in the credential manager instance of the LocalSystem account on your Windows device\. For more information, see [Set up a component user on Windows devices](#create-component-user-windows)\.
+
+------
+
+The following example defines a deployment for a Linux\-based device that configures `ggc_user` as the default user and `ggc_group` as the default group\. The `merge` configuration update requires a serialized JSON object\.
 
 ```
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.4.0",
+      "version": "2.5.0",
       "configurationUpdate": {
         "merge": "{\"runWithDefault\":{\"posixUser\":\"ggc_user:ggc_group\"}}"
       }
@@ -191,7 +300,8 @@ The following example defines a deployment that configures `ggc_user` as the def
 
 ## Configure system resource limits for components<a name="configure-component-system-resource-limits"></a>
 
-This feature is available for v2\.4\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.
+**Note**  
+This feature is available for v2\.4\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. AWS IoT Greengrass doesn't currently support this feature on Windows core devices\. 
 
 You can configure the maximum amount of CPU and RAM usage that each component's processes can use on the core device\.
 
@@ -238,7 +348,7 @@ The following example defines a deployment that configures the CPU time limit to
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.4.0",
+      "version": "2.5.0",
       "configurationUpdate": {
         "merge": "{\"runWithDefault\":{\"cpu\":2,\"memory\":102400}}"
       }
@@ -249,7 +359,7 @@ The following example defines a deployment that configures the CPU time limit to
 
 ## Connect on port 443 or through a network proxy<a name="configure-alpn-network-proxy"></a>
 
-AWS IoT Greengrass core devices communicate with AWS IoT Core using the MQTT messaging protocol with TLS client authentication\. By convention, MQTT over TLS uses port 8883\. However, as a security measure, restrictive environments might limit inbound and outbound traffic to a small range of TCP ports\. For example, a corporate firewall might open port 443 for HTTPS traffic, but close other ports that are used for less common protocols, such as port 8883 for MQTT traffic\. Other restrictive environments might require all traffic to go through an HTTP proxy before connecting to the internet\.
+AWS IoT Greengrass core devices communicate with AWS IoT Core using the MQTT messaging protocol with TLS client authentication\. By convention, MQTT over TLS uses port 8883\. However, as a security measure, restrictive environments might limit inbound and outbound traffic to a small range of TCP ports\. For example, a corporate firewall might open port 443 for HTTPS traffic, but close other ports that are used for less common protocols, such as port 8883 for MQTT traffic\. Other restrictive environments might require all traffic to go through a proxy before connecting to the internet\.
 
 **Note**  
 Greengrass core devices that run [Greengrass nucleus component](greengrass-nucleus-component.md) v2\.0\.3 and earlier use port 8443 to connect to the AWS IoT Greengrass data plane endpoint\. These devices must be able to connect to this endpoint on port 8443\. For more information, see [Allow device traffic through a proxy or firewall](allow-device-traffic.md)\.
@@ -263,7 +373,9 @@ To enable communication in these scenarios, AWS IoT Greengrass provides the foll
 To use ALPN and enable HTTPS communication over port 443, your core device must run Java 8 update 252 or later\. All updates of Java version 9 and later also support ALPN\.
 
   For more information, see [Configure HTTPS over port 443](#configure-https-port-443)\.
-+ **Connection through a network proxy**\. You can configure a network proxy server to act as an intermediary for connecting to the Greengrass core device\. AWS IoT Greengrass supports only basic authentication and HTTP proxies\. AWS IoT Greengrass doesn't support HTTPS proxies\.
++ **Connection through a network proxy**\. You can configure a network proxy server to act as an intermediary for connecting to the Greengrass core device\. AWS IoT Greengrass supports basic authentication for HTTP and HTTPS proxies\.
+
+  <a name="https-proxy-greengrass-nucleus-requirement"></a>Greengrass core devices must run [Greengrass nucleus ](greengrass-nucleus-component.md) v2\.5\.0 or later to use HTTPS proxies\.
 
   The AWS IoT Greengrass Core software passes the proxy configuration to components through the `ALL_PROXY`, `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY` environment variables\. Components must use these settings to connect through the proxy\. Components use common libraries \(such as boto3, cURL, and the python `requests` package\) that typically use these environment variables by default to make connections\. If a component also specifies these environment variables, AWS IoT Greengrass doesn't override them\.
 
@@ -289,7 +401,7 @@ The following example defines a deployment that configures MQTT over port 443\. 
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.4.0",
+      "version": "2.5.0",
       "configurationUpdate": {
         "merge": "{\"mqtt\":{\"port\":443}}"
       }
@@ -318,7 +430,7 @@ The following example defines a deployment that configures HTTPS over port 443\.
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.4.0",
+      "version": "2.5.0",
       "configurationUpdate": {
         "merge": "{\"greengrassDataPlanePort\":443}"
       }
@@ -329,7 +441,7 @@ The following example defines a deployment that configures HTTPS over port 443\.
 
 ### Configure a network proxy<a name="configure-network-proxy"></a>
 
-Follow the procedure in this section to configure Greengrass core devices to connect to the internet through an HTTP network proxy\. For more information about the endpoints and ports that core devices use, see [Allow device traffic through a proxy or firewall](allow-device-traffic.md)\.
+Follow the procedure in this section to configure Greengrass core devices to connect to the internet through an HTTP or HTTPS network proxy\. For more information about the endpoints and ports that core devices use, see [Allow device traffic through a proxy or firewall](allow-device-traffic.md)\.
 
 **Important**  
 If your core device runs a version of the [Greengrass nucleus](greengrass-nucleus-component.md) earlier than v2\.4\.0, your device's role must allow the following permissions to use a network proxy:  
@@ -363,7 +475,7 @@ The following example defines a deployment that configures a network proxy\. The
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.4.0",
+      "version": "2.5.0",
       "configurationUpdate": {
         "merge": "{\"networkProxy\":{\"noProxyAddresses\":\"http://192.168.0.1,www.example.com\",\"proxy\":{\"url\":\"https://my-proxy-server:1100\",\"username\":\"Mary_Major\",\"password\":\"pass@word1357\"}}}"
       }
@@ -372,7 +484,43 @@ The following example defines a deployment that configures a network proxy\. The
 }
 ```
 
-**The networkProxy object**
+#### Enable the core device to trust an HTTPS proxy<a name="https-proxy-certificate-trust"></a>
+
+When you configure a core device to use an HTTPS proxy, you must add the proxy server certificate chain to the core device's to enable it to trust the HTTPS proxy\. Otherwise, the core device might encounter errors when it tries to route traffic through the proxy\. Add the proxy server CA certificate to the core device's Amazon root CA certificate file\.
+
+**To enable the core device to trust the HTTPS proxy**
+
+1. Find the Amazon root CA certificate file on the core device\.
+   + If you installed the AWS IoT Greengrass Core software with [automatic provisioning](quick-installation.md), the Amazon root CA certificate file exists at `/greengrass/v2/rootCA.pem`\.
+   + If you installed the AWS IoT Greengrass Core software with [manual](manual-installation.md) or [fleet provisioning](fleet-provisioning.md), the Amazon root CA certificate file might exist at `/greengrass/v2/AmazonRootCA1.pem`\.
+
+   If the Amazon root CA certificate doesn't exist at these locations, check the `system.rootCaPath` property in `/greengrass/v2/config/effectiveConfig.yaml` to find its location\.
+
+1. Add the contents of the proxy server CA certificate file to the Amazon root CA certificate file\.
+
+   The following example shows a proxy server CA certificate added to the Amazon root CA certificate file\.
+
+   ```
+   -----BEGIN CERTIFICATE-----
+   MIIEFTCCAv2gAwIQWgIVAMHSAzWG/5YVRYtRQOxXUTEpHuEmApzGCSqGSIb3DQEK
+   \nCwUAhuL9MQswCQwJVUzEPMAVUzEYMBYGA1UECgwP1hem9uLmNvbSBJbmMuMRww
+   ... content of proxy CA certificate ...
+   +vHIRlt0e5JAm5\noTIZGoFbK82A0/nO7f/t5PSIDAim9V3Gc3pSXxCCAQoFYnui
+   GaPUlGk1gCE84a0X\n7Rp/lND/PuMZ/s8YjlkY2NmYmNjMCAXDTE5MTEyN2cM216
+   gJMIADggEPADf2/m45hzEXAMPLE=
+   -----END CERTIFICATE-----
+   
+   -----BEGIN CERTIFICATE-----
+   MIIDQTCCAimgF6AwIBAgITBmyfz/5mjAo54vB4ikPmljZKyjANJmApzyMZFo6qBg
+   ADA5MQswCQYDVQQGEwJVUzEPMA0tMVT8QtPHRh8jrdkGA1UEChMGDV3QQDExBBKW
+   ... content of root CA certificate ...
+   o/ufQJQWUCyziar1hem9uMRkwFwYVPSHCb2XV4cdFyQzR1KldZwgJcIQ6XUDgHaa
+   5MsI+yMRQ+hDaXJiobldXgjUka642M4UwtBV8oK2xJNDd2ZhwLnoQdeXeGADKkpy
+   rqXRfKoQnoZsG4q5WTP46EXAMPLE
+   -----END CERTIFICATE-----
+   ```
+
+#### The networkProxy object<a name="network-proxy-object"></a>
 
 Use the `networkProxy` object to specify information about the network proxy\. This object contains the following information:
 
@@ -382,17 +530,21 @@ Use the `networkProxy` object to specify information about the network proxy\. T
 `proxy`  
 The proxy to which to connect\. This object contains the following information:    
 `url`  
-The URL of the proxy server in the format `scheme://userinfo@host:port`\.  
+The URL of the proxy server in the format `scheme://userinfo@host:port`\.  <a name="nucleus-component-configuration-proxy-url-segments"></a>
 + `scheme` – The scheme, which must be `http` or `https`\.
-+ `userinfo` – \(Optional\) The user name and password information\. If you specify this in the `url`, the Greengrass core device ignores the `username` and `password` fields\.
+**Important**  
+<a name="https-proxy-greengrass-nucleus-requirement"></a>Greengrass core devices must run [Greengrass nucleus ](greengrass-nucleus-component.md) v2\.5\.0 or later to use HTTPS proxies\.  
+If you configure an HTTPS proxy, you must add the proxy server CA certificate to the core device's Amazon root CA certificate\. For more information, see [Enable the core device to trust an HTTPS proxy](#https-proxy-certificate-trust)\.
++ `userinfo` – \(Optional\) The user name and password information\. If you specify this information in the `url`, the Greengrass core device ignores the `username` and `password` fields\.
 + `host` – The host name or IP address of the proxy server\.
 + `port` – \(Optional\) The port number\. If you don't specify the port, then the Greengrass core device uses the following default values:
   + `http` – 80
-  + `https` – 443  
+  + `https` – 443
+<a name="https-proxy-greengrass-nucleus-requirement"></a>Greengrass core devices must run [Greengrass nucleus ](greengrass-nucleus-component.md) v2\.5\.0 or later to use HTTPS proxies\.  
 `username`  
-\(Optional\) The user name to use to authenticate to the proxy server\.  
+\(Optional\) The user name that authenticates the proxy server\.  
 `password`  
-\(Optional\) The password to use to authenticate to the proxy server\.
+\(Optional\) The password that authenticates the proxy server\.
 
 ## Configure MQTT timeouts and cache settings<a name="configure-mqtt"></a>
 

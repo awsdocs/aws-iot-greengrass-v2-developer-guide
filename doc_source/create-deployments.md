@@ -6,7 +6,10 @@ When you create a deployment, you configure the software components to deploy an
 
 The deployment target determines the devices on which you want to run your components\. To deploy to one core device, specify a thing\. To deploy to multiple core devices, specify a thing group that includes those devices\. For more information about how to configure thing groups, see [Static thing groups](https://docs.aws.amazon.com/iot/latest/developerguide/thing-groups.html) and [Dynamic thing groups](https://docs.aws.amazon.com/iot/latest/developerguide/dynamic-thing-groups.html) in the *AWS IoT Developer Guide*\.
 
-Follow the steps in this section to create a deployment to a target for the first time\. For more information about how to update the software components on a target that has a deployment, see [Revise deployments](revise-deployments.md)\.
+Follow the steps in this section to create a deployment to a target\. For more information about how to update the software components on a target that has a deployment, see [Revise deployments](revise-deployments.md)\.
+
+**Warning**  
+The [CreateDeployment](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_CreateDeployment.html) operation can uninstall components from core devices\. If a component is present in the previous deployment and not the new deployment, the core device uninstalls that component\. To avoid uninstalling components, first use the [ListDeployments](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_ListDeployments.html) operation to check if the target for the deployment already has an existing deployment\. Then, use the [GetDeployment](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_GetDeployment.html) operation to start from that existing deployment when you create a new deployment\.
 
 **To create a deployment \(AWS CLI\)**
 
@@ -16,10 +19,43 @@ Follow the steps in this section to create a deployment to a target for the firs
 
    ```
    {
+     "targetArn": "targetArn"
+   }
+   ```
+
+1. Check if the deployment target has an existing deployment that you want to revise\. Do the following:
+
+   1. <a name="revise-deployment-list-deployments-intro"></a>Run the following command to list the deployments for the deployment target\. Replace *targetArn* with the ARN of the target AWS IoT thing or thing group\.
+
+      ```
+      aws greengrassv2 list-deployments --target-arn targetArn
+      ```
+
+      The response contains a list with the latest deployment for the target\. If the response is empty, the target doesn't have an existing deployment, and you can skip to [Step 3](#create-deployment-define-name-step)\. Otherwise, copy the `deploymentId` from the response to use in the next step\.
+**Note**  <a name="revise-deployment-list-deployments-revision-note"></a>
+You can also revise a deployment other than the latest revision for the target\. Specify the `--history-filter ALL` argument to list all deployments for the target\. Then, copy the ID of the deployment that you want to revise\.
+
+   1. <a name="revise-deployment-get-deployment"></a>Run the following command to get the deployment's details\. These details include metadata, components, and job configuration\. Replace *deploymentId* with the ID from the previous step\.
+
+      ```
+      aws greengrassv2 get-deployment --deployment-id deploymentId
+      ```
+
+      The response contains the deployment's details\.
+
+   1. Copy any of the following key\-value pairs from the previous command's response into `deployment.json`\. You can change these values for the new deployment\.
+      + `deploymentName` – The deployment's name\.
+      + `components` – The deployment's components\. To uninstall a component, remove it from this object\.
+      + `deploymentPolicies` – The deployment's policies\.
+      + `iotJobConfiguration` – The deployment's job configuration\.
+      + `tags` – The deployment's tags\.
+
+1. <a name="create-deployment-define-name-step"></a>\(Optional\) Define a name for the deployment\. Replace *deploymentName* with the name of the deployment\.
+
+   ```
+   {
      "targetArn": "targetArn",
-     "components": {
-       
-     }
+     "deploymentName": "deploymentName"
    }
    ```
 
@@ -28,17 +64,22 @@ Follow the steps in this section to create a deployment to a target for the firs
    + `configurationUpdate` – The [configuration update](update-component-configurations.md) to deploy\. The update is a patch operation that modifies the component's existing configuration on each target device, or the component's default configuration if it doesn't exist on the target device\. You can specify the following configuration updates:
      + Reset updates \(`reset`\) – \(Optional\) A list of JSON pointers that define the configuration values to reset to their default values on the target device\. The AWS IoT Greengrass Core software applies reset updates before it applies merge updates\. For more information, see [Reset updates](update-component-configurations.md#reset-configuration-update)\.
      + Merge updates \(`merge`\) – \(Optional\) A JSON document that defines the configuration values to merge onto the target device\. You must serialize the JSON document as a string\. For more information, see [Merge updates](update-component-configurations.md#merge-configuration-update)\.
-   + `runWith` – \(Optional\) The system process options that the AWS IoT Greengrass Core software uses to run this component's processes on the core device\. If you omit a parameter in the `runWith` object, the AWS IoT Greengrass Core software uses the default values that you configure on the [Greengrass nucleus component](greengrass-nucleus-component.md)\.
+   + <a name="component-run-with-config"></a>`runWith` – \(Optional\) The system process options that the AWS IoT Greengrass Core software uses to run this component's processes on the core device\. If you omit a parameter in the `runWith` object, the AWS IoT Greengrass Core software uses the default values that you configure on the [Greengrass nucleus component](greengrass-nucleus-component.md)\.
 
      You can specify any of the following options:
-     + `posixUser` – The POSIX system user and \(optional\) group to use to run this component's processes\. You can set the system user and group for generic and Lambda components\. Specify the user and group separated by a colon \(`:`\) in the following format: `user:group`\. If you don't specify a group, the AWS IoT Greengrass Core software uses the primary group for the user\. For more information, see [Configure the user and group that run components](configure-greengrass-core-v2.md#configure-component-user)\.
+     + `posixUser` – The POSIX system user and, optionally, group to use to run this component on Linux core devices\. The user, and group if specified, must exist on each Linux core device\. Specify the user and group separated by a colon \(`:`\) in the following format: `user:group`\. The group is optional\. If you don't specify a group, the AWS IoT Greengrass Core software uses the primary group for the user\. For more information, see [Configure the user that runs components](configure-greengrass-core-v2.md#configure-component-user)\.
+     + `windowsUser` – The Windows user to use to run this component on Windows core devices\. The user must exist on each Windows core device, and its name and password must be stored in the LocalSystem account's Credentials Manager instance\. For more information, see [Configure the user that runs components](configure-greengrass-core-v2.md#configure-component-user)\.
+
+       This feature is available for v2\.5\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.
      + `systemResourceLimits` – The system resource limits to apply to this component's processes\. You can apply system resource limits to generic and non\-containerized Lambda components\. For more information, see [Configure system resource limits for components](configure-greengrass-core-v2.md#configure-component-system-resource-limits)\.
 
        You can specify any of the following options:
        + `cpus` – <a name="system-resource-limits-cpu-definition-this"></a>The maximum amount of CPU time that this component's processes can use on the core device\. A core device's total CPU time is equivalent to the device's number of CPU cores\. For example, on a core device with 4 CPU cores, you can set this value to `2` to limit this component's processes to 50 percent usage of each CPU core\. On a device with 1 CPU core, you can set this value to `0.25` to limit this component's processes to 25 percent usage of the CPU\. If you set this value to a number greater than the number of CPU cores, the AWS IoT Greengrass Core software doesn't limit the component's CPU usage\.
        + `memory` – <a name="system-resource-limits-memory-definition-this"></a>The maximum amount of RAM \(in kilobytes\) that this component's processes can use on the core device\.
 
-       This feature is available for v2\.4\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.  
+       This feature is available for v2\.4\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. AWS IoT Greengrass doesn't currently support this feature on Windows core devices\. 
+
+      
 **Example basic configuration update**  
 
    The following example `components` object specifies to deploy a component, `com.example.PythonRuntime`, that expects a configuration parameter named `pythonVersion`\.
@@ -46,6 +87,7 @@ Follow the steps in this section to create a deployment to a target for the firs
    ```
    {
      "targetArn": "targetArn",
+     "deploymentName": "deploymentName",
      "components": {
        "com.example.PythonRuntime": {
          "componentVersion": "1.0.0",
@@ -105,6 +147,7 @@ Follow the steps in this section to create a deployment to a target for the firs
    ```
    {
      "targetArn": "targetArn",
+     "deploymentName": "deploymentName",
      "components": {
        "com.example.IndustrialDashboard": {
          "componentVersion": "1.0.0",
@@ -152,6 +195,7 @@ Follow the steps in this section to create a deployment to a target for the firs
    ```
    {
      "targetArn": "targetArn",
+     "deploymentName": "deploymentName",
      "components": {
        "com.example.IndustrialDashboard": {
          "componentVersion": "1.0.0",
@@ -186,6 +230,7 @@ Follow the steps in this section to create a deployment to a target for the firs
    ```
    {
      "targetArn": "targetArn",
+     "deploymentName": "deploymentName",
      "components": {
        "com.example.IndustrialDashboard": {
          "componentVersion": "1.0.0",
@@ -242,8 +287,7 @@ Follow the steps in this section to create a deployment to a target for the firs
 1. Run the following command to create the deployment from `deployment.json`\.
 
    ```
-   aws greengrassv2 create-deployment \
-     --cli-input-json file://deployment.json
+   aws greengrassv2 create-deployment --cli-input-json file://deployment.json
    ```
 
    <a name="check-new-deployment-status"></a>The response includes a `deploymentId` that identifies this deployment\. You can use the deployment ID to check the status of the deployment\. For more information, see [Check deployment status](check-deployment-status.md#check-cloud-deployment-status)\.

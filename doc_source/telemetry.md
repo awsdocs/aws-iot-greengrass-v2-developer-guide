@@ -9,9 +9,10 @@ You can use the following methods to gather telemetry data from your Greengrass 
 + **Telemetry agent**—The telemetry agent on Greengrass core devices collects local telemetry data and publishes it to Amazon EventBridge without requiring any customer interaction\. Core devices publish telemetry data to EventBridge on a best effort basis\. For example, core devices might fail to deliver telemetry data while offline\. 
 
   The telemetry agent feature is enabled by default for all Greengrass core devices\. You automatically start to receive data as soon as you set up a Greengrass core device\. Aside from your data link costs, the data transfer from the core device to AWS IoT Core is without charge\. This is because the agent publishes to an AWS reserved topic\. However, depending on your use case, you might incur costs when you receive or process the data\.
-
 **Note**  
 Amazon EventBridge is an event bus service that you can use to connect your applications with data from a variety of sources, such as Greengrass core devices\. For more information, see [What is Amazon EventBridge?](https://docs.aws.amazon.com/eventbridge/latest/userguide/what-is-amazon-eventbridge.html) in the *Amazon EventBridge User Guide*\.
+
+To ensure that the the AWS IoT Greengrass Core software functions properly, AWS IoT Greengrass uses the data for development and quality improvement purposes\. This feature also helps inform new and enhanced edge capabilities\. AWS IoT Greengrass retains telemetry data for up to seven days\.
 
 This section describes how to configure and use the telemetry agent\. For information about configuring the nucleus emitter component, see [Nucleus telemetry emitter](nucleus-emitter-component.md)\.
 
@@ -219,22 +220,68 @@ Use the following steps to use the AWS CLI to create an EventBridge rule that re
 1. Create the rule\.
    + Replace *thing\-name* with the thing name of the core device\.
 
+------
+#### [ Linux or Unix ]
+
    ```
    aws events put-rule \
      --name MyGreengrassTelemetryEventRule \
      --event-pattern "{\"source\": [\"aws.greengrass\"], \"detail\": {\"ThingName\": [\"thing-name\"]}}"
    ```
 
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+   ```
+   aws events put-rule ^
+     --name MyGreengrassTelemetryEventRule ^
+     --event-pattern "{\"source\": [\"aws.greengrass\"], \"detail\": {\"ThingName\": [\"thing-name\"]}}"
+   ```
+
+------
+#### [ PowerShell ]
+
+   ```
+   aws events put-rule `
+     --name MyGreengrassTelemetryEventRule `
+     --event-pattern "{\"source\": [\"aws.greengrass\"], \"detail\": {\"ThingName\": [\"thing-name\"]}}"
+   ```
+
+------
+
    Properties that are omitted from the pattern are ignored\.
 
 1. Add the topic as a rule target\. The following example uses Amazon SQS but you can configure other target types\.
    + Replace *queue\-arn* with the ARN of your Amazon SQS queue\.
+
+------
+#### [ Linux or Unix ]
 
    ```
    aws events put-targets \
      --rule MyGreengrassTelemetryEventRule \
      --targets "Id"="1","Arn"="queue-arn"
    ```
+
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+   ```
+   aws events put-targets ^
+     --rule MyGreengrassTelemetryEventRule ^
+     --targets "Id"="1","Arn"="queue-arn"
+   ```
+
+------
+#### [ PowerShell ]
+
+   ```
+   aws events put-targets `
+     --rule MyGreengrassTelemetryEventRule `
+     --targets "Id"="1","Arn"="queue-arn"
+   ```
+
+------
 **Note**  
 To allow Amazon EventBridge to invoke your target queue, you must add a resource\-based policy to your topic\. For more information, see [Amazon SQS permissions](https://docs.aws.amazon.com/eventbridge/latest/userguide/resource-based-policies-eventbridge.html#sqs-permissions) in the *Amazon EventBridge User Guide*\.
 

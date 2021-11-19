@@ -39,9 +39,11 @@ Use the following information to troubleshoot issues with Greengrass discovery\.
 
 #### HTTP 404: \{"errorMessage":"The thing provided for discovery was not found"\}<a name="greengrass-discovery-http-issue-not-found"></a>
 
-<a name="troubleshooting-greengrass-discovery-not-found-issue"></a>You might see this error if the client device isn't associated to any Greengrass core devices or AWS IoT Greengrass V1 groups\.
+<a name="troubleshooting-greengrass-discovery-not-found-issue"></a>You might see this error in the following cases:<a name="troubleshooting-greengrass-discovery-not-found-issue-list"></a>
++ The client device isn't associated to any Greengrass core devices or AWS IoT Greengrass V1 groups\.
++ None of the client device's associated Greengrass core devices or AWS IoT Greengrass V1 groups have an MQTT broker endpoint\.
 
-<a name="troubleshooting-greengrass-discovery-not-found-solution"></a>Check that the client device is associated to the core device to which you want it to connect\. For more information, see [Associate client devices](associate-client-devices.md)\.
+<a name="troubleshooting-greengrass-discovery-not-found-solution"></a>Check that the client device is associated to the core device to which you want it to connect\. Then, check that the core device has at least one MQTT broker endpoint\. For more information, see [Associate client devices](associate-client-devices.md) and [Manage core device endpoints](manage-core-device-endpoints.md)\.
 
 ### Greengrass discovery issues \(AWS IoT Device SDK v2 for Python\)<a name="greengrass-discovery-python-issues"></a>
 
@@ -66,9 +68,11 @@ Use the following information to troubleshoot issues with Greengrass discovery i
 
 #### awsiot\.greengrass\_discovery\.DiscoveryException: \('Error during discover call: response\_code=404', 404\)<a name="greengrass-discovery-python-issue-not-found"></a>
 
-<a name="troubleshooting-greengrass-discovery-not-found-issue"></a>You might see this error if the client device isn't associated to any Greengrass core devices or AWS IoT Greengrass V1 groups\.
+<a name="troubleshooting-greengrass-discovery-not-found-issue"></a>You might see this error in the following cases:<a name="troubleshooting-greengrass-discovery-not-found-issue-list"></a>
++ The client device isn't associated to any Greengrass core devices or AWS IoT Greengrass V1 groups\.
++ None of the client device's associated Greengrass core devices or AWS IoT Greengrass V1 groups have an MQTT broker endpoint\.
 
-<a name="troubleshooting-greengrass-discovery-not-found-solution"></a>Check that the client device is associated to the core device to which you want it to connect\. For more information, see [Associate client devices](associate-client-devices.md)\.
+<a name="troubleshooting-greengrass-discovery-not-found-solution"></a>Check that the client device is associated to the core device to which you want it to connect\. Then, check that the core device has at least one MQTT broker endpoint\. For more information, see [Associate client devices](associate-client-devices.md) and [Manage core device endpoints](manage-core-device-endpoints.md)\.
 
 ### Greengrass discovery issues \(AWS IoT Device SDK v2 for C\+\+\)<a name="greengrass-discovery-cpp-issues"></a>
 
@@ -93,9 +97,11 @@ Use the following information to troubleshoot issues with Greengrass discovery i
 
 #### aws\-c\-common: AWS\_ERROR\_UNKNOWN, Unknown error\. \(HTTP 404\)<a name="greengrass-discovery-cpp-issue-not-found"></a>
 
-<a name="troubleshooting-greengrass-discovery-not-found-issue"></a>You might see this error if the client device isn't associated to any Greengrass core devices or AWS IoT Greengrass V1 groups\.
+<a name="troubleshooting-greengrass-discovery-not-found-issue"></a>You might see this error in the following cases:<a name="troubleshooting-greengrass-discovery-not-found-issue-list"></a>
++ The client device isn't associated to any Greengrass core devices or AWS IoT Greengrass V1 groups\.
++ None of the client device's associated Greengrass core devices or AWS IoT Greengrass V1 groups have an MQTT broker endpoint\.
 
-<a name="troubleshooting-greengrass-discovery-not-found-solution"></a>Check that the client device is associated to the core device to which you want it to connect\. For more information, see [Associate client devices](associate-client-devices.md)\.
+<a name="troubleshooting-greengrass-discovery-not-found-solution"></a>Check that the client device is associated to the core device to which you want it to connect\. Then, check that the core device has at least one MQTT broker endpoint\. For more information, see [Associate client devices](associate-client-devices.md) and [Manage core device endpoints](manage-core-device-endpoints.md)\.
 
 ### Greengrass discovery issues \(AWS IoT Device SDK v2 for JavaScript\)<a name="greengrass-discovery-javascript-issues"></a>
 
@@ -121,9 +127,11 @@ Use the following information to troubleshoot issues with Greengrass discovery i
 
 #### Error: Discovery failed \(headers: \[object Object\]\) \{ response\_code: 404 \}<a name="greengrass-discovery-javascript-issue-not-found"></a>
 
-<a name="troubleshooting-greengrass-discovery-not-found-issue"></a>You might see this error if the client device isn't associated to any Greengrass core devices or AWS IoT Greengrass V1 groups\.
+<a name="troubleshooting-greengrass-discovery-not-found-issue"></a>You might see this error in the following cases:<a name="troubleshooting-greengrass-discovery-not-found-issue-list"></a>
++ The client device isn't associated to any Greengrass core devices or AWS IoT Greengrass V1 groups\.
++ None of the client device's associated Greengrass core devices or AWS IoT Greengrass V1 groups have an MQTT broker endpoint\.
 
-<a name="troubleshooting-greengrass-discovery-not-found-solution"></a>Check that the client device is associated to the core device to which you want it to connect\. For more information, see [Associate client devices](associate-client-devices.md)\.
+<a name="troubleshooting-greengrass-discovery-not-found-solution"></a>Check that the client device is associated to the core device to which you want it to connect\. Then, check that the core device has at least one MQTT broker endpoint\. For more information, see [Associate client devices](associate-client-devices.md) and [Manage core device endpoints](manage-core-device-endpoints.md)\.
 
 #### Error: Discovery failed \(headers: \[object Object\]\)<a name="greengrass-discovery-javascript-issue-forbidden-not-found"></a>
 
@@ -131,9 +139,11 @@ You might see this error \(without an HTTP response code\) when you run the Gree
 + <a name="troubleshooting-greengrass-discovery-forbidden-issue"></a>You might see this error if the client device doesn't have permission to call `greengrass:Discover` for itself\.
 
   <a name="troubleshooting-greengrass-discovery-forbidden-solution"></a>Check that the client device's certificate has a policy that allows `greengrass:Discover`\. You can't use [thing policy variables](https://docs.aws.amazon.com/iot/latest/developerguide/thing-policy-variables.html) \(`iot:Connection.Thing.*`\) in the `Resource` section for this permission\. For more information, see [Discovery authentication and authorization](greengrass-discover-api.md#greengrass-discover-auth)\.
-+ <a name="troubleshooting-greengrass-discovery-not-found-issue"></a>You might see this error if the client device isn't associated to any Greengrass core devices or AWS IoT Greengrass V1 groups\.
++ <a name="troubleshooting-greengrass-discovery-not-found-issue"></a>You might see this error in the following cases:<a name="troubleshooting-greengrass-discovery-not-found-issue-list"></a>
+  + The client device isn't associated to any Greengrass core devices or AWS IoT Greengrass V1 groups\.
+  + None of the client device's associated Greengrass core devices or AWS IoT Greengrass V1 groups have an MQTT broker endpoint\.
 
-  <a name="troubleshooting-greengrass-discovery-not-found-solution"></a>Check that the client device is associated to the core device to which you want it to connect\. For more information, see [Associate client devices](associate-client-devices.md)\.
+  <a name="troubleshooting-greengrass-discovery-not-found-solution"></a>Check that the client device is associated to the core device to which you want it to connect\. Then, check that the core device has at least one MQTT broker endpoint\. For more information, see [Associate client devices](associate-client-devices.md) and [Manage core device endpoints](manage-core-device-endpoints.md)\.
 
 ### Greengrass discovery issues \(AWS IoT Device SDK v2 for Java\)<a name="greengrass-discovery-java-issues"></a>
 
@@ -158,6 +168,8 @@ Use the following information to troubleshoot issues with Greengrass discovery i
 
 #### java\.lang\.RuntimeException: Error x\-amzn\-ErrorType\(404\)<a name="greengrass-discovery-java-issue-not-found"></a>
 
-<a name="troubleshooting-greengrass-discovery-not-found-issue"></a>You might see this error if the client device isn't associated to any Greengrass core devices or AWS IoT Greengrass V1 groups\.
+<a name="troubleshooting-greengrass-discovery-not-found-issue"></a>You might see this error in the following cases:<a name="troubleshooting-greengrass-discovery-not-found-issue-list"></a>
++ The client device isn't associated to any Greengrass core devices or AWS IoT Greengrass V1 groups\.
++ None of the client device's associated Greengrass core devices or AWS IoT Greengrass V1 groups have an MQTT broker endpoint\.
 
-<a name="troubleshooting-greengrass-discovery-not-found-solution"></a>Check that the client device is associated to the core device to which you want it to connect\. For more information, see [Associate client devices](associate-client-devices.md)\.
+<a name="troubleshooting-greengrass-discovery-not-found-solution"></a>Check that the client device is associated to the core device to which you want it to connect\. Then, check that the core device has at least one MQTT broker endpoint\. For more information, see [Associate client devices](associate-client-devices.md) and [Manage core device endpoints](manage-core-device-endpoints.md)\.

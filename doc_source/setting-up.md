@@ -1,44 +1,64 @@
 # Setting up AWS IoT Greengrass core devices<a name="setting-up"></a>
 
-Complete the tasks in this section to install, configure, and run the AWS IoT Greengrass Core software V2\.
+Complete the tasks in this section to install, configure, and run the AWS IoT Greengrass Core software\.
 
 **Note**  
-This section describes advanced configuration of the AWS IoT Greengrass Core software\. If you're a first\-time user of AWS IoT Greengrass V2, we recommend that you complete the [getting started tutorial](getting-started.md) to set up a core device and explore the features of AWS IoT Greengrass\.
+This section describes advanced installation and configuration of the AWS IoT Greengrass Core software\. If you're a first\-time user of AWS IoT Greengrass V2, we recommend that you first complete the [getting started tutorial](getting-started.md) to set up a core device and explore the features of AWS IoT Greengrass\.
+
+
+
+## Supported platforms and requirements<a name="installation-requirements"></a>
+
+Before you begin, make sure you meet the following requirements to install and run the AWS IoT Greengrass Core software\.
 
 **Topics**
 + [Supported platforms](#greengrass-v2-supported-platforms)
-+ [Requirements](#greengrass-v2-requirements)
-+ [Set up an AWS account](#set-up-aws-account)
-+ [Install the AWS IoT Greengrass Core software](install-greengrass-core-v2.md)
-+ [Run the AWS IoT Greengrass Core software](run-greengrass-core-v2.md)
-+ [Run AWS IoT Greengrass Core software in a Docker container](run-greengrass-docker.md)
-+ [Configure the AWS IoT Greengrass Core software](configure-greengrass-core-v2.md)
-+ [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)
-+ [Uninstall the AWS IoT Greengrass Core software](uninstall-greengrass-core-v2.md)
++ [Device requirements](#greengrass-v2-requirements)
++ [Lambda function requirements](#greengrass-v2-lambda-requirements)
 
-## Supported platforms<a name="greengrass-v2-supported-platforms"></a>
+### Supported platforms<a name="greengrass-v2-supported-platforms"></a>
 
-AWS IoT Greengrass supports devices running the following platforms:
-+ Architecture: Armv7l
-  + OS: Linux
-+ Architecture: Armv8 \(AArch64\)
-  + OS: Linux
-+ Architecture: x86\_64
-  + OS: Linux
+AWS IoT Greengrass officially supports devices running the following platforms\. Devices with platforms not included in this list might work, but AWS IoT Greengrass tests on only these specified platforms\.
+
+------
+#### [ Linux ]
+
+Architectures:
++ Armv7l
++ Armv8 \(AArch64\)
++ x86\_64
+
+------
+#### [ Windows ]
+
+Architectures:
++ x86\_64
+
+Versions:
++ Windows 10
++ Windows Server 2019
+
+**Note**  
+Some AWS IoT Greengrass features aren't currently supported on Windows devices\. For more information, see [Greengrass feature compatibility by operating system](operating-system-feature-support-matrix.md) and [Feature considerations for Windows devices](#greengrass-v2-windows-feature-considerations)\.
+
+------
 
 Linux platforms can also run AWS IoT Greengrass V2 in a Docker container\. For more information, see [Run AWS IoT Greengrass Core software in a Docker container](run-greengrass-docker.md)\. 
 
-To build a custom Linux\-based operating system, you can use the BitBake recipe for AWS IoT Greengrass V2 in the [`meta-aws` project](https://github.com/aws/meta-aws/tree/master/recipes-iot)\. The [Yocto Project](https://www.yoctoproject.org/) is an open source collaboration project that helps you build custom Linux\-based systems for embedded applications regardless of hardware architecture\. The `meta-aws` project provides recipes that you can use to build AWS edge software capabilities in [embedded Linux](https://elinux.org/) systems that are built with [OpenEmbedded](https://www.openembedded.org/wiki/Main_Page) and Yocto Project build frameworks\. The BitBake recipe for AWS IoT Greengrass V2 installs, configures, and automatically runs the AWS IoT Greengrass Core software on your device\.
+To build a custom Linux\-based operating system, you can use the BitBake recipe for AWS IoT Greengrass V2 in the [`meta-aws` project](https://github.com/aws/meta-aws/tree/master/recipes-iot)\. The `meta-aws` project provides recipes that you can use to build AWS edge software capabilities in [embedded Linux](https://elinux.org/) systems that are built with [OpenEmbedded](https://www.openembedded.org/wiki/Main_Page) and Yocto Project build frameworks\. The [Yocto Project](https://www.yoctoproject.org/) is an open source collaboration project that helps you build custom Linux\-based systems for embedded applications regardless of hardware architecture\. The BitBake recipe for AWS IoT Greengrass V2 installs, configures, and automatically runs the AWS IoT Greengrass Core software on your device\.
 
-## Requirements<a name="greengrass-v2-requirements"></a>
+### Device requirements<a name="greengrass-v2-requirements"></a>
 
 Devices must meet the following requirements to install and run the AWS IoT Greengrass Core software v2\.x\.
 
 **Note**  
 You can use AWS IoT Device Tester for AWS IoT Greengrass to verify that your device can run the AWS IoT Greengrass Core software and communicate with the AWS Cloud\. For more information, see [Using AWS IoT Device Tester for AWS IoT Greengrass V2](device-tester-for-greengrass-ug.md)\.
+
+------
+#### [ Linux ]
 + Minimum 256 MB disk space available for the AWS IoT Greengrass Core software\. This requirement doesn't include components deployed to the core device\.
 + Minimum 96 MB RAM allocated to the AWS IoT Greengrass Core software\. This requirement doesn't include components that run on the core device\. For more information, see [Control memory allocation with JVM options](configure-greengrass-core-v2.md#jvm-tuning)\.
-+ Java version 8 or greater\. We recommend [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.
++ Java Runtime Environment \(JRE\) version 8 or greater\. To use Java to develop custom components, you must install a Java Development Kit \(JDK\)\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.
 + [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.25 or greater\.
 + The user that runs the AWS IoT Greengrass Core software \(typically `root`\), must have permission to run `sudo` with any user and any group\. The `/etc/sudoers` file must give this user permission to run `sudo` as other groups\. The permission for the user in `/etc/sudoers` should look like the following example\.
 
@@ -65,11 +85,21 @@ You can use AWS IoT Device Tester for AWS IoT Greengrass to verify that your dev
   + \(Optional\) `useradd`, `groupadd`, and `usermod` \(to set up the `ggc_user` system user and `ggc_group` system group\)
   + \(Optional\) `mkfifo` \(to run Lambda functions as components\)
 + To configure system resource limits for component processes, your device must run Linux kernel version 2\.6\.24 or later\.
-+ To run Lambda functions, your device must meet additional requirements\. For more information, see [Requirements to run Lambda functions](#greengrass-v2-lambda-requirements)\.
++ To run Lambda functions, your device must meet additional requirements\. For more information, see [Lambda function requirements](#greengrass-v2-lambda-requirements)\.
 
-### Requirements to run Lambda functions<a name="greengrass-v2-lambda-requirements"></a>
+------
+#### [ Windows ]
++ Minimum 256 MB disk space available for the AWS IoT Greengrass Core software\. This requirement doesn't include components deployed to the core device\.
++ Minimum 160 MB RAM allocated to the AWS IoT Greengrass Core software\. This requirement doesn't include components that run on the core device\. For more information, see [Control memory allocation with JVM options](configure-greengrass-core-v2.md#jvm-tuning)\.
++ A 64\-bit version of Java Runtime Environment \(JRE\) version 8 or greater\. To use Java to develop custom components, you must install a Java Development Kit \(JDK\)\. We recommend [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\. 
++ Each user that runs component processes must exist in the LocalSystem account, and the user's name and password must be in the Credential Manager instance for the LocalSystem account\. You can set up this user when you follow instructions to [install the AWS IoT Greengrass Core software](install-greengrass-core-v2.md)\.
+
+------
+
+### Lambda function requirements<a name="greengrass-v2-lambda-requirements"></a>
 
 Your device must meet the following requirements to run Lambda functions:
++ A Linux\-based operating system\.
 + You must run the AWS IoT Greengrass Core software as a root user\. Use `sudo`, for example\.
 + Your device must have the `mkfifo` shell command\.
 + Your device must run the programming language libraries that a Lambda function requires\. You must install the required libraries on the device and add them to the `PATH` environment variable\.
@@ -104,6 +134,25 @@ Your device must meet the following requirements to run Lambda functions:
       + `CONFIG_KEYS`
       + `CONFIG_SECCOMP`
       + `CONFIG_SHMEM`
+
+## Feature considerations for Windows devices<a name="greengrass-v2-windows-feature-considerations"></a>
+
+Some AWS IoT Greengrass features aren't currently supported on Windows devices\. Review the following considerations to confirm if a Windows device satisfies your feature requirements\. For more information, see [Greengrass feature compatibility by operating system](operating-system-feature-support-matrix.md)\.
++ You can't run Lambda functions\.
++ You can't configure system resource limits to customize the maximum amount of CPU and RAM usage that each component's processes can use on a core device\.
++ You can't pause and resume component processes using the [PauseComponent](ipc-component-lifecycle.md#ipc-operation-pausecomponent) and [ResumeComponent](ipc-component-lifecycle.md#ipc-operation-resumecomponent) interprocess communication operations\.
++ The following [AWS\-provided components](public-components.md) are not currently supported: 
+  + Kinesis Data Firehose
+  + Lambda launcher
+  + Lambda manager
+  + Lambda runtimes
+  + Legacy subscription router
+  + Modbus\-RTU protocol adapter
+  + Secure tunneling
+  + Amazon SNS
+  + AWS IoT SiteWise OPC\-UA collector
+  + AWS IoT SiteWise publisher
+  + AWS IoT SiteWise processor
 
 ## Set up an AWS account<a name="set-up-aws-account"></a>
 

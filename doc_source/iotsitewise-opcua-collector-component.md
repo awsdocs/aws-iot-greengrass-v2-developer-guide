@@ -7,6 +7,7 @@ With this component, AWS IoT SiteWise gateways can connect to multiple OPC\-UA s
 **Topics**
 + [Versions](#iotsitewise-opcua-collector-component-versions)
 + [Type](#iotsitewise-opcua-collector-component-type)
++ [Operating system](#iotsitewise-opcua-collector-component-os-support)
 + [Requirements](#iotsitewise-opcua-collector-component-requirements)
 + [Dependencies](#iotsitewise-opcua-collector-component-dependencies)
 + [Configuration](#iotsitewise-opcua-collector-component-configuration)
@@ -23,13 +24,27 @@ This component has the following versions:
 
 ## Type<a name="iotsitewise-opcua-collector-component-type"></a>
 
-<a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
+<a name="public-component-type-generic"></a>This <a name="public-component-type-generic-phrase"></a>component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
 
 <a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
+
+## Operating system<a name="iotsitewise-opcua-collector-component-os-support"></a>
+
+This component can be installed on Linux core devices only\.
 
 ## Requirements<a name="iotsitewise-opcua-collector-component-requirements"></a>
 
 This component has the following requirements:
++ The Greengrass core device must run on one of the following platforms:
+  + OS: Ubuntu 20\.04 or 18\.04
+
+    Architecture: x86\_64 \(AMD64\)
+  + OS: Red Hat Enterprise Linux \(RHEL\) 8
+
+    Architecture: x86\_64 \(AMD64\)
+  + OS: Amazon Linux 2
+
+    Architecture: x86\_64 \(AMD64\)
 + The Greengrass core device must allow outbound network connectivity to OPC\-UA servers\.
 
 ## Dependencies<a name="iotsitewise-opcua-collector-component-dependencies"></a>
@@ -61,16 +76,40 @@ This component writes `BatchPutAssetPropertyValue` messages to AWS IoT Greengras
 
 This component uses the following log file\.
 
+------
+#### [ Linux ]
+
 ```
 /greengrass/v2/logs/aws.iot.SiteWiseEdgeCollectorOpcua.log
 ```
 
+------
+#### [ Windows ]
+
+```
+C:\greengrass\v2\logs\aws.iot.SiteWiseEdgeCollectorOpcua.log
+```
+
+------
+
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
+
+------
+#### [ Linux ]
 
   ```
   sudo tail -f /greengrass/v2/logs/aws.iot.SiteWiseEdgeCollectorOpcua.log
   ```
+
+------
+#### [ Windows \(PowerShell\) ]
+
+  ```
+  Get-Content C:\greengrass\v2\logs\aws.iot.SiteWiseEdgeCollectorOpcua.log -Tail 10 -Wait
+  ```
+
+------
 
 ## Licenses<a name="iotsitewise-opcua-collector-component-licenses"></a>
 
@@ -83,6 +122,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.0\.2  |  Bug fixes and improvements to asset priority syncing with edge\.  | 
 |  2\.0\.1  |  Initial version\.  | 
 
 ## See also<a name="iotsitewise-opcua-collector-component-see-also"></a>

@@ -1,6 +1,6 @@
-# Use the AWS IoT Device SDK for interprocess communication \(IPC\)<a name="interprocess-communication"></a>
+# Use the AWS IoT Device SDK to communicate with the Greengrass nucleus, other components, and AWS IoT Core<a name="interprocess-communication"></a>
 
-Components running on your core device can use the AWS IoT Greengrass Core interprocess communication \(IPC\) library in the AWS IoT Device SDK to communicate with other AWS IoT Greengrass components and processes\. To develop and run custom components that use IPC, you must use the AWS IoT Device SDK to connect to the AWS IoT Greengrass Core IPC service and perform IPC operations\.
+Components running on your core device can use the AWS IoT Greengrass Core interprocess communication \(IPC\) library in the AWS IoT Device SDK to communicate with the AWS IoT Greengrass nucleus and other Greengrass components\. To develop and run custom components that use IPC, you must use the AWS IoT Device SDK to connect to the AWS IoT Greengrass Core IPC service and perform IPC operations\.
 
 The IPC interface supports two types of operations:
 + **Request/response**
@@ -31,7 +31,7 @@ The AWS IoT Greengrass Core IPC libraries are included in the following AWS IoT 
 + [AWS IoT Device SDK for Python v2](https://github.com/aws/aws-iot-device-sdk-python-v2) \(v1\.5\.3 or later\)
 
   For more information about using the AWS IoT Device SDK for Python v2 to connect to the AWS IoT Greengrass Core IPC service, see [Use AWS IoT Device SDK for Python v2](#ipc-python)\.
-+ [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2) \(v1\.13\.0 or later\)
++ [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2) \(Linux: v1\.13\.0 or later; Windows: v1\.14\.6 or later\)
 
   For more information about using the AWS IoT Device SDK for C\+\+ v2 to connect to the AWS IoT Greengrass Core IPC service, see [Use AWS IoT Device SDK for C\+\+ v2](#ipc-cpp)\.
 
@@ -233,18 +233,20 @@ To use interprocess communication in your custom component, you must create a co
 
 ### Use AWS IoT Device SDK for C\+\+ v2<a name="ipc-cpp"></a>
 
-**Important**  <a name="iot-device-sdk-cpp-v2-build-requirements"></a>
-To build the AWS IoT Device SDK v2 for C\+\+, a device must have the following tools:  
-C\+\+ 11 or later
-CMake 3\.1 or later
-One of the following compilers:  
-GCC 4\.8 or later
-Clang 3\.9 or later
-MSVC 2015 or later
+**Note**  
+AWS IoT Greengrass doesn't currently support this feature on Windows core devices\. 
+
+<a name="iot-device-sdk-cpp-v2-build-requirements-intro"></a>To build the AWS IoT Device SDK v2 for C\+\+, a device must have the following tools:<a name="iot-device-sdk-cpp-v2-build-requirements"></a>
++ C\+\+ 11 or later
++ CMake 3\.1 or later
++ One of the following compilers:
+  + GCC 4\.8 or later
+  + Clang 3\.9 or later
+  + MSVC 2015 or later
 
 **To use the AWS IoT Device SDK for C\+\+ v2**
 
-1. Download the [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2) \(v1\.13\.0 or later\)\.
+1. Download the [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2) \(Linux: v1\.13\.0 or later; Windows: v1\.14\.6 or later\)\.
 
 1. Follow the [installation instructions in the README](https://github.com/aws/aws-iot-device-sdk-cpp-v2#Installation) to build the AWS IoT Device SDK for C\+\+ v2 from source\.
 
@@ -469,7 +471,7 @@ The following example component recipe includes an `accessControl` object define
   "Manifests": [
     {
       "Lifecycle": {
-        "Run": "java -Dlog.level=INFO -jar {artifacts:path}/HelloWorld.jar"
+        "Run": "java -jar {artifacts:path}/HelloWorld.jar"
       }
     }
   ]
@@ -496,7 +498,7 @@ ComponentConfiguration:
 Manifests:
   - Lifecycle:
       Run: |-
-        java -Dlog.level=INFO -jar {artifacts:path}/HelloWorld.jar
+        java -jar {artifacts:path}/HelloWorld.jar
 ```
 
 ## Subscribe to IPC event streams<a name="ipc-subscribe-operations"></a>
@@ -589,53 +591,118 @@ The following example demonstrates how to use the [SubscribeToTopic](ipc-publish
 #### [ Java ]
 
 **Example: Subscribe to local publish/subscribe messages**  <a name="ipc-operation-subscribetotopic-example-java"></a>
+This example uses an `IPCUtils` class to create a connection to the AWS IoT Greengrass Core IPC service\. For more information, see [Connect to the AWS IoT Greengrass Core IPC service](#ipc-service-connect)\.
 
 ```
-String topic = "my/topic";
+package com.aws.greengrass.docs.samples.ipc;
 
-SubscribeToTopicRequest subscribeToTopicRequest = new SubscribeToTopicRequest();
-subscribeToTopicRequest.setTopic(topic);
+import com.aws.greengrass.docs.samples.ipc.util.IPCUtils;
+import software.amazon.awssdk.aws.greengrass.GreengrassCoreIPCClient;
+import software.amazon.awssdk.aws.greengrass.SubscribeToTopicResponseHandler;
+import software.amazon.awssdk.aws.greengrass.model.SubscribeToTopicRequest;
+import software.amazon.awssdk.aws.greengrass.model.SubscribeToTopicResponse;
+import software.amazon.awssdk.aws.greengrass.model.SubscriptionResponseMessage;
+import software.amazon.awssdk.aws.greengrass.model.UnauthorizedError;
+import software.amazon.awssdk.eventstreamrpc.EventStreamRPCConnection;
+import software.amazon.awssdk.eventstreamrpc.StreamResponseHandler;
 
-StreamResponseHandler<SubscriptionResponseMessage> streamResponseHandler =
-        new StreamResponseHandler<SubscriptionResponseMessage>() {
-            @Override
-            public void onStreamEvent(SubscriptionResponseMessage subscriptionResponseMessage) {
-                try {
-                    String message = new String(subscriptionResponseMessage.getBinaryMessage()
-                            .getMessage(), StandardCharsets.UTF_8);
-                    // Handle message.
-                } catch (Exception e) {
-                    e.printStackTrace();
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+public class SubscribeToTopic {
+    public static final int TIMEOUT_SECONDS = 10;
+
+    public static void main(String[] args) {
+        String topic = args[0];
+        try (EventStreamRPCConnection eventStreamRPCConnection =
+                     IPCUtils.getEventStreamRpcConnection()) {
+            GreengrassCoreIPCClient ipcClient =
+                    new GreengrassCoreIPCClient(eventStreamRPCConnection);
+            StreamResponseHandler<SubscriptionResponseMessage> streamResponseHandler =
+                    new SubscriptionResponseHandler(topic);
+            SubscribeToTopicResponseHandler responseHandler =
+                    SubscribeToTopic.subscribeToTopic(ipcClient, topic, streamResponseHandler);
+            CompletableFuture<SubscribeToTopicResponse> futureResponse =
+                    responseHandler.getResponse();
+            try {
+                futureResponse.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+                System.out.println("Successfully subscribed to topic: " + topic);
+            } catch (TimeoutException e) {
+                System.err.println("Timeout occurred while subscribing to topic: " + topic);
+            } catch (ExecutionException e) {
+                if (e.getCause() instanceof UnauthorizedError) {
+                    System.err.println("Unauthorized error while publishing to topic: " + topic);
+                } else {
+                    throw e;
                 }
             }
 
-            @Override
-            public boolean onStreamError(Throwable error) {
-                // Handle error.
-                return false; // Return true to close stream, false to keep stream open.
+            // Keep the main thread alive, or the process will exit.
+            try {
+                while (true) {
+                    Thread.sleep(10000);
+                }
+            } catch (InterruptedException e) {
+                System.out.println("Subscribe interrupted.");
             }
 
-            @Override
-            public void onStreamClosed() {
-                // Handle close.
-            }
-        };
-
-SubscribeToTopicResponseHandler operationResponseHandler = greengrassCoreIPCClient
-        .subscribeToTopic(subscribeToTopicRequest, Optional.of(streamResponseHandler));
-operationResponseHandler.getResponse().get();
-
-// Keep the main thread alive, or the process will exit.
-try {
-    while (true) {
-        Thread.sleep(10000);
+            // To stop subscribing, close the stream.
+            responseHandler.closeStream();
+        } catch (InterruptedException e) {
+            System.out.println("IPC interrupted.");
+        } catch (ExecutionException e) {
+            System.err.println("Exception occurred when using IPC.");
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
-} catch (InterruptedException e) {
-    System.out.println("Subscribe interrupted.");
-}
 
-// To stop subscribing, close the stream.
-operationResponseHandler.closeStream();
+    public static SubscribeToTopicResponseHandler subscribeToTopic(GreengrassCoreIPCClient greengrassCoreIPCClient, String topic, StreamResponseHandler<SubscriptionResponseMessage> streamResponseHandler) {
+        SubscribeToTopicRequest subscribeToTopicRequest = new SubscribeToTopicRequest();
+        subscribeToTopicRequest.setTopic(topic);
+        return greengrassCoreIPCClient.subscribeToTopic(subscribeToTopicRequest,
+                Optional.of(streamResponseHandler));
+    }
+
+    public static class SubscriptionResponseHandler implements StreamResponseHandler<SubscriptionResponseMessage> {
+
+        private final String topic;
+
+        public SubscriptionResponseHandler(String topic) {
+            this.topic = topic;
+        }
+
+        @Override
+        public void onStreamEvent(SubscriptionResponseMessage subscriptionResponseMessage) {
+            try {
+                String message =
+                        new String(subscriptionResponseMessage.getBinaryMessage().getMessage(),
+                                StandardCharsets.UTF_8);
+                System.out.printf("Received new message on topic %s: %s%n", this.topic, message);
+            } catch (Exception e) {
+                System.err.println("Exception occurred while processing subscription response " +
+                        "message.");
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public boolean onStreamError(Throwable error) {
+            System.err.println("Received a stream error.");
+            error.printStackTrace();
+            return false; // Return true to close stream, false to keep stream open.
+        }
+
+        @Override
+        public void onStreamClosed() {
+            System.out.println("Subscribe to topic stream closed.");
+        }
+    }
+}
 ```
 
 ------

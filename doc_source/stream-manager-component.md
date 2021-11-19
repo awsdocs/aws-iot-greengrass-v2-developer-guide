@@ -7,6 +7,7 @@ For more information about how to configure and use stream manager in custom com
 **Topics**
 + [Versions](#stream-manager-component-versions)
 + [Type](#stream-manager-component-type)
++ [Operating system](#stream-manager-component-os-support)
 + [Requirements](#stream-manager-component-requirements)
 + [Dependencies](#stream-manager-component-dependencies)
 + [Configuration](#stream-manager-component-configuration)
@@ -23,9 +24,15 @@ If you use stream manager to export data to the cloud, you can't upgrade version
 
 ## Type<a name="stream-manager-component-type"></a>
 
-<a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
+<a name="public-component-type-generic"></a>This <a name="public-component-type-generic-phrase"></a>component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
 
 <a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
+
+## Operating system<a name="stream-manager-component-os-support"></a>
+
+This component can be installed on core devices that run the following operating systems:
++ Linux
++ Windows
 
 ## Requirements<a name="stream-manager-component-requirements"></a>
 
@@ -53,9 +60,20 @@ This component must be able to perform outbound requests to the following endpoi
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#stream-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ 2\.0\.12 and 2\.0\.11 ]
+#### [ 2\.0\.13 ]
 
-The following table lists the dependencies for version 2\.0\.11 of this component\.
+The following table lists the dependencies for version 2\.0\.13 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.0\.0 <2\.6\.0  | Soft | 
+| [Token exchange service](token-exchange-service-component.md) |  >=0\.0\.0  | Hard | 
+
+------
+#### [ 2\.0\.11 and 2\.0\.12 ]
+
+The following table lists the dependencies for versions 2\.0\.11 and 2\.0\.12 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -161,16 +179,40 @@ The following example configuration specifies to use a non\-default port\.
 
 This component uses the following log file\.
 
+------
+#### [ Linux ]
+
 ```
 /greengrass/v2/logs/aws.greengrass.StreamManager.log
 ```
 
+------
+#### [ Windows ]
+
+```
+C:\greengrass\v2\logs\aws.greengrass.StreamManager.log
+```
+
+------
+
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
+
+------
+#### [ Linux ]
 
   ```
   sudo tail -f /greengrass/v2/logs/aws.greengrass.StreamManager.log
   ```
+
+------
+#### [ Windows \(PowerShell\) ]
+
+  ```
+  Get-Content C:\greengrass\v2\logs\aws.greengrass.StreamManager.log -Tail 10 -Wait
+  ```
+
+------
 
 ## Changelog<a name="stream-manager-component-changelog"></a>
 
@@ -179,6 +221,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.0\.13  |  Version updated for Greengrass nucleus version 2\.5\.0 release\.  | 
 | 2\.0\.12 | [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/stream-manager-component.html) | 
 |  2\.0\.11  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  2\.0\.10  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 

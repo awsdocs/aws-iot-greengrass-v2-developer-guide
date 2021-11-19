@@ -10,6 +10,7 @@ Support to acquire AWS credentials in this way was added to the AWS SDKs on July
 **Topics**
 + [Versions](#token-exchange-service-component-versions)
 + [Type](#token-exchange-service-component-type)
++ [Operating system](#token-exchange-service-component-os-support)
 + [Dependencies](#token-exchange-service-component-dependencies)
 + [Configuration](#token-exchange-service-component-configuration)
 + [Local log file](#token-exchange-service-component-log-file)
@@ -22,9 +23,15 @@ This component has the following versions:
 
 ## Type<a name="token-exchange-service-component-type"></a>
 
-<a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
+<a name="public-component-type-generic"></a>This <a name="public-component-type-generic-phrase"></a>component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
 
 <a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
+
+## Operating system<a name="token-exchange-service-component-os-support"></a>
+
+This component can be installed on core devices that run the following operating systems:
++ Linux
++ Windows
 
 ## Dependencies<a name="token-exchange-service-component-dependencies"></a>
 
@@ -38,16 +45,40 @@ This component doesn't have any configuration parameters\.
 
 This component uses the same log file as the [Greengrass nucleus](greengrass-nucleus-component.md) component\.
 
+------
+#### [ Linux ]
+
 ```
 /greengrass/v2/logs/greengrass.log
 ```
 
+------
+#### [ Windows ]
+
+```
+C:\greengrass\v2\logs\greengrass.log
+```
+
+------
+
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
+
+------
+#### [ Linux ]
 
   ```
   sudo tail -f /greengrass/v2/logs/greengrass.log
   ```
+
+------
+#### [ Windows \(PowerShell\) ]
+
+  ```
+  Get-Content C:\greengrass\v2\logs\greengrass.log -Tail 10 -Wait
+  ```
+
+------
 
 ## Changelog<a name="token-exchange-service-component-changelog"></a>
 

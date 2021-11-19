@@ -74,6 +74,30 @@ Windows does not have an installed SSH client\. For information about installing
 
 1. Update your `device.json` file with your user name, the IP address, and path to the private key file that you just saved on your host computer for each device under test\. For more information, see [Configure device\.json](set-config.md#device-config)\. Make sure you provide the full path and file name to the private key and use forward slashes \('/'\)\. For example, for the Windows path `C:\DT\privatekey.pem`, use `C:/DT/privatekey.pem` in the `device.json` file\. 
 
+## Configure the default Greengrass user for Windows devices<a name="configure-windows-user-for-idt"></a>
+
+To qualify a Windows\-based device, you must create the default Greengrass user in the LocalSystem account on the device under test, and then store the user name and password for the default user in the Credential Manager instance for the LocalSystem account\. 
+
+1. <a name="set-up-windows-device-environment-open-cmd"></a>Open the Windows Command Prompt \(`cmd.exe`\) as an administrator\.
+
+1. <a name="set-up-windows-device-environment-create"></a>Create the default user in the LocalSystem account on the Windows device\. Replace *password* with a secure password\.
+
+   ```
+   net user /add ggc_user password
+   ```
+
+1. <a name="set-up-windows-device-psexec"></a>Download and install the [PsExec utility](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec) from Microsoft on the device\. 
+
+1. <a name="set-up-windows-device-credentials"></a>Use the PsExec utility to store the user name and password for the default user in the Credential Manager instance for the LocalSystem account\. Replace *password* with the user's password that you set earlier\.
+
+   ```
+   psexec -s cmd /c cmdkey /generic:ggc_user /user:ggc_user /pass:password
+   ```
+
+   If the **PsExec License Agreement** opens, choose **Accept** to agree to the license and run the command\.
+**Note**  
+On Windows devices, the LocalSystem account runs the Greengrass nucleus, and you must use the PsExec utility to store the default user information in the LocalSystem account\. Using the Credential Manager application stores this information in the Windows account of the currently logged on user, instead of the LocalSystem account\.
+
 ## Configure user permissions on your device<a name="root-access"></a>
 
 IDT performs operations on various directories and files in a device under test\. Some of these operations require elevated permissions \(using sudo\)\. To automate these operations, IDT for AWS IoT Greengrass V2 must be able to run commands with sudo without being prompted for a password\.
@@ -108,9 +132,19 @@ This section describes the device requirements to run IDT tests for optional Doc
 IDT for AWS IoT Greengrass V2 provides Docker qualification tests to validate that your devices can use the AWS\-provided [Docker application manager](docker-application-manager-component.md) component to download Docker container images that you can run using custom Docker container components\. For information about creating custom Docker components, see [Run a Docker container](run-docker-container.md)\.
 
 To run Docker qualification tests, your devices under test must meet the following requirements to deploy the Docker application manager component\.
-+ <a name="docker-application-manager-component-requirements-docker-engine"></a>[Docker Engine](https://docs.docker.com/engine/) 1\.9\.1 or later installed and running on your Greengrass core device\. Version 20\.10 is the latest version that is verified to work with the connector\. You must install Docker directly on the core device before you deploy custom components that run Docker containers\. 
-+ <a name="docker-application-manager-component-requirements-docker-daemon"></a>The Docker daemon started and running on the core device before you deploy this component\. 
-+ <a name="docker-application-manager-component-requirements-root-user"></a>Root user permissions or Docker configured for you to run it as a [non\-root user](https://docs.docker.com/engine/install/linux-postinstall/)\. Adding a user to the `docker` group enables you to call `docker` commands without `sudo`\. To add `ggc_user`, or the non\-root user that you use to run AWS IoT Greengrass, to the `docker` group that you configure, run **sudo usermod \-aG docker *user\-name***\.
++ <a name="docker-engine-requirement"></a>[Docker Engine](https://docs.docker.com/engine/) 1\.9\.1 or later installed on your Greengrass core device\. Version 20\.10 is the latest version that is verified to work with the connector\. You must install Docker directly on the core device before you deploy custom components that run Docker containers\. 
++ <a name="docker-daemon-requirement"></a>The Docker daemon started and running on the core device before you deploy this component\. 
++ <a name="docker-user-permissions-requirement"></a>The system user that runs a Docker container component must have root or administrator permissions, or you must configure Docker to run it as a non\-root or non\-admistrator user\. On Linux devices, you can add a user to the `docker` group to call `docker` commands without `sudo`\. On Windows devices, you can add a user to the `docker-users` group to call `docker` commands without adminstrator privileges\.
+
+  On Linux, to add `ggc_user`, or the non\-root user that you use to run AWS IoT Greengrass, to the `docker` group that you configure, run the following command\.
+
+  ```
+  sudo usermod -aG docker user-name
+  ```
+
+  For more information, see the following Docker documentation:
+  + Linux: [Manage Docker as a non\-root user](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user)
+  + Windows: [Install Docker Desktop on Windows](https://docs.docker.com/desktop/windows/install/#install-docker-desktop-on-windows)
 
 ### ML qualification requirements<a name="idt-config-ml-components"></a>
 
@@ -118,8 +152,13 @@ IDT for AWS IoT Greengrass V2 provides ML qualification tests to validate that y
 
 To run ML qualification tests, your devices under test must meet the following requirements to deploy the machine learning components\.<a name="ml-component-requirements"></a>
 + <a name="ml-req-glibc"></a>On Greengrass core devices running Amazon Linux 2 or Ubuntu 18\.04, [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.27 or later installed on the device\.
-+ On Armv7l devices, such as Raspberry Pi, dependencies for OpenCV\-Python installed on the device\. Run the following command to install the dependencies: 
++ On Armv7l devices, such as Raspberry Pi, dependencies for OpenCV\-Python installed on the device\. Run the following command to install the dependencies\.
 
   ```
   sudo apt-get install libopenjp2-7 libilmbase23 libopenexr-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libgtk-3-0 libwebp-dev
+  ```
++ On Raspberry Pi devices, OpenCV\-Python installed on the device\. Run the following command to install OpenCV\-Python\.
+
+  ```
+  pip3 install opencv-python
   ```

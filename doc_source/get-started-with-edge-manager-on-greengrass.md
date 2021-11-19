@@ -19,14 +19,14 @@ This tutorial shows you how to deploy the sample components and the SageMaker Ed
 ## Prerequisites<a name="edge-manager-getting-started-prereqs"></a>
 
 To complete this tutorial, you must meet the following prerequisites:
-+ <a name="sm-req-core-device"></a>A Greengrass core device running on a Debian\-based Linux platform \(x86\_64 or Armv8\)\. If you don't have one, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
++ <a name="sm-req-core-device"></a>A Greengrass core device running on Amazon Linux 2, a Debian\-based Linux platform \(x86\_64 or Armv8\), or Windows \(x86\_64\)\. If you don't have one, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
 + <a name="sm-req-python"></a>[Python](https://www.python.org/downloads/) 3\.6 or later, including `pip` for your version of Python, installed on your core device\.
 + The OpenGL API GLX runtime \(`libgl1-mesa-glx`\) installed on your core device\.
 + An AWS Identity and Access Management \(IAM\) user with administrator permissions\.
 + An internet\-enabled Windows, Mac, or Unix\-like development computer that meets the following requirements:
   + [Python](https://www.python.org/downloads/) 3\.6 or later installed\.
   + AWS CLI installed and configured with your IAM administrator user credentials\. For more information, see [Installing the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and [Configuring the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)\. 
-+ The following S3 buckets created in the same AWS account and AWS Region as your Greengrass core device\. : 
++ The following S3 buckets created in the same AWS account and AWS Region as your Greengrass core device:
   + An S3 bucket to store the artifacts that are included in the sample inference and model components\. This tutorial uses *DOC\-EXAMPLE\-BUCKET1* to refer to this bucket\. 
   + An S3 bucket that you associate with your SageMaker edge device fleet\. SageMaker Edge Manager requires an S3 bucket to create the edge device fleet, and to store sample data from running inference on your device\. This tutorial uses *DOC\-EXAMPLE\-BUCKET2* to refer to this bucket\. 
 
@@ -227,21 +227,18 @@ In this step, you configure and deploy the following components to your core dev
      "targetArn":"targetArn",
      "components": {
        "aws.greengrass.SageMakerEdgeManager": {
-         "componentVersion": 1.0.x,
+         "componentVersion": "1.0.x",
          "configurationUpdate": {
-           "merge": {
-             "DeviceFleetName": "device-fleet-name",
-             "BucketName": "DOC-EXAMPLE-BUCKET2"
-           }
+           "merge": "{\"DeviceFleetName\":\"device-fleet-name\",\"BucketName\":\"DOC-EXAMPLE-BUCKET2\"}"
          }
        },
        "com.greengrass.SageMakerEdgeManager.ImageClassification": {
-         "componentVersion": 1.0.x,
+         "componentVersion": "1.0.x",
          "configurationUpdate": {
          }
        }, 
        "com.greengrass.SageMakerEdgeManager.ImageClassification.Model": {
-         "componentVersion": 1.0.x,
+         "componentVersion": "1.0.x",
          "configurationUpdate": {
          }
        }, 

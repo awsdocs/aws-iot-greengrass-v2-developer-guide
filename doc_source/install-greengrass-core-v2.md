@@ -3,7 +3,7 @@
 AWS IoT Greengrass extends AWS to edge devices so that they can act on the data they generate, while they use the AWS Cloud for management, analytics, and durable storage\. Install the AWS IoT Greengrass Core software on edge devices to integrate with AWS IoT Greengrass and the AWS Cloud\.
 
 **Important**  
-Before you download the AWS IoT Greengrass Core software, check that your core device meets the [requirements](setting-up.md#greengrass-v2-requirements) to install and run the AWS IoT Greengrass Core software v2\.0\.
+Before you download and install the AWS IoT Greengrass Core software, check that your core device meets the [requirements](setting-up.md#greengrass-v2-requirements) to install and run the AWS IoT Greengrass Core software v2\.0\.
 
 The AWS IoT Greengrass Core software includes an installer that sets up your device as a Greengrass core device\. When you run the installer, you can configure options, such as the root folder and the AWS Region to use\. You can choose to have the installer create required AWS IoT and IAM resources for you\. You can also choose to deploy local development tools to configure a device that you use for custom component development\.
 

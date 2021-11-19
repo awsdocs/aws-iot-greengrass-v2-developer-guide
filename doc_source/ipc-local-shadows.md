@@ -133,6 +133,7 @@ Type: `string`
 
 `shadowName` \(Python: `shadow_name`\)  <a name="ipc-local-shadows-shadow-name"></a>
 The name of the shadow\. To specify the thing's classic shadow, set this parameter to an empty string \(`""`\)\.  
+The AWS IoT Greengrass service uses the `AWSManagedGreengrassV2Deployment` named shadow to manage deployments that target individual core devices\. This named shadow is reserved for use by the AWS IoT Greengrass service\. Do not update or delete this named shadow\.
 Type: `string`
 
 ### Response<a name="ipc-operation-getthingshadow-response"></a>
@@ -190,39 +191,86 @@ The following examples demonstrate how to call this operation in custom componen
 ------
 #### [ Java ]
 
+**Example: Get a thing shadow**  
+This example uses an `IPCUtils` class to create a connection to the AWS IoT Greengrass Core IPC service\. For more information, see [Connect to the AWS IoT Greengrass Core IPC service](interprocess-communication.md#ipc-service-connect)\.
+
 ```
-byte[] sampleGetThingShadowRequest(String thingName, String shadowName) {
-    try {
-        // set up IPC client to connect to the IPC server
-        EventStreamRPCConnection eventStreamRpcConnection = IPCUtils.getEventStreamRpcConnection();
-        GreengrassCoreIPCClient greengrassCoreIPCClient = new GreengrassCoreIPCClient(eventStreamRpcConnection);
-        
-        // create the GetThingShadow request
+package com.aws.greengrass.docs.samples.ipc;
+
+import com.aws.greengrass.docs.samples.ipc.util.IPCUtils;
+import software.amazon.awssdk.aws.greengrass.GetThingShadowResponseHandler;
+import software.amazon.awssdk.aws.greengrass.GreengrassCoreIPCClient;
+import software.amazon.awssdk.aws.greengrass.model.GetThingShadowRequest;
+import software.amazon.awssdk.aws.greengrass.model.GetThingShadowResponse;
+import software.amazon.awssdk.aws.greengrass.model.ResourceNotFoundError;
+import software.amazon.awssdk.aws.greengrass.model.UnauthorizedError;
+import software.amazon.awssdk.eventstreamrpc.EventStreamRPCConnection;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+public class GetThingShadow {
+
+    public static final int TIMEOUT_SECONDS = 10;
+
+    public static void main(String[] args) {
+        // Use the current core device's name if thing name isn't set.
+        String thingName = args[0].isEmpty() ? System.getenv("AWS_IOT_THING_NAME") : args[0];
+        String shadowName = args[1];
+        try (EventStreamRPCConnection eventStreamRPCConnection =
+                     IPCUtils.getEventStreamRpcConnection()) {
+            GreengrassCoreIPCClient ipcClient =
+                    new GreengrassCoreIPCClient(eventStreamRPCConnection);
+            GetThingShadowResponseHandler responseHandler =
+                    GetThingShadow.getThingShadow(ipcClient, thingName, shadowName);
+            CompletableFuture<GetThingShadowResponse> futureResponse =
+                    responseHandler.getResponse();
+            try {
+                GetThingShadowResponse response = futureResponse.get(TIMEOUT_SECONDS,
+                        TimeUnit.SECONDS);
+                String shadowPayload = new String(response.getPayload(), StandardCharsets.UTF_8);
+                System.out.printf("Successfully got shadow %s/%s: %s%n", thingName, shadowName,
+                        shadowPayload);
+            } catch (TimeoutException e) {
+                System.err.printf("Timeout occurred while getting shadow: %s/%s%n", thingName,
+                        shadowName);
+            } catch (ExecutionException e) {
+                if (e.getCause() instanceof UnauthorizedError) {
+                    System.err.printf("Unauthorized error while getting shadow: %s/%s%n",
+                            thingName, shadowName);
+                } else if (e.getCause() instanceof ResourceNotFoundError) {
+                    System.err.printf("Unable to find shadow to get: %s/%s%n", thingName,
+                            shadowName);
+                } else {
+                    throw e;
+                }
+            }
+        } catch (InterruptedException e) {
+            System.out.println("IPC interrupted.");
+        } catch (ExecutionException e) {
+            System.err.println("Exception occurred when using IPC.");
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    public static GetThingShadowResponseHandler getThingShadow(GreengrassCoreIPCClient greengrassCoreIPCClient, String thingName, String shadowName) {
         GetThingShadowRequest getThingShadowRequest = new GetThingShadowRequest();
         getThingShadowRequest.setThingName(thingName);
         getThingShadowRequest.setShadowName(shadowName);
-        
-        // retrieve the GetThingShadow response after sending the request to the IPC server
-        GetThingShadowResponse getThingShadowResponse =
-                greengrassCoreIPCClient.getThingShadow(getThingShadowRequest, Optional.empty())
-                .getResponse()
-                .get();
-        
-        byte[] payload = getThingShadowResponse.getPayload();
-        return payload;
-        
-    catch (ExecutionException e) {
-        if (e.getCause() instanceof InvalidArgumentsError) {
-        // add error handling
-        }
-        ...
-    // catch ResourceNotFoundError | UnauthorizedError | ServiceError
+        return greengrassCoreIPCClient.getThingShadow(getThingShadowRequest, Optional.empty());
     }
 }
 ```
 
 ------
 #### [ Python ]
+
+**Example: Get a thing shadow**  
 
 ```
 import awsiot.greengrasscoreipc
@@ -271,6 +319,7 @@ Type: `string`
 
 `shadowName` \(Python: `shadow_name`\)  <a name="ipc-local-shadows-shadow-name"></a>
 The name of the shadow\. To specify the thing's classic shadow, set this parameter to an empty string \(`""`\)\.  
+The AWS IoT Greengrass service uses the `AWSManagedGreengrassV2Deployment` named shadow to manage deployments that target individual core devices\. This named shadow is reserved for use by the AWS IoT Greengrass service\. Do not update or delete this named shadow\.
 Type: `string`
 
 `payload`  
@@ -353,40 +402,83 @@ The following examples demonstrate how to call this operation in custom componen
 ------
 #### [ Java ]
 
+**Example: Update a thing shadow**  
+This example uses an `IPCUtils` class to create a connection to the AWS IoT Greengrass Core IPC service\. For more information, see [Connect to the AWS IoT Greengrass Core IPC service](interprocess-communication.md#ipc-service-connect)\.
+
 ```
-byte[] sampleUpdateThingShadowRequest(String thingName, String shadowName, byte[] updateDocument) {
-    try {
-        // set up IPC client to connect to the IPC server
-        EventStreamRPCConnection eventStreamRpcConnection = IPCUtils.getEventStreamRpcConnection();
-        GreengrassCoreIPCClient greengrassCoreIPCClient = new GreengrassCoreIPCClient(eventStreamRpcConnection);
-        
-        // create the UpdateThingShadow request
+package com.aws.greengrass.docs.samples.ipc;
+
+import com.aws.greengrass.docs.samples.ipc.util.IPCUtils;
+import software.amazon.awssdk.aws.greengrass.GreengrassCoreIPCClient;
+import software.amazon.awssdk.aws.greengrass.UpdateThingShadowResponseHandler;
+import software.amazon.awssdk.aws.greengrass.model.UnauthorizedError;
+import software.amazon.awssdk.aws.greengrass.model.UpdateThingShadowRequest;
+import software.amazon.awssdk.aws.greengrass.model.UpdateThingShadowResponse;
+import software.amazon.awssdk.eventstreamrpc.EventStreamRPCConnection;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+public class UpdateThingShadow {
+
+    public static final int TIMEOUT_SECONDS = 10;
+
+    public static void main(String[] args) {
+        // Use the current core device's name if thing name isn't set.
+        String thingName = args[0].isEmpty() ? System.getenv("AWS_IOT_THING_NAME") : args[0];
+        String shadowName = args[1];
+        byte[] shadowPayload = args[2].getBytes(StandardCharsets.UTF_8);
+        try (EventStreamRPCConnection eventStreamRPCConnection =
+                     IPCUtils.getEventStreamRpcConnection()) {
+            GreengrassCoreIPCClient ipcClient =
+                    new GreengrassCoreIPCClient(eventStreamRPCConnection);
+            UpdateThingShadowResponseHandler responseHandler =
+                    UpdateThingShadow.updateThingShadow(ipcClient, thingName, shadowName,
+                            shadowPayload);
+            CompletableFuture<UpdateThingShadowResponse> futureResponse =
+                    responseHandler.getResponse();
+            try {
+                futureResponse.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+                System.out.printf("Successfully updated shadow: %s/%s%n", thingName, shadowName);
+            } catch (TimeoutException e) {
+                System.err.printf("Timeout occurred while updating shadow: %s/%s%n", thingName,
+                        shadowName);
+            } catch (ExecutionException e) {
+                if (e.getCause() instanceof UnauthorizedError) {
+                    System.err.printf("Unauthorized error while updating shadow: %s/%s%n",
+                            thingName, shadowName);
+                } else {
+                    throw e;
+                }
+            }
+        } catch (InterruptedException e) {
+            System.out.println("IPC interrupted.");
+        } catch (ExecutionException e) {
+            System.err.println("Exception occurred when using IPC.");
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    public static UpdateThingShadowResponseHandler updateThingShadow(GreengrassCoreIPCClient greengrassCoreIPCClient, String thingName, String shadowName, byte[] shadowPayload) {
         UpdateThingShadowRequest updateThingShadowRequest = new UpdateThingShadowRequest();
         updateThingShadowRequest.setThingName(thingName);
         updateThingShadowRequest.setShadowName(shadowName);
-        updateThingShadowRequest.setPayload(updateDocument);
-        
-        // retrieve the UpdateThingShadow response after sending the request to the IPC server
-        UpdateThingShadowRespone updateThingShadowResponse =
-                greengrassCoreIPCClient.updateThingShadow(updateThingShadowRequest, Optional.empty())
-                .getResponse()
-                .get();
-        
-        byte[] payload = updateThingShadowResponse.getPayload();
-        return payload;
-        
-    catch (ExecutionException e) {
-        if (e.getCause() instanceof InvalidArgumentsError) {
-        // add error handling
-        }
-        ...
-    // catch ConflictError | UnauthorizedError | ServiceError 
+        updateThingShadowRequest.setPayload(shadowPayload);
+        return greengrassCoreIPCClient.updateThingShadow(updateThingShadowRequest,
+                Optional.empty());
     }
 }
 ```
 
 ------
 #### [ Python ]
+
+**Example: Update a thing shadow**  
 
 ```
 import awsiot.greengrasscoreipc
@@ -424,7 +516,9 @@ def sample_update_thing_shadow_request(thingName, shadowName, payload):
 
 ## DeleteThingShadow<a name="ipc-operation-deletethingshadow"></a>
 
-Deletes the shadow for the specified thing\.
+Deletes the shadow for the specified thing\. 
+
+Beginning in shadow manager v2\.0\.4, deleting a shadow increments the version number\. For example, when you delete the shadow `MyThingShadow` at version 1, the version of the deleted shadow is 2\. If you then recreate a shadow with the name `MyThingShadow`, the version for that shadow is 3\. 
 
 ### Request<a name="ipc-operation-deletethingshadow-request"></a>
 
@@ -436,6 +530,7 @@ Type: `string`
 
 `shadowName` \(Python: `shadow_name`\)  <a name="ipc-local-shadows-shadow-name"></a>
 The name of the shadow\. To specify the thing's classic shadow, set this parameter to an empty string \(`""`\)\.  
+The AWS IoT Greengrass service uses the `AWSManagedGreengrassV2Deployment` named shadow to manage deployments that target individual core devices\. This named shadow is reserved for use by the AWS IoT Greengrass service\. Do not update or delete this named shadow\.
 Type: `string`
 
 ### Response<a name="ipc-operation-deletethingshadow-response"></a>
@@ -468,39 +563,83 @@ The following examples demonstrate how to call this operation in custom componen
 ------
 #### [ Java ]
 
+**Example: Delete a thing shadow**  
+This example uses an `IPCUtils` class to create a connection to the AWS IoT Greengrass Core IPC service\. For more information, see [Connect to the AWS IoT Greengrass Core IPC service](interprocess-communication.md#ipc-service-connect)\.
+
 ```
-byte[] sampleDeleteThingShadowRequest(String thingName, String shadowName) {
-    try {
-        // set up IPC client to connect to the IPC server
-        EventStreamRPCConnection eventStreamRpcConnection = IPCUtils.getEventStreamRpcConnection();
-        GreengrassCoreIPCClient greengrassCoreIPCClient = new GreengrassCoreIPCClient(eventStreamRpcConnection);
-        
-        // create the DeleteThingShadow request
+package com.aws.greengrass.docs.samples.ipc;
+
+import com.aws.greengrass.docs.samples.ipc.util.IPCUtils;
+import software.amazon.awssdk.aws.greengrass.DeleteThingShadowResponseHandler;
+import software.amazon.awssdk.aws.greengrass.GreengrassCoreIPCClient;
+import software.amazon.awssdk.aws.greengrass.model.DeleteThingShadowRequest;
+import software.amazon.awssdk.aws.greengrass.model.DeleteThingShadowResponse;
+import software.amazon.awssdk.aws.greengrass.model.ResourceNotFoundError;
+import software.amazon.awssdk.aws.greengrass.model.UnauthorizedError;
+import software.amazon.awssdk.eventstreamrpc.EventStreamRPCConnection;
+
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+public class DeleteThingShadow {
+
+    public static final int TIMEOUT_SECONDS = 10;
+
+    public static void main(String[] args) {
+        // Use the current core device's name if thing name isn't set.
+        String thingName = args[0].isEmpty() ? System.getenv("AWS_IOT_THING_NAME") : args[0];
+        String shadowName = args[1];
+        try (EventStreamRPCConnection eventStreamRPCConnection =
+                     IPCUtils.getEventStreamRpcConnection()) {
+            GreengrassCoreIPCClient ipcClient =
+                    new GreengrassCoreIPCClient(eventStreamRPCConnection);
+            DeleteThingShadowResponseHandler responseHandler =
+                    DeleteThingShadow.deleteThingShadow(ipcClient, thingName, shadowName);
+            CompletableFuture<DeleteThingShadowResponse> futureResponse =
+                    responseHandler.getResponse();
+            try {
+                futureResponse.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+                System.out.printf("Successfully deleted shadow: %s/%s%n", thingName, shadowName);
+            } catch (TimeoutException e) {
+                System.err.printf("Timeout occurred while deleting shadow: %s/%s%n", thingName,
+                        shadowName);
+            } catch (ExecutionException e) {
+                if (e.getCause() instanceof UnauthorizedError) {
+                    System.err.printf("Unauthorized error while deleting shadow: %s/%s%n",
+                            thingName, shadowName);
+                } else if (e.getCause() instanceof ResourceNotFoundError) {
+                    System.err.printf("Unable to find shadow to delete: %s/%s%n", thingName,
+                            shadowName);
+                } else {
+                    throw e;
+                }
+            }
+        } catch (InterruptedException e) {
+            System.out.println("IPC interrupted.");
+        } catch (ExecutionException e) {
+            System.err.println("Exception occurred when using IPC.");
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    public static DeleteThingShadowResponseHandler deleteThingShadow(GreengrassCoreIPCClient greengrassCoreIPCClient, String thingName, String shadowName) {
         DeleteThingShadowRequest deleteThingShadowRequest = new DeleteThingShadowRequest();
         deleteThingShadowRequest.setThingName(thingName);
         deleteThingShadowRequest.setShadowName(shadowName);
-        
-        // retrieve the DeleteThingShadow response after sending the request to the IPC server
-        DeleteThingShadowResponse deleteThingShadowResponse =
-                greengrassCoreIPCClient.deleteThingShadow(deleteThingShadowRequest, Optional.empty())
-                .getResponse()
-                .get();
-        
-        byte[] payload = deleteThingShadowResponse.getPayload();
-        return payload;
-        
-    catch (ExecutionException e) {
-        if (e.getCause() instanceof InvalidArgumentsError) {
-        // add error handling
-        }
-        ...
-    // catch ResourceNotFoundError | UnauthorizedError | ServiceError
+        return greengrassCoreIPCClient.deleteThingShadow(deleteThingShadowRequest,
+                Optional.empty());
     }
 }
 ```
 
 ------
 #### [ Python ]
+
+**Example: Delete a thing shadow**  
 
 ```
 import awsiot.greengrasscoreipc
@@ -597,43 +736,95 @@ The following examples demonstrate how to call this operation in custom componen
 ------
 #### [ Java ]
 
+**Example: List a thing's named shadows**  
+This example uses an `IPCUtils` class to create a connection to the AWS IoT Greengrass Core IPC service\. For more information, see [Connect to the AWS IoT Greengrass Core IPC service](interprocess-communication.md#ipc-service-connect)\.
+
 ```
-List<String> sampleListNamedShadowsForThingRequest(String thingName, String nextToken, int pageSize) {
-    try {
-        // set up IPC client to connect to the IPC server
-        EventStreamRPCConnection eventStreamRpcConnection = IPCUtils.getEventStreamRpcConnection();
-        GreengrassCoreIPCClient greengrassCoreIPCClient = new GreengrassCoreIPCClient(eventStreamRpcConnection);
-        
-        // create the ListNamedShadowsForThing request
-        ListNamedShadowsForThingRequest request = new ListNamedShadowsForThingRequest();
-        request.setThingName(thingName);
-        request.setNextToken(nextToken);
-        request.setPageSize(pageSize);
-        
-        // retrieve the ListNamedShadowsForThing response after sending the request to the IPC server
-        ListThingShadowsForThingResponse response =
-                greengrassCoreIPCClient.listNamedShadowsForThing(request, Optional.empty())
-                .getResponse()
-                .get();
-        
-        List<String> listOfNamedShadows = response.getResults().get()
-        // pagination token used to get next set of data
-        // null indicates that all named shadows were received
-        String tokenForNextQuery = response.getNextToken().get()
-        return listOfNamedShadows;
-        
-    catch (ExecutionException e) {
-        if (e.getCause() instanceof InvalidArgumentsError) {
-        // add error handling
+package com.aws.greengrass.docs.samples.ipc;
+
+import com.aws.greengrass.docs.samples.ipc.util.IPCUtils;
+import software.amazon.awssdk.aws.greengrass.GreengrassCoreIPCClient;
+import software.amazon.awssdk.aws.greengrass.ListNamedShadowsForThingResponseHandler;
+import software.amazon.awssdk.aws.greengrass.model.ListNamedShadowsForThingRequest;
+import software.amazon.awssdk.aws.greengrass.model.ListNamedShadowsForThingResponse;
+import software.amazon.awssdk.aws.greengrass.model.ResourceNotFoundError;
+import software.amazon.awssdk.aws.greengrass.model.UnauthorizedError;
+import software.amazon.awssdk.eventstreamrpc.EventStreamRPCConnection;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+public class ListNamedShadowsForThing {
+
+    public static final int TIMEOUT_SECONDS = 10;
+
+    public static void main(String[] args) {
+        // Use the current core device's name if thing name isn't set.
+        String thingName = args[0].isEmpty() ? System.getenv("AWS_IOT_THING_NAME") : args[0];
+        try (EventStreamRPCConnection eventStreamRPCConnection =
+                     IPCUtils.getEventStreamRpcConnection()) {
+            GreengrassCoreIPCClient ipcClient =
+                    new GreengrassCoreIPCClient(eventStreamRPCConnection);
+            List<String> namedShadows = new ArrayList<>();
+            String nextToken = null;
+            try {
+                // Send additional requests until there's no pagination token in the response.
+                do {
+                    ListNamedShadowsForThingResponseHandler responseHandler =
+                            ListNamedShadowsForThing.listNamedShadowsForThing(ipcClient, thingName,
+                                    nextToken, 25);
+                    CompletableFuture<ListNamedShadowsForThingResponse> futureResponse =
+                            responseHandler.getResponse();
+                    ListNamedShadowsForThingResponse response =
+                            futureResponse.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+                    List<String> responseNamedShadows = response.getResults();
+                    namedShadows.addAll(responseNamedShadows);
+                    nextToken = response.getNextToken();
+                } while (nextToken != null);
+                System.out.printf("Successfully got named shadows for thing %s: %s%n", thingName,
+                        String.join(",", namedShadows));
+            } catch (TimeoutException e) {
+                System.err.println("Timeout occurred while listing named shadows for thing: " + thingName);
+            } catch (ExecutionException e) {
+                if (e.getCause() instanceof UnauthorizedError) {
+                    System.err.println("Unauthorized error while listing named shadows for " +
+                            "thing: " + thingName);
+                } else if (e.getCause() instanceof ResourceNotFoundError) {
+                    System.err.println("Unable to find thing to list named shadows: " + thingName);
+                } else {
+                    throw e;
+                }
+            }
+        } catch (InterruptedException e) {
+            System.out.println("IPC interrupted.");
+        } catch (ExecutionException e) {
+            System.err.println("Exception occurred when using IPC.");
+            e.printStackTrace();
+            System.exit(1);
         }
-        ...
-    // catch ResourceNotFoundError | UnauthorizedError | ServiceError
+    }
+
+    public static ListNamedShadowsForThingResponseHandler listNamedShadowsForThing(GreengrassCoreIPCClient greengrassCoreIPCClient, String thingName, String nextToken, int pageSize) {
+        ListNamedShadowsForThingRequest listNamedShadowsForThingRequest =
+                new ListNamedShadowsForThingRequest();
+        listNamedShadowsForThingRequest.setThingName(thingName);
+        listNamedShadowsForThingRequest.setNextToken(nextToken);
+        listNamedShadowsForThingRequest.setPageSize(pageSize);
+        return greengrassCoreIPCClient.listNamedShadowsForThing(listNamedShadowsForThingRequest,
+                Optional.empty());
     }
 }
 ```
 
 ------
 #### [ Python ]
+
+**Example: List a thing's named shadows**  
 
 ```
 import awsiot.greengrasscoreipc

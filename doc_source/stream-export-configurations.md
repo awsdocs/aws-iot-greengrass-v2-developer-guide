@@ -115,7 +115,7 @@ In the Stream Manager SDK, your Greengrass components use the `IoTSiteWiseConfig
 + [IoTSiteWiseConfig](https://aws-greengrass.github.io/aws-greengrass-stream-manager-sdk-js/aws-greengrass-core-sdk.StreamManager.IoTSiteWiseConfig.html) in the Node\.js SDK
 
 **Note**  
-AWS also provides the AWS IoT SiteWise connector, which is a pre\-built solution that you can use with OPC\-UA sources\. For more information, see [AWS IoT SiteWise connector](https://docs.aws.amazon.com/greengrass/latest/developerguide/iot-sitewise-connector.html) in the *AWS IoT Greengrass Developer Guide*\.
+AWS also provides AWS IoT SiteWise components, which offer a pre\-built solution that you can use to stream data from OPC\-UA sources\. For more information, see [IoT SiteWise OPC\-UA collector](iotsitewise-opcua-collector-component.md)\.
 
 ### Requirements<a name="export-to-iot-sitewise-reqs"></a>
 
@@ -178,7 +178,8 @@ In the Stream Manager SDK, your Greengrass components use the `S3ExportTaskExecu
 
 This export destination has the following requirements:
 + Target Amazon S3 buckets must be in the same AWS account as the Greengrass core device\.
-+ If a Lambda function that runs in **Greengrass container** mode writes input files to the input file directory, you must mount the directory as a volume in the container with write permissions\. This ensures that the files are written to the root file system and visible outside the container\.
++ If a Lambda function that runs in **Greengrass container** mode writes input files to an input file directory, you must mount the directory as a volume in the container with write permissions\. This ensures that the files are written to the root file system and visible to the stream manager component, which runs outside the container\.
++ If a Docker container component writes input files to an input file directory, you must mount the directory as a volume in the container with write permissions\. This ensures that the files are written to the root file system and visible to the stream manager component, which runs outside the container\.
 + The [Authorize core devices to interact with AWS services](device-service-role.md) must allow the following permissions to the target buckets\. For example:
 
   ```

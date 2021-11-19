@@ -94,21 +94,70 @@ The following examples demonstrate how to call this operation in custom componen
 #### [ Java ]
 
 **Example: Get a secret value**  
+This example uses an `IPCUtils` class to create a connection to the AWS IoT Greengrass Core IPC service\. For more information, see [Connect to the AWS IoT Greengrass Core IPC service](interprocess-communication.md#ipc-service-connect)\.
 
 ```
-String secretId = "arn:aws:secretsmanager:us-west-2:123456789012:secret:MyGreengrassSecret-abcdef";
-String versionStage = "AWSCURRENT";
-int TIMEOUT = 10;
+package com.aws.greengrass.docs.samples.ipc;
 
-GetSecretValueRequest request = new GetSecretValueRequest();
-request.setSecretId(secretId);
-request.setVersionStage(versionStage);
-CompletableFuture<GetSecretValueResponse> futureResponse = greengrassCoreIPCClient
-        .getSecretValue(request, Optional.empty()).getResponse();
-GetSecretValueResponse result = futureResponse.get(TIMEOUT, TimeUnit.SECONDS);
-result.getSecretValue().postFromJson();  // Set the SecretValue's internal union.
-String secretString = result.getSecretValue().getSecretString();
-# Handle secret value.
+import com.aws.greengrass.docs.samples.ipc.util.IPCUtils;
+import software.amazon.awssdk.aws.greengrass.GetSecretValueResponseHandler;
+import software.amazon.awssdk.aws.greengrass.GreengrassCoreIPCClient;
+import software.amazon.awssdk.aws.greengrass.model.GetSecretValueRequest;
+import software.amazon.awssdk.aws.greengrass.model.GetSecretValueResponse;
+import software.amazon.awssdk.aws.greengrass.model.UnauthorizedError;
+import software.amazon.awssdk.eventstreamrpc.EventStreamRPCConnection;
+
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+public class GetSecretValue {
+
+    public static final int TIMEOUT_SECONDS = 10;
+
+    public static void main(String[] args) {
+        String secretArn = args[0];
+        String versionStage = args[1];
+        try (EventStreamRPCConnection eventStreamRPCConnection =
+                     IPCUtils.getEventStreamRpcConnection()) {
+            GreengrassCoreIPCClient ipcClient =
+                    new GreengrassCoreIPCClient(eventStreamRPCConnection);
+            GetSecretValueResponseHandler responseHandler =
+                    GetSecretValue.getSecretValue(ipcClient, secretArn, versionStage);
+            CompletableFuture<GetSecretValueResponse> futureResponse =
+                    responseHandler.getResponse();
+            try {
+                GetSecretValueResponse response = futureResponse.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+                response.getSecretValue().postFromJson();
+                String secretString = response.getSecretValue().getSecretString();
+                System.out.println("Successfully retrieved secret value: " + secretString);
+            } catch (TimeoutException e) {
+                System.err.println("Timeout occurred while retrieving secret: " + secretArn);
+            } catch (ExecutionException e) {
+                if (e.getCause() instanceof UnauthorizedError) {
+                    System.err.println("Unauthorized error while retrieving secret: " + secretArn);
+                } else {
+                    throw e;
+                }
+            }
+        } catch (InterruptedException e) {
+            System.out.println("IPC interrupted.");
+        } catch (ExecutionException e) {
+            System.err.println("Exception occurred when using IPC.");
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    public static GetSecretValueResponseHandler getSecretValue(GreengrassCoreIPCClient greengrassCoreIPCClient, String secretArn, String versionStage) {
+        GetSecretValueRequest getSecretValueRequest = new GetSecretValueRequest();
+        getSecretValueRequest.setSecretId(secretArn);
+        getSecretValueRequest.setVersionStage(versionStage);
+        return greengrassCoreIPCClient.getSecretValue(getSecretValueRequest, Optional.empty());
+    }
+}
 ```
 
 ------
@@ -204,9 +253,21 @@ We recommend that in a production environment, you reduce the scope of the autho
   },
   "Manifests": [
     {
+      "Platform": {
+        "os": "linux"
+      },
       "Lifecycle": {
         "Install": "python3 -m pip install --user awsiotsdk",
-        "Run": "python3 -u {artifacts:path}/print_secret.py '{configuration:/SecretArn}'"
+        "Run": "python3 -u {artifacts:path}/print_secret.py \"{configuration:/SecretArn}\""
+      }
+    },
+    {
+      "Platform": {
+        "os": "windows"
+      },
+      "Lifecycle": {
+        "Install": "py -3 -m pip install --user awsiotsdk",
+        "Run": "py -3 -u {artifacts:path}/print_secret.py \"{configuration:/SecretArn}\""
       }
     }
   ]
@@ -239,9 +300,16 @@ ComponentConfiguration:
           resources:
             - "*"
 Manifests:
-  - Lifecycle:
+  - Platform:
+      os: linux
+    Lifecycle:
       Install: python3 -m pip install --user awsiotsdk
-      Run: python3 -u {artifacts:path}/print_secret.py '{configuration:/SecretArn}'
+      Run: python3 -u {artifacts:path}/print_secret.py "{configuration:/SecretArn}"
+  - Platform:
+      os: windows
+    Lifecycle:
+      Install: py -3 -m pip install --user awsiotsdk
+      Run: py -3 -u {artifacts:path}/print_secret.py "{configuration:/SecretArn}"
 ```
 
 ------
@@ -307,11 +375,34 @@ You can use this example component with the [secret manager component](secret-ma
 
 1. Create a Secrets Manager secret with test data\.
 
+------
+#### [ Linux or Unix ]
+
    ```
    aws secretsmanager create-secret \
      --name MyTestGreengrassSecret \
      --secret-string '{"my-secret-key": "my-secret-value"}'
    ```
+
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+   ```
+   aws secretsmanager create-secret ^
+     --name MyTestGreengrassSecret ^
+     --secret-string '{"my-secret-key": "my-secret-value"}'
+   ```
+
+------
+#### [ PowerShell ]
+
+   ```
+   aws secretsmanager create-secret `
+     --name MyTestGreengrassSecret `
+     --secret-string '{"my-secret-key": "my-secret-value"}'
+   ```
+
+------
 
    Save the ARN of the secret to use in the following steps\.
 

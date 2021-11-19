@@ -3,11 +3,12 @@
 The local debug console component \(`aws.greengrass.LocalDebugConsole`\) provides a local dashboard that displays information about your AWS IoT Greengrass core devices and its components\. You can use this dashboard to debug your core device and manage local components\.
 
 **Important**  
-Don't use this component in production environments\. This component is intended for use only in development environments\. Anyone with access to the AWS IoT Greengrass CLI on the core device can access information and perform operations that this component exposes\.
+<a name="local-dev-tools-production-environment-warning"></a>We recommend that you use this component in only development environments, not production environments\. This component provides access to information and operations that you typically won't need in a production environment\. Follow the principle of least privilege by deploying this component to only core devices where you need it\.
 
 **Topics**
 + [Versions](#local-debug-console-component-versions)
 + [Type](#local-debug-console-component-type)
++ [Operating system](#local-debug-console-component-os-support)
 + [Requirements](#local-debug-console-component-requirements)
 + [Dependencies](#local-debug-console-component-dependencies)
 + [Configuration](#local-debug-console-component-configuration)
@@ -30,6 +31,12 @@ This component has the following versions:
 
 <a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
 
+## Operating system<a name="local-debug-console-component-os-support"></a>
+
+This component can be installed on core devices that run the following operating systems:
++ Linux
++ Windows
+
 ## Requirements<a name="local-debug-console-component-requirements"></a>
 
 This component has the following requirements:
@@ -38,6 +45,17 @@ This component has the following requirements:
 ## Dependencies<a name="local-debug-console-component-dependencies"></a>
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#local-debug-console-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+
+------
+#### [ 2\.2\.3 ]
+
+The following table lists the dependencies for version 2\.2\.3 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.1\.0 <2\.6\.0 | Hard | 
+| [Greengrass CLI](greengrass-cli-component.md) | >=2\.1\.0 <2\.6\.0 | Hard | 
 
 ------
 #### [ 2\.2\.2 ]
@@ -117,6 +135,11 @@ Default: `1441`
 \(Optional\) The websocket port to use for the local debug console\.  
 Default: `1442`
 
+`bindHostname`  <a name="local-debug-console-component-configuration-bind-hostname"></a>
+\(Optional\) The hostname to use for the local debug console\.  
+If you [run the AWS IoT Greengrass Core software in a Docker container](run-greengrass-docker.md), set this parameter to `0.0.0.0`, so you can open the local debug console outside the Docker container\.  
+Default: `localhost`
+
 **Example: Configuration merge update**  
 The following example configuration specifies to open the local debug console on non\-default ports and disable HTTPS\.  
 
@@ -138,6 +161,11 @@ Default: `1441`
 `websocketPort`  <a name="local-debug-console-component-configuration-websocket-port"></a>
 \(Optional\) The websocket port to use for the local debug console\.  
 Default: `1442`
+
+`bindHostname`  <a name="local-debug-console-component-configuration-bind-hostname"></a>
+\(Optional\) The hostname to use for the local debug console\.  
+If you [run the AWS IoT Greengrass Core software in a Docker container](run-greengrass-docker.md), set this parameter to `0.0.0.0`, so you can open the local debug console outside the Docker container\.  
+Default: `localhost`
 
 **Example: Configuration merge update**  
 The following example configuration specifies to open the local debug console on non\-default ports\.  
@@ -176,11 +204,23 @@ You can change the default ports from `1441` and `1442`\. For more information, 
 
 1. <a name="local-debug-console-component-create-session-step"></a>Create a session to use the local debug console\. When you create a session, you generate a password that you use to authenticate\. The local debug console requires a password to increase security, because you can use this component to view important information and perform operations on the core device\. The local debug console also creates a certificate to secure the connection if you enable HTTPS in the component configuration\. HTTPS is enabled by default\.
 
-   Use the AWS IoT Greengrass CLI to create the session\. This command generates a random 43\-character password that expires after 8 hours\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass V2 root folder\.
+   Use the AWS IoT Greengrass CLI to create the session\. This command generates a random 43\-character password that expires after 8 hours\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass V2 root folder\.
+
+------
+#### [ Linux or Unix ]
 
    ```
    sudo /greengrass/v2/bin/greengrass-cli get-debug-password
    ```
+
+------
+#### [ Windows ]
+
+   ```
+   C:\greengrass\v2\bin\greengrass-cli get-debug-password
+   ```
+
+------
 
    The command output looks like the following example if you have configured the local debug console to use HTTPS\. You use the certificate fingerprints to verify that the connection is secure when you open the local debug console\.
 
@@ -252,11 +292,23 @@ You can change the default ports from `1441` and `1442`\. For more information, 
 
 1. Create a session to use the local debug console\. When you create a session, you generate a password that you use to authenticate\. The local debug console requires a password to increase security, because you can use this component to view important information and perform operations on the core device\.
 
-   Use the AWS IoT Greengrass CLI to create the session\. This command generates a random 43\-character password that expires after 8 hours\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass V2 root folder\.
+   Use the AWS IoT Greengrass CLI to create the session\. This command generates a random 43\-character password that expires after 8 hours\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass V2 root folder\.
+
+------
+#### [ Linux or Unix ]
 
    ```
    sudo /greengrass/v2/bin/greengrass-cli get-debug-password
    ```
+
+------
+#### [ Windows ]
+
+   ```
+   C:\greengrass\v2\bin\greengrass-cli get-debug-password
+   ```
+
+------
 
    The command output looks like the following example\.
 
@@ -280,16 +332,40 @@ You can change the default ports from `1441` and `1442`\. For more information, 
 
 This component uses the same log file as the [Greengrass nucleus](greengrass-nucleus-component.md) component\.
 
+------
+#### [ Linux ]
+
 ```
 /greengrass/v2/logs/greengrass.log
 ```
 
+------
+#### [ Windows ]
+
+```
+C:\greengrass\v2\logs\greengrass.log
+```
+
+------
+
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
+
+------
+#### [ Linux ]
 
   ```
   sudo tail -f /greengrass/v2/logs/greengrass.log
   ```
+
+------
+#### [ Windows \(PowerShell\) ]
+
+  ```
+  Get-Content C:\greengrass\v2\logs\greengrass.log -Tail 10 -Wait
+  ```
+
+------
 
 ## Changelog<a name="local-debug-console-component-changelog"></a>
 
@@ -298,6 +374,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.2\.3  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/local-debug-console-component.html)  | 
 |  2\.2\.2  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  2\.2\.1  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  2\.2\.0  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 

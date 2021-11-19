@@ -32,7 +32,7 @@ AWS IoT Greengrass V2 introduces new fundamental concepts for devices, fleets, a
 
   In AWS IoT Greengrass V1, subscriptions specify where Lambda functions receive event messages to consume as function payloads\. Functions subscribe to local publish/subscribe messages and AWS IoT Core MQTT messages\.
 
-  In AWS IoT Greengrass V2, components manage their own subscriptions to local publish/subscribe and AWS IoT Core MQTT messages\. In the component recipe, you define *authorization policies* to specify which topics the component can use to communicate\. In component code, you can use interprocess communication \(IPC\) for local publish/subscribe messaging and AWS IoT Core MQTT messaging\. For more information, see [Use the AWS IoT Device SDK for interprocess communication \(IPC\)Use interprocess communication \(IPC\)](interprocess-communication.md)\.
+  In AWS IoT Greengrass V2, components manage their own subscriptions to local publish/subscribe and AWS IoT Core MQTT messages\. In the component recipe, you define *authorization policies* to specify which topics the component can use to communicate\. In component code, you can use interprocess communication \(IPC\) for local publish/subscribe messaging and AWS IoT Core MQTT messaging\. For more information, see [Use the AWS IoT Device SDK to communicate with the Greengrass nucleus, other components, and AWS IoT CoreCommunicate with the Greengrass nucleus, other components, and AWS IoT Core](interprocess-communication.md)\.
 + **Local resources**
 
   In AWS IoT Greengrass V1, Lambda functions run in containers that you configure to access volumes and devices on the core device's file system\.
@@ -89,7 +89,7 @@ If your Lambda function uses features such as stream manager or local secrets, y
 + **Local secrets**
 
   If your Lambda function uses local secrets, specify `aws.greengrass.SecretManager` as a component dependency when you import the function\. When you deploy the secret manager component, specify the secret resources to deploy to the target core devices\. The core device's role alias must point to an IAM role that allows the core device to retrieve the secret resources to deploy\. For more information, see [Secret manager](secret-manager-component.md)\.
-+ **Subscriptions**
++ <a name="run-v1-lambda-functions-subscriptions"></a>**Subscriptions**
 
   If your Lambda function publishes messages to the local publish/subscribe broker or to AWS IoT Core, specify `aws.greengrass.LegacySubscriptionRouter` as a component dependency when you import the function\. When you deploy the legacy subscription router component, specify the subscriptions that the Lambda function uses\. For more information, see [Legacy subscription router](legacy-subscription-router-component.md)\.
 **Note**  <a name="legacy-subscription-router-requirement-note"></a>

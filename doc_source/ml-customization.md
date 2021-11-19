@@ -106,7 +106,7 @@ When you deploy the inference component, AWS IoT Greengrass looks for the latest
 
 ### Create a custom model component \(console\)<a name="create-model-store-component-console"></a>
 
-1. Upload your model to an S3 bucket\. For information about uploading your models to an S3 bucket, see [Working with Amazon S3 Buckets](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html) in the *Amazon Simple Storage Service Developer Guide*\.
+1. Upload your model to an S3 bucket\. For information about uploading your models to an S3 bucket, see [Working with Amazon S3 Buckets](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html) in the *Amazon Simple Storage Service User Guide*\.
 **Note**  <a name="s3-artifacts-note"></a>
 <a name="sr-artifacts-req"></a>You must store your artifacts in S3 buckets that are in the same AWS account and AWS Region as the components\. To enable AWS IoT Greengrass to access these artifacts, the [Greengrass device role](device-service-role.md) must allow the `s3:GetObject` action\. For more information about the device role, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
 
@@ -136,7 +136,7 @@ Do not change the name of the component\.
 
 ### Create a custom model component \(AWS CLI\)<a name="create-model-store-component-cli"></a>
 
-1. Upload your model to an S3 bucket\. For information about uploading your models to an S3 bucket, see [Working with Amazon S3 Buckets](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html) in the *Amazon Simple Storage Service Developer Guide*\.
+1. Upload your model to an S3 bucket\. For information about uploading your models to an S3 bucket, see [Working with Amazon S3 Buckets](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html) in the *Amazon Simple Storage Service User Guide*\.
 **Note**  <a name="s3-artifacts-note"></a>
 <a name="sr-artifacts-req"></a>You must store your artifacts in S3 buckets that are in the same AWS account and AWS Region as the components\. To enable AWS IoT Greengrass to access these artifacts, the [Greengrass device role](device-service-role.md) must allow the `s3:GetObject` action\. For more information about the device role, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
 
@@ -154,13 +154,26 @@ Do not change the name of the component\.
    ```
 
 ------
-#### [ Windows command prompt ]
+#### [ Windows Command Prompt \(CMD\) ]
 
    ```
    aws greengrassv2 get-component ^
        --arn <arn> ^
        --recipe-output-format <recipe-format> ^
        --query recipe ^
+       --output text > <recipe-file>.base64
+   
+   certutil -decode <recipe-file>.base64 <recipe-file>
+   ```
+
+------
+#### [ PowerShell ]
+
+   ```
+   aws greengrassv2 get-component `
+       --arn <arn> `
+       --recipe-output-format <recipe-format> `
+       --query recipe `
        --output text > <recipe-file>.base64
    
    certutil -decode <recipe-file>.base64 <recipe-file>
@@ -223,13 +236,26 @@ You can use the recipe of an existing public machine learning component as a tem
   ```
 
 ------
-#### [ Windows command prompt ]
+#### [ Windows Command Prompt \(CMD\) ]
 
   ```
   aws greengrassv2 get-component ^
       --arn <arn> ^
       --recipe-output-format <recipe-format> ^
       --query recipe ^
+      --output text > <recipe-file>.base64
+  
+  certutil -decode <recipe-file>.base64 <recipe-file>
+  ```
+
+------
+#### [ PowerShell ]
+
+  ```
+  aws greengrassv2 get-component `
+      --arn <arn> `
+      --recipe-output-format <recipe-format> `
+      --query recipe `
       --output text > <recipe-file>.base64
   
   certutil -decode <recipe-file>.base64 <recipe-file>
@@ -252,7 +278,7 @@ To view the sample artifacts that are included in the public machine learning co
 
 Before you can create a custom component, you must upload the component artifacts to an S3 bucket and use the S3 URIs in your component recipe\. For example, to use custom inference code in your inference component, upload the code to an S3 bucket\. You can then use the Amazon S3 URI of your inference code as an artifact in your component\. 
 
-For information about uploading content to an S3 bucket, see [Working with Amazon S3 Buckets](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html) in the *Amazon Simple Storage Service Developer Guide*\.
+For information about uploading content to an S3 bucket, see [Working with Amazon S3 Buckets](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html) in the *Amazon Simple Storage Service User Guide*\.
 
 **Note**  <a name="s3-artifacts-note"></a>
 <a name="sr-artifacts-req"></a>You must store your artifacts in S3 buckets that are in the same AWS account and AWS Region as the components\. To enable AWS IoT Greengrass to access these artifacts, the [Greengrass device role](device-service-role.md) must allow the `s3:GetObject` action\. For more information about the device role, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
@@ -274,7 +300,7 @@ This section shows you how to create a custom inference component using the DLR 
 
 ### Upload your inference code to an Amazon S3 bucket<a name="create-inference-code"></a>
 
-Create your inference code and then upload it to an S3 bucket\. For information about uploading content to an S3 bucket, see [Working with Amazon S3 Buckets](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html) in the *Amazon Simple Storage Service Developer Guide*\.
+Create your inference code and then upload it to an S3 bucket\. For information about uploading content to an S3 bucket, see [Working with Amazon S3 Buckets](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html) in the *Amazon Simple Storage Service User Guide*\.
 
 **Note**  <a name="s3-artifacts-note"></a>
 <a name="sr-artifacts-req"></a>You must store your artifacts in S3 buckets that are in the same AWS account and AWS Region as the components\. To enable AWS IoT Greengrass to access these artifacts, the [Greengrass device role](device-service-role.md) must allow the `s3:GetObject` action\. For more information about the device role, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
@@ -295,13 +321,26 @@ Create your inference code and then upload it to an S3 bucket\. For information 
    ```
 
 ------
-#### [ Windows command prompt ]
+#### [ Windows Command Prompt \(CMD\) ]
 
    ```
    aws greengrassv2 get-component ^
        --arn arn:aws:greengrass:region:aws:components:aws.greengrass.DLRImageClassification:versions:version ^
        --recipe-output-format JSON | YAML ^
        --query recipe ^
+       --output text > <recipe-file>.base64
+   
+   certutil -decode <recipe-file>.base64 <recipe-file>
+   ```
+
+------
+#### [ PowerShell ]
+
+   ```
+   aws greengrassv2 get-component `
+       --arn arn:aws:greengrass:region:aws:components:aws.greengrass.DLRImageClassification:versions:version `
+       --recipe-output-format JSON | YAML `
+       --query recipe `
        --output text > <recipe-file>.base64
    
    certutil -decode <recipe-file>.base64 <recipe-file>
@@ -347,7 +386,7 @@ Create your inference code and then upload it to an S3 bucket\. For information 
 
      ```
      {
-         variant.DLR.ImageClassification.ModelStore: {
+         "variant.DLR.ImageClassification.ModelStore": {
              "VersionRequirement": "<version>",
              "DependencyType": "HARD"
          }
@@ -372,7 +411,7 @@ Create your inference code and then upload it to an S3 bucket\. For information 
 
      ```
      {
-         <custom-model-component>: {
+         "<custom-model-component>": {
              "VersionRequirement": "<version>",
              "DependencyType": "HARD"
          }

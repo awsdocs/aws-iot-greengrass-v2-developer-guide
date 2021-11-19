@@ -4,7 +4,7 @@ The Amazon SageMaker Edge Manager component \(`aws.greengrass.SageMakerEdgeManag
 
 SageMaker Edge Manager provides model management for edge devices so you can optimize, secure, monitor, and maintain machine learning models on fleets of edge devices\. The SageMaker Edge Manager component installs and manages the lifecycle of the SageMaker Edge Manager agent on your core device\. You can also use SageMaker Edge Manager to package and use SageMaker Neo\-compiled models as model components on Greengrass core devices\. For more information about using SageMaker Edge Manager agent on your core device, see [Use Amazon SageMaker Edge Manager on Greengrass core devices](use-sagemaker-edge-manager.md)\.
 
-SageMaker Edge Manager component v1\.0\.x installs Edge Manager agent binary v1\.20210512\.96da6cc\. For more information about Edge Manager agent binary versions, see [Edge Manager Agent](https://docs.aws.amazon.com/sagemaker/latest/dg/edge-device-fleet-about)\.
+SageMaker Edge Manager component v1\.1\.x installs Edge Manager agent binary v1\.20210820\.e20fa3a\. For more information about Edge Manager agent binary versions, see [Edge Manager Agent](https://docs.aws.amazon.com/sagemaker/latest/dg/edge-device-fleet-about)\.
 
 **Note**  
 The SageMaker Edge Manager component is available only in the following AWS Regions:  
@@ -18,27 +18,35 @@ Asia Pacific \(Tokyo\)
 **Topics**
 + [Versions](#sagemaker-edge-manager-component-versions)
 + [Type](#sagemaker-edge-manager-component-type)
++ [Operating system](#sagemaker-edge-manager-component-os-support)
 + [Requirements](#sagemaker-edge-manager-component-requirements)
 + [Dependencies](#sagemaker-edge-manager-component-dependencies)
-+ [Configuration](#sagemaker-edge-manager-component-config)
++ [Configuration](#sagemaker-edge-manager-component-configuration)
 + [Local log file](#sagemaker-edge-manager-component-log-file)
 + [Changelog](#sagemaker-edge-manager-component-changelog)
 
 ## Versions<a name="sagemaker-edge-manager-component-versions"></a>
 
 This component has the following versions:
++ 1\.1\.x
 + 1\.0\.x
 
 ## Type<a name="sagemaker-edge-manager-component-type"></a>
 
-<a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
+<a name="public-component-type-generic"></a>This <a name="public-component-type-generic-phrase"></a>component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
 
 <a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
+
+## Operating system<a name="sagemaker-edge-manager-component-os-support"></a>
+
+This component can be installed on core devices that run the following operating systems:
++ Linux
++ Windows
 
 ## Requirements<a name="sagemaker-edge-manager-component-requirements"></a>
 
 This component has the following requirements:<a name="sm-edge-manager-component-reqs"></a>
-+ <a name="sm-req-core-device"></a>A Greengrass core device running on a Debian\-based Linux platform \(x86\_64 or Armv8\)\. If you don't have one, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
++ <a name="sm-req-core-device"></a>A Greengrass core device running on Amazon Linux 2, a Debian\-based Linux platform \(x86\_64 or Armv8\), or Windows \(x86\_64\)\. If you don't have one, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
 + <a name="sm-req-python"></a>[Python](https://www.python.org/downloads/) 3\.6 or later, including `pip` for your version of Python, installed on your core device\.
 + The [Greengrass device role](device-service-role.md) configured with the following: 
   + <a name="sm-req-iam-trust-relationship"></a>A trust relationship that allows `credentials.iot.amazonaws.com` and `sagemaker.amazonaws.com` to assume the role, as shown in the following IAM policy example\.
@@ -102,7 +110,7 @@ This component must be able to perform outbound requests to the following endpoi
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#sagemaker-edge-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ 1\.0\.3 ]
+#### [ >=1\.0\.3 ]
 
 The following table lists the dependencies for version 1\.0\.3 of this component\.
 
@@ -113,7 +121,7 @@ The following table lists the dependencies for version 1\.0\.3 of this component
 | [Token exchange service](token-exchange-service-component.md) | >=0\.0\.0 | Hard | 
 
 ------
-#### [ 1\.0\.1 \- 1\.0\.2 ]
+#### [ 1\.0\.1 and 1\.0\.2 ]
 
 The following table lists the dependencies for versions 1\.0\.1 and 1\.0\.2 of this component\.
 
@@ -138,7 +146,7 @@ The following table lists the dependencies for version 1\.0\.0 of this component
 
 For more information about component dependencies, see the [component recipe reference](component-recipe-reference.md#recipe-reference-component-dependencies)\.
 
-## Configuration<a name="sagemaker-edge-manager-component-config"></a>
+## Configuration<a name="sagemaker-edge-manager-component-configuration"></a>
 
 This component provides the following configuration parameters that you can customize when you deploy the component\.
 
@@ -165,8 +173,8 @@ Default: `30`
 
 `CaptureDataDestination`  
 \(Optional\) The destination where you store captured data\. This parameter can have the following values:  
-+ `Disk`—Writes captured data to the component's work directory\. 
 + `Cloud`—Uploads captured data to the S3 bucket that you specify in `BucketName`\.
++ `Disk`—Writes captured data to the component's work directory\. 
 If you specify `Disk`, you can also choose to periodically upload the captured data to your S3 bucket by setting `CaptureDataPeriodicUpload` to `true`\.  
 Default: `Cloud`
 
@@ -189,8 +197,13 @@ Default: `4`
 Default: `3072`
 
 `FolderPrefix`  
-\(Optional\) The name of the folder to which the agent writes the captured data\. If you set `CaptureDataDestination` to `Disk`, the agent creates the folder in the component's work directory\. If you set `CaptureDataDestination` to `Cloud`, or if you set `CaptureDataPeriodicUpload` to `true`, the agent creates the folder in your S3 bucket\.   
+\(Optional\) The name of the folder to which the agent writes the captured data\. If you set `CaptureDataDestination` to `Disk`, the agent creates the folder in the directory that is specified by `CaptureDataDiskPath`\. If you set `CaptureDataDestination` to `Cloud`, or if you set `CaptureDataPeriodicUpload` to `true`, the agent creates the folder in your S3 bucket\.   
 Default: `sme-capture`
+
+`CaptureDataDiskPath`  
+This feature is available in v1\.1\.0 and later versions of the SageMaker Edge Manager component\.  
+\(Optional\) The path to the folder to which the agent creates the captured data folder\. If you set `CaptureDataDestination` to `Disk`, the agent creates the captured data folder in this directory\. If you don't specify this value, the agent creates the captured data folder in the component's work directory\. Use the `FolderPrefix` parameter to specify the name of the captured data folder\.  
+Default: `/greengrass/v2/work/aws.greengrass.SageMakerEdgeManager/capture`
 
 `SagemakerEdgeLogVerbose`  
 \(Optional\) String value that specifies whether to enable debug logging\. Supported values are `true` and `false`\.  
@@ -217,16 +230,40 @@ The following example configuration specifies that the core device is part of th
 
 This component uses the following log file\.
 
+------
+#### [ Linux ]
+
 ```
 /greengrass/v2/logs/aws.greengrass.SageMakerEdgeManager.log
 ```
 
+------
+#### [ Windows ]
+
+```
+C:\greengrass\v2\logs\aws.greengrass.SageMakerEdgeManager.log
+```
+
+------
+
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
+
+------
+#### [ Linux ]
 
   ```
   sudo tail -f /greengrass/v2/logs/aws.greengrass.SageMakerEdgeManager.log
   ```
+
+------
+#### [ Windows \(PowerShell\) ]
+
+  ```
+  Get-Content C:\greengrass\v2\logs\aws.greengrass.SageMakerEdgeManager.log -Tail 10 -Wait
+  ```
+
+------
 
 ## Changelog<a name="sagemaker-edge-manager-component-changelog"></a>
 
@@ -235,6 +272,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  1\.1\.0  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/sagemaker-edge-manager-component.html)  | 
 |  1\.0\.3  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  1\.0\.2  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/sagemaker-edge-manager-component.html)  | 
 |  1\.0\.1  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 

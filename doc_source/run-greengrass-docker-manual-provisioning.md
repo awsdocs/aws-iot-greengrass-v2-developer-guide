@@ -109,6 +109,8 @@ The thing name can't contain colon \(`:`\) characters\.
 
    1. Create a file that contains the AWS IoT policy document that Greengrass core devices require\.
 
+      <a name="nano-command-intro"></a>For example, on a Linux\-based system, you can run the following command to use GNU nano to create the file\.
+
       ```
       nano greengrass-v2-iot-policy.json
       ```
@@ -219,7 +221,7 @@ In the previous step, you downloaded the certificates for your AWS IoT thing\. I
 Run the following command to download the root CA certificate\.
 
 ```
-curl ./greengrass-v2-certs/AmazonRootCA1.pem https://www.amazontrust.com/repository/AmazonRootCA1.pem
+curl -o ./greengrass-v2-certs/AmazonRootCA1.pem https://www.amazontrust.com/repository/AmazonRootCA1.pem
 ```
 
 ## Retrieve AWS IoT endpoints<a name="retrieve-iot-endpoints"></a>
@@ -267,6 +269,8 @@ In this section, you create a token exchange IAM role and an AWS IoT role alias 
 1. <a name="create-token-exchange-role-create-iam-role"></a>Create an IAM role that your device can use as a token exchange role\. Do the following:
 
    1. Create a file that contains the trust policy document that the token exchange role requires\.
+
+      <a name="nano-command-intro"></a>For example, on a Linux\-based system, you can run the following command to use GNU nano to create the file\.
 
       ```
       nano device-role-trust-policy.json
@@ -322,6 +326,8 @@ In this section, you create a token exchange IAM role and an AWS IoT role alias 
       ```
 
    1. Create a file that contains the access policy document that the token exchange role requires\.
+
+      <a name="nano-command-intro"></a>For example, on a Linux\-based system, you can run the following command to use GNU nano to create the file\.
 
       ```
       nano device-role-access-policy.json
@@ -410,6 +416,8 @@ To create a role alias, you must have permission to pass the token exchange IAM 
 1. Create and attach an AWS IoT policy that allows your Greengrass core device to use the role alias to assume the token exchange role\. If you have set up a Greengrass core device before, you can attach its role alias AWS IoT policy instead of creating a new one\. Do the following:
 
    1. \(Optional\) Create a file that contains the AWS IoT policy document that the role alias requires\.
+
+      <a name="nano-command-intro"></a>For example, on a Linux\-based system, you can run the following command to use GNU nano to create the file\.
 
       ```
       nano greengrass-v2-iot-role-alias-policy.json
@@ -534,7 +542,6 @@ This tutorial uses an environment file to set the environment variables that wil
    AWS_REGION=region
    PROVISION=false
    COMPONENT_DEFAULT_USER=ggc_user:ggc_group
-   DEPLOY_DEV_TOOLS=true
    INIT_CONFIG=/tmp/config/config.yaml
    ```
 
@@ -542,6 +549,8 @@ This tutorial uses an environment file to set the environment variables that wil
    + */greengrass/v2*\. The path to the root folder to use to install the AWS IoT Greengrass Core software\.
    + *region*\. The AWS Region where you created your AWS IoT resources\. You must specify the same value for the `awsRegion` configuration parameter in your [configuration file](#create-docker-install-configuration-file)\.
    + */tmp/config/*\. The directory to which you mount the configuration file when you start the Docker container\.
+**Note**  <a name="docker-local-dev-tools-production-environment-warning"></a>
+You can set the `DEPLOY_DEV_TOOLS` environment variable to `true` to deploy the [Greengrass CLI component](greengrass-cli-component.md), which enables you to develop custom components inside of the Docker container\. <a name="local-dev-tools-production-environment-warning"></a>We recommend that you use this component in only development environments, not production environments\. This component provides access to information and operations that you typically won't need in a production environment\. Follow the principle of least privilege by deploying this component to only core devices where you need it\.
 
 ## Run the AWS IoT Greengrass Core software in a container<a name="run-greengrass-image-manual-provisioning"></a>
 
@@ -641,7 +650,7 @@ You can then run the following command to access the container and explore AWS I
 docker exec -it container-id /bin/bash
 ```
 
-For information about creating a simple component, see [Create your first component](getting-started.md#create-first-component) in [Getting started with AWS IoT Greengrass V2](getting-started.md)
+For information about creating a simple component, see [Step 4: Develop and test a component on your device](getting-started.md#create-first-component) in [Getting started with AWS IoT Greengrass V2](getting-started.md)
 
 **Note**  <a name="run-greengrass-commands-in-docker-note"></a>
 When you use `docker exec` to run commands inside the Docker container, those commands are not logged in the Docker logs\. To log your commands in the Docker logs, attach an interactive shell to the Docker container\. For more information, see [Attach an interactive shell to the Docker container](docker-troubleshooting.md#debugging-docker-attach-shell)\.

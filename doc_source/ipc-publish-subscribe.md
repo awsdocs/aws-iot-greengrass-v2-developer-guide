@@ -82,19 +82,71 @@ The following examples demonstrate how to call this operation in custom componen
 #### [ Java ]
 
 **Example: Publish a binary message**  
+This example uses an `IPCUtils` class to create a connection to the AWS IoT Greengrass Core IPC service\. For more information, see [Connect to the AWS IoT Greengrass Core IPC service](interprocess-communication.md#ipc-service-connect)\.
 
 ```
-String topic = "my/topic";
-String message = "Hello, World!";
+package com.aws.greengrass.docs.samples.ipc;
 
-PublishToTopicRequest publishToTopicRequest = new PublishToTopicRequest();
-PublishMessage publishMessage = new PublishMessage();
-BinaryMessage binaryMessage = new BinaryMessage();
-binaryMessage.setMessage(message.getBytes(StandardCharsets.UTF_8));
-publishMessage.setBinaryMessage(binaryMessage);
-publishToTopicRequest.setPublishMessage(publishMessage);
-publishToTopicRequest.setTopic(topic);
-greengrassCoreIPCClient.publishToTopic(publishToTopicRequest, Optional.empty()).getResponse().get();
+import com.aws.greengrass.docs.samples.ipc.util.IPCUtils;
+import software.amazon.awssdk.aws.greengrass.GreengrassCoreIPCClient;
+import software.amazon.awssdk.aws.greengrass.PublishToTopicResponseHandler;
+import software.amazon.awssdk.aws.greengrass.model.*;
+import software.amazon.awssdk.eventstreamrpc.EventStreamRPCConnection;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+public class PublishToTopic {
+    public static final int TIMEOUT_SECONDS = 10;
+
+    public static void main(String[] args) {
+        String topic = args[0];
+        String message = args[1];
+        try (EventStreamRPCConnection eventStreamRPCConnection =
+                     IPCUtils.getEventStreamRpcConnection()) {
+            GreengrassCoreIPCClient ipcClient =
+                    new GreengrassCoreIPCClient(eventStreamRPCConnection);
+            PublishToTopicResponseHandler responseHandler =
+                    PublishToTopic.publishBinaryMessageToTopic(ipcClient, topic, message);
+            CompletableFuture<PublishToTopicResponse> futureResponse =
+                    responseHandler.getResponse();
+            try {
+                futureResponse.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+                System.out.println("Successfully published to topic: " + topic);
+            } catch (TimeoutException e) {
+                System.err.println("Timeout occurred while publishing to topic: " + topic);
+            } catch (ExecutionException e) {
+                if (e.getCause() instanceof UnauthorizedError) {
+                    System.err.println("Unauthorized error while publishing to topic: " + topic);
+                } else {
+                    throw e;
+                }
+            }
+        } catch (InterruptedException e) {
+            System.out.println("IPC interrupted.");
+        } catch (ExecutionException e) {
+            System.err.println("Exception occurred when using IPC.");
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    public static PublishToTopicResponseHandler publishBinaryMessageToTopic(
+            GreengrassCoreIPCClient greengrassCoreIPCClient, String topic, String message) {
+        PublishToTopicRequest publishToTopicRequest = new PublishToTopicRequest();
+        PublishMessage publishMessage = new PublishMessage();
+        BinaryMessage binaryMessage = new BinaryMessage();
+        binaryMessage.setMessage(message.getBytes(StandardCharsets.UTF_8));
+        publishMessage.setBinaryMessage(binaryMessage);
+        publishToTopicRequest.setPublishMessage(publishMessage);
+        publishToTopicRequest.setTopic(topic);
+        return greengrassCoreIPCClient.publishToTopic(publishToTopicRequest, Optional.empty());
+    }
+}
 ```
 
 ------
@@ -252,53 +304,118 @@ The following examples demonstrate how to call this operation in custom componen
 #### [ Java ]
 
 **Example: Subscribe to local publish/subscribe messages**  <a name="ipc-operation-subscribetotopic-example-java"></a>
+This example uses an `IPCUtils` class to create a connection to the AWS IoT Greengrass Core IPC service\. For more information, see [Connect to the AWS IoT Greengrass Core IPC service](interprocess-communication.md#ipc-service-connect)\.
 
 ```
-String topic = "my/topic";
+package com.aws.greengrass.docs.samples.ipc;
 
-SubscribeToTopicRequest subscribeToTopicRequest = new SubscribeToTopicRequest();
-subscribeToTopicRequest.setTopic(topic);
+import com.aws.greengrass.docs.samples.ipc.util.IPCUtils;
+import software.amazon.awssdk.aws.greengrass.GreengrassCoreIPCClient;
+import software.amazon.awssdk.aws.greengrass.SubscribeToTopicResponseHandler;
+import software.amazon.awssdk.aws.greengrass.model.SubscribeToTopicRequest;
+import software.amazon.awssdk.aws.greengrass.model.SubscribeToTopicResponse;
+import software.amazon.awssdk.aws.greengrass.model.SubscriptionResponseMessage;
+import software.amazon.awssdk.aws.greengrass.model.UnauthorizedError;
+import software.amazon.awssdk.eventstreamrpc.EventStreamRPCConnection;
+import software.amazon.awssdk.eventstreamrpc.StreamResponseHandler;
 
-StreamResponseHandler<SubscriptionResponseMessage> streamResponseHandler =
-        new StreamResponseHandler<SubscriptionResponseMessage>() {
-            @Override
-            public void onStreamEvent(SubscriptionResponseMessage subscriptionResponseMessage) {
-                try {
-                    String message = new String(subscriptionResponseMessage.getBinaryMessage()
-                            .getMessage(), StandardCharsets.UTF_8);
-                    // Handle message.
-                } catch (Exception e) {
-                    e.printStackTrace();
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+public class SubscribeToTopic {
+    public static final int TIMEOUT_SECONDS = 10;
+
+    public static void main(String[] args) {
+        String topic = args[0];
+        try (EventStreamRPCConnection eventStreamRPCConnection =
+                     IPCUtils.getEventStreamRpcConnection()) {
+            GreengrassCoreIPCClient ipcClient =
+                    new GreengrassCoreIPCClient(eventStreamRPCConnection);
+            StreamResponseHandler<SubscriptionResponseMessage> streamResponseHandler =
+                    new SubscriptionResponseHandler(topic);
+            SubscribeToTopicResponseHandler responseHandler =
+                    SubscribeToTopic.subscribeToTopic(ipcClient, topic, streamResponseHandler);
+            CompletableFuture<SubscribeToTopicResponse> futureResponse =
+                    responseHandler.getResponse();
+            try {
+                futureResponse.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+                System.out.println("Successfully subscribed to topic: " + topic);
+            } catch (TimeoutException e) {
+                System.err.println("Timeout occurred while subscribing to topic: " + topic);
+            } catch (ExecutionException e) {
+                if (e.getCause() instanceof UnauthorizedError) {
+                    System.err.println("Unauthorized error while publishing to topic: " + topic);
+                } else {
+                    throw e;
                 }
             }
 
-            @Override
-            public boolean onStreamError(Throwable error) {
-                // Handle error.
-                return false; // Return true to close stream, false to keep stream open.
+            // Keep the main thread alive, or the process will exit.
+            try {
+                while (true) {
+                    Thread.sleep(10000);
+                }
+            } catch (InterruptedException e) {
+                System.out.println("Subscribe interrupted.");
             }
 
-            @Override
-            public void onStreamClosed() {
-                // Handle close.
-            }
-        };
-
-SubscribeToTopicResponseHandler operationResponseHandler = greengrassCoreIPCClient
-        .subscribeToTopic(subscribeToTopicRequest, Optional.of(streamResponseHandler));
-operationResponseHandler.getResponse().get();
-
-// Keep the main thread alive, or the process will exit.
-try {
-    while (true) {
-        Thread.sleep(10000);
+            // To stop subscribing, close the stream.
+            responseHandler.closeStream();
+        } catch (InterruptedException e) {
+            System.out.println("IPC interrupted.");
+        } catch (ExecutionException e) {
+            System.err.println("Exception occurred when using IPC.");
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
-} catch (InterruptedException e) {
-    System.out.println("Subscribe interrupted.");
-}
 
-// To stop subscribing, close the stream.
-operationResponseHandler.closeStream();
+    public static SubscribeToTopicResponseHandler subscribeToTopic(GreengrassCoreIPCClient greengrassCoreIPCClient, String topic, StreamResponseHandler<SubscriptionResponseMessage> streamResponseHandler) {
+        SubscribeToTopicRequest subscribeToTopicRequest = new SubscribeToTopicRequest();
+        subscribeToTopicRequest.setTopic(topic);
+        return greengrassCoreIPCClient.subscribeToTopic(subscribeToTopicRequest,
+                Optional.of(streamResponseHandler));
+    }
+
+    public static class SubscriptionResponseHandler implements StreamResponseHandler<SubscriptionResponseMessage> {
+
+        private final String topic;
+
+        public SubscriptionResponseHandler(String topic) {
+            this.topic = topic;
+        }
+
+        @Override
+        public void onStreamEvent(SubscriptionResponseMessage subscriptionResponseMessage) {
+            try {
+                String message =
+                        new String(subscriptionResponseMessage.getBinaryMessage().getMessage(),
+                                StandardCharsets.UTF_8);
+                System.out.printf("Received new message on topic %s: %s%n", this.topic, message);
+            } catch (Exception e) {
+                System.err.println("Exception occurred while processing subscription response " +
+                        "message.");
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public boolean onStreamError(Throwable error) {
+            System.err.println("Received a stream error.");
+            error.printStackTrace();
+            return false; // Return true to close stream, false to keep stream open.
+        }
+
+        @Override
+        public void onStreamClosed() {
+            System.out.println("Subscribe to topic stream closed.");
+        }
+    }
+}
 ```
 
 ------
@@ -804,9 +921,21 @@ The following example recipe allows the component to publish to all topics\.
   },
   "Manifests": [
     {
+      "Platform": {
+        "os": "linux"
+      },
       "Lifecycle": {
         "Install": "python3 -m pip install --user awsiotsdk",
         "Run": "python3 -u {artifacts:path}/pubsub_publisher.py"
+      }
+    },
+    {
+      "Platform": {
+        "os": "windows"
+      },
+      "Lifecycle": {
+        "Install": "py -3 -m pip install --user awsiotsdk",
+        "Run": "py -3 -u {artifacts:path}/pubsub_publisher.py"
       }
     }
   ]
@@ -834,9 +963,16 @@ ComponentConfiguration:
           resources:
             - "*"
 Manifests:
-  - Lifecycle:
+  - Platform:
+      os: linux
+    Lifecycle:
       Install: python3 -m pip install --user awsiotsdk
       Run: python3 -u {artifacts:path}/pubsub_publisher.py
+  - Platform:
+      os: windows
+    Lifecycle:
+      Install: py -3 -m pip install --user awsiotsdk
+      Run: py -3 -u {artifacts:path}/pubsub_publisher.py
 ```
 
 ------
@@ -929,9 +1065,21 @@ The following example recipe allows the component to subscribe to all topics\.
   },
   "Manifests": [
     {
+      "Platform": {
+        "os": "linux"
+      },
       "Lifecycle": {
         "Install": "python3 -m pip install --user awsiotsdk",
         "Run": "python3 -u {artifacts:path}/pubsub_subscriber.py"
+      }
+    },
+    {
+      "Platform": {
+        "os": "windows"
+      },
+      "Lifecycle": {
+        "Install": "py -3 -m pip install --user awsiotsdk",
+        "Run": "py -3 -u {artifacts:path}/pubsub_subscriber.py"
       }
     }
   ]
@@ -959,9 +1107,16 @@ ComponentConfiguration:
           resources:
             - "*"
 Manifests:
-  - Lifecycle:
+  - Platform:
+      os: linux
+    Lifecycle:
       Install: python3 -m pip install --user awsiotsdk
       Run: python3 -u {artifacts:path}/pubsub_subscriber.py
+  - Platform:
+      os: windows
+    Lifecycle:
+      Install: py -3 -m pip install --user awsiotsdk
+      Run: py -3 -u {artifacts:path}/pubsub_subscriber.py
 ```
 
 ------

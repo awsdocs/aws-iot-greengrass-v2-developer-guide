@@ -7,6 +7,7 @@ For more information about how AWS IoT Greengrass devices can interact with shad
 **Topics**
 + [Versions](#shadow-manager-component-versions)
 + [Type](#shadow-manager-component-type)
++ [Operating system](#shadow-manager-component-os-support)
 + [Requirements](#shadow-manager-component-requirements)
 + [Dependencies](#shadow-manager-component-dependencies)
 + [Configuration](#shadow-manager-component-config)
@@ -26,6 +27,12 @@ This component has the following versions:
 
 <a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
 
+## Operating system<a name="shadow-manager-component-os-support"></a>
+
+This component can be installed on core devices that run the following operating systems:
++ Linux
++ Windows
+
 ## Requirements<a name="shadow-manager-component-requirements"></a>
 
 This component has the following requirements:
@@ -43,9 +50,19 @@ This component has the following requirements:
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#shadow-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ 2\.0\.3 ]
+#### [ 2\.0\.5 ]
 
-The following table lists the dependencies for version 2\.0\.3 of this component\.
+The following table lists the dependencies for version 2\.0\.5 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.2\.0 <2\.6\.0 | Soft | 
+
+------
+#### [ 2\.0\.3 and 2\.0\.4 ]
+
+The following table lists the dependencies for versions 2\.0\.3 and 2\.0\.4 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -53,7 +70,7 @@ The following table lists the dependencies for version 2\.0\.3 of this component
 | [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.2\.0 <2\.5\.0 | Soft | 
 
 ------
-#### [ 2\.0\.1 \- 2\.0\.2 ]
+#### [ 2\.0\.1 and 2\.0\.2 ]
 
 The following table lists the dependencies for versions 2\.0\.1 and 2\.0\.2 of this component\.
 
@@ -91,6 +108,7 @@ By default, the shadow manager syncs the local state of the classic shadow for y
 Default: `true`  
 `namedShadows`  
 The list of named core device shadows that you want to sync\.   
+The AWS IoT Greengrass service uses the `AWSManagedGreengrassV2Deployment` named shadow to manage deployments that target individual core devices\. This named shadow is reserved for use by the AWS IoT Greengrass service\. Do not update or delete this named shadow\.  
 `shadowDocuments`  
 The list of additional device shadows to sync\. Each object in this list contains the following information\.     
 `thingName`  
@@ -126,36 +144,36 @@ The following example shows a sample configuration merge update with all availab
 
 ```
 {
-  "synchronize":{
-    "coreThing":{
-      "classic":true,
-      "namedShadows":[
+  "synchronize": {
+    "coreThing": {
+      "classic": true,
+      "namedShadows": [
         "MyCoreShadowA",
         "MyCoreShadowB"
       ]
     },
-    "shadowDocuments":[
+    "shadowDocuments": [
       {
-        "thingName":"MyDevice1",
-        "classic":false,
-        "namedShadows":[
+        "thingName": "MyDevice1",
+        "classic": false,
+        "namedShadows": [
           "MyShadowA",
           "MyShadowB"
         ]
       },
       {
-        "thingName":"MyDevice2",
-        "classic":true,
-        "namedShadows":[ ]
+        "thingName": "MyDevice2",
+        "classic": true,
+        "namedShadows": []
       }
     ]
   },
   "rateLimits": {       
-          "maxOutboundSyncUpdatesPerSecond":100,
-          "maxTotalLocalRequestsRate":200,
-          "maxLocalRequestsPerSecondPerThing":20
-   },
-  "shadowDocumentSizeLimitBytes":8192
+    "maxOutboundSyncUpdatesPerSecond": 100,
+    "maxTotalLocalRequestsRate": 200,
+    "maxLocalRequestsPerSecondPerThing": 20
+  },
+  "shadowDocumentSizeLimitBytes": 8192
 }
 ```
 
@@ -163,16 +181,40 @@ The following example shows a sample configuration merge update with all availab
 
 This component uses the same log file as the [Greengrass nucleus](greengrass-nucleus-component.md) component\.
 
+------
+#### [ Linux ]
+
 ```
 /greengrass/v2/logs/greengrass.log
 ```
 
+------
+#### [ Windows ]
+
+```
+C:\greengrass\v2\logs\greengrass.log
+```
+
+------
+
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
+
+------
+#### [ Linux ]
 
   ```
   sudo tail -f /greengrass/v2/logs/greengrass.log
   ```
+
+------
+#### [ Windows \(PowerShell\) ]
+
+  ```
+  Get-Content C:\greengrass\v2\logs\greengrass.log -Tail 10 -Wait
+  ```
+
+------
 
 ## Changelog<a name="shadow-manager-component-changelog"></a>
 
@@ -181,6 +223,8 @@ The following table describes the changes in each version of the component\.
 
 |  Version  |  Changes  | 
 | --- | --- | 
+|  2\.0\.5  |  Version updated for Greengrass nucleus version 2\.5\.0 release\.  | 
+|  2\.0\.4  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/shadow-manager-component.html)  | 
 |  2\.0\.3  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  2\.0\.2  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/shadow-manager-component.html)  | 
 |  2\.0\.1  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 

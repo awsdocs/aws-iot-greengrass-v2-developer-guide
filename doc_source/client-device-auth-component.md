@@ -8,6 +8,7 @@ Client devices are local IoT devices that connect to a Greengrass core device to
 **Topics**
 + [Versions](#client-device-auth-component-versions)
 + [Type](#client-device-auth-component-type)
++ [Operating system](#client-device-auth-component-os-support)
 + [Requirements](#client-device-auth-component-requirements)
 + [Dependencies](#client-device-auth-component-dependencies)
 + [Configuration](#client-device-auth-component-configuration)
@@ -26,6 +27,12 @@ This component has the following versions:
 <a name="public-component-type-plugin-para2"></a>This component uses the same log file as the Greengrass nucleus\. For more information, see [Monitor AWS IoT Greengrass logs](monitor-logs.md)\.
 
 <a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
+
+## Operating system<a name="client-device-auth-component-os-support"></a>
+
+This component can be installed on core devices that run the following operating systems:
++ Linux
++ Windows
 
 ## Requirements<a name="client-device-auth-component-requirements"></a>
 
@@ -53,9 +60,19 @@ This component must be able to perform outbound requests to the following endpoi
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#client-device-auth-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ 2\.0\.2 ]
+#### [ 2\.0\.4 ]
 
-The following table lists the dependencies for version 2\.0\.2 of this component\.
+The following table lists the dependencies for version 2\.0\.4 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.2\.0 <2\.6\.0 | Soft | 
+
+------
+#### [ 2\.0\.3 and 2\.0\.2 ]
+
+The following table lists the dependencies for versions 2\.0\.3 and 2\.0\.2 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -251,16 +268,40 @@ The following example configuration specifies to allow client devices whose name
 
 This component uses the same log file as the [Greengrass nucleus](greengrass-nucleus-component.md) component\.
 
+------
+#### [ Linux ]
+
 ```
 /greengrass/v2/logs/greengrass.log
 ```
 
+------
+#### [ Windows ]
+
+```
+C:\greengrass\v2\logs\greengrass.log
+```
+
+------
+
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
+
+------
+#### [ Linux ]
 
   ```
   sudo tail -f /greengrass/v2/logs/greengrass.log
   ```
+
+------
+#### [ Windows \(PowerShell\) ]
+
+  ```
+  Get-Content C:\greengrass\v2\logs\greengrass.log -Tail 10 -Wait
+  ```
+
+------
 
 ## Changelog<a name="client-device-auth-component-changelog"></a>
 
@@ -269,6 +310,8 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.0\.4  |  Version updated for Greengrass nucleus version 2\.5\.0 release\.  | 
+|  2\.0\.3  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/client-device-auth-component.html)  | 
 |  2\.0\.2  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  2\.0\.1  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  2\.0\.0  |  Initial version\.  | 

@@ -45,16 +45,40 @@ The following considerations apply when you use file system logs:
 **To view the AWS IoT Greengrass Core software log file**
 + Run the following command to view the log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
 
+------
+#### [ Linux or Unix ]
+
   ```
   sudo tail -f /greengrass/v2/logs/greengrass.log
   ```
 
+------
+#### [ PowerShell ]
+
+  ```
+  gc C:\greengrass\v2\logs\greengrass.log -Tail 10 -Wait
+  ```
+
+------
+
 **To view the log file for a component**
-+ Run the following command to view the log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder, and replace *com\.example\.HelloWorld* with the name of the component\.
++ Run the following command to view the log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder, and replace *com\.example\.HelloWorld* with the name of the component\.
+
+------
+#### [ Linux or Unix ]
 
   ```
   sudo tail -f /greengrass/v2/logs/com.example.HelloWorld.log
   ```
+
+------
+#### [ PowerShell ]
+
+  ```
+  gc C:\greengrass\v2\logs\com.example.HelloWorld.log -Tail 10 -Wait
+  ```
+
+------
 
 You can also use the `logs` command of the [Greengrass CLI](greengrass-cli-component.md) to analyze Greengrass logs on a core device\. To use the `logs` command, you must configure the [Greengrass nucleus](greengrass-nucleus-component.md) to output JSON format log files\. For more information, see [Greengrass Command Line Interface](gg-cli.md) and [logs](gg-cli-logs.md)\.
 
@@ -86,10 +110,10 @@ The log stream name uses the following variables:
 + `thingName` – The name of the core device\.
 If a thing name contains a colon \(`:`\), the log manager replaces the colon with a plus \(`+`\)\.
 
-The following considerations apply when you use CloudWatch Logs:
+<a name="log-manager-considerations-intro"></a>The following considerations apply when you use the log manager component to write to CloudWatch Logs:<a name="log-manager-considerations"></a>
 + **Log delays**
 
-  The log manager component writes logs from only rotated log files\. By default, the AWS IoT Greengrass Core software rotates log files after they are 1,024 KB\. As a result, the log manager component uploads logs only after the AWS IoT Greengrass Core software or a Greengrass component writes over 1,024 KB worth of logs\. You can configure a lower log file size limit to cause log files to rotate more often\. This causes the log manager component to upload logs to CloudWatch Logs more frequently\.
+  The log manager component writes logs from only rotated log files\. By default, the AWS IoT Greengrass Core software rotates log files every hour or after they are 1,024 KB\. As a result, the log manager component uploads logs only after the AWS IoT Greengrass Core software or a Greengrass component writes over 1,024 KB worth of logs\. You can configure a lower log file size limit to cause log files to rotate more often\. This causes the log manager component to upload logs to CloudWatch Logs more frequently\.
 
   The log manager component also uploads new logs periodically\. By default, the log manager component uploads new logs every 5 minutes\. You can configure a lower upload interval, so the log manager component uploads logs to CloudWatch Logs more frequently\.
 
@@ -102,12 +126,43 @@ The following considerations apply when you use CloudWatch Logs:
 
 If you [configure the AWS IoT Greengrass Core software as a system service](configure-greengrass-core-v2.md#configure-system-service), you can view system service logs to troubleshoot issues, such as the software failing to start\.
 
-**To view system service logs \(systemd\)**
-+ Use the [journalctl command](https://man7.org/linux/man-pages/man1/journalctl.1.html) to view logs for the AWS IoT Greengrass Core software system service\.
+**To view system service logs \(CLI\)**
++ Run the following command to view AWS IoT Greengrass Core software system service logs\.
+
+------
+#### [ Linux or Unix \(systemd\) ]
 
   ```
   sudo journalctl -u greengrass.service
   ```
+
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+  ```
+  type C:\greengrass\v2\logs\greengrass.wrapper.log
+  ```
+
+------
+#### [ PowerShell ]
+
+  ```
+  gc C:\greengrass\v2\logs\greengrass.wrapper.log
+  ```
+
+------
+
+On Windows devices, you can also use the **Event Viewer** application to view system service logs\.
+
+**To view Windows service logs \(Event Viewer\)**
+
+1. Open the **Event Viewer** application\.
+
+1. Select **Windows Logs** to expand it\.
+
+1. Choose **Application** to view application service logs\.
+
+1. Find and open event logs whose **Source** is **greengrass**\.
 
 ## Enable logging to CloudWatch Logs<a name="enable-cloudwatch-logs"></a>
 

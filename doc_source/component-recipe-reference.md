@@ -98,13 +98,14 @@ If you omit this parameter, AWS IoT Greengrass creates a name from the platform 
 \(Optional\) An object that defines the platform to which this manifest applies\. Omit this parameter to define a manifest that applies to all platforms\.  
 This object specifies key\-value pairs about the platform on which a core device runs\. When you deploy this component, the AWS IoT Greengrass Core software compares these key\-value pairs with the platform attributes on the core device\. The AWS IoT Greengrass Core software always defines `os` and `architecture`, and it might define additional attributes\. You can specify custom platform attributes for a core device when you deploy the Greengrass nucleus component\. For more information, see the [platform overrides parameter](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-platform-overrides) of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.  
 For each key\-value pair, you can specify one of the following values:  
-+ An exact value, such as `linux`\. Exact values must start with a letter or a number\.
++ An exact value, such as `linux` or `windows`\. Exact values must start with a letter or a number\.
 + `*`, which matches any value\. This also matches when a value isn't present\.
 + A Java\-style regular expression, such as `/windows|linux/`\. The regular expression must start and end with a slash character \(`/`\)\. For example, the regular expression `/.+/` matches any non\-blank value\.
 This object contains the following information:    
 `os`  
 \(Optional\) The name of the operating system for the platform that this manifest supports\. Common platforms include the following values:  
 + `linux`
++ `windows`
 + `darwin` \(macOS\)  
 `architecture`  
 \(Optional\) The processor architecture for the platform that this manifest supports\. Common architectures include the following values:  
@@ -127,14 +128,15 @@ This object contains the following information:
 + The component deploys to the core device for the first time\.
 + The component version changes\.
 + The bootstrap script changes as the result of a component configuration update\.
-You can use this lifecycle step to restart the AWS IoT Greengrass Core software\. This lets you develop a component that performs a restart after it installs operating system updates or runtime updates, for example\.  
+You can use this lifecycle step to restart the AWS IoT Greengrass Core software or restart the core device\. This lets you develop a component that performs a restart after it installs operating system updates or runtime updates, for example\.  
 After the AWS IoT Greengrass Core software completes the bootstrap step for all components that have a bootstrap step in a deployment, the software restarts\.  
-You must configure the AWS IoT Greengrass Core software as a system service to restart the AWS IoT Greengrass Core software\. If you don't configure the AWS IoT Greengrass Core software as a system service, the software won't restart\. For more information, see [Configure AWS IoT Greengrass as a system service](configure-greengrass-core-v2.md#configure-system-service)\.
+You must configure the AWS IoT Greengrass Core software as a system service to restart the AWS IoT Greengrass Core software or the core device\. If you don't configure the AWS IoT Greengrass Core software as a system service, the software won't restart\. For more information, see [Configure the Greengrass nucleus as a system service](configure-greengrass-core-v2.md#configure-system-service)\.
 This object contains the following information:    
 `Script`  
 The script to run\. The exit code of this script defines the restart instruction\. Use the following exit codes:  
 + `0` – Don't restart the AWS IoT Greengrass Core software or the core device\. The AWS IoT Greengrass Core software still restarts after all components bootstrap\.
 + `100` – Request to restart the AWS IoT Greengrass Core software\.
++ `101` – Request to restart the core device\.
 Exit codes 100 to 199 are reserved for special behavior\. Other exit codes represent script errors\.  
 `RequiresPrivilege`  <a name="recipe-lifecycle-requiresprivilege"></a>
 \(Optional\) You can run the script with root privileges\. If you set this option to `true`, then the AWS IoT Greengrass Core software runs this lifecycle script as root instead of as the system user that you configure to run this component\. Defaults to `false`\.  
@@ -397,7 +399,7 @@ You can reference the following recipe examples to help you create recipes for y
 
 ### Hello World component recipe<a name="recipe-example-hello-world"></a>
 
-The following recipe describes a Hello World component that runs a Python script\. This component supports Linux and accepts a `Message` parameter that AWS IoT Greengrass passes as an argument to the Python script\. This is the recipe for the Hello World component in the [Getting started tutorial](getting-started.md)\.
+The following recipe describes a Hello World component that runs a Python script\. This component supports all platforms and accepts a `Message` parameter that AWS IoT Greengrass passes as an argument to the Python script\. This is the recipe for the Hello World component in the [Getting started tutorial](getting-started.md)\.
 
 ------
 #### [ JSON ]
@@ -420,7 +422,15 @@ The following recipe describes a Hello World component that runs a Python script
         "os": "linux"
       },
       "Lifecycle": {
-        "Run": "python3 -u {artifacts:path}/hello_world.py '{configuration:/Message}'"
+        "Run": "python3 -u {artifacts:path}/hello_world.py \"{configuration:/Message}\""
+      }
+    },
+    {
+      "Platform": {
+        "os": "windows"
+      },
+      "Lifecycle": {
+        "Run": "py -3 -u {artifacts:path}/hello_world.py \"{configuration:/Message}\""
       }
     }
   ]
@@ -445,7 +455,12 @@ Manifests:
       os: linux
     Lifecycle:
       Run: |
-        python3 -u {artifacts:path}/hello_world.py '{configuration:/Message}'
+        python3 -u {artifacts:path}/hello_world.py "{configuration:/Message}"
+  - Platform:
+      os: windows
+    Lifecycle:
+      Run: |
+        py -3 -u {artifacts:path}/hello_world.py "{configuration:/Message}"
 ```
 
 ------

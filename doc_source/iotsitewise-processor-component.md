@@ -7,6 +7,7 @@ With this component, AWS IoT SiteWise gateways can use asset models and assets t
 **Topics**
 + [Versions](#iotsitewise-processor-component-versions)
 + [Type](#iotsitewise-processor-component-type)
++ [Operating system](#iotsitewise-processor-component-os-support)
 + [Requirements](#iotsitewise-processor-component-requirements)
 + [Dependencies](#iotsitewise-processor-component-dependencies)
 + [Configuration](#iotsitewise-processor-component-configuration)
@@ -22,9 +23,13 @@ This component has the following versions:
 
 ## Type<a name="iotsitewise-processor-component-type"></a>
 
-<a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
+<a name="public-component-type-generic"></a>This <a name="public-component-type-generic-phrase"></a>component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
 
 <a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
+
+## Operating system<a name="iotsitewise-processor-component-os-support"></a>
+
+This component can be installed on Linux core devices only\.
 
 ## Requirements<a name="iotsitewise-processor-component-requirements"></a>
 
@@ -81,22 +86,46 @@ This component doesn't have any configuration parameters\.
 
 This component uses the following log file\.
 
+------
+#### [ Linux ]
+
 ```
 /greengrass/v2/logs/aws.iot.SiteWiseEdgeProcessor.log
 ```
 
+------
+#### [ Windows ]
+
+```
+C:\greengrass\v2\logs\aws.iot.SiteWiseEdgeProcessor.log
+```
+
+------
+
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
+
+------
+#### [ Linux ]
 
   ```
   sudo tail -f /greengrass/v2/logs/aws.iot.SiteWiseEdgeProcessor.log
   ```
 
+------
+#### [ Windows \(PowerShell\) ]
+
+  ```
+  Get-Content C:\greengrass\v2\logs\aws.iot.SiteWiseEdgeProcessor.log -Tail 10 -Wait
+  ```
+
+------
+
 ## Licenses<a name="iotsitewise-processor-component-licenses"></a>
 
 This component includes the following third\-party software/licensing:
 
-### <a name="w600aac14c63c21b5b1b1"></a>
+### <a name="w687aac11c63c23b5b1b1"></a>
 + Apache\-2\.0
 + MIT
 + BSD\-2\-Clause

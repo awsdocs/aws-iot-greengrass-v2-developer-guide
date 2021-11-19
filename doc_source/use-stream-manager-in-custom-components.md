@@ -100,15 +100,46 @@ The Stream Manager SDK for Python is available as source code that you can inclu
 
    1. Zip the `stream_manager` folder into a ZIP file named `stream_manager_sdk.zip`\.
 
+------
+#### [ Linux or Unix ]
+
       ```
-      zip -r stream_manager_sdk.zip stream_manager 
+      zip -rv stream_manager_sdk.zip stream_manager
       ```
 
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+      ```
+      tar -acvf stream_manager_sdk.zip stream_manager
+      ```
+
+------
+#### [ PowerShell ]
+
+      ```
+      Compress-Archive stream_manager stream_manager_sdk.zip
+      ```
+
+------
+
    1. Verify that the `stream_manager_sdk.zip` file contains the `stream_manager` folder and its contents\. Run the following command to list the contents of the ZIP file\.
+
+------
+#### [ Linux or Unix ]
 
       ```
       unzip -l stream_manager_sdk.zip
       ```
+
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+      ```
+      tar -tf stream_manager_sdk.zip
+      ```
+
+------
 
       The output should look similar to the following\.
 
@@ -130,9 +161,29 @@ The Stream Manager SDK for Python is available as source code that you can inclu
 
 1. Copy the Stream Manager SDK artifacts to your component's artifacts folder\. In addition to the Stream Manager SDK ZIP file, your component uses the SDK's `requirements.txt` file to install the dependencies of the Stream Manager SDK\. Replace *\~/greengrass\-components* with the path to the folder that you use for local development\.
 
+------
+#### [ Linux or Unix ]
+
    ```
    cp {stream_manager_sdk.zip,requirements.txt} ~/greengrass-components/artifacts/com.example.StreamManagerS3Python/1.0.0/
    ```
+
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+   ```
+   robocopy . %USERPROFILE%\greengrass-components\artifacts\com.example.StreamManagerS3Python\1.0.0 stream_manager_sdk.zip
+   robocopy . %USERPROFILE%\greengrass-components\artifacts\com.example.StreamManagerS3Python\1.0.0 requirements.txt
+   ```
+
+------
+#### [ PowerShell ]
+
+   ```
+   cp .\stream_manager_sdk.zip,.\requirements.txt ~\greengrass-components\artifacts\com.example.StreamManagerS3Python\1.0.0\
+   ```
+
+------
 
 1. Create your component recipe\. In the recipe, do the following:
 
@@ -182,6 +233,27 @@ The Stream Manager SDK for Python is available as source code that you can inclu
              "URI": "s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.StreamManagerS3Python/1.0.0/requirements.txt"
            }
          ]
+       },
+       {
+         "Platform": {
+           "os": "windows"
+         },
+         "Lifecycle": {
+           "Install": "pip3 install --user -r {artifacts:path}/requirements.txt",
+           "Run": "set PYTHONPATH=\"%PYTHONPATH%;{artifacts:decompressedPath}/stream_manager_sdk\" & py -3 {artifacts:path}/stream_manager_s3.py"
+         },
+         "Artifacts": [
+           {
+             "URI": "s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.StreamManagerS3Python/1.0.0/stream_manager_sdk.zip",
+             "Unarchive": "ZIP"
+           },
+           {
+             "URI": "s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.StreamManagerS3Python/1.0.0/stream_manager_s3.py"
+           },
+           {
+             "URI": "s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.StreamManagerS3Python/1.0.0/requirements.txt"
+           }
+         ]
        }
      ]
    }
@@ -208,6 +280,18 @@ The Stream Manager SDK for Python is available as source code that you can inclu
          Run: |
            export PYTHONPATH=$PYTHONPATH:{artifacts:decompressedPath}/stream_manager_sdk
            python3 {artifacts:path}/stream_manager_s3.py
+       Artifacts:
+         - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.StreamManagerS3Python/1.0.0/stream_manager_sdk.zip
+           Unarchive: ZIP
+         - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.StreamManagerS3Python/1.0.0/stream_manager_s3.py
+         - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.StreamManagerS3Python/1.0.0/requirements.txt
+     - Platform:
+         os: windows
+       Lifecycle:
+         Install: pip3 install --user -r {artifacts:path}/requirements.txt
+         Run: |
+           set PYTHONPATH="%PYTHONPATH%;{artifacts:decompressedPath}/stream_manager_sdk"
+           py -3 {artifacts:path}/stream_manager_s3.py
        Artifacts:
          - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.StreamManagerS3Python/1.0.0/stream_manager_sdk.zip
            Unarchive: ZIP
@@ -241,15 +325,46 @@ The Stream Manager SDK for JavaScript is available as source code that you can i
 
    1. Zip the `aws-greengrass-stream-manager-sdk` folder into a ZIP file named `stream-manager-sdk.zip`\.
 
+------
+#### [ Linux or Unix ]
+
       ```
-      zip -r stream-manager-sdk.zip aws-greengrass-stream-manager-sdk
+      zip -rv stream-manager-sdk.zip aws-greengrass-stream-manager-sdk
       ```
 
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+      ```
+      tar -acvf stream-manager-sdk.zip aws-greengrass-stream-manager-sdk
+      ```
+
+------
+#### [ PowerShell ]
+
+      ```
+      Compress-Archive aws-greengrass-stream-manager-sdk stream-manager-sdk.zip
+      ```
+
+------
+
    1. Verify that the `stream-manager-sdk.zip` file contains the `aws-greengrass-stream-manager-sdk` folder and its contents\. Run the following command to list the contents of the ZIP file\.
+
+------
+#### [ Linux or Unix ]
 
       ```
       unzip -l stream-manager-sdk.zip
       ```
+
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+      ```
+      tar -tf stream-manager-sdk.zip
+      ```
+
+------
 
       The output should look similar to the following\.
 
@@ -272,9 +387,28 @@ The Stream Manager SDK for JavaScript is available as source code that you can i
 
 1. Copy the Stream Manager SDK artifact to your component's artifacts folder\. Replace *\~/greengrass\-components* with the path to the folder that you use for local development\.
 
+------
+#### [ Linux or Unix ]
+
    ```
    cp stream-manager-sdk.zip ~/greengrass-components/artifacts/com.example.StreamManagerS3JS/1.0.0/
    ```
+
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+   ```
+   robocopy . %USERPROFILE%\greengrass-components\artifacts\com.example.StreamManagerS3JS\1.0.0 stream-manager-sdk.zip
+   ```
+
+------
+#### [ PowerShell ]
+
+   ```
+   cp .\stream-manager-sdk.zip ~\greengrass-components\artifacts\com.example.StreamManagerS3JS\1.0.0\
+   ```
+
+------
 
 1. Create your component recipe\. In the recipe, do the following:
 
@@ -321,6 +455,24 @@ The Stream Manager SDK for JavaScript is available as source code that you can i
              "URI": "s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.StreamManagerS3JS/1.0.0/index.js"
            }
          ]
+       },
+       {
+         "Platform": {
+           "os": "windows"
+         },
+         "Lifecycle": {
+           "Install": "npm install {artifacts:decompressedPath}/stream-manager-sdk/aws-greengrass-stream-manager-sdk",
+           "Run": "set NODE_PATH=\"%NODE_PATH%;{work:path}/node_modules\" & node {artifacts:path}/index.js"
+         },
+         "Artifacts": [
+           {
+             "URI": "s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.StreamManagerS3JS/1.0.0/stream-manager-sdk.zip",
+             "Unarchive": "ZIP"
+           },
+           {
+             "URI": "s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.StreamManagerS3JS/1.0.0/index.js"
+           }
+         ]
        }
      ]
    }
@@ -346,6 +498,17 @@ The Stream Manager SDK for JavaScript is available as source code that you can i
          Install: npm install {artifacts:decompressedPath}/stream-manager-sdk/aws-greengrass-stream-manager-sdk
          Run: |
            export NODE_PATH=$NODE_PATH:{work:path}/node_modules
+           node {artifacts:path}/index.js
+       Artifacts:
+         - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.StreamManagerS3JS/1.0.0/stream-manager-sdk.zip
+           Unarchive: ZIP
+         - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.StreamManagerS3JS/1.0.0/index.js
+     - Platform:
+         os: windows
+       Lifecycle:
+         Install: npm install {artifacts:decompressedPath}/stream-manager-sdk/aws-greengrass-stream-manager-sdk
+         Run: |
+           set NODE_PATH="%NODE_PATH%;{work:path}/node_modules"
            node {artifacts:path}/index.js
        Artifacts:
          - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.StreamManagerS3JS/1.0.0/stream-manager-sdk.zip

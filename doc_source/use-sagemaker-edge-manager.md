@@ -29,7 +29,7 @@ When you use SageMaker Edge Manager on Greengrass core devices, you can also use
 ## Requirements<a name="greengrass-edge-manager-agent-requirements"></a>
 
 You must meet the following requirements to use the SageMaker Edge Manager agent on Greengrass core devices\.<a name="sm-edge-manager-component-reqs"></a>
-+ <a name="sm-req-core-device"></a>A Greengrass core device running on a Debian\-based Linux platform \(x86\_64 or Armv8\)\. If you don't have one, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
++ <a name="sm-req-core-device"></a>A Greengrass core device running on Amazon Linux 2, a Debian\-based Linux platform \(x86\_64 or Armv8\), or Windows \(x86\_64\)\. If you don't have one, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
 + <a name="sm-req-python"></a>[Python](https://www.python.org/downloads/) 3\.6 or later, including `pip` for your version of Python, installed on your core device\.
 + The [Greengrass device role](device-service-role.md) configured with the following: 
   + <a name="sm-req-iam-trust-relationship"></a>A trust relationship that allows `credentials.iot.amazonaws.com` and `sagemaker.amazonaws.com` to assume the role, as shown in the following IAM policy example\.

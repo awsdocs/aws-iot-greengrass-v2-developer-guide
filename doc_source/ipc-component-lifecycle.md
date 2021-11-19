@@ -130,7 +130,7 @@ This operation doesn't provide any information in its response\.
 
 ## PauseComponent<a name="ipc-operation-pausecomponent"></a>
 
-This feature is available for v2\.4\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.
+This feature is available for v2\.4\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. AWS IoT Greengrass doesn't currently support this feature on Windows core devices\. 
 
 Pauses a component's processes on the core device\. To resume a component, use the [ResumeComponent](#ipc-operation-resumecomponent) operation\.
 
@@ -170,7 +170,7 @@ This operation doesn't provide any information in its response\.
 
 ## ResumeComponent<a name="ipc-operation-resumecomponent"></a>
 
-This feature is available for v2\.4\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.
+This feature is available for v2\.4\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. AWS IoT Greengrass doesn't currently support this feature on Windows core devices\. 
 
 Resumes a component's processes on the core device\. To pause a component, use the [PauseComponent](#ipc-operation-pausecomponent) operation\.
 

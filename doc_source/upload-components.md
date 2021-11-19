@@ -11,7 +11,7 @@ When you upload a component, you do the following:
 1. Create a component version in AWS IoT Greengrass from the component recipe\.
 
 **Note**  <a name="component-version-uniqueness-note"></a>
-<a name="component-version-uniqueness-para"></a>Each component version that you upload must be unique\. You can't edit a component version after you upload it\.
+<a name="component-version-uniqueness-para"></a>Each component version that you upload must be unique\. Make sure that you upload the correct component version, because you can't edit it after you upload it\.
 
 ## Upload a component \(AWS CLI\)<a name="upload-component-cli"></a>
 
@@ -57,7 +57,7 @@ Core device roles don't allow access to S3 buckets by default\. If this is your 
        {
          "Lifecycle": {
            ...
-         }
+         },
          "Artifacts": [
            {
              "URI": "s3://DOC-EXAMPLE-BUCKET/artifacts/MyGreengrassComponent/1.0.0/artifact.py",
@@ -97,8 +97,7 @@ You can use the `Unarchive: ZIP` option to configure the AWS IoT Greengrass Core
    Run the following command to create the component from a recipe file\. This command creates the component and publishes it as a private AWS IoT Greengrass component in your AWS account\. Replace *path/to/recipeFile* with the path to the recipe file\.
 
    ```
-   aws greengrassv2 create-component-version  \
-     --inline-recipe fileb://path/to/recipeFile
+   aws greengrassv2 create-component-version --inline-recipe fileb://path/to/recipeFile
    ```
 
    Copy the `arn` from the response to check the state of the component in the next step\.
@@ -108,8 +107,7 @@ AWS IoT Greengrass computes the digest of each artifact when you create the comp
 1. Each component in the AWS IoT Greengrass service has a state\. Run the following command to confirm the state of the component version that you upload in this procedure\. Replace *com\.example\.HelloWorld* and *1\.0\.0* with the component version to query\. Replace the `arn` with the ARN from the previous step\.
 
    ```
-   aws greengrassv2 describe-component \
-     --arn "arn:aws:greengrass:region:account-id:components:com.example.HelloWorld:versions:1.0.0"
+   aws greengrassv2 describe-component --arn "arn:aws:greengrass:region:account-id:components:com.example.HelloWorld:versions:1.0.0"
    ```
 
    The operation returns a response that contains the component's metadata\. The metadata contains a `status` object that contains the component state and any errors, if applicable\.

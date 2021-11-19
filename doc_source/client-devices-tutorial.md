@@ -397,9 +397,21 @@ In this section, you update the MQTT bridge component to relay messages from cli
         },
         "Manifests": [
           {
+            "Platform": {
+              "os": "linux"
+            },
             "Lifecycle": {
               "Install": "python3 -m pip install --user awsiotsdk",
               "Run": "python3 -u {artifacts:path}/hello_world_subscriber.py"
+            }
+          },
+          {
+            "Platform": {
+              "os": "windows"
+            },
+            "Lifecycle": {
+              "Install": "py -3 -m pip install --user awsiotsdk",
+              "Run": "py -3 -u {artifacts:path}/hello_world_subscriber.py"
             }
           }
         ]
@@ -482,6 +494,9 @@ In this section, you update the MQTT bridge component to relay messages from cli
 
    1. Use the Greengrass CLI to deploy the component\.
 
+------
+#### [ Linux or Unix ]
+
       ```
       sudo /greengrass/v2/bin/greengrass-cli deployment create \
         --recipeDir recipes \
@@ -489,11 +504,45 @@ In this section, you update the MQTT bridge component to relay messages from cli
         --merge "com.example.clientdevices.MyHelloWorldSubscriber=1.0.0"
       ```
 
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+      ```
+      C:\greengrass\v2/bin/greengrass-cli deployment create ^
+        --recipeDir recipes ^
+        --artifactDir artifacts ^
+        --merge "com.example.clientdevices.MyHelloWorldSubscriber=1.0.0"
+      ```
+
+------
+#### [ PowerShell ]
+
+      ```
+      C:\greengrass\v2/bin/greengrass-cli deployment create `
+        --recipeDir recipes `
+        --artifactDir artifacts `
+        --merge "com.example.clientdevices.MyHelloWorldSubscriber=1.0.0"
+      ```
+
+------
+
 1. View the component logs to verify that the component installs successfully and subscribes to the topic\.
+
+------
+#### [ Linux or Unix ]
 
    ```
    sudo tail -f /greengrass/v2/logs/com.example.clientdevices.MyHelloWorldSubscriber.log
    ```
+
+------
+#### [ PowerShell ]
+
+   ```
+   gc C:\greengrass\v2/logs/com.example.clientdevices.MyHelloWorldSubscriber.log -Tail 10 -Wait
+   ```
+
+------
 
    You can keep the log feed open to verify that the core device receives messages\.
 
@@ -513,9 +562,21 @@ In this section, you update the MQTT bridge component to relay messages from cli
 
 1. View the component logs again to verify that the component receives and prints the messages from the client device\.
 
+------
+#### [ Linux or Unix ]
+
    ```
    sudo tail -f /greengrass/v2/logs/com.example.clientdevices.MyHelloWorldSubscriber.log
    ```
+
+------
+#### [ PowerShell ]
+
+   ```
+   gc C:\greengrass\v2/logs/com.example.clientdevices.MyHelloWorldSubscriber.log -Tail 10 -Wait
+   ```
+
+------
 
 You've completed this tutorial\. The client device connects to the core device and sends MQTT messages to AWS IoT Core and Greengrass components\. For more information about the topics covered in this tutorial, see the following:
 + [Associate client devices](associate-client-devices.md)

@@ -42,7 +42,7 @@ To use the `com.aws.greengrass.provisioning.DeviceIdentityInterface` interface i
             <dependency>
                 <groupId>com.aws.greengrass</groupId>
                 <artifactId>nucleus</artifactId>
-                <version>2.4.0-SNAPSHOT</version>
+                <version>2.5.0-SNAPSHOT</version>
                 <scope>provided</scope>
             </dependency>
         </dependencies>

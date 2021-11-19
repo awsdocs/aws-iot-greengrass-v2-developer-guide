@@ -33,7 +33,7 @@ You must specify an ARN that includes the version of the function to import\. Yo
 
 1. \(Optional\) Specify the version \(`componentVersion`\) for the component\. If you omit this parameter, AWS IoT Greengrass creates the component with the version of the Lambda function as a valid semantic version\. For example, if your function version is `3`, the component version becomes `3.0.0`\.
 **Note**  
-<a name="component-version-uniqueness-para"></a>Each component version that you upload must be unique\. You can't edit a component version after you upload it\.  
+<a name="component-version-uniqueness-para"></a>Each component version that you upload must be unique\. Make sure that you upload the correct component version, because you can't edit it after you upload it\.  
 <a name="semver-para"></a>AWS IoT Greengrass uses semantic versions for components\. Semantic versions follow a *major*\.*minor*\.*patch* number system\. For example, version `1.0.0` represents the first major release for a component\. For more information, see the [semantic version specification](https://semver.org/)\.
 
    ```

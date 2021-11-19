@@ -62,6 +62,8 @@ You can use the AWS IoT Greengrass Core software that runs on your edge devices 
 
 You configure and manage Greengrass core devices through AWS IoT Greengrass APIs where you create continuous software deployments\. For more information, see [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)\.
 
+Some features are supported on only certain platforms\. For more information, see [Greengrass feature compatibility by operating system](operating-system-feature-support-matrix.md)\.
+
 For more information about supported platforms, requirements, and downloads, see [Setting up AWS IoT Greengrass core devices](setting-up.md)\.
 
 <a name="core-software-license"></a>By downloading this software, you agree to the [Greengrass Core Software License Agreement](https://greengrass-release-license.s3.us-west-2.amazonaws.com/greengrass-license-v1.pdf)\.

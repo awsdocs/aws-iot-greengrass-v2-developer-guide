@@ -87,10 +87,9 @@ If you previously downloaded this image and ran the `amazon/amazon-ec2-metadata-
 
 ### Machine learning qualification errors<a name="machine-learning-qualification-failure"></a>
 
-When you run machine learning \(ML\) qualification tests, you might encounter qualification failures if your device doesn't meet the requirements to deploy the AWS\-provided ML components\. To troubleshoot ML qualification errors, do the following: 
+When you run machine learning \(ML\) qualification tests, you might encounter qualification failures if your device doesn't meet the [requirements](dlr-component.md#dlr-component-requirements) to deploy the AWS\-provided ML components\. To troubleshoot ML qualification errors, do the following: 
 + Look for error details in the component logs for the components that were deployed during the test run\. Component logs are located in the `<device-tester-extract-location>/results/<execution-id>/logs/<test-group-id>` directory\.
 + Add the `-Dgg.persist=installed.software` argument to the `test.json` file for the failing test case\. The `test.json` file is located in the `<device-tester-extract-location>/tests/GGV2Q_version directory. `
-+ 
 
 ### Parsing errors<a name="parse-error"></a>
 

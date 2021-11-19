@@ -2,26 +2,24 @@
 
 Each target thing or thing group can have one active deployment at a time\. When you create a deployment for a target that already has a deployment, the software components in the new deployment replace those from the previous deployment\. If the new deployment doesn't define a component that the previous deployment defines, the AWS IoT Greengrass Core software removes that component from the target core devices\. You can revise an existing deployment so that you don't remove the components that run on core devices from a previous deployment to a target\.
 
-You use the [CreateDeployment](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_CreateDeployment.html) operation to revise deployments\. This operation is the same operation that you use to [create deployments](create-deployments.md)\.
+To revise a deployment, you create a deployment that starts from the same components and configurations that exist in a previous deployment\. You use the [CreateDeployment](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_CreateDeployment.html) operation, which is the same operation that you use to [create deployments](create-deployments.md)\.
 
 **To revise a deployment \(AWS CLI\)**
 
-1. To revise a deployment, you create a deployment that defines the same components and configuration as a previous deployment\. Run the following command to list the deployments for the target to revise\. Replace *targetArn* with the ARN of the target AWS IoT thing or thing group\.
+1. <a name="revise-deployment-list-deployments-intro"></a>Run the following command to list the deployments for the deployment target\. Replace *targetArn* with the ARN of the target AWS IoT thing or thing group\.
 
    ```
-   aws greengrassv2 list-deployments \
-     --target-arn targetArn
+   aws greengrassv2 list-deployments --target-arn targetArn
    ```
 
    The response contains a list with the latest deployment for the target\. Copy the `deploymentId` from the response to use in the next step\.
-**Note**  
-You can also revise a deployment other than the latest revision for the target\. Specify the `--history-filter ALL` argument to list all deployments for the target\. Then, copy the ID of the deployment to revise\.
+**Note**  <a name="revise-deployment-list-deployments-revision-note"></a>
+You can also revise a deployment other than the latest revision for the target\. Specify the `--history-filter ALL` argument to list all deployments for the target\. Then, copy the ID of the deployment that you want to revise\.
 
-1. Run the following command to get the deployment's details, which include its metadata, components, and job configuration\. Replace *deploymentId* with the ID from the previous step\.
+1. <a name="revise-deployment-get-deployment"></a>Run the following command to get the deployment's details\. These details include metadata, components, and job configuration\. Replace *deploymentId* with the ID from the previous step\.
 
    ```
-   aws greengrassv2 get-deployment \
-     --deployment-id deploymentId
+   aws greengrassv2 get-deployment --deployment-id deploymentId
    ```
 
    The response contains the deployment's details\.
@@ -61,8 +59,7 @@ You can also revise a deployment other than the latest revision for the target\.
 1. Run the following command to create the deployment from `deployment.json`\.
 
    ```
-   aws greengrassv2 create-deployment \
-     --cli-input-json file://deployment.json
+   aws greengrassv2 create-deployment --cli-input-json file://deployment.json
    ```
 
    <a name="check-new-deployment-status"></a>The response includes a `deploymentId` that identifies this deployment\. You can use the deployment ID to check the status of the deployment\. For more information, see [Check deployment status](check-deployment-status.md#check-cloud-deployment-status)\.

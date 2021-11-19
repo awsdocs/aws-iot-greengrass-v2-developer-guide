@@ -79,17 +79,72 @@ The following examples demonstrate how to call this operation in custom componen
 #### [ Java ]
 
 **Example: Publish a message**  
+This example uses an `IPCUtils` class to create a connection to the AWS IoT Greengrass Core IPC service\. For more information, see [Connect to the AWS IoT Greengrass Core IPC service](interprocess-communication.md#ipc-service-connect)\.
 
 ```
-String topic = "my/topic";
-String message = "Hello, World!";
-QOS qos = QOS.AT_LEAST_ONCE;
+package com.aws.greengrass.docs.samples.ipc;
 
-PublishToIoTCoreRequest publishToIoTCoreRequest = new PublishToIoTCoreRequest();
-publishToIoTCoreRequest.setTopicName(topic);
-publishToIoTCoreRequest.setPayload(message.getBytes(StandardCharsets.UTF_8));
-publishToIoTCoreRequest.setQos(qos);
-greengrassCoreIPCClient.publishToIoTCore(publishToIoTCoreRequest, Optional.empty()).getResponse().get();
+import com.aws.greengrass.docs.samples.ipc.util.IPCUtils;
+import software.amazon.awssdk.aws.greengrass.GreengrassCoreIPCClient;
+import software.amazon.awssdk.aws.greengrass.PublishToIoTCoreResponseHandler;
+import software.amazon.awssdk.aws.greengrass.model.PublishToIoTCoreRequest;
+import software.amazon.awssdk.aws.greengrass.model.PublishToIoTCoreResponse;
+import software.amazon.awssdk.aws.greengrass.model.QOS;
+import software.amazon.awssdk.aws.greengrass.model.UnauthorizedError;
+import software.amazon.awssdk.eventstreamrpc.EventStreamRPCConnection;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+public class PublishToIoTCore {
+
+    public static final int TIMEOUT_SECONDS = 10;
+
+    public static void main(String[] args) {
+        String topic = args[0];
+        String message = args[1];
+        QOS qos = QOS.get(args[2]);
+        try (EventStreamRPCConnection eventStreamRPCConnection =
+                     IPCUtils.getEventStreamRpcConnection()) {
+            GreengrassCoreIPCClient ipcClient =
+                    new GreengrassCoreIPCClient(eventStreamRPCConnection);
+            PublishToIoTCoreResponseHandler responseHandler =
+                    PublishToIoTCore.publishBinaryMessageToTopic(ipcClient, topic, message, qos);
+            CompletableFuture<PublishToIoTCoreResponse> futureResponse =
+                    responseHandler.getResponse();
+            try {
+                futureResponse.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+                System.out.println("Successfully published to topic: " + topic);
+            } catch (TimeoutException e) {
+                System.err.println("Timeout occurred while publishing to topic: " + topic);
+            } catch (ExecutionException e) {
+                if (e.getCause() instanceof UnauthorizedError) {
+                    System.err.println("Unauthorized error while publishing to topic: " + topic);
+                } else {
+                    throw e;
+                }
+            }
+        } catch (InterruptedException e) {
+            System.out.println("IPC interrupted.");
+        } catch (ExecutionException e) {
+            System.err.println("Exception occurred when using IPC.");
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    public static PublishToIoTCoreResponseHandler publishBinaryMessageToTopic(GreengrassCoreIPCClient greengrassCoreIPCClient, String topic, String message, QOS qos) {
+        PublishToIoTCoreRequest publishToIoTCoreRequest = new PublishToIoTCoreRequest();
+        publishToIoTCoreRequest.setTopicName(topic);
+        publishToIoTCoreRequest.setPayload(message.getBytes(StandardCharsets.UTF_8));
+        publishToIoTCoreRequest.setQos(qos);
+        return greengrassCoreIPCClient.publishToIoTCore(publishToIoTCoreRequest, Optional.empty());
+    }
+}
 ```
 
 ------
@@ -246,54 +301,113 @@ The following examples demonstrate how to call this operation in custom componen
 #### [ Java ]
 
 **Example: Subscribe to messages**  
+This example uses an `IPCUtils` class to create a connection to the AWS IoT Greengrass Core IPC service\. For more information, see [Connect to the AWS IoT Greengrass Core IPC service](interprocess-communication.md#ipc-service-connect)\.
 
 ```
-String topic = "my/topic";
-QOS qos = QOS.AT_MOST_ONCE;
+package com.aws.greengrass.docs.samples.ipc;
 
-SubscribeToIoTCoreRequest subscribeToIoTCoreRequest = new SubscribeToIoTCoreRequest();
-subscribeToIoTCoreRequest.setTopicName(topic);
-subscribeToIoTCoreRequest.setQos(qos);
+import com.aws.greengrass.docs.samples.ipc.util.IPCUtils;
+import software.amazon.awssdk.aws.greengrass.GreengrassCoreIPCClient;
+import software.amazon.awssdk.aws.greengrass.SubscribeToIoTCoreResponseHandler;
+import software.amazon.awssdk.aws.greengrass.model.*;
+import software.amazon.awssdk.eventstreamrpc.EventStreamRPCConnection;
+import software.amazon.awssdk.eventstreamrpc.StreamResponseHandler;
 
-StreamResponseHandler<IoTCoreMessage> streamResponseHandler = new StreamResponseHandler<IoTCoreMessage>() {
-    @Override
-    public void onStreamEvent(IoTCoreMessage ioTCoreMessage) {
-        try {
-            String message = new String(ioTCoreMessage.getMessage().getPayload(), StandardCharsets.UTF_8);
-            String topicName = ioTCoreMessage.getMessage().getTopicName();
-            // Handle message.
-        } catch (Exception e) {
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+public class SubscribeToIoTCore {
+
+    public static final int TIMEOUT_SECONDS = 10;
+
+    public static void main(String[] args) {
+        String topic = args[0];
+        QOS qos = QOS.get(args[1]);
+        try (EventStreamRPCConnection eventStreamRPCConnection =
+                     IPCUtils.getEventStreamRpcConnection()) {
+            GreengrassCoreIPCClient ipcClient =
+                    new GreengrassCoreIPCClient(eventStreamRPCConnection);
+            StreamResponseHandler<IoTCoreMessage> streamResponseHandler =
+                    new SubscriptionResponseHandler();
+            SubscribeToIoTCoreResponseHandler responseHandler =
+                    SubscribeToIoTCore.subscribeToIoTCore(ipcClient, topic, qos,
+                            streamResponseHandler);
+            CompletableFuture<SubscribeToIoTCoreResponse> futureResponse =
+                    responseHandler.getResponse();
+            try {
+                futureResponse.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+                System.out.println("Successfully subscribed to topic: " + topic);
+            } catch (TimeoutException e) {
+                System.err.println("Timeout occurred while subscribing to topic: " + topic);
+            } catch (ExecutionException e) {
+                if (e.getCause() instanceof UnauthorizedError) {
+                    System.err.println("Unauthorized error while subscribing to topic: " + topic);
+                } else {
+                    throw e;
+                }
+            }
+
+            // Keep the main thread alive, or the process will exit.
+            try {
+                while (true) {
+                    Thread.sleep(10000);
+                }
+            } catch (InterruptedException e) {
+                System.out.println("Subscribe interrupted.");
+            }
+
+            // To stop subscribing, close the stream.
+            responseHandler.closeStream();
+        } catch (InterruptedException e) {
+            System.out.println("IPC interrupted.");
+        } catch (ExecutionException e) {
+            System.err.println("Exception occurred when using IPC.");
             e.printStackTrace();
+            System.exit(1);
         }
     }
 
-    @Override
-    public boolean onStreamError(Throwable throwable) {
-        // Handle error.
-        return false; // Return true to close stream, false to keep stream open.
+    public static SubscribeToIoTCoreResponseHandler subscribeToIoTCore(GreengrassCoreIPCClient greengrassCoreIPCClient, String topic, QOS qos, StreamResponseHandler<IoTCoreMessage> streamResponseHandler) {
+        SubscribeToIoTCoreRequest subscribeToIoTCoreRequest = new SubscribeToIoTCoreRequest();
+        subscribeToIoTCoreRequest.setTopicName(topic);
+        subscribeToIoTCoreRequest.setQos(qos);
+        return greengrassCoreIPCClient.subscribeToIoTCore(subscribeToIoTCoreRequest,
+                Optional.of(streamResponseHandler));
     }
 
-    @Override
-    public void onStreamClosed() {
-        // Handle close.
-    }
-};
+    public static class SubscriptionResponseHandler implements StreamResponseHandler<IoTCoreMessage> {
 
-SubscribeToIoTCoreResponseHandler operationResponseHandler = greengrassCoreIPCClient
-        .subscribeToIoTCore(subscribeToIoTCoreRequest, Optional.of(streamResponseHandler));
-operationResponseHandler.getResponse().get();
+        @Override
+        public void onStreamEvent(IoTCoreMessage ioTCoreMessage) {
+            try {
+                String topic = ioTCoreMessage.getMessage().getTopicName();
+                String message = new String(ioTCoreMessage.getMessage().getPayload(),
+                        StandardCharsets.UTF_8);
+                System.out.printf("Received new message on topic %s: %s%n", topic, message);
+            } catch (Exception e) {
+                System.err.println("Exception occurred while processing subscription response " +
+                        "message.");
+                e.printStackTrace();
+            }
+        }
 
-// Keep the main thread alive, or the process will exit.
-try {
-    while (true) {
-        Thread.sleep(10000);
+        @Override
+        public boolean onStreamError(Throwable error) {
+            System.err.println("Received a stream error.");
+            error.printStackTrace();
+            return false;
+        }
+
+        @Override
+        public void onStreamClosed() {
+            System.out.println("Subscribe to IoT Core stream closed.");
+        }
     }
-} catch (InterruptedException e) {
-    System.out.println("Subscribe interrupted.");
 }
-
-// To stop subscribing, close the stream.
-operationResponseHandler.closeStream();
 ```
 
 ------

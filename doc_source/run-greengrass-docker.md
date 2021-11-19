@@ -18,7 +18,7 @@ Host computers must meet the following minimum requirements to install and run t
 + <a name="docker-engine-reqs"></a>[Docker Engine](https://docs.docker.com/engine/install/) version 18\.09 or later\.
 + <a name="docker-compose-reqs"></a>\(Optional\) [Docker Compose](https://docs.docker.com/compose/install/) version 1\.22 or later\. Docker Compose is required only if you want to use the Docker Compose CLI to run your Docker images\.
 
-To run Lambda function components inside of the Docker container, you must configure the container to meet additional requirements\. For more information, see [Requirements to run Lambda functions](setting-up.md#greengrass-v2-lambda-requirements)\.
+To run Lambda function components inside of the Docker container, you must configure the container to meet additional requirements\. For more information, see [Lambda function requirements](setting-up.md#greengrass-v2-lambda-requirements)\.
 
 ### Run components in process mode<a name="docker-container-mode-limitation"></a>
 

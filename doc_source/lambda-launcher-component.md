@@ -8,6 +8,7 @@ When you deploy a Lambda function component to a core device, the deployment als
 **Topics**
 + [Versions](#lambda-launcher-component-versions)
 + [Type](#lambda-launcher-component-type)
++ [Operating system](#lambda-launcher-component-os-support)
 + [Requirements](#lambda-launcher-component-requirements)
 + [Dependencies](#lambda-launcher-component-dependencies)
 + [Configuration](#lambda-launcher-component-configuration)
@@ -21,18 +22,32 @@ This component has the following versions:
 
 ## Type<a name="lambda-launcher-component-type"></a>
 
-<a name="public-component-type-generic"></a>This component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
+<a name="public-component-type-generic"></a>This <a name="public-component-type-generic-phrase"></a>component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
 
 <a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
+
+## Operating system<a name="lambda-launcher-component-os-support"></a>
+
+This component can be installed on Linux core devices only\.
 
 ## Requirements<a name="lambda-launcher-component-requirements"></a>
 
 This component has the following requirements:
-+ <a name="core-device-lambda-function-requirements"></a>Your core device must meet the requirements to run Lambda functions\. If you want the core device to run containerized Lambda functions, the device must meet the requirements to do so\. For more information, see [Requirements to run Lambda functions](setting-up.md#greengrass-v2-lambda-requirements)\.
++ <a name="core-device-lambda-function-requirements"></a>Your core device must meet the requirements to run Lambda functions\. If you want the core device to run containerized Lambda functions, the device must meet the requirements to do so\. For more information, see [Lambda function requirements](setting-up.md#greengrass-v2-lambda-requirements)\.
 
 ## Dependencies<a name="lambda-launcher-component-dependencies"></a>
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#lambda-launcher-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+
+------
+#### [ 2\.0\.9 ]
+
+The following table lists the dependencies for version 2\.0\.9 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Lambda manager](lambda-manager-component.md) | >=2\.0\.0 <2\.3\.0  | Hard | 
 
 ------
 #### [ 2\.0\.4 \- 2\.0\.8 ]
@@ -84,6 +99,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.0\.9  |  Version updated for Greengrass nucleus version 2\.5\.0 release\.  | 
 |  2\.0\.8  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  2\.0\.7  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  2\.0\.6  |  General performance improvements and bug fixes\.  | 

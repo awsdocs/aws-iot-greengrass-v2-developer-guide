@@ -36,9 +36,21 @@ To run this example component, your device must have the `s3:ListAllMyBuckets` p
   },
   "Manifests": [
     {
+      "Platform": {
+        "os": "linux"
+      },
       "Lifecycle": {
         "Install": "pip3 install --user boto3",
         "Run": "python3 -u {artifacts:path}/list_s3_buckets.py"
+      }
+    },
+    {
+      "Platform": {
+        "os": "windows"
+      },
+      "Lifecycle": {
+        "Install": "pip3 install --user boto3",
+        "Run": "py -3 -u {artifacts:path}/list_s3_buckets.py"
       }
     }
   ]
@@ -60,11 +72,20 @@ ComponentDependencies:
     VersionRequirement: '^2.0.0'
     DependencyType: HARD
 Manifests:
-  - Lifecycle:
+  - Platform:
+      os: linux
+    Lifecycle:
       Install:
         pip3 install --user boto3
       Run: |-
         python3 -u {artifacts:path}/list_s3_buckets.py
+  - Platform:
+      os: windows
+    Lifecycle:
+      Install:
+        pip3 install --user boto3
+      Run: |-
+        py -3 -u {artifacts:path}/list_s3_buckets.py
 ```
 
 ------

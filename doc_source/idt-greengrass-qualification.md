@@ -31,7 +31,51 @@ You can run `list-supported-products` to list the versions of AWS IoT Greengrass
 ## Test group descriptions<a name="dt-test-groups"></a>
 
 ------
-#### [ IDT v4\.2\.0 and later ]
+#### [ IDT v4\.4\.0 ]
+
+**Required Test Groups for Core Qualification**  
+These test groups are required to qualify your AWS IoT Greengrass V2 device for the AWS Partner Device Catalog\.    
+Core Dependencies  
+Validates that the device meets all software and hardware requirements for the AWS IoT Greengrass Core software\. This test group includes the following test case:     
+Java Version  
+Checks that the required Java version is installed on the device under test\. AWS IoT Greengrass requires Java 8 or later\.  
+PreTest Validation  
+Checks that the device meets the software requirements to run tests\.   
++ For Linux\-based devices, this test checks if the device can run the following Linux commands: 
+
+  `chmod`, `cp`, `echo`, `grep`, `kill`, `ln`, `mkinfo`, `ps`, `rm`, `sh`, `uname` 
++ For Windows\-based devices, this test checks if the device has the following Microsoft software installed:
+
+  [Powershell](https://docs.microsoft.com/en-us/powershell/?view=powershell-7.1) v5\.1 or later, [\.NET](https://docs.microsoft.com/en-us/dotnet/fundamentals/powershell) v4\.6\.1 or later, [Visual C\+\+](https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170) 2017 or later, [PsExec utility](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec)  
+Version Checker  
+Checks that the version of AWS IoT Greengrass provided is compatible with the AWS IoT Device Tester version you are using\.  
+Component  
+Validates that the device can deploy components and upgrade them\. This test group includes the following tests:    
+Cloud Component  
+Validates device capability for cloud components\.  
+Local Component  
+Validates device capability for local components\.  
+Lambda  
+This test is not applicable for Windows\-based devices\.  
+Validates that the device can deploy Lambda function components that use the Java runtime, and that the Lambda functions can use AWS IoT Core MQTT topics as event sources for work messages\.  
+MQTT  
+Validates that the device can subscribe and publish to AWS IoT Core MQTT topics\.
+
+**Optional Test Groups**  
+These test groups are optional, and used only for qualifying Linux\-based Greengrass core devices\. If you choose to qualify for optional tests, your device is listed with additional capabilities in the AWS Partner Device Catalog\.  
+Docker dependencies  
+<a name="description-docker"></a>Validates that the device meets all required technical dependencies to use the AWS\-provided Docker application manager \(`aws.greengrass.DockerApplicationManager`\) component\.  
+Docker Application Manager Qualification  
+<a name="description-docker-app-manager-qual"></a>Validates <a name="description-docker-app-manager-qual-phrase"></a>that the device can download a Docker container image from [Amazon Elastic Container Registry \(Amazon ECR\)](https://aws.amazon.com/ecr/)\.  
+Machine Learning Dependencies  
+<a name="description-ml"></a>Validates that the device meets all of the required technical dependencies to use the AWS\-provided machine learning \(ML\) components\.  
+Machine Learning Inference Tests  
+<a name="description-ml-inference"></a>Validates <a name="description-ml-inference-phrase"></a>that the device can perform ML inference using the [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) and [TensorFlow Lite](https://www.tensorflow.org/lite/guide/python) ML frameworks\.  
+Stream Manager Dependencies  
+<a name="description-sm"></a>Validates that the device can download, install, and run the [AWS IoT Greengrass stream manager](manage-data-streams.md)\.
+
+------
+#### [ IDT v4\.2\.0 ]
 
 **Required Test Groups for Core Qualification**  
 These test groups are required to qualify your AWS IoT Greengrass V2 device for the AWS Partner Device Catalog\.    
@@ -67,30 +111,5 @@ Machine Learning Inference Tests
 <a name="description-ml-inference"></a>Validates <a name="description-ml-inference-phrase"></a>that the device can perform ML inference using the [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) and [TensorFlow Lite](https://www.tensorflow.org/lite/guide/python) ML frameworks\.  
 Stream Manager Dependencies  
 <a name="description-sm"></a>Validates that the device can download, install, and run the [AWS IoT Greengrass stream manager](manage-data-streams.md)\.
-
-------
-#### [ IDT v4\.0\.2 and v4\.1\.x ]
-
-**Required Test Groups for Core Qualification**  
-These test groups are required to qualify your AWS IoT Greengrass V2 device for the AWS Partner Device Catalog\.    
-Core Dependencies  
-Validates that your device meets all software and hardware requirements for the AWS IoT Greengrass Core software\. This test group includes the following test case:     
-Java Version  
-Checks that the required Java version is installed on your device\. AWS IoT Greengrass requires Java 8 or later\.  
-PreTest Validation  
-Checks that your device can run the following Linux commands:   
-`chmod`, `cp`, `echo`, `grep`, `kill`, `ln`, `mkinfo`, `ps`, `rm`, `sh`, `uname`   
-Version Checker  
-Checks that the version of AWS IoT Greengrass provided is compatible with the AWS IoT Device Tester version you are using\.  
-Component  
-Validates that your device can deploy components and upgrade them\. This test group includes the following tests:    
-Cloud Component  
-Validates device capability for cloud components\.  
-Local Component  
-Validates device capability for local components\.  
-Lambda  
-Validates that your device can deploy Lambda function components that use the Java runtime, and that the Lambda functions can use AWS IoT Core MQTT topics as event sources for work messages\.  
-MQTT  
-Validates that your device can subscribe and publish to AWS IoT Core MQTT topics\.
 
 ------

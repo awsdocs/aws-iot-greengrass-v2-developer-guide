@@ -20,7 +20,7 @@ This tutorial accesses the camera module for [Raspberry Pi](https://www.raspberr
 To complete this tutorial, you must first complete [Tutorial: Perform sample image classification inference using TensorFlow Lite](ml-tutorial-image-classification.md)\.
 
 You also need the following:
-+ A Greengrass core device with a camera interface\. This tutorial accesses the camera module on one the following supported devices:
++ A Linux Greengrass core device with a camera interface\. This tutorial accesses the camera module on one the following supported devices:
   + [Raspberry Pi](https://www.raspberrypi.org/) running [Raspberry Pi OS](https://www.raspberrypi.org/downloads/) \(previously called Raspbian\)
   + [NVIDIA Jetson Nano](https://developer.nvidia.com/embedded/jetson-nano)
   + [AWS DeepLens](https://aws.amazon.com/deeplens/)

@@ -10,6 +10,7 @@ This component provides similar functionality to the Kinesis Data Firehose conne
 **Topics**
 + [Versions](#kinesis-firehose-component-versions)
 + [Type](#kinesis-firehose-component-type)
++ [Operating system](#kinesis-firehose-component-os-support)
 + [Requirements](#kinesis-firehose-component-requirements)
 + [Dependencies](#kinesis-firehose-component-dependencies)
 + [Configuration](#kinesis-firehose-component-configuration)
@@ -27,14 +28,18 @@ This component has the following versions:
 
 ## Type<a name="kinesis-firehose-component-type"></a>
 
-<a name="public-component-type-lambda"></a>This component is a Lambda component \(`aws.greengrass.lambda`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component's Lambda function using the [Lambda launcher component](lambda-launcher-component.md)\.
+<a name="public-component-type-lambda"></a>This <a name="public-component-type-lambda-phrase"></a>component is a Lambda component \(`aws.greengrass.lambda`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component's Lambda function using the [Lambda launcher component](lambda-launcher-component.md)\.
 
 <a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
+
+## Operating system<a name="kinesis-firehose-component-os-support"></a>
+
+This component can be installed on Linux core devices only\.
 
 ## Requirements<a name="kinesis-firehose-component-requirements"></a>
 
 This component has the following requirements:
-+ <a name="core-device-lambda-function-requirements"></a>Your core device must meet the requirements to run Lambda functions\. If you want the core device to run containerized Lambda functions, the device must meet the requirements to do so\. For more information, see [Requirements to run Lambda functions](setting-up.md#greengrass-v2-lambda-requirements)\.
++ <a name="core-device-lambda-function-requirements"></a>Your core device must meet the requirements to run Lambda functions\. If you want the core device to run containerized Lambda functions, the device must meet the requirements to do so\. For more information, see [Lambda function requirements](setting-up.md#greengrass-v2-lambda-requirements)\.
 + <a name="public-component-python3-requirement"></a>[Python](https://www.python.org/) version 3\.7 installed on the core device and added to the PATH environment variable\.
 + The [Greengrass device role](device-service-role.md) must allow the `firehose:PutRecord` and `firehose:PutRecordBatch` actions, as shown in the following example IAM policy\.
 
@@ -112,6 +117,19 @@ This component must be able to perform outbound requests to the following endpoi
 ## Dependencies<a name="kinesis-firehose-component-dependencies"></a>
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#kinesis-firehose-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+
+------
+#### [ 2\.0\.8 ]
+
+The following table lists the dependencies for version 2\.0\.8 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.6\.0  | Hard | 
+| [Lambda launcher](lambda-launcher-component.md) | ^2\.0\.0  | Hard | 
+| [Lambda runtimes](lambda-runtimes-component.md) | ^2\.0\.0  | Soft | 
+| [Token exchange service](token-exchange-service-component.md) | ^2\.0\.0  | Hard | 
 
 ------
 #### [ 2\.0\.7 ]
@@ -328,22 +346,46 @@ The response contains the status of each data record sent in the batch\.
 ```
 
 **Note**  <a name="connector-component-retryable-error"></a>
-If the component detects a retryable error, such as a connection error, it retries the publish in the next batch\.
+If the component detects an error that can be retried, such as a connection error, it retries the publish in the next batch\.
 
 ## Local log file<a name="kinesis-firehose-component-log-file"></a>
 
 This component uses the following log file\.
 
+------
+#### [ Linux ]
+
 ```
 /greengrass/v2/logs/aws.greengrass.KinesisFirehose.log
 ```
 
+------
+#### [ Windows ]
+
+```
+C:\greengrass\v2\logs\aws.greengrass.KinesisFirehose.log
+```
+
+------
+
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
+
+------
+#### [ Linux ]
 
   ```
   sudo tail -f /greengrass/v2/logs/aws.greengrass.KinesisFirehose.log
   ```
+
+------
+#### [ Windows \(PowerShell\) ]
+
+  ```
+  Get-Content C:\greengrass\v2\logs\aws.greengrass.KinesisFirehose.log -Tail 10 -Wait
+  ```
+
+------
 
 ## Licenses<a name="kinesis-firehose-component-licenses"></a>
 
@@ -365,6 +407,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.0\.8  |  Version updated for Greengrass nucleus version 2\.5\.0 release\.  | 
 |  2\.0\.7  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  2\.0\.6  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  2\.0\.5  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 

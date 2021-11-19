@@ -22,8 +22,7 @@ You can check the status of individual core devices\.
 + Run the following command to retrieve the status of a device\. Replace *coreDeviceName* with the name of the core device to query\.
 
   ```
-  aws greengrassv2 get-core-device \
-    --core-device-thing-name coreDeviceName
+  aws greengrassv2 get-core-device --core-device-thing-name coreDeviceName
   ```
 
   The response contains information about the core device, including its status\.
@@ -36,8 +35,7 @@ You can check the status of a group of core devices \(a thing group\)\.
 + Run the following command to retrieve the status of multiple core devices\. Replace the ARN in the command with the ARN of the thing group to query\.
 
   ```
-  aws greengrassv2 list-core-devices \
-    --thing-group-arn "arn:aws:iot:region:account-id:thinggroup/thingGroupName"
+  aws greengrassv2 list-core-devices --thing-group-arn "arn:aws:iot:region:account-id:thinggroup/thingGroupName"
   ```
 
   The response contains the list of core devices in the thing group\. Each entry in the list contains the status of the core device\.
@@ -50,8 +48,7 @@ You can check the status, such as lifecycle state, of the software components on
 + Run the following command to retrieve the status of the components on a core device\. Replace *coreDeviceName* with the name of the core device to query\.
 
   ```
-  aws greengrassv2 list-installed-components \
-    --core-device-thing-name coreDeviceName
+  aws greengrassv2 list-installed-components --core-device-thing-name coreDeviceName
   ```
 
   The response contains the list of components that run on the core device\. Each entry in the list contains the lifecycle state of the component\.

@@ -7,6 +7,7 @@ When you deploy a Lambda function component to a core device, the deployment als
 
 **Topics**
 + [Versions](#lambda-manager-component-versions)
++ [Operating system](#lambda-manager-component-os-support)
 + [Type](#lambda-manager-component-type)
 + [Requirements](#lambda-manager-component-requirements)
 + [Dependencies](#lambda-manager-component-dependencies)
@@ -17,8 +18,13 @@ When you deploy a Lambda function component to a core device, the deployment als
 ## Versions<a name="lambda-manager-component-versions"></a>
 
 This component has the following versions:
++ 2\.2\.x
 + 2\.1\.x
 + 2\.0\.x
+
+## Operating system<a name="lambda-manager-component-os-support"></a>
+
+This component can be installed on Linux core devices only\.
 
 ## Type<a name="lambda-manager-component-type"></a>
 
@@ -31,16 +37,36 @@ This component has the following versions:
 ## Requirements<a name="lambda-manager-component-requirements"></a>
 
 This component has the following requirements:
-+ <a name="core-device-lambda-function-requirements"></a>Your core device must meet the requirements to run Lambda functions\. If you want the core device to run containerized Lambda functions, the device must meet the requirements to do so\. For more information, see [Requirements to run Lambda functions](setting-up.md#greengrass-v2-lambda-requirements)\.
++ <a name="core-device-lambda-function-requirements"></a>Your core device must meet the requirements to run Lambda functions\. If you want the core device to run containerized Lambda functions, the device must meet the requirements to do so\. For more information, see [Lambda function requirements](setting-up.md#greengrass-v2-lambda-requirements)\.
 
 ## Dependencies<a name="lambda-manager-component-dependencies"></a>
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#lambda-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ 2\.1\.3 ]
+#### [ 2\.2\.1 ]
 
-The following table lists the dependencies for version 2\.1\.3 of this component\.
+The following table lists the dependencies for version 2\.2\.1 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.0\.0 <2\.6\.0  | Soft | 
+
+------
+#### [ 2\.2\.0 ]
+
+The following table lists the dependencies for version 2\.2\.0 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.5\.0 <2\.6\.0  | Soft | 
+
+------
+#### [ 2\.1\.3 and 2\.1\.4 ]
+
+The following table lists the dependencies for versions 2\.1\.3 and 2\.1\.4 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -103,16 +129,40 @@ Default: `60`
 
 This component uses the same log file as the [Greengrass nucleus](greengrass-nucleus-component.md) component\.
 
+------
+#### [ Linux ]
+
 ```
 /greengrass/v2/logs/greengrass.log
 ```
 
+------
+#### [ Windows ]
+
+```
+C:\greengrass\v2\logs\greengrass.log
+```
+
+------
+
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
+
+------
+#### [ Linux ]
 
   ```
   sudo tail -f /greengrass/v2/logs/greengrass.log
   ```
+
+------
+#### [ Windows \(PowerShell\) ]
+
+  ```
+  Get-Content C:\greengrass\v2\logs\greengrass.log -Tail 10 -Wait
+  ```
+
+------
 
 ## Changelog<a name="lambda-manager-component-changelog"></a>
 
@@ -121,6 +171,9 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.2\.1  |  Changes this component's [Greengrass nucleus](greengrass-nucleus-component.md) dependency version constraints to fix a dependency resolution issue\.  | 
+|  2\.2\.0  |  <a name="changelog-lambda-manager-2.2.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/lambda-manager-component.html)  | 
+|  2\.1\.4  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/lambda-manager-component.html)  | 
 |  2\.1\.3  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  2\.1\.2  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  2\.1\.1  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 

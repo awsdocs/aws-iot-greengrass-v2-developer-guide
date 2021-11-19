@@ -38,6 +38,8 @@ In this section, you create a token exchange IAM role and an AWS IoT role alias 
 
    1. Create a file that contains the trust policy document that the token exchange role requires\.
 
+      <a name="nano-command-intro"></a>For example, on a Linux\-based system, you can run the following command to use GNU nano to create the file\.
+
       ```
       nano device-role-trust-policy.json
       ```
@@ -92,6 +94,8 @@ In this section, you create a token exchange IAM role and an AWS IoT role alias 
       ```
 
    1. Create a file that contains the access policy document that the token exchange role requires\.
+
+      <a name="nano-command-intro"></a>For example, on a Linux\-based system, you can run the following command to use GNU nano to create the file\.
 
       ```
       nano device-role-access-policy.json
@@ -192,6 +196,8 @@ In this section, you create an AWS IoT policy that AWS IoT attaches to all devic
 
   1. Create a file that contains the AWS IoT policy document that Greengrass core devices require\.
 
+     <a name="nano-command-intro"></a>For example, on a Linux\-based system, you can run the following command to use GNU nano to create the file\.
+
      ```
      nano greengrass-v2-iot-policy.json
      ```
@@ -286,6 +292,8 @@ In this section, you create an IAM role that allows AWS IoT to provision resourc
 
    1. Create a file that contains the trust policy document that allows AWS IoT to assume the role\.
 
+      <a name="nano-command-intro"></a>For example, on a Linux\-based system, you can run the following command to use GNU nano to create the file\.
+
       ```
       nano aws-iot-trust-policy.json
       ```
@@ -358,6 +366,8 @@ In this section, you create an IAM role that allows AWS IoT to provision resourc
 
    1. Create a file to contain the provisioning template document\.
 
+      <a name="nano-command-intro"></a>For example, on a Linux\-based system, you can run the following command to use GNU nano to create the file\.
+
       ```
       nano greengrass-fleet-provisioning-template.json
       ```
@@ -428,14 +438,43 @@ In this section, you create an IAM role that allows AWS IoT to provision resourc
       + Replace the template description with a description for your template\.
       + Replace the provisioning role ARN with the ARN of the role that you created earlier\.
 
+------
+#### [ Linux or Unix ]
+
       ```
       aws iot create-provisioning-template \
         --template-name GreengrassFleetProvisioningTemplate \
         --description "A provisioning template for Greengrass core devices." \
         --provisioning-role-arn "arn:aws:iam::123456789012:role/GreengrassFleetProvisioningRole" \
-        --template-body file://greengrass-fleet-provisioning-template.json
+        --template-body file://greengrass-fleet-provisioning-template.json \
         --enabled
       ```
+
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+      ```
+      aws iot create-provisioning-template ^
+        --template-name GreengrassFleetProvisioningTemplate ^
+        --description "A provisioning template for Greengrass core devices." ^
+        --provisioning-role-arn "arn:aws:iam::123456789012:role/GreengrassFleetProvisioningRole" ^
+        --template-body file://greengrass-fleet-provisioning-template.json ^
+        --enabled
+      ```
+
+------
+#### [ PowerShell ]
+
+      ```
+      aws iot create-provisioning-template `
+        --template-name GreengrassFleetProvisioningTemplate `
+        --description "A provisioning template for Greengrass core devices." `
+        --provisioning-role-arn "arn:aws:iam::123456789012:role/GreengrassFleetProvisioningRole" `
+        --template-body file://greengrass-fleet-provisioning-template.json `
+        --enabled
+      ```
+
+------
 **Note**  
 If you created a pre\-provisioning hook, specify the ARN of the pre\-provisioning hook's Lambda function with the `--pre-provisioning-hook` argument\.  
 
@@ -473,6 +512,9 @@ To help you better manage the number of devices, and which devices, that registe
 
 1. Create and save a certificate and private key to use for provisioning\. AWS IoT provides client certificates that are signed by the Amazon Root certificate authority \(CA\)\.
 
+------
+#### [ Linux or Unix ]
+
    ```
    aws iot create-keys-and-certificate \
      --certificate-pem-outfile "claim-certs/claim.pem.crt" \
@@ -481,6 +523,30 @@ To help you better manage the number of devices, and which devices, that registe
      --set-as-active
    ```
 
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+   ```
+   aws iot create-keys-and-certificate ^
+     --certificate-pem-outfile "claim-certs/claim.pem.crt" ^
+     --public-key-outfile "claim-certs/claim.public.pem.key" ^
+     --private-key-outfile "claim-certs/claim.private.pem.key" ^
+     --set-as-active
+   ```
+
+------
+#### [ PowerShell ]
+
+   ```
+   aws iot create-keys-and-certificate `
+     --certificate-pem-outfile "claim-certs/claim.pem.crt" `
+     --public-key-outfile "claim-certs/claim.public.pem.key" `
+     --private-key-outfile "claim-certs/claim.private.pem.key" `
+     --set-as-active
+   ```
+
+------
+
    The response contains information about the certificate, if the request succeeds\. Save the certificate's ARN to use later\.
 
 1. Create and attach an AWS IoT policy that allows devices to use the certificate to create unique device certificates and provision with the fleet provisioning template\. The following policy allows access to the device provisioning MQTT API\. For more information, see [Device provisioning MQTT API](https://docs.aws.amazon.com/iot/latest/developerguide/fleet-provision-api.html) in the *AWS IoT Core Developer Guide*\.
@@ -488,6 +554,8 @@ To help you better manage the number of devices, and which devices, that registe
    Do the following:
 
    1. Create a file that contains the AWS IoT policy document that Greengrass core devices require\.
+
+      <a name="nano-command-intro"></a>For example, on a Linux\-based system, you can run the following command to use GNU nano to create the file\.
 
       ```
       nano greengrass-provisioning-claim-iot-policy.json

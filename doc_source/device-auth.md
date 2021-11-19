@@ -33,11 +33,11 @@ Client devices also download a Greengrass core device CA certificate\. They use 
 
 ### Certificate rotation on the local MQTT broker<a name="mqtt-expiration"></a>
 
-Greengrass core devices generate a local MQTT server certificate that client devices use for mutual authentication\. This certificate is signed by the core device CA certificate, which the core device stores in the AWS IoT Greengrass cloud\. The MQTT server certificate expires every 7 days\. This limited period is based on security best practices\. This rotation helps mitigate the threat of an attacker stealing the MQTT server certificate and private key to impersonate the Greengrass core device\.
+Greengrass core devices generate a local MQTT server certificate that client devices use for mutual authentication\. This certificate is signed by the core device CA certificate, which the core device stores in the AWS IoT Greengrass cloud\. Client devices retrieve the core device CA certificate when they discover the core device\. They use the core device CA certificate to verify the core device's MQTT server certificate when they connect to the core device\. The core device CA certificate expires after 5 years\.
+
+The MQTT server certificate expires every 7 days\. This limited period is based on security best practices\. This rotation helps mitigate the threat of an attacker stealing the MQTT server certificate and private key to impersonate the Greengrass core device\.
 
 When the MQTT server certificate expires, the Greengrass core device generates a new certificate and restarts the local MQTT broker\. When this happens, all client devices connected to the Greengrass core device are disconnected\. Client devices can reconnect to the Greengrass core device after a short period of time\.
-
-The core device CA certificate expires after 5 years\.
 
 ## AWS IoT policies for data plane operations<a name="iot-policies"></a>
 
@@ -74,6 +74,11 @@ This permission is evaluated when a core device receives a deployment that speci
 Grants permission to get a presigned URL to download a large deployment document\.  
 This permission is evaluated when a core device receives a deployment that specifies a deployment document larger than 7 KB \(if the deployment targets a thing\) or 31 KB \(if the deployment targets a thing group\)\. The deployment document includes component configurations, deployment policies, and deployment metadata\. For more information, see [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)\.  
 This feature is available for v2\.3\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.
+
+`greengrass:ListThingGroupsForCoreDevice`  
+Grants permission to get a core device's thing group hierarchy\.  
+This permission is checked when a core device receives a deployment from AWS IoT Greengrass\. The core device uses this action to identify whether it was removed from a thing group since the last deployment\. If the core device was removed from a thing group, and that thing group is the target of a deployment to the core device, then the core device removes the components installed by that deployment\.  
+This feature is used by v2\.5\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.
 
 `greengrass:VerifyClientDeviceIdentity`  
 Grants permission to verify the identity of a client device that connects to a core device\.  
@@ -133,6 +138,11 @@ If you used the [AWS IoT Greengrass Core software installer to provision resourc
 1. <a name="update-iot-policy-save-policy"></a>Choose **Save as new version**\.
 
 ## Minimal AWS IoT policy for AWS IoT Greengrass V2 core devices<a name="greengrass-core-minimal-iot-policy"></a>
+
+**Important**  
+Later versions of the [Greengrass nucleus component](greengrass-nucleus-component.md) require additional permissions on the minimal AWS IoT policy\. You might need to [update your core devices' AWS IoT policies](#update-core-device-iot-policy) to grant additional permissions\.  
+Core devices that run Greengrass nucleus v2\.5\.0 and later require the `greengrass:ListThingGroupsForCoreDevice` permission\.
+Core devices that run Greengrass nucleus v2\.3\.0 and later require the `greengrass:GetDeploymentConfiguration` permission to support large deployment configuration documents\.
 
 The following example policy includes the minimum set of actions required to support basic Greengrass functionality for your core device\.
 + The policy includes the `*` wildcard after the core device thing name \(For example, `core-device-thing-name*`\)\. The core device uses the same device certificate to make multiple connections to AWS IoT Core, but the client ID in a connection might not be an exact match of the core device thing name\. This wildcard allows the core device to connect when it uses a client ID with a suffix\.
@@ -204,7 +214,8 @@ The following example policy includes the minimum set of actions required to sup
             "Action": [
                 "greengrass:GetComponentVersionArtifact",
                 "greengrass:ResolveComponentCandidates",
-                "greengrass:GetDeploymentConfiguration"
+                "greengrass:GetDeploymentConfiguration",
+                "greengrass:ListThingGroupsForCoreDevice"
             ],
             "Resource": "*"
         }

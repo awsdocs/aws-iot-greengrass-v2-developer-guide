@@ -10,12 +10,11 @@ This section describes the steps to deploy the Greengrass CLI component\. For in
 
 You must meet the following requirements to deploy the Greengrass CLI component:
 + AWS IoT Greengrass Core software installed and configured on your core device\. For more information, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\. 
-+ To use the AWS CLI to deploy the Greengrass CLI, you must have installed and configured the AWS CLI on your Linux device\. For more information, see [Configuring the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) in the *AWS Command Line Interface User Guide*\.
-
-After you deploy the Greengrass CLI component, you must run the Greengrass CLI as an authorized user to interact with AWS IoT Greengrass Core software\. You can run it as one of the following users:
-+ The root user \(`sudo`\)\.
-+ A system user that runs AWS IoT Greengrass Core software\.
-+ A system user in an authorized system group\. You use the `AuthorizedPosixGroups` configuration parameter when you deploy the Greengrass CLI component to authorize the system group\.
++ To use the AWS CLI to deploy the Greengrass CLI, you must have installed and configured the AWS CLI\. For more information, see [Configuring the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) in the *AWS Command Line Interface User Guide*\.
++ <a name="greengrass-cli-authorization-requirement"></a>You must be authorized to use the Greengrass CLI to interact with the AWS IoT Greengrass Core software\. Do one of the following to use the Greengrass CLI:
+  + Use the system user that runs the AWS IoT Greengrass Core software\.
+  + Use a user with root or adminstrative permissions\. On Linux core devices, you can use `sudo` to gain root permissions\.
+  + Use a system user that's in a group that you specify in the `AuthorizedPosixGroups` or `AuthorizedWindowsGroups` configuration parameters when you deploy the component\. For more information, see [Greengrass CLI component configuration](greengrass-cli-component.md#greengrass-cli-component-configuration)\.
 
 ## Deploy the Greengrass CLI component<a name="gg-cli-deploy"></a>
 
@@ -52,9 +51,9 @@ Complete the following steps to deploy the Greengrass CLI component to your core
      "targetArn":"targetArn",
      "components": {
        "aws.greengrass.Cli": {
-         "componentVersion": "2.4.0",
+         "componentVersion": "2.5.0",
          "configurationUpdate": {
-           "AuthorizedPosixGroups": "<group1>,<group2>,...,<groupN>"
+           "merge": "{\"AuthorizedPosixGroups\":\"<group1>,<group2>,...,<groupN>\",\"AuthorizedWindowsGroups\":\"<group1>,<group2>,...,<groupN>\"}"
          }
        }
      }
@@ -67,21 +66,35 @@ Complete the following steps to deploy the Greengrass CLI component to your core
 `version`  
 The version of the Greengrass CLI component\.  
 `configurationUpdate.AuthorizedPosixGroups`  
-Optional\. A string that contains a comma\-separated list of system groups that you want to authorize to use the Greengrass CLI to interact with the AWS IoT Greengrass Core software\. You can specify group names or group IDs\. For example, specifying `"group1,1002,group3"` authorizes three system groups \(`group1`, `1002`, and `group3`\) to use the Greengrass CLI\.   
-If you don't specify any groups to authorize, you can use the Greengrass CLI as the root user \(`sudo`\) or as the system user that runs the AWS IoT Greengrass Core software\. 
+\(Optional\) A string that contains a comma\-separated list of system groups\. You authorize these system groups to use the Greengrass CLI to interact with the AWS IoT Greengrass Core software\. You can specify group names or group IDs\. For example, `group1,1002,group3` authorizes three system groups \(`group1`, `1002`, and `group3`\) to use the Greengrass CLI\.  
+If you don't specify any groups to authorize, you can use the Greengrass CLI as the root user \(`sudo`\) or as the system user that runs the AWS IoT Greengrass Core software\.  
+`configurationUpdate.AuthorizedWindowsGroups`  
+\(Optional\) A string that contains a comma\-separated list of system groups\. You authorize these system groups to use the Greengrass CLI to interact with the AWS IoT Greengrass Core software\. You can specify group names or group IDs\. For example, `group1,1002,group3` authorizes three system groups \(`group1`, `1002`, and `group3`\) to use the Greengrass CLI\.  
+If you don't specify any groups to authorize, you can use the Greengrass CLI as an administrator or as the system user that runs the AWS IoT Greengrass Core software\.
 
 1. Run the following command to deploy the Greengrass CLI component on the device:
 
    ```
-   $ aws greengrassv2 create-deployment \
-       --cli-input-json file://path/to/deployment.json
+   $ aws greengrassv2 create-deployment --cli-input-json file://path/to/deployment.json
    ```
 
 During installation, the component adds a symbolic link to `greengrass-cli` in the `/greengrass/v2/bin` folder on your device, and you run the Greengrass CLI from this path\. To run the Greengrass CLI without its absolute path, add your `/greengrass/v2/bin` folder to your PATH variable\. To verify the Greengrass CLI installation, run the following command:
 
+------
+#### [ Linux or Unix ]
+
 ```
-$ /greengrass/v2/bin/greengrass-cli help
+/greengrass/v2/bin/greengrass-cli help
 ```
+
+------
+#### [ Windows ]
+
+```
+C:\greengrass\v2\bin\greengrass-cli help
+```
+
+------
 
 You should see the following output:
 

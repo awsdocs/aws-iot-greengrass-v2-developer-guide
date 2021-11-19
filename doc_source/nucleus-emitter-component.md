@@ -5,6 +5,7 @@ The nucleus emitter component \(`aws.greengrass.telemetry.NucleusEmitter`\) gath
 **Topics**
 + [Versions](#nucleus-emitter-component-versions)
 + [Type](#nucleus-emitter-component-type)
++ [Operating system](#nucleus-emitter-component-os-support)
 + [Dependencies](#nucleus-emitter-component-dependencies)
 + [Configuration](#nucleus-emitter-component-configuration)
 + [Output data](#nucleus-emitter-component-output-data)
@@ -25,9 +26,28 @@ This component has the following versions:
 
 <a name="public-component-type-more-information"></a>For more information, see [Component types](develop-greengrass-components.md#component-types)\.
 
+## Operating system<a name="nucleus-emitter-component-os-support"></a>
+
+This component can be installed on core devices that run the following operating systems:
++ Linux
++ Windows
+
 ## Dependencies<a name="nucleus-emitter-component-dependencies"></a>
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#nucleus-emitter-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+
+------
+#### [ 1\.0\.1 ]
+
+The following table lists the dependencies for version 1\.0\.1 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.4\.0 <2\.6\.0  | Hard | 
+
+------
+#### [ 1\.0\.0 ]
 
 The following table lists the dependencies for version 1\.0\.0 of this component\.
 
@@ -35,6 +55,8 @@ The following table lists the dependencies for version 1\.0\.0 of this component
 | Dependency | Compatible versions | Dependency type | 
 | --- | --- | --- | 
 | [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.4\.0 <2\.5\.0  | Hard | 
+
+------
 
 For more information about component dependencies, see the [component recipe reference](component-recipe-reference.md#recipe-reference-component-dependencies)\.
 
@@ -49,7 +71,7 @@ Default: `true`
 `mqttTopic`  
 \(Optional\) The AWS IoT Core MQTT topic to which this component publishes telemetry data\.  
 Set this value to the AWS IoT Core MQTT topic to which you want to publish telemetry data\. When this value is empty, the nucleus emitter doesn't publish telemetry data to the cloud\.   
-Default: ""
+Default: `""`
 
 `telemetryPublishIntervalMs`  
 \(Optional\) The amount of time \(in milliseconds\) between which the component publishes telemetry data\. If you set this value lower than the minimum supported value, the component uses the minimum value instead\.  
@@ -223,22 +245,46 @@ The nucleus emitter publishes the following metrics:
 
 To use system health telemetry data, you can create custom components that subscribe to the topics to which the nucleus emitter publishes the telemetry data, and react to that data as needed\. Because the nucleus emitter component provides the option to publish telemetry data to a local topic, you can subscribe to that topic, and use the published data to act locally on your core device\. The core device can then react to telemetry data even when it has limited connectivity to the cloud\.
 
-For example, you can configure a component that listens on the `$local/greengrass/telemetry` topic for telemetry data and send the data to the stream manager component to stream your data to the AWS Cloud\. For more information about creating such a component, see [Publish/subscribe local messages](ipc-publish-subscribe.md) and [](use-stream-manager-in-custom-components.md)\.
+For example, you can configure a component that listens on the `$local/greengrass/telemetry` topic for telemetry data and send the data to the stream manager component to stream your data to the AWS Cloud\. For more information about creating such a component, see [Publish/subscribe local messages](ipc-publish-subscribe.md) and [Create custom components that use stream manager](use-stream-manager-in-custom-components.md)\.
 
 ## Local log file<a name="nucleus-emitter-component-log-file"></a>
 
 This component uses the same log file as the [Greengrass nucleus](greengrass-nucleus-component.md) component\.
 
+------
+#### [ Linux ]
+
 ```
 /greengrass/v2/logs/greengrass.log
 ```
 
+------
+#### [ Windows ]
+
+```
+C:\greengrass\v2\logs\greengrass.log
+```
+
+------
+
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
+
+------
+#### [ Linux ]
 
   ```
   sudo tail -f /greengrass/v2/logs/greengrass.log
   ```
+
+------
+#### [ Windows \(PowerShell\) ]
+
+  ```
+  Get-Content C:\greengrass\v2\logs\greengrass.log -Tail 10 -Wait
+  ```
+
+------
 
 ## Changelog<a name="nucleus-emitter-component-changelog"></a>
 
@@ -247,4 +293,5 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  1\.0\.1  |  Version updated for Greengrass nucleus version 2\.5\.0 release\.  | 
 |  1\.0\.0  |  Initial version\.  | 

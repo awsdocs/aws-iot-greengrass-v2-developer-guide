@@ -18,7 +18,7 @@ In this tutorial you deploy the sample inference component to perform image clas
 ## Prerequisites<a name="ml-tutorial-prereqs"></a>
 
 To complete this tutorial, you need the following:
-+ A Greengrass core device\. If you don't have one, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
++ A Linux Greengrass core device\. If you don't have one, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
 + If you are using an Armv7l device such as Raspberry Pi, dependencies for OpenCV Python installed on the device\. Run the following command to install the dependencies: 
 
   ```

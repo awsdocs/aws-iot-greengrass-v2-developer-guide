@@ -11,7 +11,9 @@ The AWS IoT Greengrass Core software includes an installer that sets up the soft
 `-Droot`  
 \(Optional\) The path to the folder to use as the root for the AWS IoT Greengrass Core software\.  
 This argument sets a JVM property, so you must specify it before `-jar` when you run the installer\. For example, specify `java -Droot="/greengrass/v2" -jar /path/to/Greengrass.jar`\.
-Default: `~/.greengrass`
+Default:  
++ Linux: `~/.greengrass`
++ Windows: `%USERPROFILE%/.greengrass`
 
 `-ar`, `--aws-region`  
 The AWS Region that the AWS IoT Greengrass Core software uses to retrieve or create its required AWS resources\.
@@ -49,20 +51,23 @@ You must specify `--provision true` to apply this argument\.
 Default: `GreengrassV2TokenExchangeRoleAlias`
 
 `-ss`, `--setup-system-service`  
-\(Optional\) You can set up the AWS IoT Greengrass Core software as a system service that runs when this device boots\. The system service name is `greengrass`\. For more information, see [Configure AWS IoT Greengrass as a system service](configure-greengrass-core-v2.md#configure-system-service)\.  
-This argument requires that the systemd init system is available on the device\.  
+\(Optional\) You can set up the AWS IoT Greengrass Core software as a system service that runs when this device boots\. The system service name is `greengrass`\. For more information, see [Configure the Greengrass nucleus as a system service](configure-greengrass-core-v2.md#configure-system-service)\.  
+On Linux operating systems, this argument requires that the systemd init system is available on the device\.  
 Default: `false`
 
 `-u`, `--component-default-user`  
-\(Optional\) The name or ID of the system user and group that the AWS IoT Greengrass Core software uses to run components\. Specify the user and group separated by a colon\. The group is optional\. For example, you can specify **ggc\_user:ggc\_group** or **ggc\_user**\.  
-+ If you run as root, this defaults to the user and group that the configuration file defines\. If the configuration file doesn't define a user and group, this defaults to `ggc_user:ggc_group`\. If `ggc_user` or `ggc_group` don't exist, the software creates them\.
+The name or ID of the user that the AWS IoT Greengrass Core software uses to run components\. For example, you can specify **ggc\_user**\. This value is required when you run the installer on Windows operating systems\.  
+On Linux operating systems, you can also optionally specify the group\. Specify the user and group separated by a colon\. For example, **ggc\_user:ggc\_group**\.  
+
+The following additional considerations apply for Linux operating systems:
++ If you run as root, the default component user is the user that is defined in the configuration file\. If the configuration file doesn't define a user, this defaults to `ggc_user:ggc_group`\. If `ggc_user` or `ggc_group` don't exist, the software creates them\.
 + If you run as a non\-root user, the AWS IoT Greengrass Core software uses that user to run components\.
 + If you don't specify a group, the AWS IoT Greengrass Core software uses the primary group of the system user\.
-For more information, see [Configure the user and group that run components](configure-greengrass-core-v2.md#configure-component-user)\.
+For more information, see [Configure the user that runs components](configure-greengrass-core-v2.md#configure-component-user)\.
 
 `-d`, `--deploy-dev-tools`  
 \(Optional\) You can download and deploy the [Greengrass CLI](greengrass-cli-component.md) component to this core device\. You can use this tool to develop and debug components on this core device\.  
-The local development tools are intended for use only in development environments\. Don't specify this option on production devices\.
+<a name="local-dev-tools-production-environment-warning"></a>We recommend that you use this component in only development environments, not production environments\. This component provides access to information and operations that you typically won't need in a production environment\. Follow the principle of least privilege by deploying this component to only core devices where you need it\.
 You must specify `--provision true` to apply this argument\.  
 Default: `false`
 

@@ -50,11 +50,15 @@ Default: `8883`
 
 `proxyUrl`  
 \(Optional\) The URL of the proxy server in the format `scheme://userinfo@host:port`\.  <a name="nucleus-component-configuration-proxy-url-segments"></a>
-+ `scheme` – The scheme, which must be `http`\.
++ `scheme` – The scheme, which must be `http` or `https`\.
+**Important**  
+<a name="https-proxy-greengrass-nucleus-requirement"></a>Greengrass core devices must run [Greengrass nucleus ](greengrass-nucleus-component.md) v2\.5\.0 or later to use HTTPS proxies\.  
+If you configure an HTTPS proxy, you must add the proxy server CA certificate to the core device's Amazon root CA certificate\. For more information, see [Enable the core device to trust an HTTPS proxy](configure-greengrass-core-v2.md#https-proxy-certificate-trust)\.
 + `userinfo` – \(Optional\) The user name and password information\. If you specify this information in the `url`, the Greengrass core device ignores the `username` and `password` fields\.
 + `host` – The host name or IP address of the proxy server\.
-+ `port` – \(Optional\) The port number\. If you don't specify the port, then the Greengrass core device uses the following default value:
++ `port` – \(Optional\) The port number\. If you don't specify the port, then the Greengrass core device uses the following default values:
   + `http` – 80
+  + `https` – 443
 
 `proxyUserName`  
 \(Optional\) The user name that authenticates the proxy server\.

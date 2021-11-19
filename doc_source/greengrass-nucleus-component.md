@@ -9,6 +9,7 @@ When the version of the nucleus component changes, or when you change certain co
 
 **Topics**
 + [Versions](#greengrass-nucleus-component-versions)
++ [Operating system](#greengrass-nucleus-component-os-support)
 + [Requirements](#greengrass-nucleus-component-requirements)
 + [Dependencies](#greengrass-nucleus-component-dependencies)
 + [Installation](#greengrass-nucleus-component-install)
@@ -19,15 +20,24 @@ When the version of the nucleus component changes, or when you change certain co
 ## Versions<a name="greengrass-nucleus-component-versions"></a>
 
 This component has the following versions:
++ 2\.5\.x
 + 2\.4\.x
 + 2\.3\.x
 + 2\.2\.x
 + 2\.1\.x
 + 2\.0\.x
 
+## Operating system<a name="greengrass-nucleus-component-os-support"></a>
+
+This component can be installed on core devices that run the following operating systems:
++ Linux
++ Windows
+
+For more information, see [Supported platforms](setting-up.md#greengrass-v2-supported-platforms)\.
+
 ## Requirements<a name="greengrass-nucleus-component-requirements"></a>
 
-Devices must meet certain requirements to install and run the Greengrass nucleus and the AWS IoT Greengrass Core software\. For more information, see [AWS IoT Greengrass Core software requirements](setting-up.md#greengrass-v2-requirements)\.
+Devices must meet certain requirements to install and run the Greengrass nucleus and the AWS IoT Greengrass Core software\. For more information, see [Device requirements](setting-up.md#greengrass-v2-requirements)\.
 
 ## Dependencies<a name="greengrass-nucleus-component-dependencies"></a>
 
@@ -59,11 +69,16 @@ This object contains the following information:
 The proxy to which to connect\. This object contains the following information:    
 `url`  
 The URL of the proxy server in the format `scheme://userinfo@host:port`\.  <a name="nucleus-component-configuration-proxy-url-segments"></a>
-+ `scheme` – The scheme, which must be `http`\.
++ `scheme` – The scheme, which must be `http` or `https`\.
+**Important**  
+<a name="https-proxy-greengrass-nucleus-requirement"></a>Greengrass core devices must run [Greengrass nucleus ](#greengrass-nucleus-component) v2\.5\.0 or later to use HTTPS proxies\.  
+If you configure an HTTPS proxy, you must add the proxy server CA certificate to the core device's Amazon root CA certificate\. For more information, see [Enable the core device to trust an HTTPS proxy](configure-greengrass-core-v2.md#https-proxy-certificate-trust)\.
 + `userinfo` – \(Optional\) The user name and password information\. If you specify this information in the `url`, the Greengrass core device ignores the `username` and `password` fields\.
 + `host` – The host name or IP address of the proxy server\.
-+ `port` – \(Optional\) The port number\. If you don't specify the port, then the Greengrass core device uses the following default value:
-  + `http` – 80  
++ `port` – \(Optional\) The port number\. If you don't specify the port, then the Greengrass core device uses the following default values:
+  + `http` – 80
+  + `https` – 443
+<a name="https-proxy-greengrass-nucleus-requirement"></a>Greengrass core devices must run [Greengrass nucleus ](#greengrass-nucleus-component) v2\.5\.0 or later to use HTTPS proxies\.  
 `username`  
 \(Optional\) The user name that authenticates the proxy server\.  
 `password`  
@@ -130,14 +145,18 @@ Default: `8443`
 The AWS Region to use\.
 
 `runWithDefault`  
-The system user and group to use to run components\.  
+The system user to use to run components\.  
 <a name="nucleus-component-parameter-restart-para"></a>When you deploy a change to this configuration parameter, the AWS IoT Greengrass Core software restarts for the change to take effect\.
 This object contains the following information:    
 `posixUser`  
-The name or ID of the system user and system group that the core device uses to run generic and Lambda components\. Specify the user and group separated by a colon \(`:`\), where the group is optional\. If you omit the group, the AWS IoT Greengrass Core software defaults to the primary group of the user that you specify\. For example, you can specify `ggc_user` or `ggc_user:ggc_group`\. For more information, see [Configure the user and group that run components](configure-greengrass-core-v2.md#configure-component-user)\.  
-When you run the AWS IoT Greengrass Core software with the `--component-default-user ggc_user:ggc_group` option, the software sets this parameter in the nucleus component\.  
+The name or ID of the system user and, optionally, system group that the core device uses to run generic and Lambda components\. Specify the user and group separated by a colon \(`:`\) in the following format: `user:group`\. The group is optional\. If you don't specify a group, the AWS IoT Greengrass Core software uses the primary group for the user\. For example, you can specify `ggc_user` or `ggc_user:ggc_group`\. For more information, see [Configure the user that runs components](configure-greengrass-core-v2.md#configure-component-user)\.  
+When you run the AWS IoT Greengrass Core software installer with the `--component-default-user ggc_user:ggc_group` option, the software sets this parameter in the nucleus component\.  
+`windowsUser`  
+This feature is available in v2\.5\.0 and later of this component\.  
+The name of the Windows user to use to run this component on Windows core devices\. The user must exist on each Windows core device, and its name and password must be stored in the LocalSystem account's Credentials Manager instance\. For more information, see [Configure the user that runs components](configure-greengrass-core-v2.md#configure-component-user)\.  
+When you run the AWS IoT Greengrass Core software installer with the `--component-default-user ggc_user` option, the software sets this parameter in the nucleus component\.  
 `systemResourceLimits`  
-This feature is available in v2\.4\.0 and later of this component\.  
+This feature is available in v2\.4\.0 and later of this component\. AWS IoT Greengrass doesn't currently support this feature on Windows core devices\.   
 The system resource limits to apply to generic and non\-containerized Lambda component processes by default\. You can override system resource limits for individual components when you create a deployment\. For more information, see [Configure system resource limits for components](configure-greengrass-core-v2.md#configure-component-system-resource-limits)\.  
 This object contains the following information:    
 `cpus`  
@@ -218,6 +237,17 @@ Default: `10000000000` \(10 GB\)
 \(Optional\) A dictionary of attributes that identify the core device's platform\. Use this to define custom platform attributes that component recipes can use to identify the correct lifecycle and artifacts for the component\. For example, you might define a hardware capability attribute to deploy only the minimal set of artifacts for a component to run\. For more information, see the [manifest platform parameter](component-recipe-reference.md#component-platform-definition) in the component recipe\.  
 You can also use this parameter to override the `os` and `architecture` platform attributes of the core device\.
 
+  `httpClient`   
+This parameter is available in v2\.5\.0 and later of this component\.  
+\(Optional\) The HTTP client configuration for the core device\. These configuration options apply to all HTTP requests made by this component\. If a core device runs on a slower network, you can increase these timeout durations to prevent HTTP requests from timing out\.  
+This object contains the following information:    
+`connectionTimeoutMs`  
+\(Optional\) The amount of time \(in milliseconds\) to wait for a connection to open before the connection request times out\.  
+Default: `2000` \(2 seconds\)  
+`socketTimeoutMs`  
+\(Optional\) The amount of time \(in milliseconds\) to wait for data to transfer over an open connection before the connection times out\.  
+Default: `30000` \(30 seconds\)
+
 **Example: Configuration merge update**  
 
 ```
@@ -246,16 +276,40 @@ You can also use this parameter to override the `os` and `architecture` platform
 
 This component uses the following log file\.
 
+------
+#### [ Linux ]
+
 ```
 /greengrass/v2/logs/greengrass.log
 ```
 
+------
+#### [ Windows ]
+
+```
+C:\greengrass\v2\logs\greengrass.log
+```
+
+------
+
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
+
+------
+#### [ Linux ]
 
   ```
   sudo tail -f /greengrass/v2/logs/greengrass.log
   ```
+
+------
+#### [ Windows \(PowerShell\) ]
+
+  ```
+  Get-Content C:\greengrass\v2\logs\greengrass.log -Tail 10 -Wait
+  ```
+
+------
 
 ## Changelog<a name="greengrass-nucleus-component-changelog"></a>
 
@@ -264,6 +318,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.5\.0  |  <a name="changelog-nucleus-2.5.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
 |  2\.4\.0  |  <a name="changelog-nucleus-2.4.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
 |  2\.3\.0  |  <a name="changelog-nucleus-2.3.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
 |  2\.2\.0  |  <a name="changelog-nucleus-2.2.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 

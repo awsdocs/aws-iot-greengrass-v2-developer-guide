@@ -4,14 +4,37 @@ With AWS IoT Greengrass, you can develop and test components on your Greengrass 
 
 **To develop a component on a Greengrass core device\.**
 
-1. Create a folder for your component with subfolders for recipes and artifacts\. Run the following commands on your Greengrass core device to create these folders and change to the component folder\. Replace *\~/greengrassv2* with the path to the folder to use for local development\.
+1. <a name="create-component-recipes-artifacts-folder-step"></a>Create a folder for your components with subfolders for recipes and artifacts\. Run the following commands on your Greengrass core device to create these folders and change to the component folder\. Replace *\~/greengrassv2* or *%USERPROFILE%\\greengrassv2* with the path to the folder to use for local development\.
+
+------
+#### [ Linux or Unix ]
 
    ```
    mkdir -p ~/greengrassv2/{recipes,artifacts}
    cd ~/greengrassv2
    ```
 
-1. Create a recipe that defines your component's metadata, parameters, dependencies, lifecycle, and platform capability\. Run the following command to create the recipe file and open it in the `nano` text editor\. Include the component version in the recipe file name so that you can identify which recipe reflects which component version\. You can choose YAML or JSON format for your recipe\.
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+   ```
+   mkdir %USERPROFILE%\greengrassv2\recipes, %USERPROFILE%\greengrassv2\artifacts
+   cd %USERPROFILE%\greengrassv2
+   ```
+
+------
+#### [ PowerShell ]
+
+   ```
+   mkdir ~/greengrassv2/recipes, ~/greengrassv2/artifacts
+   cd ~/greengrassv2
+   ```
+
+------
+
+1. <a name="create-component-recipe-file-step"></a>Use a text editor to create a recipe file that defines your component's metadata, parameters, dependencies, lifecycle, and platform capability\. Include the component version in the recipe file name so that you can identify which recipe reflects which component version\. You can choose YAML or JSON format for your recipe\.
+
+   <a name="nano-command-intro"></a>For example, on a Linux\-based system, you can run the following command to use GNU nano to create the file\.
 
 ------
 #### [ JSON ]
@@ -28,7 +51,7 @@ With AWS IoT Greengrass, you can develop and test components on your Greengrass 
    ```
 
 ------
-**Note**  <a name="semver-note"></a>
+**Note**  
 <a name="semver-para"></a>AWS IoT Greengrass uses semantic versions for components\. Semantic versions follow a *major*\.*minor*\.*patch* number system\. For example, version `1.0.0` represents the first major release for a component\. For more information, see the [semantic version specification](https://semver.org/)\.
 
 1. Define the recipe for your component\. For more information, see [AWS IoT Greengrass component recipe reference](component-recipe-reference.md)\.
@@ -56,7 +79,15 @@ With AWS IoT Greengrass, you can develop and test components on your Greengrass 
            "os": "linux"
          },
          "Lifecycle": {
-           "Run": "python3 -u {artifacts:path}/hello_world.py '{configuration:/Message}'"
+           "Run": "python3 -u {artifacts:path}/hello_world.py \"{configuration:/Message}\""
+         }
+       },
+       {
+         "Platform": {
+           "os": "windows"
+         },
+         "Lifecycle": {
+           "Run": "py -3 -u {artifacts:path}/hello_world.py \"{configuration:/Message}\""
          }
        }
      ]
@@ -81,7 +112,12 @@ With AWS IoT Greengrass, you can develop and test components on your Greengrass 
          os: linux
        Lifecycle:
          Run: |
-           python3 -u {artifacts:path}/hello_world.py '{configuration:/Message}'
+           python3 -u {artifacts:path}/hello_world.py "{configuration:/Message}"
+     - Platform:
+         os: windows
+       Lifecycle:
+         Run: |
+           py -3 -u {artifacts:path}/hello_world.py "{configuration:/Message}"
    ```
 
 ------
@@ -90,23 +126,37 @@ With AWS IoT Greengrass, you can develop and test components on your Greengrass 
 
    ```
    import sys
-   import datetime
    
-   message = "Hello, %s! Current time: %s." % (sys.argv[1], datetime.datetime.now())
+   message = "Hello, %s!" % sys.argv[1]
    
-   # Print the message to stdout.
+   # Print the message to stdout, which Greengrass saves in a log file.
    print(message)
-   
-   # Append the message to the log file.
-   with open('/tmp/Greengrass_HelloWorld.log', 'a') as f:
-       print(message, file=f)
    ```
 
 1. Create a folder for the component version to develop\. We recommend that you use a separate folder for each component version's artifacts so that you can identify which artifacts are for each component version\. Run the following command\.
 
+------
+#### [ Linux or Unix ]
+
    ```
    mkdir -p artifacts/com.example.HelloWorld/1.0.0
    ```
+
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+   ```
+   mkdir artifacts/com.example.HelloWorld/1.0.0
+   ```
+
+------
+#### [ PowerShell ]
+
+   ```
+   mkdir artifacts/com.example.HelloWorld/1.0.0
+   ```
+
+------
 **Important**  <a name="local-artifact-folder-name-requirements"></a>
 You must use the following format for the artifact folder path\. Include the component name and version that you specify in the recipe\.  
 

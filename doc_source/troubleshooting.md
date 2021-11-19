@@ -20,6 +20,7 @@ Troubleshoot AWS IoT Greengrass Core software issues\.
 
 **Topics**
 + [Unable to set up core device](#unable-to-set-up-core-device)
++ [Unable to set up nucleus as a system service](#unable-to-set-up-system-service)
 + [Unable to connect to AWS IoT Core](#core-error-unable-to-connect-to-aws-iot)
 + [Out of memory error](#java-out-of-memory)
 + [Unable to install Greengrass CLI](#unable-to-install-greengrass-cli)
@@ -29,6 +30,14 @@ Troubleshoot AWS IoT Greengrass Core software issues\.
 ### Unable to set up core device<a name="unable-to-set-up-core-device"></a>
 
 If the AWS IoT Greengrass Core software installer fails and you aren't able to set up a core device, you might need to uninstall the software and try again\. For more information, see [Uninstall the AWS IoT Greengrass Core software](uninstall-greengrass-core-v2.md)\.
+
+### Unable to set up nucleus as a system service<a name="unable-to-set-up-system-service"></a>
+
+You might see this error when the AWS IoT Greengrass Core software installer fails to set up AWS IoT Greengrass as a system service\. On Linux devices, this error typically occurs if the core device doesn't have the [systemd](https://en.wikipedia.org/wiki/Systemd) init system\. The installer can successfully set up the AWS IoT Greengrass Core software even if it fails to set up the system service\.
+
+Do one of the following:
++ Configure and run the AWS IoT Greengrass Core software as a system service\. You must configure the software as a system service to use all of the features of AWS IoT Greengrass\. You can install [systemd](https://en.wikipedia.org/wiki/Systemd) or use a different init system\. For more information, see [Configure the Greengrass nucleus as a system service](configure-greengrass-core-v2.md#configure-system-service)\.
++ Run the AWS IoT Greengrass Core software without a system service\. You can run the software using a loader script that the installer sets up in the Greengrass root folder\. For more information, see [Run the AWS IoT Greengrass Core software without a system service](run-greengrass-core-v2.md#run-greengrass-core-no-system-service)\.
 
 ### Unable to connect to AWS IoT Core<a name="core-error-unable-to-connect-to-aws-iot"></a>
 
@@ -125,6 +134,7 @@ This issue can occur in the following cases:
 + The core device is the target of multiple deployments that have conflicting component version requirements\. For example, the core device might be the target of multiple deployments that include a `com.example.HelloWorld` component, where one deployment requires version 1\.0\.0 and the other requires version 1\.0\.1\. It's impossible to have a component that meets both requirements, so the deployment fails\.
 + The component version doesn't exist in the AWS IoT Greengrass service or on the local device\. The component might have been deleted, for example\.
 + There exists component versions that meet the version requirements, but none are compatible with the core device's platform\.
++ The core device's AWS IoT policy doesn't grant the `greengrass:ResolveComponentCandidates` permission\. Look for `Status Code: 403` in the error log to identify this issue\. To resolve this issue, add the `greengrass:ResolveComponentCandidates` permission to the core device's AWS IoT policy\. For more information, see [Minimal AWS IoT policy for AWS IoT Greengrass V2 core devices](device-auth.md#greengrass-core-minimal-iot-policy)\.
 
 To resolve this issue, revise the deployments to include compatible component versions or remove incompatible ones\. For more information about how to revise cloud deployments, see [Revise deployments](revise-deployments.md)\. For more information about how to revise local deployments, see the [AWS IoT Greengrass CLI deployment create](gg-cli-deployment.md#deployment-create) command\.
 
@@ -171,16 +181,37 @@ You might see this information message printed multiple times without an error, 
 Troubleshoot Greengrass component issues on core devices\.
 
 **Topics**
++ [Warn: '<command>' is not recognized as an internal or external command](#component-warn-command-not-recognized)
 + [Python script doesn't log messages](#python-component-no-log-output)
+
+### Warn: '<command>' is not recognized as an internal or external command<a name="component-warn-command-not-recognized"></a>
+
+You might see this error in a Greengrass component's logs when the AWS IoT Greengrass Core software fails to run a command in the component's lifecycle script\. The component's state becomes `BROKEN` as a result of this error\. This error can occur if the system user that runs the component, such as `ggc_user`, can't find the command's executable in the folders in the [PATH](https://en.wikipedia.org/wiki/PATH_(variable))\.
+
+On Windows devices, check that the folder that contains the executable is in the `PATH` for the system user that runs the component\. If it's missing from the `PATH`, do one of the following:
++ Add the executable's folder to the `PATH` system variable, which is available to all users\. After you update the `PATH` system variable, you must restart the AWS IoT Greengrass Core software to run components with the updated `PATH`\. If the AWS IoT Greengrass Core software doesn't use the updated `PATH` after you restart the software, restart the device and try again\. For more information, see [Run the AWS IoT Greengrass Core software](run-greengrass-core-v2.md)\.
++ Add the executable's folder to the `PATH` user variable for the system user that runs the component\.
 
 ### Python script doesn't log messages<a name="python-component-no-log-output"></a>
 
 Greengrass core devices collect logs that you can use to identify issues with components\. If your Python script's `stdout` and `stderr` messages don't appear in your component logs, you might need to flush the buffer or disable buffering for these standard output streams in Python\. Do any of the following:
 + Run Python with the [\-u](https://docs.python.org/3/using/cmdline.html#cmdoption-u) argument to disable buffering on `stdout` and `stderr`\.
 
+------
+#### [ Linux or Unix ]
+
   ```
   python3 -u hello_world.py
   ```
+
+------
+#### [ Windows ]
+
+  ```
+  py -3 -u hello_world.py
+  ```
+
+------
 + Use [Setenv](component-recipe-reference.md#lifecycle-setenv-definition) in your component's recipe to set the [PYTHONUNBUFFERED](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONUNBUFFERED) environment variable to a non\-empty string\. This environment variable disables buffering on `stdout` and `stderr`\.
 + Flush the buffer for the `stdout` or `stderr` streams\. Do one of the following:
   + Flush a message when you print\.

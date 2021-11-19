@@ -141,7 +141,7 @@ The AWS CLI is an open source tool that you can use to interact with AWS service
 1. Create the following customer managed policy that grants permissions to manage IDT and AWS IoT Greengrass roles\.
 
 ------
-#### [ Linux, macOS, or Unix ]
+#### [ Linux or Unix ]
 
    ```
    aws iam create-policy --policy-name IDTUsageMetricsIAMPermissions --policy-document '{
@@ -168,6 +168,24 @@ The AWS CLI is an open source tool that you can use to interact with AWS service
 
 **Note**  
 This step includes a Windows command prompt example because it uses a different JSON syntax than Linux, macOS, or Unix terminal commands\.
+
+------
+#### [ PowerShell ]
+
+   ```
+   aws iam create-policy --policy-name IDTUsageMetricsIAMPermissions --policy-document '{
+       "Version": "2012-10-17",
+       "Statement": [
+           {
+               "Effect": "Allow",
+               "Action": [
+                   "iot-device-tester:SendMetrics"
+               ],
+               "Resource": "*"
+           }
+       ]
+   }'
+   ```
 
 ------
 
@@ -199,14 +217,35 @@ To allow IDT to access your AWS credentials and submit metrics to AWS, do the fo
 
 1. Store the AWS credentials for your IAM user as environment variables or in a credentials file:
 
-   1. To use environment variables, run the following command:
+   1. To use environment variables, run the following commands\.
+
+------
+#### [ Linux or Unix ]
 
       ```
-      AWS_ACCESS_KEY_ID=access-key
-      AWS_SECRET_ACCESS_KEY=secret-access-key
+      export AWS_ACCESS_KEY_ID=access-key
+      export AWS_SECRET_ACCESS_KEY=secret-access-key
       ```
 
-   1. To use the credentials file, add the following information to the `.aws/credentials file:`
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+      ```
+      set AWS_ACCESS_KEY_ID=access-key
+      set AWS_SECRET_ACCESS_KEY=secret-access-key
+      ```
+
+------
+#### [ PowerShell ]
+
+      ```
+      $env:AWS_ACCESS_KEY_ID="access-key"
+      $env:AWS_SECRET_ACCESS_KEY="secret-access-key"
+      ```
+
+------
+
+   1. To use the credentials file, add the following information to the `~/.aws/credentials` file\.
 
       ```
       [profile-name]

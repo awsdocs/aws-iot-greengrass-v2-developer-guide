@@ -15,7 +15,7 @@ Retrieve the version, status, and configuration of one component\.
 **Synopsis**  
 
 ```
-$ sudo greengrass-cli component details --name <component-name> 
+greengrass-cli component details --name <component-name> 
 ```
 
 **Arguments**  
@@ -40,7 +40,7 @@ Retrieve the names, component details, and runtime configuration for all root\-l
 **Synopsis**  
 
 ```
-$ sudo greengrass-cli component list
+greengrass-cli component list
 ```
 
 **Arguments**  
@@ -86,7 +86,7 @@ Restart components\.
 **Synopsis**  
 
 ```
-$ sudo greengrass-cli component restart --names <component-name>,...
+greengrass-cli component restart --names <component-name>,...
 ```
 
 **Arguments**  
@@ -102,7 +102,7 @@ Stop running components\.
 **Synopsis**  
 
 ```
-$ sudo greengrass-cli component stop --names <component-name>,...
+greengrass-cli component stop --names <component-name>,...
 ```
 
 **Arguments**  

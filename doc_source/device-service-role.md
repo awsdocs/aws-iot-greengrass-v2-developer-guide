@@ -12,7 +12,7 @@ This policy doesn't include access to files in S3 buckets\. You must add permiss
 
   This role alias refers to the IAM role\.
 
-For more information, see [Install the AWS IoT Greengrass Core software](getting-started.md#install-greengrass-v2)\.
+For more information, see [Step 3: Install the AWS IoT Greengrass Core software](getting-started.md#install-greengrass-v2)\.
 
 You can also set the role alias for an existing core device\. To do so, configure the `iotRoleAlias` configuration parameter of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.
 
@@ -30,7 +30,29 @@ The role allows the following service to assume the role:
 If you use the AWS IoT Greengrass Core software to create this role, it uses the following permissions policy to allow core devices to connect and send logs to AWS\. The policy's name defaults to the name of the IAM role ending with `Access`\. For example, if you use the default IAM role name, then this policy's name is `GreengrassV2TokenExchangeRoleAccess`\.
 
 ------
-#### [ Greengrass nucleus v2\.4\.0 and later ]
+#### [ Greengrass nucleus v2\.5\.0 and later ]
+
+```
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "logs:DescribeLogStreams",
+        "s3:GetBucketLocation"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+
+------
+#### [ v2\.4\.x ]
 
 ```
 {
@@ -106,20 +128,66 @@ The default core device role doesn't allow core devices to access S3 buckets\. T
 
 1. Run the following command to create the policy from the policy document in `component-artifact-policy.json`\.
 
+------
+#### [ Linux or Unix ]
+
    ```
    aws iam create-policy \
      --policy-name MyGreengrassV2ComponentArtifactPolicy \
      --policy-document file://component-artifact-policy.json
    ```
 
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+   ```
+   aws iam create-policy ^
+     --policy-name MyGreengrassV2ComponentArtifactPolicy ^
+     --policy-document file://component-artifact-policy.json
+   ```
+
+------
+#### [ PowerShell ]
+
+   ```
+   aws iam create-policy `
+     --policy-name MyGreengrassV2ComponentArtifactPolicy `
+     --policy-document file://component-artifact-policy.json
+   ```
+
+------
+
    Copy the policy Amazon Resource Name \(ARN\) from the policy metadata in the output\. You use this ARN to attach this policy to the core device role in the next step\.
 
 1. Run the following command to attach the policy to the core device role\. Replace *GreengrassV2TokenExchangeRole* with the name of the role that you specified when you ran the AWS IoT Greengrass Core software\. Then, replace the policy ARN with the ARN from the previous step\.
+
+------
+#### [ Linux or Unix ]
 
    ```
    aws iam attach-role-policy \
      --role-name GreengrassV2TokenExchangeRole \
      --policy-arn arn:aws:iam::123456789012:policy/MyGreengrassV2ComponentArtifactPolicy
    ```
+
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+   ```
+   aws iam attach-role-policy ^
+     --role-name GreengrassV2TokenExchangeRole ^
+     --policy-arn arn:aws:iam::123456789012:policy/MyGreengrassV2ComponentArtifactPolicy
+   ```
+
+------
+#### [ PowerShell ]
+
+   ```
+   aws iam attach-role-policy `
+     --role-name GreengrassV2TokenExchangeRole `
+     --policy-arn arn:aws:iam::123456789012:policy/MyGreengrassV2ComponentArtifactPolicy
+   ```
+
+------
 
    If the command has no output, it succeeded, and your core device can access artifacts that you upload to this S3 bucket\.

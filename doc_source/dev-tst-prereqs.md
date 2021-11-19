@@ -14,9 +14,28 @@ Windows has a path length limitation of 260 characters\. If you are using Window
 
 IDT for AWS IoT Greengrass V2 tests your device for compatibility with a specific version of AWS IoT Greengrass\. Run the following command to download the AWS IoT Greengrass Core software to a file named `aws.greengrass.nucleus.zip`\. Replace *version* with a [supported nucleus component version](dev-test-versions.md) for your IDT version\. 
 
+------
+#### [ Linux or Unix ]
+
 ```
 curl -s https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-version.zip > aws.greengrass.nucleus.zip
 ```
+
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+```
+curl -s https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-version.zip > aws.greengrass.nucleus.zip
+```
+
+------
+#### [ PowerShell ]
+
+```
+iwr -Uri https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-version.zip -OutFile aws.greengrass.nucleus.zip
+```
+
+------
 
 Place the downloaded `aws.greengrass.nucleus.zip` file in the `<device-tester-extract-location>/products/` folder\.
 
@@ -109,7 +128,7 @@ In this step, configure the permissions that IDT for AWS IoT Greengrass V2 uses 
         "Version": "2012-10-17",
         "Statement": [
           {
-            "Sid": "VisualEditor1",
+            "Sid": "passRoleForResources",
             "Effect": "Allow",
             "Action": "iam:PassRole",
             "Resource": "arn:aws:iam::*:role/idt-*",
@@ -124,114 +143,109 @@ In this step, configure the permissions that IDT for AWS IoT Greengrass V2 uses 
             }
           },
           {
-            "Sid": "VisualEditor2",
+            "Sid": "lambdaResources",
             "Effect": "Allow",
             "Action": [
               "lambda:CreateFunction",
               "lambda:PublishVersion",
-              "iot:DeleteCertificate",
               "lambda:DeleteFunction",
-              "lambda:GetFunction",
-              "execute-api:Invoke",
-              "iot:UpdateCertificate"
+              "lambda:GetFunction"
             ],
             "Resource": [
-              "arn:aws:execute-api:us-east-1:098862408343:9xpmnvs5h4/prod/POST/metrics",
-              "arn:aws:lambda:*:*:function:idt-*",
-              "arn:aws:iot:*:*:cert/*"
+              "arn:aws:lambda:*:*:function:idt-*"
             ]
           },
           {
-            "Sid": "VisualEditor3",
+            "Sid": "iamResources",
             "Effect": "Allow",
             "Action": [
-              "iot:CreateThing",
-              "iot:DeleteThing"
-            ],
-            "Resource": [
-              "arn:aws:iot:*:*:thing/idt-*",
-              "arn:aws:iot:*:*:cert/*"
-            ]
-          },
-          {
-            "Sid": "VisualEditor4",
-            "Effect": "Allow",
-            "Action": [
-              "iot:AttachPolicy",
-              "iot:DetachPolicy",
-              "iot:DeletePolicy"
-            ],
-            "Resource": [
-              "arn:aws:iot:*:*:policy/idt-*",
-              "arn:aws:iot:*:*:cert/*"
-            ]
-          },
-          {
-            "Sid": "VisualEditor5",
-            "Effect": "Allow",
-            "Action": [
-              "iot:CreateJob",
-              "iot:DescribeJob",
-              "iot:DescribeJobExecution",
-              "iot:ListJobs*",
-              "iot:DeleteJob"
-            ],
-            "Resource": [
-              "arn:aws:iot:*:*:thing/idt-*",
-              "arn:aws:iot:*:*:job/*",
-              "arn:aws:iot:*:*:thinggroup/*"
-            ]
-          },
-          {
-            "Sid": "VisualEditor6",
-            "Effect": "Allow",
-            "Action": [
-              "iot:DescribeEndpoint",
-              "greengrass:*",
-              "iam:ListAttachedRolePolicies",
               "iam:CreateRole",
-              "iam:CreatePolicy",
-              "iam:ListPolicies",
-              "iam:ListRolePolicies",
-              "iam:AttachRolePolicy",
-              "iam:ListEntitiesForPolicy",
               "iam:GetRole",
-              "iam:PassRole",
               "iam:DeleteRole",
+              "iam:CreatePolicy",
               "iam:DeletePolicy",
+              "iam:GetPolicy",
+              "iam:AttachRolePolicy",
               "iam:DetachRolePolicy",
               "iam:TagRole",
               "iam:TagPolicy",
-              "iot:CreateRoleAlias",
-              "iot:DescribeThingGroup",
-              "iot:CreateThingGroup",
-              "iot:AddThingToThingGroup",
-              "iot:AttachPolicy",
-              "iot:ListAttachedPolicies",
+              "iam:ListAttachedRolePolicies",
+              "iam:ListEntitiesForPolicy"
+            ],
+            "Resource": [
+              "arn:aws:iam::*:role/idt-*",
+              "arn:aws:iam::*:policy/idt-*"
+            ]
+          },
+          {
+            "Sid": "iotResources",
+            "Effect": "Allow",
+            "Action": [
               "iot:CreateThing",
-              "iot:DescribeRoleAlias",
-              "iot:DescribeEndpoint",
               "iot:DeleteThing",
-              "iot:DeleteThingGroup",
-              "iot:DeleteRoleAlias",
-              "iot:DeletePolicy",
-              "iot:DetachPolicy",
-              "iot:DetachThingPrincipal",
-              "iot:RemoveThingFromThingGroup",
-              "iot:UpdateCertificate",
               "iot:DescribeThing",
+              "iot:CreateThingGroup",
+              "iot:DeleteThingGroup",
+              "iot:DescribeThingGroup",
+              "iot:AddThingToThingGroup",
+              "iot:RemoveThingFromThingGroup",
+              "iot:AttachThingPrincipal",
+              "iot:DetachThingPrincipal",
+              "iot:UpdateCertificate",
               "iot:DeleteCertificate",
               "iot:CreatePolicy",
+              "iot:AttachPolicy",
+              "iot:DetachPolicy",
+              "iot:DeletePolicy",
               "iot:GetPolicy",
-              "iot:GetThingShadow",
-              "iot:CreateKeysAndCertificate",
-              "iot:ListThings",
-              "iot:UpdateThingShadow",
               "iot:Publish",
-              "iot:CreateCertificateFromCsr",
-              "iot:ListTagsForResource",
               "iot:TagResource",
               "iot:ListThingPrincipals",
+              "iot:ListAttachedPolicies"
+            ],
+            "Resource": [
+              "arn:aws:iot:*:*:thing/idt-*",
+              "arn:aws:iot:*:*:thinggroup/idt-*",
+              "arn:aws:iot:*:*:policy/idt-*",
+              "arn:aws:iot:*:*:cert/*",
+              "arn:aws:iot:*:*:topic/idt-*"
+            ]
+          },
+          {
+            "Sid": "s3Resources",
+            "Effect": "Allow",
+            "Action": [
+              "s3:GetObject",
+              "s3:PutObject",
+              "s3:DeleteObjectVersion",
+              "s3:DeleteObject",
+              "s3:CreateBucket",
+              "s3:ListBucket",
+              "s3:ListBucketVersions",
+              "s3:DeleteBucket",
+              "s3:PutObjectTagging",
+              "s3:PutBucketTagging"
+            ],
+            "Resource": "arn:aws:s3::*:idt-*"
+          },
+          {
+            "Sid": "roleAliasRousource",
+            "Effect": "Allow",
+            "Action": [
+              "iot:CreateRoleAlias",
+              "iot:DescribeRoleAlias",
+              "iot:DeleteRoleAlias",
+              "iot:TagResource"
+            ],
+            "Resource": [
+              "arn:aws:iot:*:*:rolealias/idt-*",
+              "arn:aws:iam::*:role/idt-*"
+            ]
+          },
+          {
+            "Sid": "idtExecuteAndCollectMetrics",
+            "Effect": "Allow",
+            "Action": [
               "iot-device-tester:SendMetrics",
               "iot-device-tester:SupportedVersion",
               "iot-device-tester:LatestIdt",
@@ -241,61 +255,17 @@ In this step, configure the permissions that IDT for AWS IoT Greengrass V2 uses 
             "Resource": "*"
           },
           {
-            "Sid": "VisualEditor7",
+            "Sid": "greengrassAndIotResourcesWithoutReseourceType",
             "Effect": "Allow",
             "Action": [
-              "iot:DetachThingPrincipal",
-              "iot:AttachThingPrincipal"
+              "greengrass:*",
+              "iot:GetThingShadow",
+              "iot:UpdateThingShadow",
+              "iot:ListThings",
+              "iot:DescribeEndpoint",
+              "iot:CreateKeysAndCertificate"
             ],
-            "Resource": [
-              "arn:aws:iot:*:*:thing/idt-*",
-              "arn:aws:iot:*:*:cert/*"
-            ]
-          },
-          {
-            "Sid": "VisualEditor8",
-            "Effect": "Allow",
-            "Action": [
-              "s3:GetObject",
-              "s3:PutObject",
-              "s3:AbortMultipartUpload",
-              "s3:ListMultipartUploadParts",
-              "s3:DeleteObjectVersion",
-              "s3:PutObjectTagging",
-              "s3:ListBucketVersions",
-              "s3:CreateBucket",
-              "s3:DeleteObject",
-              "s3:DeleteBucket",
-              "s3:ListBucket",
-              "s3:PutBucketTagging"
-            ],
-            "Resource": "arn:aws:s3:::idt*"
-          },
-          {
-            "Sid": "VisualEditor9",
-            "Effect": "Allow",
-            "Action": [
-              "iot:CreateThingGroup",
-              "iot:AddThingToThingGroup",
-              "iot:DescribeThingGroup"
-            ],
-            "Resource": "arn:aws:iot:*:*:thinggroup/*"
-          },
-          {
-            "Sid": "VisualEditor10",
-            "Effect": "Allow",
-            "Action": [
-              "iot:AddThingToThingGroup"
-            ],
-            "Resource": "arn:aws:iot:*:*:thing/idt-*"
-          },
-          {
-            "Sid": "VisualEditor11",
-            "Effect": "Allow",
-            "Action": [
-              "iot:DescribeRoleAlias"
-            ],
-            "Resource": "arn:aws:iot:*:*:rolealias/*"
+            "Resource": "*"
           }
         ]
       }
@@ -342,7 +312,7 @@ The AWS CLI is an open source tool that you can use to interact with AWS service
         "Version": "2012-10-17",
         "Statement": [
           {
-            "Sid": "VisualEditor1",
+            "Sid": "passRoleForResources",
             "Effect": "Allow",
             "Action": "iam:PassRole",
             "Resource": "arn:aws:iam::*:role/idt-*",
@@ -357,114 +327,109 @@ The AWS CLI is an open source tool that you can use to interact with AWS service
             }
           },
           {
-            "Sid": "VisualEditor2",
+            "Sid": "lambdaResources",
             "Effect": "Allow",
             "Action": [
               "lambda:CreateFunction",
               "lambda:PublishVersion",
-              "iot:DeleteCertificate",
               "lambda:DeleteFunction",
-              "lambda:GetFunction",
-              "execute-api:Invoke",
-              "iot:UpdateCertificate"
+              "lambda:GetFunction"
             ],
             "Resource": [
-              "arn:aws:execute-api:us-east-1:098862408343:9xpmnvs5h4/prod/POST/metrics",
-              "arn:aws:lambda:*:*:function:idt-*",
-              "arn:aws:iot:*:*:cert/*"
+              "arn:aws:lambda:*:*:function:idt-*"
             ]
           },
           {
-            "Sid": "VisualEditor3",
+            "Sid": "iamResources",
             "Effect": "Allow",
             "Action": [
-              "iot:CreateThing",
-              "iot:DeleteThing"
-            ],
-            "Resource": [
-              "arn:aws:iot:*:*:thing/idt-*",
-              "arn:aws:iot:*:*:cert/*"
-            ]
-          },
-          {
-            "Sid": "VisualEditor4",
-            "Effect": "Allow",
-            "Action": [
-              "iot:AttachPolicy",
-              "iot:DetachPolicy",
-              "iot:DeletePolicy"
-            ],
-            "Resource": [
-              "arn:aws:iot:*:*:policy/idt-*",
-              "arn:aws:iot:*:*:cert/*"
-            ]
-          },
-          {
-            "Sid": "VisualEditor5",
-            "Effect": "Allow",
-            "Action": [
-              "iot:CreateJob",
-              "iot:DescribeJob",
-              "iot:DescribeJobExecution",
-              "iot:ListJobs*",
-              "iot:DeleteJob"
-            ],
-            "Resource": [
-              "arn:aws:iot:*:*:thing/idt-*",
-              "arn:aws:iot:*:*:job/*",
-              "arn:aws:iot:*:*:thinggroup/*"
-            ]
-          },
-          {
-            "Sid": "VisualEditor6",
-            "Effect": "Allow",
-            "Action": [
-              "iot:DescribeEndpoint",
-              "greengrass:*",
-              "iam:ListAttachedRolePolicies",
               "iam:CreateRole",
-              "iam:CreatePolicy",
-              "iam:ListPolicies",
-              "iam:ListRolePolicies",
-              "iam:AttachRolePolicy",
-              "iam:ListEntitiesForPolicy",
               "iam:GetRole",
-              "iam:PassRole",
               "iam:DeleteRole",
+              "iam:CreatePolicy",
               "iam:DeletePolicy",
+              "iam:GetPolicy",
+              "iam:AttachRolePolicy",
               "iam:DetachRolePolicy",
               "iam:TagRole",
               "iam:TagPolicy",
-              "iot:CreateRoleAlias",
-              "iot:DescribeThingGroup",
-              "iot:CreateThingGroup",
-              "iot:AddThingToThingGroup",
-              "iot:AttachPolicy",
-              "iot:ListAttachedPolicies",
+              "iam:ListAttachedRolePolicies",
+              "iam:ListEntitiesForPolicy"
+            ],
+            "Resource": [
+              "arn:aws:iam::*:role/idt-*",
+              "arn:aws:iam::*:policy/idt-*"
+            ]
+          },
+          {
+            "Sid": "iotResources",
+            "Effect": "Allow",
+            "Action": [
               "iot:CreateThing",
-              "iot:DescribeRoleAlias",
-              "iot:DescribeEndpoint",
               "iot:DeleteThing",
-              "iot:DeleteThingGroup",
-              "iot:DeleteRoleAlias",
-              "iot:DeletePolicy",
-              "iot:DetachPolicy",
-              "iot:DetachThingPrincipal",
-              "iot:RemoveThingFromThingGroup",
-              "iot:UpdateCertificate",
               "iot:DescribeThing",
+              "iot:CreateThingGroup",
+              "iot:DeleteThingGroup",
+              "iot:DescribeThingGroup",
+              "iot:AddThingToThingGroup",
+              "iot:RemoveThingFromThingGroup",
+              "iot:AttachThingPrincipal",
+              "iot:DetachThingPrincipal",
+              "iot:UpdateCertificate",
               "iot:DeleteCertificate",
               "iot:CreatePolicy",
+              "iot:AttachPolicy",
+              "iot:DetachPolicy",
+              "iot:DeletePolicy",
               "iot:GetPolicy",
-              "iot:GetThingShadow",
-              "iot:CreateKeysAndCertificate",
-              "iot:ListThings",
-              "iot:UpdateThingShadow",
               "iot:Publish",
-              "iot:CreateCertificateFromCsr",
-              "iot:ListTagsForResource",
               "iot:TagResource",
               "iot:ListThingPrincipals",
+              "iot:ListAttachedPolicies"
+            ],
+            "Resource": [
+              "arn:aws:iot:*:*:thing/idt-*",
+              "arn:aws:iot:*:*:thinggroup/idt-*",
+              "arn:aws:iot:*:*:policy/idt-*",
+              "arn:aws:iot:*:*:cert/*",
+              "arn:aws:iot:*:*:topic/idt-*"
+            ]
+          },
+          {
+            "Sid": "s3Resources",
+            "Effect": "Allow",
+            "Action": [
+              "s3:GetObject",
+              "s3:PutObject",
+              "s3:DeleteObjectVersion",
+              "s3:DeleteObject",
+              "s3:CreateBucket",
+              "s3:ListBucket",
+              "s3:ListBucketVersions",
+              "s3:DeleteBucket",
+              "s3:PutObjectTagging",
+              "s3:PutBucketTagging"
+            ],
+            "Resource": "arn:aws:s3::*:idt-*"
+          },
+          {
+            "Sid": "roleAliasRousource",
+            "Effect": "Allow",
+            "Action": [
+              "iot:CreateRoleAlias",
+              "iot:DescribeRoleAlias",
+              "iot:DeleteRoleAlias",
+              "iot:TagResource"
+            ],
+            "Resource": [
+              "arn:aws:iot:*:*:rolealias/idt-*",
+              "arn:aws:iam::*:role/idt-*"
+            ]
+          },
+          {
+            "Sid": "idtExecuteAndCollectMetrics",
+            "Effect": "Allow",
+            "Action": [
               "iot-device-tester:SendMetrics",
               "iot-device-tester:SupportedVersion",
               "iot-device-tester:LatestIdt",
@@ -474,61 +439,17 @@ The AWS CLI is an open source tool that you can use to interact with AWS service
             "Resource": "*"
           },
           {
-            "Sid": "VisualEditor7",
+            "Sid": "greengrassAndIotResourcesWithoutReseourceType",
             "Effect": "Allow",
             "Action": [
-              "iot:DetachThingPrincipal",
-              "iot:AttachThingPrincipal"
+              "greengrass:*",
+              "iot:GetThingShadow",
+              "iot:UpdateThingShadow",
+              "iot:ListThings",
+              "iot:DescribeEndpoint",
+              "iot:CreateKeysAndCertificate"
             ],
-            "Resource": [
-              "arn:aws:iot:*:*:thing/idt-*",
-              "arn:aws:iot:*:*:cert/*"
-            ]
-          },
-          {
-            "Sid": "VisualEditor8",
-            "Effect": "Allow",
-            "Action": [
-              "s3:GetObject",
-              "s3:PutObject",
-              "s3:AbortMultipartUpload",
-              "s3:ListMultipartUploadParts",
-              "s3:DeleteObjectVersion",
-              "s3:PutObjectTagging",
-              "s3:ListBucketVersions",
-              "s3:CreateBucket",
-              "s3:DeleteObject",
-              "s3:DeleteBucket",
-              "s3:ListBucket",
-              "s3:PutBucketTagging"
-            ],
-            "Resource": "arn:aws:s3:::idt*"
-          },
-          {
-            "Sid": "VisualEditor9",
-            "Effect": "Allow",
-            "Action": [
-              "iot:CreateThingGroup",
-              "iot:AddThingToThingGroup",
-              "iot:DescribeThingGroup"
-            ],
-            "Resource": "arn:aws:iot:*:*:thinggroup/*"
-          },
-          {
-            "Sid": "VisualEditor10",
-            "Effect": "Allow",
-            "Action": [
-              "iot:AddThingToThingGroup"
-            ],
-            "Resource": "arn:aws:iot:*:*:thing/idt-*"
-          },
-          {
-            "Sid": "VisualEditor11",
-            "Effect": "Allow",
-            "Action": [
-              "iot:DescribeRoleAlias"
-            ],
-            "Resource": "arn:aws:iot:*:*:rolealias/*"
+            "Resource": "*"
           }
         ]
       }
