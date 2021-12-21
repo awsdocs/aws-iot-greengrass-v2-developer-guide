@@ -33,7 +33,7 @@ Client devices also download a Greengrass core device CA certificate\. They use 
 
 ### Certificate rotation on the local MQTT broker<a name="mqtt-expiration"></a>
 
-Greengrass core devices generate a local MQTT server certificate that client devices use for mutual authentication\. This certificate is signed by the core device CA certificate, which the core device stores in the AWS IoT Greengrass cloud\. Client devices retrieve the core device CA certificate when they discover the core device\. They use the core device CA certificate to verify the core device's MQTT server certificate when they connect to the core device\. The core device CA certificate expires after 5 years\.
+Greengrass core devices generate a local MQTT server certificate that client devices use for mutual authentication\. This certificate is signed by the core device CA certificate, which the core device stores in the AWS IoT Greengrass cloud as well as locally at: `/greengrass/v2/work/aws.greengrass.clientdevices.Auth/ca.pem` \. Client devices retrieve the core device CA certificate when they discover the core device\. They use the core device CA certificate to verify the core device's MQTT server certificate when they connect to the core device\. The core device CA certificate expires after 5 years\.
 
 The MQTT server certificate expires every 7 days\. This limited period is based on security best practices\. This rotation helps mitigate the threat of an attacker stealing the MQTT server certificate and private key to impersonate the Greengrass core device\.
 
