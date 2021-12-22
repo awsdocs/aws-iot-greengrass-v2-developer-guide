@@ -847,6 +847,8 @@ int main() {
         std::cerr << "Operation timed out while waiting for response from Greengrass Core." << std::endl;
         exit(-1);
     }
+
+    auto response = responseFuture.get();
     
     if (!response) {
         // Handle error.
