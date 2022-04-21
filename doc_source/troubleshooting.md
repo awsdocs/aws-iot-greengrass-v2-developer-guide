@@ -26,6 +26,8 @@ Troubleshoot AWS IoT Greengrass Core software issues\.
 + [Unable to install Greengrass CLI](#unable-to-install-greengrass-cli)
 + [User root is not allowed to execute](#user-not-allowed-to-execute)
 + [Failed to map segment from shared object: operation not permitted](#unable-to-start-greengrass)
++ [software\.amazon\.awssdk\.services\.iam\.model\.IamException: The security token included in the request is invalid](#error-invalid-security-token)
++ [Error: com\.aws\.greengrass\.security\.provider\.pkcs11\.PKCS11CryptoKeyService: Private key or certificate with label <label> does not exist](#pkcs11-provider-error-private-key-or-certificate-does-not-exist)
 
 ### Unable to set up core device<a name="unable-to-set-up-core-device"></a>
 
@@ -84,6 +86,54 @@ Run the following command to remount the `/tmp` directory with `exec` permission
 sudo mount -o remount,exec /tmp
 ```
 
+### software\.amazon\.awssdk\.services\.iam\.model\.IamException: The security token included in the request is invalid<a name="error-invalid-security-token"></a>
+
+You might see this error when you [install the AWS IoT Greengrass Core software with automatic provisioning](quick-installation.md), and the installer uses an AWS session token that isn't valid\. Do the following:
++ If you use temporary security credentials, check that the session token is correct and that you copy and paste the complete session token\.
++ If you use long\-term security credentials, check that the device doesn't have a session token from a time where you previously used temporary credentials\. Do the following:
+
+  1. Run the following command to unset the session token environment variable\.
+
+------
+#### [ Linux or Unix ]
+
+     ```
+     unset AWS_SESSION_TOKEN
+     ```
+
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+     ```
+     set AWS_SESSION_TOKEN=
+     ```
+
+------
+#### [ PowerShell ]
+
+     ```
+     Remove-Item Env:\AWS_SESSION_TOKEN
+     ```
+
+------
+
+  1. Check if the AWS credentials file, `~/.aws/credentials`, contains a session token, `aws_session_token`\. If so, remove that line from the file\.
+
+     ```
+     aws_session_token = AQoEXAMPLEH4aoAH0gNCAPyJxz4BlCFFxWNE1OPTgk5TthT+FvwqnKwRcOIfrRh3c/LTo6UDdyJwOOvEVPvLXCrrrUtdnniCEXAMPLE/IvU1dYUg2RVAJBanLiHb4IgRmpRV3zrkuWJOgQs8IZZaIv2BXIa2R4Olgk
+     ```
+
+You can also install the AWS IoT Greengrass Core software without providing AWS credentials\. For more information, see [Install AWS IoT Greengrass Core software with manual resource provisioning](manual-installation.md) or [Install AWS IoT Greengrass Core software with AWS IoT fleet provisioning](fleet-provisioning.md)\.
+
+### Error: com\.aws\.greengrass\.security\.provider\.pkcs11\.PKCS11CryptoKeyService: Private key or certificate with label <label> does not exist<a name="pkcs11-provider-error-private-key-or-certificate-does-not-exist"></a>
+
+This error occurs when the [PKCS\#11 provider component](pkcs11-provider-component.md) can't find or load the private key or certificate that you specify when you configure the AWS IoT Greengrass Core software to use a [hardware security module \(HSM\)](hardware-security.md)\. Do the following:
++ Check that the private key and certificate are stored in the HSM using the slot, user PIN, and object label that you configure the AWS IoT Greengrass Core software to use\.
++ Check that the private key and certificate use the same object label in the HSM\.
++ If your HSM supports object IDs, check that the private key and certificate use the same object ID in the HSM\.
+
+Check the documentation for your HSM to learn how to query details about the security tokens in the HSM\. If you need to change the slot, object label, or object ID for a security token, check the documentation for your HSM to learn how to do so\.
+
 ## AWS IoT Greengrass cloud issues<a name="greengrass-cloud-issues"></a>
 
 Use the following information to troubleshoot issues with the AWS IoT Greengrass console and API\. Each entry corresponds to an error message that you might see when you perform an action\.
@@ -104,6 +154,7 @@ Troubleshoot deployment issues on Greengrass core devices\. Each entry correspon
 + [Error: com\.aws\.greengrass\.componentmanager\.exceptions\.NoAvailableComponentVersionException: Failed to negotiate component <name> version with cloud and no local applicable version satisfying requirement <requirements>](#core-error-no-available-component-version)
 + [software\.amazon\.awssdk\.services\.secretsmanager\.model\.SecretsManagerException: User: <user> is not authorized to perform: secretsmanager:GetSecretValue on resource: <arn>](#secret-manager-error-not-authorized-to-perform-get-secret-value)
 + [Info: com\.aws\.greengrass\.deployment\.exceptions\.RetryableDeploymentDocumentDownloadException: Greengrass Cloud Service returned an error when getting full deployment configuration](#core-error-getting-full-deployment-configuration)
++ [Warn: com\.aws\.greengrass\.deployment\.DeploymentService: Failed to get thing group hierarchy](#core-warning-failed-to-get-thing-group-hierarchy)
 + [Info: com\.aws\.greengrass\.deployment\.DeploymentDocumentDownloader: Calling Greengrass cloud to get full deployment configuration](#core-info-repetitive-get-full-deployment-configuration)
 
 ### Error: com\.aws\.greengrass\.componentmanager\.exceptions\.PackageDownloadException: Failed to download artifact<a name="core-error-failed-to-download-artifact-package-download-exception"></a>
@@ -172,6 +223,12 @@ You might see this error when the core device receives a large deployment docume
 
 To resolve this issue, add the `greengrass:GetDeploymentConfiguration` permission to the core device's AWS IoT policy\. For more information, see [Update a core device's AWS IoT policy](device-auth.md#update-core-device-iot-policy)\.
 
+### Warn: com\.aws\.greengrass\.deployment\.DeploymentService: Failed to get thing group hierarchy<a name="core-warning-failed-to-get-thing-group-hierarchy"></a>
+
+You might see this warning when the core device receives a deployment and the core device's AWS IoT policy doesn't allow the `greengrass:ListThingGroupsForCoreDevice` permission\. When you create a deployment, the core device uses this permission to identify its thing groups and remove components for any thing groups from which you removed the core device\. If the core device runs [Greengrass nucleus](greengrass-nucleus-component.md) v2\.5\.0, the deployment fails\. If the core device runs Greengrass nucleus v2\.5\.1 or later, the deployment proceeds but doesn't remove components\. For more information about thing group removal behavior, see [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)\.
+
+To update the core device's behavior to remove components for thing groups from which you remove the core device, add the `greengrass:ListThingGroupsForCoreDevice` permission to the core device's AWS IoT policy\. For more information, see [Update a core device's AWS IoT policy](device-auth.md#update-core-device-iot-policy)\.
+
 ### Info: com\.aws\.greengrass\.deployment\.DeploymentDocumentDownloader: Calling Greengrass cloud to get full deployment configuration<a name="core-info-repetitive-get-full-deployment-configuration"></a>
 
 You might see this information message printed multiple times without an error, because the core device logs the error at the `DEBUG` log level\. This issue can occur when the core device receives a large deployment document\. When this issue occurs, the deployment retries indefinitely, and its status is **In progress** \(`IN_PROGRESS`\)\. For more information about how to resolve this issue, see [this troubleshooting entry](#core-error-getting-full-deployment-configuration)\.
@@ -181,15 +238,30 @@ You might see this information message printed multiple times without an error, 
 Troubleshoot Greengrass component issues on core devices\.
 
 **Topics**
++ [Instant exceeds minimum or maximum instant](#stream-manager-instant-exceeds-maximun-minimum)
 + [Warn: '<command>' is not recognized as an internal or external command](#component-warn-command-not-recognized)
 + [Python script doesn't log messages](#python-component-no-log-output)
++ [com\.aws\.greengrass\.componentmanager\.plugins\.docker\.exceptions\.DockerLoginException: Error logging into the registry using credentials \- 'The stub received bad data\.'](#docker-login-stub-received-bad-data)
+
+### Instant exceeds minimum or maximum instant<a name="stream-manager-instant-exceeds-maximun-minimum"></a>
+
+When you upgrade stream manager v2\.0\.7 to a version between v2\.0\.8 and v2\.0\.11, you might see the following error in the stream manager component's logs if the component fails to start\. 
+
+```
+2021-07-16T00:54:58.568Z [INFO] (Copier) aws.greengrass.StreamManager: stdout. Caused by: com.fasterxml.jackson.databind.JsonMappingException: Instant exceeds minimum or maximum instant (through reference chain: com.amazonaws.iot.greengrass.streammanager.export.PersistedSuccessExportStatesV1["lastExportTime"]). {scriptName=services.aws.greengrass.StreamManager.lifecycle.startup.script, serviceName=aws.greengrass.StreamManager, currentState=STARTING}
+2021-07-16T00:54:58.579Z [INFO] (Copier) aws.greengrass.StreamManager: stdout. Caused by: java.time.DateTimeException: Instant exceeds minimum or maximum instant. {scriptName=services.aws.greengrass.StreamManager.lifecycle.startup.script, serviceName=aws.greengrass.StreamManager, currentState=STARTING}
+```
+
+If you deployed stream manager v2\.0\.7 and you want to upgrade to a later version, you must upgrade to stream manager v2\.0\.12 directly\. For more information about the stream manager component, see [Stream manager](stream-manager-component.md)\.
 
 ### Warn: '<command>' is not recognized as an internal or external command<a name="component-warn-command-not-recognized"></a>
 
 You might see this error in a Greengrass component's logs when the AWS IoT Greengrass Core software fails to run a command in the component's lifecycle script\. The component's state becomes `BROKEN` as a result of this error\. This error can occur if the system user that runs the component, such as `ggc_user`, can't find the command's executable in the folders in the [PATH](https://en.wikipedia.org/wiki/PATH_(variable))\.
 
 On Windows devices, check that the folder that contains the executable is in the `PATH` for the system user that runs the component\. If it's missing from the `PATH`, do one of the following:
-+ Add the executable's folder to the `PATH` system variable, which is available to all users\. After you update the `PATH` system variable, you must restart the AWS IoT Greengrass Core software to run components with the updated `PATH`\. If the AWS IoT Greengrass Core software doesn't use the updated `PATH` after you restart the software, restart the device and try again\. For more information, see [Run the AWS IoT Greengrass Core software](run-greengrass-core-v2.md)\.
++ Add the executable's folder to the `PATH` system variable, which is available to all users\. Then, restart the component\.
+
+  If you run Greengrass nucleus 2\.5\.0, after you update the `PATH` system variable, you must restart the AWS IoT Greengrass Core software to run components with the updated `PATH`\. If the AWS IoT Greengrass Core software doesn't use the updated `PATH` after you restart the software, restart the device and try again\. For more information, see [Run the AWS IoT Greengrass Core software](run-greengrass-core-v2.md)\.
 + Add the executable's folder to the `PATH` user variable for the system user that runs the component\.
 
 ### Python script doesn't log messages<a name="python-component-no-log-output"></a>
@@ -231,6 +303,24 @@ Greengrass core devices collect logs that you can use to identify issues with co
     ```
 
 For more information about how to verify that your Python script outputs log messages, see [Monitor AWS IoT Greengrass logs](monitor-logs.md)\.
+
+### com\.aws\.greengrass\.componentmanager\.plugins\.docker\.exceptions\.DockerLoginException: Error logging into the registry using credentials \- 'The stub received bad data\.'<a name="docker-login-stub-received-bad-data"></a>
+
+You might see this error in the Greengrass nucleus logs when the [Docker application manager component](docker-application-manager-component.md) tries to download a Docker image from a private repository in Amazon Elastic Container Registry \(Amazon ECR\)\. This error occurs if you use the `wincred` [Docker credential helper](https://github.com/docker/docker-credential-helpers) \(`docker-credential-wincred`\)\. As a result, Amazon ECR is unable to store the login credentials\.
+
+Take one of the following actions:
++ If you don't use the `wincred` Docker credential helper, remove the `docker-credential-wincred` program from the core device\.
++ If you use the `wincred` Docker credential helper, do the following:
+
+  1. Rename the `docker-credential-wincred` program on the core device\. Replace `wincred` with a new name for the Windows Docker credential helper\. For example, you can rename it to `docker-credential-wincredreal`\.
+
+  1. Update the `credsStore` option in the Docker configuration file \(`.docker/config.json`\) to use the new name for the Windows Docker credential helper\. For example, if you renamed the program to `docker-credential-wincredreal`, update the `credsStore` option to `wincredreal`\.
+
+     ```
+     {
+       "credsStore": "wincredreal"
+     }
+     ```
 
 ## AWS Command Line Interface issues<a name="aws-cli-issues"></a>
 

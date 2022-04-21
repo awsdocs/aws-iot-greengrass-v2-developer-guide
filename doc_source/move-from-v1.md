@@ -15,7 +15,7 @@ AWS IoT Greengrass V2 introduces new fundamental concepts for devices, fleets, a
 
   In AWS IoT Greengrass V2, you use *deployments* to define the software components and configurations that run on core devices\. Each deployment targets a single core device or an AWS IoT thing group that can contain multiple core devices\. Deployments to thing groups are continuous, so when you add a core device to a thing group, it receives the software configuration for that fleet\. For more information, see [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)\.
 
-  You can also create local deployments to develop and test custom software components\. For more information, see [Create local AWS IoT Greengrass components](create-components.md)\.
+  You can also create local deployments to develop and test custom software components\. For more information, see [Create AWS IoT Greengrass components](create-components.md)\.
 + **AWS IoT Greengrass Core software and connectors**
 
   In AWS IoT Greengrass V1, the AWS IoT Greengrass Core software is a single package that contains the software and all of its features\. AWS IoT Greengrass connectors are modules that you deploy to AWS IoT Greengrass V1 core devices\.
@@ -69,11 +69,7 @@ You can run most AWS IoT Greengrass V1 applications on AWS IoT Greengrass V2\. Y
 ### Can I run my Greengrass v1\.x applications on Greengrass v2\.0?<a name="greengrass-v1-feature-differences"></a>
 
 AWS IoT Greengrass provides features that you can use to run your AWS IoT Greengrass Core software v1\.x applications on the AWS IoT Greengrass Core software v2\.0\. However, if your v1\.x applications use any of the following listed features, you won't be able to run them on the v2\.0 software yet\.
-+ Hardware security integration
 + Stream manager telemetry metrics
-+ The following languages in the AWS IoT Greengrass Core SDK:
-  + Node\.js
-  + C
 + The C and C\+\+ Lambda function runtimes\.
 
 You can [develop custom components](develop-greengrass-components.md) to build any feature or runtime to run on Greengrass core devices\.

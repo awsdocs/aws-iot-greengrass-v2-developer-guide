@@ -4,7 +4,7 @@ This section describes the prerequisites for using AWS IoT Device Tester \(IDT\)
 
 ## Download the latest version of AWS IoT Device Tester for AWS IoT Greengrass<a name="install-dev-tst-gg"></a>
 
-Download the [latest version](dev-test-versions.md) of IDT and extract the software into a location \(*<device\-tester\-extract\-location>*\) on your file system where you have read/write permissions\. 
+Download the [latest version](idt-programmatic-download.md) of IDT and extract the software into a location \(*<device\-tester\-extract\-location>*\) on your file system where you have read/write permissions\. 
 
 **Note**  
 <a name="unzip-package-to-local-drive"></a>IDT does not support being run by multiple users from a shared location, such as an NFS directory or a Windows network shared folder\. We recommend that you extract the IDT package to a local drive and run the IDT binary on your local workstation\.  
@@ -77,7 +77,7 @@ If you do not have an AWS account, complete the following steps to create one\.
 **Note**  
 We strongly recommend that you adhere to the best practice of using the **Administrator** IAM user that follows and securely lock away the root user credentials\. Sign in as the root user only to perform a few [account and service management tasks](https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.html)\.
 
-1. In the navigation pane, choose **Users** and then choose **Add user**\.
+1. In the navigation pane, choose **Users** and then choose **Add users**\.
 
 1. For **User name**, enter **Administrator**\.
 
@@ -125,16 +125,16 @@ In this step, configure the permissions that IDT for AWS IoT Greengrass V2 uses 
 
       ```
       <a name="customer-managed-policy-cli"></a>{
-        "Version": "2012-10-17",
-        "Statement": [
+          "Version":"2012-10-17",
+          "Statement":[
           {
-            "Sid": "passRoleForResources",
-            "Effect": "Allow",
-            "Action": "iam:PassRole",
-            "Resource": "arn:aws:iam::*:role/idt-*",
-            "Condition": {
-              "StringEquals": {
-                "iam:PassedToService": [
+            "Sid":"passRoleForResources",
+            "Effect":"Allow",
+            "Action":"iam:PassRole",
+            "Resource":"arn:aws:iam::*:role/idt-*",
+            "Condition":{
+              "StringEquals":{
+                "iam:PassedToService":[
                   "iot.amazonaws.com",
                   "lambda.amazonaws.com",
                   "greengrass.amazonaws.com"
@@ -143,44 +143,22 @@ In this step, configure the permissions that IDT for AWS IoT Greengrass V2 uses 
             }
           },
           {
-            "Sid": "lambdaResources",
-            "Effect": "Allow",
-            "Action": [
+            "Sid":"lambdaResources",
+            "Effect":"Allow",
+            "Action":[
               "lambda:CreateFunction",
               "lambda:PublishVersion",
               "lambda:DeleteFunction",
               "lambda:GetFunction"
             ],
-            "Resource": [
+            "Resource":[
               "arn:aws:lambda:*:*:function:idt-*"
             ]
           },
           {
-            "Sid": "iamResources",
-            "Effect": "Allow",
-            "Action": [
-              "iam:CreateRole",
-              "iam:GetRole",
-              "iam:DeleteRole",
-              "iam:CreatePolicy",
-              "iam:DeletePolicy",
-              "iam:GetPolicy",
-              "iam:AttachRolePolicy",
-              "iam:DetachRolePolicy",
-              "iam:TagRole",
-              "iam:TagPolicy",
-              "iam:ListAttachedRolePolicies",
-              "iam:ListEntitiesForPolicy"
-            ],
-            "Resource": [
-              "arn:aws:iam::*:role/idt-*",
-              "arn:aws:iam::*:policy/idt-*"
-            ]
-          },
-          {
-            "Sid": "iotResources",
-            "Effect": "Allow",
-            "Action": [
+            "Sid":"iotResources",
+            "Effect":"Allow",
+            "Action":[
               "iot:CreateThing",
               "iot:DeleteThing",
               "iot:DescribeThing",
@@ -201,9 +179,10 @@ In this step, configure the permissions that IDT for AWS IoT Greengrass V2 uses 
               "iot:Publish",
               "iot:TagResource",
               "iot:ListThingPrincipals",
-              "iot:ListAttachedPolicies"
+              "iot:ListAttachedPolicies",
+              "iot:ListTargetsForPolicy"
             ],
-            "Resource": [
+            "Resource":[
               "arn:aws:iot:*:*:thing/idt-*",
               "arn:aws:iot:*:*:thinggroup/idt-*",
               "arn:aws:iot:*:*:policy/idt-*",
@@ -212,9 +191,9 @@ In this step, configure the permissions that IDT for AWS IoT Greengrass V2 uses 
             ]
           },
           {
-            "Sid": "s3Resources",
-            "Effect": "Allow",
-            "Action": [
+            "Sid":"s3Resources",
+            "Effect":"Allow",
+            "Action":[
               "s3:GetObject",
               "s3:PutObject",
               "s3:DeleteObjectVersion",
@@ -226,38 +205,39 @@ In this step, configure the permissions that IDT for AWS IoT Greengrass V2 uses 
               "s3:PutObjectTagging",
               "s3:PutBucketTagging"
             ],
-            "Resource": "arn:aws:s3::*:idt-*"
+            "Resource":"arn:aws:s3::*:idt-*"
           },
           {
-            "Sid": "roleAliasRousource",
-            "Effect": "Allow",
-            "Action": [
+            "Sid":"roleAliasResources",
+            "Effect":"Allow",
+            "Action":[
               "iot:CreateRoleAlias",
               "iot:DescribeRoleAlias",
               "iot:DeleteRoleAlias",
-              "iot:TagResource"
+              "iot:TagResource",
+              "iam:GetRole"
             ],
-            "Resource": [
+            "Resource":[
               "arn:aws:iot:*:*:rolealias/idt-*",
               "arn:aws:iam::*:role/idt-*"
             ]
           },
           {
-            "Sid": "idtExecuteAndCollectMetrics",
-            "Effect": "Allow",
-            "Action": [
+            "Sid":"idtExecuteAndCollectMetrics",
+            "Effect":"Allow",
+            "Action":[
               "iot-device-tester:SendMetrics",
               "iot-device-tester:SupportedVersion",
               "iot-device-tester:LatestIdt",
               "iot-device-tester:CheckVersion",
               "iot-device-tester:DownloadTestSuite"
             ],
-            "Resource": "*"
+            "Resource":"*"
           },
           {
-            "Sid": "greengrassAndIotResourcesWithoutReseourceType",
-            "Effect": "Allow",
-            "Action": [
+            "Sid":"genericResources",
+            "Effect":"Allow",
+            "Action":[
               "greengrass:*",
               "iot:GetThingShadow",
               "iot:UpdateThingShadow",
@@ -265,11 +245,34 @@ In this step, configure the permissions that IDT for AWS IoT Greengrass V2 uses 
               "iot:DescribeEndpoint",
               "iot:CreateKeysAndCertificate"
             ],
-            "Resource": "*"
+            "Resource":"*"
+          },
+          {
+            "Sid":"iamResourcesUpdate",
+            "Effect":"Allow",
+            "Action":[
+              "iam:CreateRole",
+              "iam:DeleteRole",
+              "iam:CreatePolicy",
+              "iam:DeletePolicy",
+              "iam:AttachRolePolicy",
+              "iam:DetachRolePolicy",
+              "iam:TagRole",
+              "iam:TagPolicy",
+              "iam:GetPolicy",
+              "iam:ListAttachedRolePolicies",
+              "iam:ListEntitiesForPolicy"
+            ],
+            "Resource":[
+              "arn:aws:iam::*:role/idt-*",
+              "arn:aws:iam::*:policy/idt-*"
+            ]
           }
         ]
       }
       ```
+**Note**  
+If you want to use a [custom IAM role as the token exchange role](set-config.md#custom-token-exchange-role-idt) for your device under test, make sure you update the `roleAliasResources` statement and the `passRoleForResources` statement in your policy to allow your custom IAM role resource\.
 
    1. Choose **Review policy**\.
 
@@ -309,16 +312,16 @@ The AWS CLI is an open source tool that you can use to interact with AWS service
 
       ```
       <a name="customer-managed-policy-cli"></a>{
-        "Version": "2012-10-17",
-        "Statement": [
+          "Version":"2012-10-17",
+          "Statement":[
           {
-            "Sid": "passRoleForResources",
-            "Effect": "Allow",
-            "Action": "iam:PassRole",
-            "Resource": "arn:aws:iam::*:role/idt-*",
-            "Condition": {
-              "StringEquals": {
-                "iam:PassedToService": [
+            "Sid":"passRoleForResources",
+            "Effect":"Allow",
+            "Action":"iam:PassRole",
+            "Resource":"arn:aws:iam::*:role/idt-*",
+            "Condition":{
+              "StringEquals":{
+                "iam:PassedToService":[
                   "iot.amazonaws.com",
                   "lambda.amazonaws.com",
                   "greengrass.amazonaws.com"
@@ -327,44 +330,22 @@ The AWS CLI is an open source tool that you can use to interact with AWS service
             }
           },
           {
-            "Sid": "lambdaResources",
-            "Effect": "Allow",
-            "Action": [
+            "Sid":"lambdaResources",
+            "Effect":"Allow",
+            "Action":[
               "lambda:CreateFunction",
               "lambda:PublishVersion",
               "lambda:DeleteFunction",
               "lambda:GetFunction"
             ],
-            "Resource": [
+            "Resource":[
               "arn:aws:lambda:*:*:function:idt-*"
             ]
           },
           {
-            "Sid": "iamResources",
-            "Effect": "Allow",
-            "Action": [
-              "iam:CreateRole",
-              "iam:GetRole",
-              "iam:DeleteRole",
-              "iam:CreatePolicy",
-              "iam:DeletePolicy",
-              "iam:GetPolicy",
-              "iam:AttachRolePolicy",
-              "iam:DetachRolePolicy",
-              "iam:TagRole",
-              "iam:TagPolicy",
-              "iam:ListAttachedRolePolicies",
-              "iam:ListEntitiesForPolicy"
-            ],
-            "Resource": [
-              "arn:aws:iam::*:role/idt-*",
-              "arn:aws:iam::*:policy/idt-*"
-            ]
-          },
-          {
-            "Sid": "iotResources",
-            "Effect": "Allow",
-            "Action": [
+            "Sid":"iotResources",
+            "Effect":"Allow",
+            "Action":[
               "iot:CreateThing",
               "iot:DeleteThing",
               "iot:DescribeThing",
@@ -385,9 +366,10 @@ The AWS CLI is an open source tool that you can use to interact with AWS service
               "iot:Publish",
               "iot:TagResource",
               "iot:ListThingPrincipals",
-              "iot:ListAttachedPolicies"
+              "iot:ListAttachedPolicies",
+              "iot:ListTargetsForPolicy"
             ],
-            "Resource": [
+            "Resource":[
               "arn:aws:iot:*:*:thing/idt-*",
               "arn:aws:iot:*:*:thinggroup/idt-*",
               "arn:aws:iot:*:*:policy/idt-*",
@@ -396,9 +378,9 @@ The AWS CLI is an open source tool that you can use to interact with AWS service
             ]
           },
           {
-            "Sid": "s3Resources",
-            "Effect": "Allow",
-            "Action": [
+            "Sid":"s3Resources",
+            "Effect":"Allow",
+            "Action":[
               "s3:GetObject",
               "s3:PutObject",
               "s3:DeleteObjectVersion",
@@ -410,38 +392,39 @@ The AWS CLI is an open source tool that you can use to interact with AWS service
               "s3:PutObjectTagging",
               "s3:PutBucketTagging"
             ],
-            "Resource": "arn:aws:s3::*:idt-*"
+            "Resource":"arn:aws:s3::*:idt-*"
           },
           {
-            "Sid": "roleAliasRousource",
-            "Effect": "Allow",
-            "Action": [
+            "Sid":"roleAliasResources",
+            "Effect":"Allow",
+            "Action":[
               "iot:CreateRoleAlias",
               "iot:DescribeRoleAlias",
               "iot:DeleteRoleAlias",
-              "iot:TagResource"
+              "iot:TagResource",
+              "iam:GetRole"
             ],
-            "Resource": [
+            "Resource":[
               "arn:aws:iot:*:*:rolealias/idt-*",
               "arn:aws:iam::*:role/idt-*"
             ]
           },
           {
-            "Sid": "idtExecuteAndCollectMetrics",
-            "Effect": "Allow",
-            "Action": [
+            "Sid":"idtExecuteAndCollectMetrics",
+            "Effect":"Allow",
+            "Action":[
               "iot-device-tester:SendMetrics",
               "iot-device-tester:SupportedVersion",
               "iot-device-tester:LatestIdt",
               "iot-device-tester:CheckVersion",
               "iot-device-tester:DownloadTestSuite"
             ],
-            "Resource": "*"
+            "Resource":"*"
           },
           {
-            "Sid": "greengrassAndIotResourcesWithoutReseourceType",
-            "Effect": "Allow",
-            "Action": [
+            "Sid":"genericResources",
+            "Effect":"Allow",
+            "Action":[
               "greengrass:*",
               "iot:GetThingShadow",
               "iot:UpdateThingShadow",
@@ -449,11 +432,34 @@ The AWS CLI is an open source tool that you can use to interact with AWS service
               "iot:DescribeEndpoint",
               "iot:CreateKeysAndCertificate"
             ],
-            "Resource": "*"
+            "Resource":"*"
+          },
+          {
+            "Sid":"iamResourcesUpdate",
+            "Effect":"Allow",
+            "Action":[
+              "iam:CreateRole",
+              "iam:DeleteRole",
+              "iam:CreatePolicy",
+              "iam:DeletePolicy",
+              "iam:AttachRolePolicy",
+              "iam:DetachRolePolicy",
+              "iam:TagRole",
+              "iam:TagPolicy",
+              "iam:GetPolicy",
+              "iam:ListAttachedRolePolicies",
+              "iam:ListEntitiesForPolicy"
+            ],
+            "Resource":[
+              "arn:aws:iam::*:role/idt-*",
+              "arn:aws:iam::*:policy/idt-*"
+            ]
           }
         ]
       }
       ```
+**Note**  
+If you want to use a [custom IAM role as the token exchange role](set-config.md#custom-token-exchange-role-idt) for your device under test, make sure you update the `roleAliasResources` statement and the `passRoleForResources` statement in your policy to allow your custom IAM role resource\.
 
    1. Run the following command to create a customer managed policy named `IDTGreengrassIAMPermissions`\. Replace `policy.json` with the full path to the JSON file that you created in the previous step\. 
 

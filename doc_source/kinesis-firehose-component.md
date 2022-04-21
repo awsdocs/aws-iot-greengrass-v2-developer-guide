@@ -24,6 +24,7 @@ This component provides similar functionality to the Kinesis Data Firehose conne
 ## Versions<a name="kinesis-firehose-component-versions"></a>
 
 This component has the following versions:
++ 2\.1\.x
 + 2\.0\.x
 
 ## Type<a name="kinesis-firehose-component-type"></a>
@@ -62,7 +63,7 @@ This component has the following requirements:
   ```
 
   You can dynamically override the default delivery stream in the input message payload for this component\. If your application uses this feature, the IAM policy must include all target streams as resources\. You can grant granular or conditional access to resources \(for example, by using a wildcard `*` naming scheme\)\.
-+ <a name="connector-component-legacy-subscription-router-dependency"></a>To receive output data from this component, you must merge the following configuration update for the [legacy subscription router component](legacy-subscription-router-component.md) when you deploy this component\. The legacy subscription router component \(`aws.greengrass.LegacySubscriptionRouter`\) is a dependency of this component\. This configuration specifies the topic where this component publishes responses\.
++ <a name="connector-component-legacy-subscription-router-dependency"></a>To receive output data from this component, you must merge the following configuration update for the [legacy subscription router component](legacy-subscription-router-component.md) \(`aws.greengrass.LegacySubscriptionRouter`\) when you deploy this component\. This configuration specifies the topic where this component publishes responses\.
 
 ------
 #### [ Legacy subscription router v2\.1\.x ]
@@ -119,9 +120,9 @@ This component must be able to perform outbound requests to the following endpoi
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#kinesis-firehose-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ 2\.0\.8 ]
+#### [ 2\.0\.8 \- 2\.1\.0 ]
 
-The following table lists the dependencies for version 2\.0\.8 of this component\.
+The following table lists the dependencies for versions 2\.0\.8 and 2\.1\.0 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -352,40 +353,16 @@ If the component detects an error that can be retried, such as a connection erro
 
 This component uses the following log file\.
 
-------
-#### [ Linux ]
-
 ```
 /greengrass/v2/logs/aws.greengrass.KinesisFirehose.log
 ```
 
-------
-#### [ Windows ]
-
-```
-C:\greengrass\v2\logs\aws.greengrass.KinesisFirehose.log
-```
-
-------
-
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
-
-------
-#### [ Linux ]
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
 
   ```
   sudo tail -f /greengrass/v2/logs/aws.greengrass.KinesisFirehose.log
   ```
-
-------
-#### [ Windows \(PowerShell\) ]
-
-  ```
-  Get-Content C:\greengrass\v2\logs\aws.greengrass.KinesisFirehose.log -Tail 10 -Wait
-  ```
-
-------
 
 ## Licenses<a name="kinesis-firehose-component-licenses"></a>
 
@@ -407,6 +384,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.1\.0  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/kinesis-firehose-component.html)  | 
 |  2\.0\.8  |  Version updated for Greengrass nucleus version 2\.5\.0 release\.  | 
 |  2\.0\.7  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  2\.0\.6  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 

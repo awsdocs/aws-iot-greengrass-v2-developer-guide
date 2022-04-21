@@ -4,6 +4,8 @@ The shadow manager component enables AWS IoT Greengrass to sync local device sha
 
 When you configure shadow manager to sync shadows, it syncs all state changes for specified shadows, regardless of whether the changes occur in local shadow documents or in cloud shadow documents\.
 
+You can also specify whether the shadow manager component syncs shadows in real time or on a periodic interval\. By default, the shadow manager component syncs shadows in real time, so the core device sends and receives shadow updates to and from AWS IoT Core when each update occurs\. You can configure periodic intervals to reduce bandwidth usage and charges\.
+
 **Topics**
 + [Prerequisites](#shadow-sync-prereqs)
 + [Configure the shadow manager component](#configure-shadow-manager-for-sync)
@@ -16,11 +18,10 @@ To sync local shadows to the AWS IoT Core, you must configure the Greengrass cor
 + `iot:UpdateThingShadow`
 + `iot:DeleteThingShadow`
 
-For more information about these AWS IoT Core policies, see [AWS IoT Core policy actions](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policy-actions.html) in the *AWS IoT Developer Guide*\.
-
-For more information about the minimal AWS IoT policy for core devices, see [Minimal AWS IoT policy for AWS IoT Greengrass V2 core devices](device-auth.md#greengrass-core-minimal-iot-policy)\.
-
-For more information about how to update a core device's AWS IoT policy, see [Update a core device's AWS IoT policy](device-auth.md#update-core-device-iot-policy)\.
+For more information, see the following:
++ [AWS IoT Core policy actions](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policy-actions.html) in the *AWS IoT Developer Guide*
++ [Minimal AWS IoT policy for AWS IoT Greengrass V2 core devices](device-auth.md#greengrass-core-minimal-iot-policy)
++ [Update a core device's AWS IoT policy](device-auth.md#update-core-device-iot-policy)
 
 ## Configure the shadow manager component<a name="configure-shadow-manager-for-sync"></a>
 
@@ -29,31 +30,38 @@ The shadow manager requires a list of shadow name mappings to sync shadow state 
 To sync shadow states, [create a deployment](create-deployments.md) that includes the `aws.greengrass.ShadowManager` component, and specify the shadows that you want to sync in the `synchronize` configuration parameter in the shadow manager configuration in the deployment\.
 
 The following example configuration update instructs the shadow manager component to sync the following shadows with AWS IoT Core:
-+  The classic shadow for the core device 
-+  The named `MyCoreShadow` for the core device 
-+  The classic shadow for an IoT thing named `MyDevice2` 
++ The classic shadow for the core device 
++ The named `MyCoreShadow` for the core device 
++ The classic shadow for an IoT thing named `MyDevice2` 
 + The named shadows `MyShadowA` and `MyShadowB` for a IoT thing named `MyDevice1`
+
+This configuration update specifies to sync shadows with AWS IoT Core in real time\. To configure the shadow manager component to sync shadows on a periodic interval, change the sync strategy to `periodic` and specify a `delay` in seconds for the interval\. For more information, see [the strategy configuration parameter](shadow-manager-component.md#shadow-manager-component-configuration-strategy) of the shadow manager component\.
 
 ```
 {
-  "synchronize":{
-    "coreThing":{
-      "classic":true,
-      "namedShadows":["MyCoreShadow"]
+  "strategy": {
+    "type": "realTime"
+  },
+  "synchronize": {
+    "coreThing": {
+      "classic": true,
+      "namedShadows": [
+        "MyCoreShadow"
+      ]
     },
-    "shadowDocuments":[
+    "shadowDocuments": [
       {
-        "thingName":"MyDevice1",
-        "classic":false,
-        "namedShadows":[
+        "thingName": "MyDevice1",
+        "classic": false,
+        "namedShadows": [
           "MyShadowA",
           "MyShadowB"
         ]
       },
       {
-        "thingName":"MyDevice2",
-        "classic":true,
-        "namedShadows":[ ]
+        "thingName": "MyDevice2",
+        "classic": true,
+        "namedShadows": [ ]
       }
     ]
   }

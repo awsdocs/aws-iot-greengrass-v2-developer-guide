@@ -28,17 +28,40 @@ You can also configure the core device to install Docker Engine when the compone
   ```
   apt-get install docker-ce docker-ce-cli containerd.io && docker load -i {artifacts:path}/hello-world.tar
   ```
-+ <a name="docker-user-permissions-requirement"></a>The system user that runs a Docker container component must have root or administrator permissions, or you must configure Docker to run it as a non\-root or non\-admistrator user\. On Linux devices, you can add a user to the `docker` group to call `docker` commands without `sudo`\. On Windows devices, you can add a user to the `docker-users` group to call `docker` commands without adminstrator privileges\.
++ <a name="docker-user-permissions-requirement"></a>The system user that runs a Docker container component must have root or administrator permissions, or you must configure Docker to run it as a non\-root or non\-admistrator user\.
+  + On Linux devices, you can add a user to the `docker` group to call `docker` commands without `sudo`\.
+  + On Windows devices, you can add a user to the `docker-users` group to call `docker` commands without adminstrator privileges\.
 
-  On Linux, to add `ggc_user`, or the non\-root user that you use to run AWS IoT Greengrass, to the `docker` group that you configure, run the following command\.
+------
+#### [ Linux or Unix ]
+
+  To add `ggc_user`, or the non\-root user that you use to run Docker container components, to the `docker` group, run the following command\.
 
   ```
-  sudo usermod -aG docker user-name
+  sudo usermod -aG docker ggc_user
   ```
 
-  For more information, see the following Docker documentation:
-  + Linux: [Manage Docker as a non\-root user](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user)
-  + Windows: [Install Docker Desktop on Windows](https://docs.docker.com/desktop/windows/install/#install-docker-desktop-on-windows)
+  For more information, see [Manage Docker as a non\-root user](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user)\.
+
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+  To add `ggc_user`, or the user that you use to run Docker container components, to the `docker-users` group, run the following command as an administrator\.
+
+  ```
+  net localgroup docker-users ggc_user /add
+  ```
+
+------
+#### [ Windows PowerShell ]
+
+  To add `ggc_user`, or the user that you use to run Docker container components, to the `docker-users` group, run the following command as an administrator\.
+
+  ```
+  Add-LocalGroupMember -Group docker-users -Member ggc_user
+  ```
+
+------
 + Files accessed by the Docker container component [mounted as a volume](https://docs.docker.com/storage/volumes/) in the Docker container\.
 + <a name="docker-proxy-requirement"></a>If you [configure the AWS IoT Greengrass Core software to use a network proxy](configure-greengrass-core-v2.md#configure-alpn-network-proxy), you must [configure Docker to use the same proxy server](https://docs.docker.com/network/proxy/)\.
 
@@ -204,7 +227,7 @@ You must install and start the Docker daemon before you deploy the component\.
    docker container ls
    ```
 
-1. When the component is ready, upload the component to AWS IoT Greengrass to deploy to other core devices\. For more information, see [Upload components to deploy to your core devicesUpload components to deploy](upload-components.md)\.
+1. When the component is ready, upload the component to AWS IoT Greengrass to deploy to other core devices\. For more information, see [Publish components to deploy to your core devices](publish-components.md)\.
 
 ## Run a Docker container from a private image in Amazon ECR<a name="run-docker-container-private-ecr"></a>
 
@@ -295,7 +318,7 @@ You must install and start the Docker daemon before you deploy the component\.
    docker container ls
    ```
 
-1. Upload the component to AWS IoT Greengrass to deploy to other core devices\. For more information, see [Upload components to deploy to your core devicesUpload components to deploy](upload-components.md)\.
+1. Upload the component to AWS IoT Greengrass to deploy to other core devices\. For more information, see [Publish components to deploy to your core devices](publish-components.md)\.
 
 ## Run a Docker container from an image in Amazon S3<a name="run-docker-container-s3"></a>
 
@@ -376,7 +399,7 @@ This section describes how you can run a Docker container in a component from a 
    docker container ls
    ```
 
-1. When the component is ready, upload the Docker image archive to an S3 bucket, and add its URI to the component recipe\. Then, you can upload the component to AWS IoT Greengrass to deploy to other core devices\. For more information, see [Upload components to deploy to your core devicesUpload components to deploy](upload-components.md)\.
+1. When the component is ready, upload the Docker image archive to an S3 bucket, and add its URI to the component recipe\. Then, you can upload the component to AWS IoT Greengrass to deploy to other core devices\. For more information, see [Publish components to deploy to your core devices](publish-components.md)\.
 
    When you're done, the component recipe should look like the following example\.
 

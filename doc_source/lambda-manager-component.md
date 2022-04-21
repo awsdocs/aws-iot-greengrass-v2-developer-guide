@@ -44,9 +44,9 @@ This component has the following requirements:
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#lambda-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ 2\.2\.1 ]
+#### [ 2\.2\.1 and 2\.2\.2 ]
 
-The following table lists the dependencies for version 2\.2\.1 of this component\.
+The following table lists the dependencies for versions 2\.2\.1 and 2\.2\.2 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -129,40 +129,16 @@ Default: `60`
 
 This component uses the same log file as the [Greengrass nucleus](greengrass-nucleus-component.md) component\.
 
-------
-#### [ Linux ]
-
 ```
 /greengrass/v2/logs/greengrass.log
 ```
 
-------
-#### [ Windows ]
-
-```
-C:\greengrass\v2\logs\greengrass.log
-```
-
-------
-
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
-
-------
-#### [ Linux ]
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
 
   ```
   sudo tail -f /greengrass/v2/logs/greengrass.log
   ```
-
-------
-#### [ Windows \(PowerShell\) ]
-
-  ```
-  Get-Content C:\greengrass\v2\logs\greengrass.log -Tail 10 -Wait
-  ```
-
-------
 
 ## Changelog<a name="lambda-manager-component-changelog"></a>
 
@@ -171,6 +147,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.2\.2  |  Fixes an issue where pinned Lambda function components restart unexpectedly in certain scenarios\.  | 
 |  2\.2\.1  |  Changes this component's [Greengrass nucleus](greengrass-nucleus-component.md) dependency version constraints to fix a dependency resolution issue\.  | 
 |  2\.2\.0  |  <a name="changelog-lambda-manager-2.2.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/lambda-manager-component.html)  | 
 |  2\.1\.4  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/lambda-manager-component.html)  | 

@@ -27,6 +27,7 @@ This component provides similar functionality to the CloudWatch metrics connecto
 
 This component has the following versions:
 + 3\.0\.x
++ 2\.1\.x
 + 2\.0\.x
 
 For information about changes in each version of the component, see the [changelog](#cloudwatch-metrics-component-changelog)\.
@@ -90,7 +91,7 @@ This component has the following requirements:
   For more information, see [Amazon CloudWatch permissions reference](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/permissions-reference-cw.html) in the *Amazon CloudWatch User Guide*\.
 
 ------
-#### [ 2\.0\.x ]
+#### [ 2\.0\.x \- 2\.1\.x ]
 + <a name="core-device-lambda-function-requirements"></a>Your core device must meet the requirements to run Lambda functions\. If you want the core device to run containerized Lambda functions, the device must meet the requirements to do so\. For more information, see [Lambda function requirements](setting-up.md#greengrass-v2-lambda-requirements)\.
 + <a name="public-component-python3-requirement"></a>[Python](https://www.python.org/) version 3\.7 installed on the core device and added to the PATH environment variable\.
 + The [Greengrass device role](device-service-role.md) must allow the `cloudwatch:PutMetricData` action, as shown in the following example IAM policy\.
@@ -111,7 +112,7 @@ This component has the following requirements:
   ```
 
   For more information, see [Amazon CloudWatch permissions reference](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/permissions-reference-cw.html) in the *Amazon CloudWatch User Guide*\.
-+ <a name="connector-component-legacy-subscription-router-dependency"></a>To receive output data from this component, you must merge the following configuration update for the [legacy subscription router component](legacy-subscription-router-component.md) when you deploy this component\. The legacy subscription router component \(`aws.greengrass.LegacySubscriptionRouter`\) is a dependency of this component\. This configuration specifies the topic where this component publishes responses\.
++ <a name="connector-component-legacy-subscription-router-dependency"></a>To receive output data from this component, you must merge the following configuration update for the [legacy subscription router component](legacy-subscription-router-component.md) \(`aws.greengrass.LegacySubscriptionRouter`\) when you deploy this component\. This configuration specifies the topic where this component publishes responses\.
 
 ------
 #### [ Legacy subscription router v2\.1\.x ]
@@ -181,9 +182,9 @@ The following table lists the dependencies for version 3\.0\.0 of this component
 | [Token exchange service](token-exchange-service-component.md) | >=0\.0\.0 | Hard | 
 
 ------
-#### [ 2\.0\.8 ]
+#### [ 2\.0\.8 \- 2\.1\.0 ]
 
-The following table lists the dependencies for version 2\.0\.8 of this component\.
+The following table lists the dependencies for versions 2\.0\.8 and 2\.1\.0 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -288,22 +289,21 @@ Default: 5,000 metrics
 Default: `cloudwatch/metric/put`
 
 `OutputTopic`  
-\(Optional\) The topic to which the component publishes status responses\. If you specify `true` for `PubSubToIoTCore`, you can use MQTT wildcards \(\+ and \#\) in this topic\.  
+\(Optional\) The topic to which the component publishes status responses\.  
 Default: `cloudwatch/metric/put/status`
 
- `PubSubToIoTCore`   
+`PubSubToIoTCore`  
 \(Optional\) String value that defines whether to publish and subscribe to AWS IoT Core MQTT topics\. Supported values are `true` and `false`\.  
 Default: `false`
 
- `UseInstaller`   
+`UseInstaller`  
 \(Optional\) Boolean value that defines whether to use the installer script in this component to install this component's SDK dependencies\.  
-
-Set this value to `false` if you want to use a custom script to install dependencies, or if you want to include runtime dependencies in a pre\-built Linux image\. To use this component, you will need to install the following libraries, including any dependencies, and make them available to the default Greengrass system user\.
+Set this value to `false` if you want to use a custom script to install dependencies, or if you want to include runtime dependencies in a pre\-built Linux image\. To use this component, you must install the following libraries, including any dependencies, and make them available to the default Greengrass system user\.  
 + [AWS IoT Device SDK v2 for Python](https://github.com/aws/aws-iot-device-sdk-python-v2)
 + [AWS SDK for Python \(Boto3\)](http://boto.readthedocs.org/en/latest/ref/)
 Default: `true`
 
- `PublishRegion`   
+`PublishRegion`  
 \(Optional\) The AWS Region to which to publish CloudWatch metrics\. This value overrides the default Region for the core device\. This parameter is required only for cross\-Region metrics\.
 
 `accessControl`  
@@ -365,7 +365,7 @@ Default:
 ```
 
 ------
-#### [ 2\.0\.x ]
+#### [ 2\.0\.x \- 2\.1\.x ]
 
 **Note**  <a name="connector-component-lambda-parameters"></a>
 This component's default configuration includes Lambda function parameters\. We recommend that you edit only the following parameters to configure this component on your devices\.
@@ -445,7 +445,7 @@ Beginning with component version v3\.0\.0, you can optionally configure this com
 
  `request`   
 The metric in this message\.  
-The request object contains the metric data to publish to CloudWatch\. The metric values must meet the specifications of the [ `PutMetricData`](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_PutMetricData.html) operation\.  
+The request object contains the metric data to publish to CloudWatch\. The metric values must meet the specifications of the [https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_PutMetricData.html](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_PutMetricData.html) operation\.  
 Type: `object` that contains the following information:    
  `namespace`   
 The user\-defined namespace for the metric data in this request\. CloudWatch uses namespaces as containers for metric data points\.  
@@ -463,7 +463,8 @@ The value for the metric\.
 CloudWatch rejects values that are too small or too large\. The value must be between `8.515920e-109` and `1.174271e+108` \(Base 10\) or `2e-360` and `2e360` \(Base 2\)\. CloudWatch doesn't support special values such as `NaN`, `+Infinity`, and `-Infinity`\.
 Type: `double`  
  `dimensions`   
-\(Optional\) The for the metric\. Dimensions provide additional information about the metric and its data\. A metric can define up to 10 dimensions\.  
+\(Optional\) The dimensions for the metric\. Dimensions provide additional information about the metric and its data\. A metric can define up to 10 dimensions\.  
+This component automatically includes a dimension named `coreName`, where the value is the name of the core device\.  
 Type: `array` of objects that each contain the following information:    
  `name`   
 \(Optional\) The dimension name\.  
@@ -607,16 +608,29 @@ C:\greengrass\v2\logs\aws.greengrass.Cloudwatch.log
 
 The following table describes the changes in each version of the component\.
 
+------
+#### [ v3\.x ]
+
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
-|  2\.0\.8  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/cloudwatch-metrics-component.html)  | 
 |  3\.0\.0  |  <a name="changelog-cloudwatch-metrics-3.0.0-major-version-changes"></a>This version of the CloudWatch metrics component expects different configuration parameters than version 2\.x\. If you use a non\-default configuration for version 2\.x, and you want to upgrade from v2\.x to v3\.x, you must update the component's configuration\. For more information, see [CloudWatch metrics component configuration](#cloudwatch-metrics-component-configuration)\. <a name="changelog-cloudwatch-metrics-3.0.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/cloudwatch-metrics-component.html)  | 
+
+------
+#### [ v2\.x ]
+
+
+|  **Version**  |  **Changes**  | 
+| --- | --- | 
+|  2\.1\.0  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/cloudwatch-metrics-component.html)  | 
+|  2\.0\.8  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/cloudwatch-metrics-component.html)  | 
 |  2\.0\.7  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  2\.0\.6  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  2\.0\.5  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 
 |  2\.0\.4  |  Version updated for Greengrass nucleus version 2\.1\.0 release\.  | 
 |  2\.0\.3  |  Initial version\.  | 
+
+------
 
 ## See also<a name="cloudwatch-metrics-component-see-also"></a>
 + [Using Amazon CloudWatch metrics](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/working_with_metrics.html) in the *Amazon CloudWatch User Guide*

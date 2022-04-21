@@ -74,29 +74,37 @@ Windows does not have an installed SSH client\. For information about installing
 
 1. Update your `device.json` file with your user name, the IP address, and path to the private key file that you just saved on your host computer for each device under test\. For more information, see [Configure device\.json](set-config.md#device-config)\. Make sure you provide the full path and file name to the private key and use forward slashes \('/'\)\. For example, for the Windows path `C:\DT\privatekey.pem`, use `C:/DT/privatekey.pem` in the `device.json` file\. 
 
-## Configure the default Greengrass user for Windows devices<a name="configure-windows-user-for-idt"></a>
+## Configure user credentials for Windows devices<a name="configure-windows-user-for-idt"></a>
 
-To qualify a Windows\-based device, you must create the default Greengrass user in the LocalSystem account on the device under test, and then store the user name and password for the default user in the Credential Manager instance for the LocalSystem account\. 
+To qualify a Windows\-based device, you must configure user credentials in the LocalSystem account on the device under test for the following users: 
++ The default Greengrass user \(`ggc_user`\)\.
++ The user that you use to connect to the device under test\. You configure this user in the [`device.json` file](set-config.md#device-config)\.
 
-1. <a name="set-up-windows-device-environment-open-cmd"></a>Open the Windows Command Prompt \(`cmd.exe`\) as an administrator\.
+You must create each user in the LocalSystem account on the device under test, and then store the user name and password for the user in the Credential Manager instance for the LocalSystem account\. <a name="set-up-windows-device-environment-procedure"></a>
 
-1. <a name="set-up-windows-device-environment-create"></a>Create the default user in the LocalSystem account on the Windows device\. Replace *password* with a secure password\.
+**To configure users on Windows devices**
 
-   ```
-   net user /add ggc_user password
-   ```
+1. Open the Windows Command Prompt \(`cmd.exe`\) as an administrator\.
 
-1. <a name="set-up-windows-device-psexec"></a>Download and install the [PsExec utility](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec) from Microsoft on the device\. 
-
-1. <a name="set-up-windows-device-credentials"></a>Use the PsExec utility to store the user name and password for the default user in the Credential Manager instance for the LocalSystem account\. Replace *password* with the user's password that you set earlier\.
+1. Create the users in the LocalSystem account on the Windows device\. Run the following command for each user that you want to create\. For the default Greengrass user, replace *user\-name* with `ggc_user`\. Replace *password* with a secure password\.
 
    ```
-   psexec -s cmd /c cmdkey /generic:ggc_user /user:ggc_user /pass:password
+   net user /add user-name password
+   ```
+
+1. Download and install the [PsExec utility](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec) from Microsoft on the device\. 
+
+1. Use the PsExec utility to store the user name and password for the default user in the Credential Manager instance for the LocalSystem account\. 
+
+   Run the following command for each user that you want to configure in Credential Manager\. For the default Greengrass user, replace *user\-name* with `ggc_user`\. Replace *password* with the user's password that you set earlier\.
+
+   ```
+   psexec -s cmd /c cmdkey /generic:user-name /user:user-name /pass:password
    ```
 
    If the **PsExec License Agreement** opens, choose **Accept** to agree to the license and run the command\.
 **Note**  
-On Windows devices, the LocalSystem account runs the Greengrass nucleus, and you must use the PsExec utility to store the default user information in the LocalSystem account\. Using the Credential Manager application stores this information in the Windows account of the currently logged on user, instead of the LocalSystem account\.
+On Windows devices, the LocalSystem account runs the Greengrass nucleus, and you must use the PsExec utility to store user information in the LocalSystem account\. Using the Credential Manager application stores this information in the Windows account of the currently logged on user, instead of the LocalSystem account\.
 
 ## Configure user permissions on your device<a name="root-access"></a>
 
@@ -119,6 +127,106 @@ Follow these steps on the device under test to allow sudo access without being p
 
    `<ssh-username> ALL=(ALL) NOPASSWD: ALL`
 
+## Configure a custom token exchange role<a name="configure-custom-tes-role-for-idt"></a>
+
+You can choose to use a custom IAM role as the token exchange role that the device under test assumes to interact with AWS resources\. For information about creating an IAM role, see [Creating IAM roles](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create.html) in the *IAM User Guide*\.
+
+You must meet the following requirements to allow IDT to use your custom IAM role\. We strongly recommend that you add only the minimum required policy actions to this role\.
++ The [userdata\.json](set-config.md#custom-token-exchange-role-idt) configuration file must be updated to set the `GreengrassV2TokenExchangeRole` parameter to `true`\.
++ The custom IAM role must be configured with the following minimum trust policy:
+
+  ```
+  {
+     "Version":"2012-10-17",
+     "Statement":[
+        {
+           "Effect":"Allow",
+           "Principal":{
+              "Service":[
+                 "credentials.iot.amazonaws.com",
+                 "lambda.amazonaws.com", 
+                 "sagemaker.amazonaws.com" 
+              ]
+           },
+           "Action":"sts:AssumeRole"
+        }
+     ]
+  }
+  ```
++ The custom IAM role must be configured with the following minimum permissions policy:
+
+  ```
+  {
+     "Version":"2012-10-17",
+     "Statement":[
+        {
+           "Effect":"Allow",
+           "Action":[
+              "iot:DescribeCertificate",
+              "logs:CreateLogGroup",
+              "logs:CreateLogStream",
+              "logs:PutLogEvents",
+              "logs:DescribeLogStreams",
+              "iot:Connect",
+              "iot:Publish",
+              "iot:Subscribe",
+              "iot:Receive",
+              "iot:ListThingPrincipals", 
+              "iot:GetThingShadow",
+              "iot:UpdateThingShadow",
+              "s3:GetBucketLocation",
+              "s3:GetObject",
+              "s3:PutObject",
+              "s3:AbortMultipartUpload",
+              "s3:ListMultipartUploadParts"
+           ],
+           "Resource":"*"
+        }
+     ]
+  }
+  ```
++ The name of the custom IAM role must match the IAM role resource that you specify in the IAM permissions for the test user\. By default, the [test user policy](dev-tst-prereqs.md#configure-idt-permissions) allows access to IAM roles that have the `idt-` prefix in their role names\. If your IAM role name doesn't use this prefix, add the `arn:aws:iam::*:role/custom-iam-role-name` resource to the `roleAliasResources` statement and the `passRoleForResources` statement in your test user policy, as shown in the following examples:
+
+    
+**Example `passRoleForResources` statement**  
+
+  ```
+  {
+     "Sid":"passRoleForResources",
+     "Effect":"Allow",
+     "Action":"iam:PassRole",
+     "Resource":"arn:aws:iam::*:role/custom-iam-role-name",
+     "Condition":{
+        "StringEquals":{
+           "iam:PassedToService":[
+              "iot.amazonaws.com",
+              "lambda.amazonaws.com",
+              "greengrass.amazonaws.com"
+           ]
+        }
+     }
+  }
+  ```  
+**Example `roleAliasResources` statement**  
+
+  ```
+  {
+     "Sid":"roleAliasResources",
+     "Effect":"Allow",
+     "Action":[
+        "iot:CreateRoleAlias",
+        "iot:DescribeRoleAlias",
+        "iot:DeleteRoleAlias",
+        "iot:TagResource",
+        "iam:GetRole"
+     ],
+     "Resource":[
+        "arn:aws:iot:*:*:rolealias/idt-*",
+        "arn:aws:iam::*:role/custom-iam-role-name"
+     ]
+  }
+  ```
+
 ## Configure your device to test optional features<a name="optional-feature-config"></a>
 
 This section describes the device requirements to run IDT tests for optional Docker and machine learning \(ML\) features\. You must make sure your device meets these requirements only if you want to test these features\. Otherwise, continue to [Configure IDT settings to run the AWS IoT Greengrass qualification suite](set-config.md)\.
@@ -126,6 +234,7 @@ This section describes the device requirements to run IDT tests for optional Doc
 **Topics**
 + [Docker qualification requirements](#idt-config-docker-components)
 + [ML qualification requirements](#idt-config-ml-components)
++ [HSM qualification requirements](#idt-config-hsm-components)
 
 ### Docker qualification requirements<a name="idt-config-docker-components"></a>
 
@@ -134,17 +243,40 @@ IDT for AWS IoT Greengrass V2 provides Docker qualification tests to validate th
 To run Docker qualification tests, your devices under test must meet the following requirements to deploy the Docker application manager component\.
 + <a name="docker-engine-requirement"></a>[Docker Engine](https://docs.docker.com/engine/) 1\.9\.1 or later installed on your Greengrass core device\. Version 20\.10 is the latest version that is verified to work with the connector\. You must install Docker directly on the core device before you deploy custom components that run Docker containers\. 
 + <a name="docker-daemon-requirement"></a>The Docker daemon started and running on the core device before you deploy this component\. 
-+ <a name="docker-user-permissions-requirement"></a>The system user that runs a Docker container component must have root or administrator permissions, or you must configure Docker to run it as a non\-root or non\-admistrator user\. On Linux devices, you can add a user to the `docker` group to call `docker` commands without `sudo`\. On Windows devices, you can add a user to the `docker-users` group to call `docker` commands without adminstrator privileges\.
++ <a name="docker-user-permissions-requirement"></a>The system user that runs a Docker container component must have root or administrator permissions, or you must configure Docker to run it as a non\-root or non\-admistrator user\.
+  + On Linux devices, you can add a user to the `docker` group to call `docker` commands without `sudo`\.
+  + On Windows devices, you can add a user to the `docker-users` group to call `docker` commands without adminstrator privileges\.
 
-  On Linux, to add `ggc_user`, or the non\-root user that you use to run AWS IoT Greengrass, to the `docker` group that you configure, run the following command\.
+------
+#### [ Linux or Unix ]
+
+  To add `ggc_user`, or the non\-root user that you use to run Docker container components, to the `docker` group, run the following command\.
 
   ```
-  sudo usermod -aG docker user-name
+  sudo usermod -aG docker ggc_user
   ```
 
-  For more information, see the following Docker documentation:
-  + Linux: [Manage Docker as a non\-root user](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user)
-  + Windows: [Install Docker Desktop on Windows](https://docs.docker.com/desktop/windows/install/#install-docker-desktop-on-windows)
+  For more information, see [Manage Docker as a non\-root user](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user)\.
+
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+  To add `ggc_user`, or the user that you use to run Docker container components, to the `docker-users` group, run the following command as an administrator\.
+
+  ```
+  net localgroup docker-users ggc_user /add
+  ```
+
+------
+#### [ Windows PowerShell ]
+
+  To add `ggc_user`, or the user that you use to run Docker container components, to the `docker-users` group, run the following command as an administrator\.
+
+  ```
+  Add-LocalGroupMember -Group docker-users -Member ggc_user
+  ```
+
+------
 
 ### ML qualification requirements<a name="idt-config-ml-components"></a>
 
@@ -162,3 +294,7 @@ To run ML qualification tests, your devices under test must meet the following r
   ```
   pip3 install opencv-python
   ```
+
+### HSM qualification requirements<a name="idt-config-hsm-components"></a>
+
+AWS IoT Greengrass provides [PKCS\#11 provider component](pkcs11-provider-component.md) to integrate with the PKCS Hardware Security Module \(HSM\) on the device\. The HSM setup depends on your device and the HSM module that you have chosen\. As long as the expected HSM configuration, as documented in the [IDT configuration settings](set-config.md), is provided, IDT will have the information required to run this optional feature qualification test\.

@@ -6,10 +6,22 @@ Publish/subscribe \(pubsub\) messaging enables you to send and receive messages 
 You can't use this publish/subscribe IPC service to publish or subscribe to AWS IoT Core MQTT\. For more information about how to exchange messages with AWS IoT Core MQTT, see the [Publish/subscribe AWS IoT Core MQTT messages](ipc-iot-core-mqtt.md)\.
 
 **Topics**
++ [Minimum SDK versions](#ipc-publish-subscribe-sdk-versions)
 + [Authorization](#ipc-publish-subscribe-authorization)
 + [PublishToTopic](#ipc-operation-publishtotopic)
 + [SubscribeToTopic](#ipc-operation-subscribetotopic)
 + [Examples](#ipc-publish-subscribe-examples)
+
+## Minimum SDK versions<a name="ipc-publish-subscribe-sdk-versions"></a>
+
+The following table lists the minimum versions of the AWS IoT Device SDK that you must use to publish and subscribe to messages to and from local topics\.
+
+
+| SDK | Minimum version | 
+| --- | --- | 
+|  [AWS IoT Device SDK for Java v2](https://github.com/aws/aws-iot-device-sdk-java-v2)  |  v1\.2\.10  | 
+|  [AWS IoT Device SDK for Python v2](https://github.com/aws/aws-iot-device-sdk-python-v2)  |  v1\.5\.3  | 
+|  [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2)  |  Linux: v1\.13\.0; Windows: v1\.14\.6  | 
 
 ## Authorization<a name="ipc-publish-subscribe-authorization"></a>
 
@@ -246,6 +258,8 @@ int main() {
         std::cerr << "Operation timed out while waiting for response from Greengrass Core." << std::endl;
         exit(-1);
     }
+    
+    auto response = responseFuture.get();
     if (!response) {
         // Handle error.
         auto errorType = response.GetResultType();
@@ -561,6 +575,7 @@ int main() {
         exit(-1);
     }
     
+    auto response = responseFuture.get();
     if (!response) {
         // Handle error.
         auto errorType = response.GetResultType();

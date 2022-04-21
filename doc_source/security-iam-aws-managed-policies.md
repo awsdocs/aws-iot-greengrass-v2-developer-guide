@@ -4,7 +4,7 @@ To add permissions to users, groups, and roles, it is easier to use AWS managed 
 
 AWS services maintain and update AWS managed policies\. You can't change the permissions in AWS managed policies\. Services occasionally add additional permissions to an AWS managed policy to support new features\. This type of update affects all identities \(users, groups, and roles\) where the policy is attached\. Services are most likely to update an AWS managed policy when a new feature is launched or when new operations become available\. Services do not remove permissions from an AWS managed policy, so policy updates won't break your existing permissions\.
 
-Additionally, AWS supports managed policies for job functions that span multiple services\. For example, the **ViewOnlyAccess** AWS managed policy provides read\-only access to many AWS services and resources\. When a service launches a new feature, AWS adds read\-only permissions for new operations and resources\. For a list and descriptions of job function policies, see [AWS managed policies for job functions](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_job-functions.html) in the *IAM User Guide*\.
+Additionally, AWS supports managed policies for job functions that span multiple services\. For example, the `ViewOnlyAccess` AWS managed policy provides read\-only access to many AWS services and resources\. When a service launches a new feature, AWS adds read\-only permissions for new operations and resources\. For a list and descriptions of job function policies, see [AWS managed policies for job functions](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_job-functions.html) in the *IAM User Guide*\.
 
 **Topics**
 + [AWS managed policy: AWSGreengrassFullAccess](#aws-managed-policies-AWSGreengrassFullAccess)
@@ -75,7 +75,11 @@ This policy grants administrative permissions that allow AWS IoT Greengrass to p
 
 This policy includes the following permissions\.
 + `greengrass` – Manage Greengrass resources\.
-+ `iot` \(`*Shadow`\) – Manage AWS IoT shadows that have special identifiers in their names\. These permissions are required so that AWS IoT Greengrass can communicate with core devices\.
++ `iot` \(`*Shadow`\) – Manage AWS IoT shadows that have the following special identifiers in their names\. These permissions are required so that AWS IoT Greengrass can communicate with core devices\.
+  + `*-gci` – AWS IoT Greengrass uses this shadow to store core device connectivity information, so client devices can discover and connect to core devices\.
+  + `*-gcm` – AWS IoT Greengrass V1 uses this shadow to notify the core device that the Greengrass group's certificate authority \(CA\) certificate has rotated\.
+  + `*-gda` – AWS IoT Greengrass V1 uses this shadow to notify the core device of a deployment\.
+  + `GG_*` – Unused\.
 + `iot` \(`DescribeThing` and `DescribeCertificate`\) – Retrieve information about AWS IoT things and certificates\. These permissions are required so that AWS IoT Greengrass can verify client devices that connect to a core device\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.
 + `lambda` – Retrieve information about AWS Lambda functions\. This permission is required so that AWS IoT Greengrass V1 can deploy Lambda functions to Greengrass cores\. For more information, see [Run Lambda function on the AWS IoT Greengrass core](https://docs.aws.amazon.com/greengrass/v1/developerguide/lambda-functions.html) in the *AWS IoT Greengrass V1 Developer Guide*\.
 + `secretsmanager` – Retrieve the value of AWS Secrets Manager secrets whose names start with `greengrass-`\. This permission is required so that AWS IoT Greengrass V1 can deploy Secrets Manager secrets to Greengrass cores\. For more information, see [Deploy secrets to the AWS IoT Greengrass core](https://docs.aws.amazon.com/greengrass/v1/developerguide/secrets.html) in the *AWS IoT Greengrass V1 Developer Guide*\.

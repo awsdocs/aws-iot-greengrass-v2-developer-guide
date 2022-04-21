@@ -2,7 +2,7 @@
 
 AWS IoT Greengrass *components* are software modules that you deploy to Greengrass core devices\. Components can represent applications, runtime installers, libraries, or any code that you would run on a device\. You can define components that depend on other components\. For example, you might define a component that installs Python, and then define that component as a dependency of your components that run Python applications\. When you deploy your components to your fleets of devices, Greengrass deploys only the software modules that your devices require\.
 
-You can develop and test components on your Greengrass core device\. This lets you create and iterate your AWS IoT Greengrass software without interaction with the AWS Cloud\. When you finish a version of your component, you can upload it to AWS IoT Greengrass in the cloud, so you and your team can deploy the component to other devices in your fleet\. For more information about how to deploy components, see [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)\.
+You can develop and test components on your Greengrass core device\. As a result, you can create and iterate your AWS IoT Greengrass software without interacting with the AWS Cloud\. When you finish a version of your component, you can upload it to AWS IoT Greengrass in the cloud, so you and your team can deploy the component to other devices in your fleet\. For more information about how to deploy components, see [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)\.
 
 Every component is composed of a *recipe* and *artifacts*\.
 + <a name="component-recipe-definition"></a>**Recipes**
@@ -16,6 +16,8 @@ Every component is composed of a *recipe* and *artifacts*\.
 
 AWS IoT Greengrass provides pre\-built components that you can use in your applications and deploy to your devices\. For example, you can use the stream manager component to upload data to various AWS services, or you can use the CloudWatch metrics component to publish custom metrics to Amazon CloudWatch\. For more information, see [AWS\-provided components](public-components.md)\.
 
+AWS IoT Greengrass curates an index of Greengrass components, called the Greengrass Software Catalog\. This catalog tracks Greengrass components that are developed by the Greengrass community\. From this catalog, you can download, modify, and deploy components to create your Greengrass applications\. For more information, see [Community components](greengrass-software-catalog.md)\.
+
 The AWS IoT Greengrass Core software runs components as the system user and group, such as `ggc_user` and `ggc_group`, that you configure on the core device\. This means that components have the permissions of that system user\. If you use a system user without a home directory, then components can't use run commands or code that use a home directory\. This means that you can't use the `pip install some-library --user` command to install Python packages for example\. If you followed the [getting started tutorial](getting-started.md) to set up your core device, then your system user doesn't have a home directory\. For more information about how to configure the user and group that run components, see [Configure the user that runs components](configure-greengrass-core-v2.md#configure-component-user)\.
 
 **Note**  <a name="semver-note"></a>
@@ -24,9 +26,9 @@ The AWS IoT Greengrass Core software runs components as the system user and grou
 **Topics**
 + [Component lifecycle](#component-lifecycle)
 + [Component types](#component-types)
-+ [Create local AWS IoT Greengrass components](create-components.md)
++ [Create AWS IoT Greengrass components](create-components.md)
 + [Test AWS IoT Greengrass components with local deployments](test-components.md)
-+ [Upload components to deploy to your core devices](upload-components.md)
++ [Publish components to deploy to your core devices](publish-components.md)
 + [Interact with AWS services](interact-with-aws-services.md)
 + [Run a Docker container](run-docker-container.md)
 + [AWS IoT Greengrass component recipe reference](component-recipe-reference.md)
@@ -39,9 +41,9 @@ The *component lifecycle* defines the stages that the AWS IoT Greengrass Core so
 + `INSTALLED` – The component is installed on the core device\. The component enters this state after it runs its [install script](component-recipe-reference.md#install-lifecycle-definition)\.
 + `STARTING` – The component is starting on the core device\. The component enters this state when it runs its [startup script](component-recipe-reference.md#startup-lifecycle-definition)\. If the startup succeeds, the component enters the `RUNNING` state\.
 + `RUNNING` – The component is running on the core device\. The component enters this state when it runs its [run script](component-recipe-reference.md#run-lifecycle-definition) or when it has active background processes from its startup script\.
-+ `FINISHED` – The component ran successfully and is no longer running\.
++ `FINISHED` – The component ran successfully and completed its run\.
 + `STOPPING` – The component is stopping\. The component enters this state when it runs its [shutdown script](component-recipe-reference.md#shutdown-lifecycle-definition)\.
-+ `ERRORED` – The component encountered an error\. When the component enters this state, it runs its [recover script](component-recipe-reference.md#recover-lifecycle-definition)\. Then, the component restarts to try to return to normal use\. If the component enters the `ERRORED` state three times without a successful run, the component becomes `BROKEN`\.
++ `ERRORED` – The component encountered an error\. When the component enters this state, it runs its [recover script](component-recipe-reference.md#recover-lifecycle-definition)\. Then, the component restarts to try returning to normal use\. If the component enters the `ERRORED` state three times without a successful run, the component becomes `BROKEN`\.
 + `BROKEN` – The component encountered errors multiple times and can't recover\. You must deploy the component again to fix it\.
 
 ## Component types<a name="component-types"></a>

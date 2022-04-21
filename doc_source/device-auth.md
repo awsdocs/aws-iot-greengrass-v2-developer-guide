@@ -60,82 +60,210 @@ AWS IoT Core enables you to attach AWS IoT policies to thing groups to define pe
 
 ### AWS IoT Greengrass V2 policy actions<a name="greengrass-policy-actions"></a>
 
-AWS IoT Greengrass V2 defines the following policy actions that Greengrass core devices and client devices can use in AWS IoT policies:Core device actions
+AWS IoT Greengrass V2 defines the following policy actions that Greengrass core devices and client devices can use in AWS IoT policies\. To specify a resource for an policy action, you use the Amazon Resource Name \(ARN\) of the resource\.Core device actions
 
-`greengrass:GetComponentVersionArtifact`  
+`greengrass:GetComponentVersionArtifact`  <a name="greengrass-get-component-version-artifact-action"></a>
 Grants permission to get a presigned URL to download a public component artifact\.  
-This permission is evaluated when a core device receives a deployment that specifies a public component that has artifacts\. If the core device already has the artifact, it doesn't download the artifact again\.
+This permission is evaluated when a core device receives a deployment that specifies a public component that has artifacts\. If the core device already has the artifact, it doesn't download the artifact again\.  
+Resource type: `componentVersion`  
+Resource ARN format: `arn:aws:greengrass:region:account-id:components:component-name:versions:component-version`
 
-`greengrass:ResolveComponentCandidates`  
+`greengrass:ResolveComponentCandidates`  <a name="greengrass-resolve-component-candidates-action"></a>
 Grants permission to identify a list of components that meet the component, version, and platform requirements for a deployment\. If the requirements conflict, or no components exist that meet the requirements, this operation returns an error and the deployment fails on the device\.  
-This permission is evaluated when a core device receives a deployment that specifies components\.
+This permission is evaluated when a core device receives a deployment that specifies components\.  
+Resource type: None  
+Resource ARN format: `*`
 
-`greengrass:GetDeploymentConfiguration`  
+`greengrass:GetDeploymentConfiguration`  <a name="greengrass-get-deployment-configuration-action"></a>
 Grants permission to get a presigned URL to download a large deployment document\.  
 This permission is evaluated when a core device receives a deployment that specifies a deployment document larger than 7 KB \(if the deployment targets a thing\) or 31 KB \(if the deployment targets a thing group\)\. The deployment document includes component configurations, deployment policies, and deployment metadata\. For more information, see [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)\.  
-This feature is available for v2\.3\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.
+This feature is available for v2\.3\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.  
+Resource type: None  
+Resource ARN format: `*`
 
-`greengrass:ListThingGroupsForCoreDevice`  
+`greengrass:ListThingGroupsForCoreDevice`  <a name="greengrass-list-thing-groups-for-core-device-action"></a>
 Grants permission to get a core device's thing group hierarchy\.  
 This permission is checked when a core device receives a deployment from AWS IoT Greengrass\. The core device uses this action to identify whether it was removed from a thing group since the last deployment\. If the core device was removed from a thing group, and that thing group is the target of a deployment to the core device, then the core device removes the components installed by that deployment\.  
-This feature is used by v2\.5\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.
+This feature is used by v2\.5\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.  
+Resource type: `thing` \(core device\)  
+Resource ARN format: `arn:aws:iot:region:account-id:thing/core-device-thing-name*`
 
-`greengrass:VerifyClientDeviceIdentity`  
+`greengrass:VerifyClientDeviceIdentity`  <a name="greengrass-verify-client-device-identity-action"></a>
 Grants permission to verify the identity of a client device that connects to a core device\.  
-This permission is evaluated when a core device receives an MQTT connection from a client device\. The client device presents its AWS IoT device certificate\. Then, the core device sends the device certificate to the AWS IoT Greengrass cloud service to verify the client device's identity\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.
+This permission is evaluated when a core device runs the [client device auth component](client-device-auth-component.md) and receives an MQTT connection from a client device\. The client device presents its AWS IoT device certificate\. Then, the core device sends the device certificate to the AWS IoT Greengrass cloud service to verify the client device's identity\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.  
+Resource type: None  
+Resource ARN format: `*`
 
-`greengrass:VerifyClientDeviceIoTCertificateAssociation`  
+`greengrass:VerifyClientDeviceIoTCertificateAssociation`  <a name="greengrass-verify-client-device-iot-certificate-association-action"></a>
 Grants permission to verify whether a client device is associated with an AWS IoT certificate\.  
-This permission is evaluated when a core device authorizes a client device to connect over MQTT\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.  
+This permission is evaluated when a core device runs the [client device auth component](client-device-auth-component.md) and authorizes a client device to connect over MQTT\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.  
 For a core device to use this operation, the [Greengrass service role](greengrass-service-role.md) must be associated to your AWS account and allow the `iot:DescribeCertificate` permission\.
+Resource type: `thing` \(client device\)  
+Resource ARN format: `arn:aws:iot:region:account-id:thing/client-device-thing-name`
 
 `greengrass:PutCertificateAuthorities`  <a name="greengrass-put-certificate-authorities-action"></a>
 Grants permission to upload certificate authority \(CA\) certificates that client devices can download to verify the core device\.  
-This permission is evaluated when a core device installs and runs the [client device auth component](client-device-auth-component.md)\. This component creates a local certificate authority and uses this operation to upload its CA certificates\. Client devices download these CA certificates when they use the [Discover](#greengrass-discover-action) operation to find core devices where they can connect\. When client devices connect to an MQTT broker on a core device, they use these CA certificates to verify the identity of the core device\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.
+This permission is evaluated when a core device installs and runs the [client device auth component](client-device-auth-component.md)\. This component creates a local certificate authority and uses this operation to upload its CA certificates\. Client devices download these CA certificates when they use the [Discover](#greengrass-discover-action) operation to find core devices where they can connect\. When client devices connect to an MQTT broker on a core device, they use these CA certificates to verify the identity of the core device\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.  
+Resource type: None  
+ARN format: `*`
 
-`greengrass:GetConnectivityInfo`  
+`greengrass:GetConnectivityInfo`  <a name="greengrass-get-connectivity-info-action"></a>
 Grants permission to get connectivity information for a core device\. This information describes how client devices can connect to the core device\.  
 This permission is evaluated when a core device installs and runs the [client device auth component](client-device-auth-component.md)\. This component uses the connectivity information to generate valid CA certificates to upload to the AWS IoT Greengrass cloud service with the [PutCertificateAuthories](#greengrass-put-certificate-authorities-action) operation\. Client devices use these CA certificates to verify the identity of the core device\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.  
-You can also use this operation on the AWS IoT Greengrass control plane to view connectivity information for a core device\. For more information, see [GetConnectivityInfo](https://docs.aws.amazon.com/greengrass/v1/apireference/getconnectivityinfo-get.html) in the *AWS IoT Greengrass V1 API Reference*\.
+You can also use this operation on the AWS IoT Greengrass control plane to view connectivity information for a core device\. For more information, see [GetConnectivityInfo](https://docs.aws.amazon.com/greengrass/v1/apireference/getconnectivityinfo-get.html) in the *AWS IoT Greengrass V1 API Reference*\.  
+Resource type: `thing` \(core device\)  
+Resource ARN format: `arn:aws:iot:region:account-id:thing/core-device-thing-name*`
 
-`greengrass:UpdateConnectivityInfo`  
+`greengrass:UpdateConnectivityInfo`  <a name="greengrass-update-connectivity-info-action"></a>
 Grants permission to update connectivity information for a core device\. This information describes how client devices can connect to the core device\.  
 This permission is evaluated when a core device runs the [IP detector component](ip-detector-component.md)\. This component identifies the information that client devices require to connect to the core device on the local network\. Then, this component uses this operation to upload the connectivity information to the AWS IoT Greengrass cloud service, so client devices can retrieve this information with the [Discover](#greengrass-discover-action) operation\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.  
-You can also use this operation on the AWS IoT Greengrass control plane to manually update connectivity information for a core device\. For more information, see [UpdateConnectivityInfo](https://docs.aws.amazon.com/greengrass/v1/apireference/updateconnectivityinfo-put.html) in the *AWS IoT Greengrass V1 API Reference*\.Client device actions
+You can also use this operation on the AWS IoT Greengrass control plane to manually update connectivity information for a core device\. For more information, see [UpdateConnectivityInfo](https://docs.aws.amazon.com/greengrass/v1/apireference/updateconnectivityinfo-put.html) in the *AWS IoT Greengrass V1 API Reference*\.  
+Resource type: `thing` \(core device\)  
+Resource ARN format: `arn:aws:iot:region:account-id:thing/core-device-thing-name*`Client device actions
 
 `greengrass:Discover`  <a name="greengrass-discover-action"></a>
-Grants permission to discover connectivity information for core devices where a client device can connect\. This information describes how the client device can connect to the core devices\. A client device can discover only the core devices that you have associated it with by using the [BatchAssociateClientDeviceWithCoreDevice](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_BatchAssociateClientDeviceWithCoreDevice.html) operation\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.
+Grants permission to discover connectivity information for core devices where a client device can connect\. This information describes how the client device can connect to the core devices\. A client device can discover only the core devices that you have associated it with by using the [BatchAssociateClientDeviceWithCoreDevice](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_BatchAssociateClientDeviceWithCoreDevice.html) operation\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.  
+Resource type: `thing` \(client device\)  
+Resource ARN format: `arn:aws:iot:region:account-id:thing/client-device-thing-name`
 
 ## Update a core device's AWS IoT policy<a name="update-core-device-iot-policy"></a>
 
-You can use the AWS IoT Greengrass and AWS IoT consoles to view and update a core device's AWS IoT policy\.
+You can use the AWS IoT Greengrass and AWS IoT consoles or the AWS IoT API to view and update a core device's AWS IoT policy\.
 
 **Note**  
 If you used the [AWS IoT Greengrass Core software installer to provision resources](quick-installation.md), your core device has an AWS IoT policy that allows access to all AWS IoT Greengrass actions \(`greengrass:*`\)\. You can follow these steps to restrict access to only the actions that a core device uses\.
 
-**To review and update a core device's AWS IoT policy**
+### Review and update a core device's AWS IoT policy \(console\)<a name="update-core-device-iot-policy-console"></a>
 
-1. <a name="update-iot-policy-open-greengrass-console"></a>In the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass) navigation menu, choose **Core devices**\.
+1. <a name="update-iot-policy-console-open-greengrass-console"></a>In the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass) navigation menu, choose **Core devices**\.
 
-1. <a name="update-iot-policy-choose-core-device"></a>On the **Core devices** page, choose the core device to update\.
+1. <a name="update-iot-policy-console-choose-core-device"></a>On the **Core devices** page, choose the core device to update\.
 
-1. <a name="update-iot-policy-choose-core-device-thing"></a>On the core device details page, choose the link to the core device's **Thing**\. This link opens the thing details page in the AWS IoT console\.
+1. <a name="update-iot-policy-console-choose-core-device-thing"></a>On the core device details page, choose the link to the core device's **Thing**\. This link opens the thing details page in the AWS IoT console\.
 
-1. <a name="update-iot-policy-choose-thing-security"></a>On the thing details page, choose **Certificates**\.
+1. <a name="update-iot-policy-console-choose-thing-security"></a>On the thing details page, choose **Certificates**\.
 
-1. <a name="update-iot-policy-choose-thing-certificate"></a>In the **Certificates** tab, choose the thing's active certificate\.
+1. <a name="update-iot-policy-console-choose-thing-certificate"></a>In the **Certificates** tab, choose the thing's active certificate\.
 
-1. <a name="update-iot-policy-choose-certificate-policies"></a>On the certificate details page, choose **Policies**\.
+1. <a name="update-iot-policy-console-choose-certificate-policies"></a>On the certificate details page, choose **Policies**\.
 
-1. <a name="update-iot-policy-choose-policy"></a>In the **Policies** tab, choose the AWS IoT policy to review and update\. You can add the required permissions to any policy that is attached to the core device's active certificate\.
-**Note**  
+1. <a name="update-iot-policy-console-choose-policy"></a>In the **Policies** tab, choose the AWS IoT policy to review and update\. You can add the required permissions to any policy that is attached to the core device's active certificate\.
+**Note**  <a name="quick-installation-iot-policies-note"></a>
 If you used the [AWS IoT Greengrass Core software installer to provision resources](quick-installation.md), you have two AWS IoT policies\. We recommend that you choose the policy named **GreengrassV2IoTThingPolicy**, if it exists\. Core devices that you create with the quick installer use this policy name by default\. If you add permissions to this policy, you are also granting these permissions to other core devices that use this policy\.
 
-1. <a name="update-iot-policy-edit-policy"></a>In the policy overview, choose **Edit policy document**\.
+1. <a name="update-iot-policy-console-edit-policy"></a>In the policy overview, choose **Edit policy document**\.
 
 1. Review the policy and add, remove, or edit permissions as needed\.
 
-1. <a name="update-iot-policy-save-policy"></a>Choose **Save as new version**\.
+1. <a name="update-iot-policy-console-save-policy"></a>Choose **Save as new version**\.
+
+### Review and update a core device's AWS IoT policy \(AWS CLI\)<a name="update-core-device-iot-policy-cli"></a>
+
+1. <a name="update-iot-policy-cli-list-thing-principals"></a>List the principals for the core device's AWS IoT thing\. Thing principals can be X\.509 device certificates or other identifies\. Run the following command, and replace *MyGreengrassCore* with the name of the core device\.
+
+   ```
+   aws iot list-thing-principals --thing-name MyGreengrassCore
+   ```
+
+   The operation returns a response that lists the core device's thing principals\.
+
+   ```
+   {
+       "principals": [
+           "arn:aws:iot:us-west-2:123456789012:cert/certificateId"
+       ]
+   }
+   ```
+
+1. <a name="update-iot-policy-cli-identify-active-certificate"></a>Identify the core device's active certificate\. Run the following command, and replace *certificateId* with the ID of each certificate from the previous step until you find the active certificate\. The certificate ID is the hexadecimal string at the end of the certificate ARN\. The `--query` argument specifies to output only the certificate's status\.
+
+   ```
+   aws iot describe-certificate --certificate-id certificateId --query 'certificateDescription.status'
+   ```
+
+   The operation returns the certificate status as a string\. For example, if the certificate is active, this operation outputs `"ACTIVE"`\.
+
+1. <a name="update-iot-policy-cli-list-certificate-policies"></a>List the AWS IoT policies that are attached to the certificate\. Run the following command, and replace the certificate ARN with the ARN of the certificate\.
+
+   ```
+   aws iot list-principal-policies --principal arn:aws:iot:us-west-2:123456789012:cert/certificateId
+   ```
+
+   The operation returns a response that lists the AWS IoT policies that are attached to the certificate\.
+
+   ```
+   {
+       "policies": [
+           {
+               "policyName": "GreengrassTESCertificatePolicyMyGreengrassCoreTokenExchangeRoleAlias",
+               "policyArn": "arn:aws:iot:us-west-2:123456789012:policy/GreengrassTESCertificatePolicyMyGreengrassCoreTokenExchangeRoleAlias"
+           },
+           {
+               "policyName": "GreengrassV2IoTThingPolicy",
+               "policyArn": "arn:aws:iot:us-west-2:123456789012:policy/GreengrassV2IoTThingPolicy"
+           }
+       ]
+   }
+   ```
+
+1. <a name="update-iot-policy-cli-choose-policy"></a>Choose the policy to view and update\.
+**Note**  <a name="quick-installation-iot-policies-note"></a>
+If you used the [AWS IoT Greengrass Core software installer to provision resources](quick-installation.md), you have two AWS IoT policies\. We recommend that you choose the policy named **GreengrassV2IoTThingPolicy**, if it exists\. Core devices that you create with the quick installer use this policy name by default\. If you add permissions to this policy, you are also granting these permissions to other core devices that use this policy\.
+
+1. <a name="update-iot-policy-cli-get-policy-document"></a>Get the policy's document\. Run the following command, and replace *GreengrassV2IoTThingPolicy* with the name of the policy\.
+
+   ```
+   aws iot get-policy --policy-name GreengrassV2IoTThingPolicy
+   ```
+
+   The operation returns a response that contains the policy's document and other information about the policy\. The policy document is a JSON object serialized as a string\. 
+
+   ```
+   {
+       "policyName": "GreengrassV2IoTThingPolicy",
+       "policyArn": "arn:aws:iot:us-west-2:123456789012:policy/GreengrassV2IoTThingPolicy",
+       "policyDocument": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n                \"iot:Connect\",\n                \"iot:Publish\",\n                \"iot:Subscribe\",\n                \"iot:Receive\",\n                \"greengrass:*\"\n],\n      \"Resource\": \"*\"\n    }\n  ]\n}",
+       "defaultVersionId": "1",
+       "creationDate": "2021-02-05T16:03:14.098000-08:00",
+       "lastModifiedDate": "2021-02-05T16:03:14.098000-08:00",
+       "generationId": "f19144b798534f52c619d44f771a354f1b957dfa2b850625d9f1d0fde530e75f"
+   }
+   ```
+
+1. <a name="update-iot-policy-cli-create-policy-document-file"></a>Use an online converter or other tool to convert the policy document string to a JSON object, and then save it to a file named `iot-policy.json`\.
+
+   For example, if you have the [jq](https://stedolan.github.io/jq/) tool installed, you can run the following command to get the policy document, convert it to a JSON object, and save the policy document as a JSON object\.
+
+   ```
+   aws iot get-policy --policy-name GreengrassV2IoTThingPolicy --query 'policyDocument' | jq fromjson >> iot-policy.json
+   ```
+
+1. Review the policy document, and add, remove, or edit permissions as needed\.
+
+   <a name="nano-command-intro-existing-file"></a>For example, on a Linux\-based system, you can run the following command to use GNU nano to open the file\.
+
+   ```
+   nano iot-policy.json
+   ```
+
+   When you're done, the policy document might look similar to the [minimal AWS IoT policy for core devices](#greengrass-core-minimal-iot-policy)\.
+
+1. <a name="update-iot-policy-cli-create-policy-version"></a>Save the changes as a new version of the policy\. Run the following command, and replace *GreengrassV2IoTThingPolicy* with the name of the policy\.
+
+   ```
+   aws iot create-policy-version --policy-name GreengrassV2IoTThingPolicy --policy-document file://iot-policy.json --set-as-default
+   ```
+
+   The operation returns a response similar to the following example if it succeeds\.
+
+   ```
+   {
+       "policyArn": "arn:aws:iot:us-west-2:123456789012:policy/GreengrassV2IoTThingPolicy",
+       "policyDocument": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n\t\t\"iot:Connect\",\n\t\t\"iot:Publish\",\n\t\t\"iot:Subscribe\",\n\t\t\"iot:Receive\",\n\t\t\"greengrass:*\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}",
+       "policyVersionId": "2",
+       "isDefaultVersion": true
+   }
+   ```
 
 ## Minimal AWS IoT policy for AWS IoT Greengrass V2 core devices<a name="greengrass-core-minimal-iot-policy"></a>
 
@@ -157,7 +285,6 @@ The following example policy includes the minimum set of actions required to sup
 + The policy grants permission to assume an IAM role through an AWS IoT role alias\. The core device uses this role, called the token exchange role, to acquire AWS credentials that it can use to authenticate AWS requests\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
 
   When you install the AWS IoT Greengrass Core software, you create and attach a second AWS IoT policy that includes only this permission\. If you include this permission in your core device's primary AWS IoT policy, you can detach and delete the other AWS IoT policy\.
-+ The policy includes a section that allows AWS IoT Core to get, update, and delete the core device's shadow\. To allow shadow sync for connected devices in the Greengrass group, specify the target Amazon Resource Names \(ARNs\) in the `Resource` list \(for example, `arn:aws:iot:region:account-id:thing/device-name`\)\.
 
 ```
 {
@@ -195,17 +322,6 @@ The following example policy includes the minimum set of actions required to sup
         },
         {
             "Effect": "Allow",
-            "Action": [
-                "iot:GetThingShadow",
-                "iot:UpdateThingShadow",
-                "iot:DeleteThingShadow"
-            ],
-            "Resource": [
-                "arn:aws:iot:region:account-id:thing/core-device-thing-name*"
-            ]
-        },
-        {
-            "Effect": "Allow",
             "Action": "iot:AssumeRoleWithCertificate",
             "Resource": "arn:aws:iot:region:account-id:rolealias/token-exchange-role-alias-name"
         },
@@ -226,13 +342,41 @@ The following example policy includes the minimum set of actions required to sup
 ## Minimal AWS IoT policy to support client devices<a name="client-device-support-minimal-iot-policy"></a>
 
 The following example policy includes the minimum set of actions required to support interaction with client devices on a core device\. To support client devices, a core device must have the permissions in this AWS IoT policy in addition to the [Minimal AWS IoT policy for basic operation](#greengrass-core-minimal-iot-policy)\.
-+ The policy allows the core device to get, update, and delete the shadow for any AWS IoT thing\. These permissions allow the core device to manage and sync shadows for client devices\. To follow best security practices, restrict the `iot:GetThingShadow`, `iot:UpdateThingShadow`, and `iot:DeleteThingShadow` operations to the minimal set of client devices that connect to the core device for your use case\.
-+ The policy allows the core device to update its own connectivity information\. This permission is required only if you deploy the [IP detector component](ip-detector-component.md) to the core device\.
++ The policy allows the core device to update its own connectivity information\. This permission \(`greengrass:UpdateConnectivityInfo`\) is required only if you deploy the [IP detector component](ip-detector-component.md) to the core device\.
 
 ```
 {
     "Version": "2012-10-17",
     "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "iot:Publish"
+            ],
+            "Resource": [
+                "arn:aws:iot:region:account-id:topic/$aws/things/core-device-thing-name*-gci/shadow/get"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "iot:Subscribe"
+            ],
+            "Resource": [
+                "arn:aws:iot:region:account-id:topicfilter/$aws/things/core-device-thing-name*-gci/shadow/update/delta",
+                "arn:aws:iot:region:account-id:topicfilter/$aws/things/core-device-thing-name*-gci/shadow/get/accepted"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "iot:Receive"
+            ],
+            "Resource": [
+                "arn:aws:iot:region:account-id:topic/$aws/things/core-device-thing-name*-gci/shadow/update/delta",
+                "arn:aws:iot:region:account-id:topic/$aws/things/core-device-thing-name*-gci/shadow/get/accepted"
+            ]
+        },
         {
             "Effect": "Allow",
             "Action": [
@@ -255,18 +399,7 @@ The following example policy includes the minimum set of actions required to sup
                 "greengrass:UpdateConnectivityInfo"
             ],
             "Resource": [
-                "arn:aws:greengrass:region:account-id:/greengrass/things/core-device-thing-name*/connectivityInfo"
-            ]
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "iot:GetThingShadow",
-                "iot:UpdateThingShadow",
-                "iot:DeleteThingShadow"
-            ],
-            "Resource": [
-                "arn:aws:iot:region:account-id:thing/*"
+                "arn:aws:iot:region:account-id:thing/core-device-thing-name*"
             ]
         }
     ]

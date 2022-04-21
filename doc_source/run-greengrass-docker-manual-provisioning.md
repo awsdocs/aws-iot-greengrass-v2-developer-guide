@@ -24,9 +24,9 @@ To complete this tutorial, you need the following:
 
 ## Create an AWS IoT thing<a name="create-iot-thing"></a>
 
-AWS IoT *things* represent devices and logical entities that connect to AWS IoT\. Greengrass core devices are AWS IoT things\. When you register a device as an AWS IoT thing, that device can use a digital certificate to authenticate with AWS\. This certificate allows the device to communicate with AWS IoT and AWS IoT Greengrass\.
+AWS IoT *things* represent devices and logical entities that connect to AWS IoT\. Greengrass core devices are AWS IoT things\. When you register a device as an AWS IoT thing, that device can use a digital certificate to authenticate with AWS\.
 
-In this section, you create an AWS IoT thing and download certificates that your device can use to connect to AWS\. 
+In this section, you create an AWS IoT thing that represents your device\.
 
 **To create an AWS IoT thing**
 
@@ -49,141 +49,7 @@ The thing name can't contain colon \(`:`\) characters\.
    }
    ```
 
-1. Create a folder where you download the certificates for the AWS IoT thing\.
-
-   ```
-   mkdir greengrass-v2-certs
-   ```
-
-1. Create and download the certificates for the AWS IoT thing\.
-
-   ```
-   aws iot create-keys-and-certificate --set-as-active --certificate-pem-outfile greengrass-v2-certs/device.pem.crt --public-key-outfile greengrass-v2-certs/public.pem.key --private-key-outfile greengrass-v2-certs/private.pem.key
-   ```
-
-   The response looks similar to the following example, if the request succeeds\.
-
-   ```
-   {
-     "certificateArn": "arn:aws:iot:us-west-2:123456789012:cert/aa0b7958770878eabe251d8a7ddd547f4889c524c9b574ab9fbf65f32248b1d4",
-     "certificateId": "aa0b7958770878eabe251d8a7ddd547f4889c524c9b574ab9fbf65f32248b1d4",
-     "certificatePem": "-----BEGIN CERTIFICATE-----
-   MIICiTCCAfICCQD6m7oRw0uXOjANBgkqhkiG9w
-    0BAQUFADCBiDELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAldBMRAwDgYDVQQHEwdTZ
-    WF0dGxlMQ8wDQYDVQQKEwZBbWF6b24xFDASBgNVBAsTC0lBTSBDb25zb2xlMRIw
-    EAYDVQQDEwlUZXN0Q2lsYWMxHzAdBgkqhkiG9w0BCQEWEG5vb25lQGFtYXpvbi5
-    jb20wHhcNMTEwNDI1MjA0NTIxWhcNMTIwNDI0MjA0NTIxWjCBiDELMAkGA1UEBh
-    MCVVMxCzAJBgNVBAgTAldBMRAwDgYDVQQHEwdTZWF0dGxlMQ8wDQYDVQQKEwZBb
-    WF6b24xFDASBgNVBAsTC0lBTSBDb25zb2xlMRIwEAYDVQQDEwlUZXN0Q2lsYWMx
-    HzAdBgkqhkiG9w0BCQEWEG5vb25lQGFtYXpvbi5jb20wgZ8wDQYJKoZIhvcNAQE
-    BBQADgY0AMIGJAoGBAMaK0dn+a4GmWIWJ21uUSfwfEvySWtC2XADZ4nB+BLYgVI
-    k60CpiwsZ3G93vUEIO3IyNoH/f0wYK8m9TrDHudUZg3qX4waLG5M43q7Wgc/MbQ
-    ITxOUSQv7c7ugFFDzQGBzZswY6786m86gpEIbb3OhjZnzcvQAaRHhdlQWIMm2nr
-    AgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAtCu4nUhVVxYUntneD9+h8Mg9q6q+auN
-    KyExzyLwaxlAoo7TJHidbtS4J5iNmZgXL0FkbFFBjvSfpJIlJ00zbhNYS5f6Guo
-    EDmFJl0ZxBHjJnyp378OD8uTs7fLvjx79LjSTbNYiytVbZPQUQ5Yaxu2jXnimvw
-    3rrszlaEXAMPLE=
-   -----END CERTIFICATE-----",
-     "keyPair": {
-       "PublicKey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkEXAMPLEQEFAAOCAQ8AMIIBCgKCAQEAEXAMPLE1nnyJwKSMHw4h\nMMEXAMPLEuuN/dMAS3fyce8DW/4+EXAMPLEyjmoF/YVF/gHr99VEEXAMPLE5VF13\n59VK7cEXAMPLE67GK+y+jikqXOgHh/xJTwo+sGpWEXAMPLEDz18xOd2ka4tCzuWEXAMPLEahJbYkCPUBSU8opVkR7qkEXAMPLE1DR6sx2HocliOOLtu6Fkw91swQWEXAMPLE\GB3ZPrNh0PzQYvjUStZeccyNCx2EXAMPLEvp9mQOUXP6plfgxwKRX2fEXAMPLEDa\nhJLXkX3rHU2xbxJSq7D+XEXAMPLEcw+LyFhI5mgFRl88eGdsAEXAMPLElnI9EesG\nFQIDAQAB\n-----END PUBLIC KEY-----\n",
-       "PrivateKey": "-----BEGIN RSA PRIVATE KEY-----\nkey omitted for security reasons\n-----END RSA PRIVATE KEY-----\n"
-     }
-   }
-   ```
-
-1. Attach the certificate to the AWS IoT thing\.
-   + Replace *MyGreengrassCore* with the name of your AWS IoT thing\.
-   + Replace the certificate Amazon Resource Name \(ARN\) with the ARN of the certificate that you created in the previous step\.
-
-   ```
-   aws iot attach-thing-principal --thing-name MyGreengrassCore --principal arn:aws:iot:us-west-2:123456789012:cert/aa0b7958770878eabe251d8a7ddd547f4889c524c9b574ab9fbf65f32248b1d4
-   ```
-
-   The command doesn't have any output if the request succeeds\.
-
-1. Create and attach an AWS IoT policy that defines the AWS IoT permissions for your Greengrass core device\. The following policy allows access to all MQTT topics and Greengrass operations, so your device works with custom applications and future changes that require new Greengrass operations\. You can restrict this policy down based on your use case\. For more information, see [Minimal AWS IoT policy for AWS IoT Greengrass V2 core devices](device-auth.md#greengrass-core-minimal-iot-policy)\.
-
-   If you have set up a Greengrass core device before, you can attach its AWS IoT policy instead of creating a new one\.
-
-   Do the following:
-
-   1. Create a file that contains the AWS IoT policy document that Greengrass core devices require\.
-
-      <a name="nano-command-intro"></a>For example, on a Linux\-based system, you can run the following command to use GNU nano to create the file\.
-
-      ```
-      nano greengrass-v2-iot-policy.json
-      ```
-
-      Copy the following JSON into the file\.
-
-      ```
-      {
-        "Version": "2012-10-17",
-        "Statement": [
-          {
-            "Effect": "Allow",
-            "Action": [
-              "iot:Publish",
-              "iot:Subscribe",
-              "iot:Receive",
-              "iot:Connect",
-              "greengrass:*"
-            ],
-            "Resource": [
-              "*"
-            ]
-          }
-        ]
-      }
-      ```
-
-   1. Create an AWS IoT policy from the policy document\.
-      + Replace *GreengrassV2IoTThingPolicy* with the name of the policy to create\.
-
-      ```
-      aws iot create-policy --policy-name GreengrassV2IoTThingPolicy --policy-document file://greengrass-v2-iot-policy.json
-      ```
-
-      The response looks similar to the following example, if the request succeeds\.
-
-      ```
-      {
-        "policyName": "GreengrassV2IoTThingPolicy",
-        "policyArn": "arn:aws:iot:us-west-2:123456789012:policy/GreengrassV2IoTThingPolicy",
-        "policyDocument": "{
-          \"Version\": \"2012-10-17\",
-          \"Statement\": [
-            {
-              \"Effect\": \"Allow\",
-              \"Action\": [
-                \"iot:Publish\",
-                \"iot:Subscribe\",
-                \"iot:Receive\",
-                \"iot:Connect\",
-                \"greengrass:*\"
-              ],
-              \"Resource\": [
-                \"*\"
-              ]
-            }
-          ]
-        }",
-        "policyVersionId": "1"
-      }
-      ```
-
-   1. Attach the AWS IoT policy to the AWS IoT thing's certificate\.
-      + Replace *GreengrassV2IoTThingPolicy* with the name of the policy to attach\.
-      + Replace the target ARN with the ARN of the certificate for your AWS IoT thing\.
-
-      ```
-      aws iot attach-policy --policy-name GreengrassV2IoTThingPolicy --target arn:aws:iot:us-west-2:123456789012:cert/aa0b7958770878eabe251d8a7ddd547f4889c524c9b574ab9fbf65f32248b1d4
-      ```
-
-      The command doesn't have any output if the request succeeds\.
-
-1. \(Optional\) Add the AWS IoT thing to a new or existing thing group\. You use thing groups to manage fleets of Greengrass core devices\. When you deploy software components to your devices, you can choose to target individual devices or groups of devices\. You can add a device to a thing group with an active Greengrass deployment to deploy that thing group's software components to the device\. Do the following:
+1. \(Optional\) Add the AWS IoT thing to a new or existing thing group\. You use thing groups to manage fleets of Greengrass core devices\. When you deploy software components to your devices, you can target individual devices or groups of devices\. You can add a device to a thing group with an active Greengrass deployment to deploy that thing group's software components to the device\. Do the following:
 
    1. \(Optional\) Create an AWS IoT thing group\.
       + Replace *MyGreengrassCoreGroup* with the name of the thing group to create\.

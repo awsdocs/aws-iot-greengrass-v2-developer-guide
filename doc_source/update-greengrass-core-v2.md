@@ -22,10 +22,10 @@ The following requirements apply to deploy OTA updates of the AWS IoT Greengrass
 
 ## Considerations for core devices<a name="ota-update-considerations"></a>
 
-Before perform an OTA update, be aware of the impact on the core devices that you update:
+Before you perform an OTA update, be aware of the impact on the core devices that you update and their connected client devices:
 + The Greengrass nucleus shuts down\. 
 + All components running on the core device also shut down\. If those components write to local resources, they might leave those resources in an incorrect state unless shut down properly\. Components can use [interprocess communication](interprocess-communication.md) to tell the nucleus component to defer the update until they clean up the resources that they use\.
-+ While the nucleus component is shut down, the core device loses its connections with the AWS Cloud and local devices\. 
++ While the nucleus component is shut down, the core device loses its connections with the AWS Cloud and local devices\. The core device won't route messages from client devices while shut down\.
 + Long\-lived Lambda functions that run as components lose their dynamic state information and drop all pending work\.
 
 ## Greengrass nucleus update behavior<a name="ota-update-behavior-nucleus"></a>

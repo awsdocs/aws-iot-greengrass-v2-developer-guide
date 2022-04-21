@@ -1,6 +1,6 @@
 # Allow device traffic through a proxy or firewall<a name="allow-device-traffic"></a>
 
-Greengrass core devices and Greengrass components perform outbound requests to AWS services and other websites\. As a security measure, you might limit outbound traffic to a small range of endpoints and ports\. You can use the following information about endpoints and ports to limit device traffic through a proxy or firewall\. For more information about how to configure a core device to use a proxy, see [Connect on port 443 or through a network proxy](configure-greengrass-core-v2.md#configure-alpn-network-proxy)\.
+Greengrass core devices and Greengrass components perform outbound requests to AWS services and other websites\. As a security measure, you might limit outbound traffic to a small range of endpoints and ports\. You can use the following information about endpoints and ports to limit device traffic through a proxy, firewall, or [Amazon VPC security group](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html)\. For more information about how to configure a core device to use a proxy, see [Connect on port 443 or through a network proxy](configure-greengrass-core-v2.md#configure-alpn-network-proxy)\.
 
 **Topics**
 + [Endpoints for basic operation](#core-endpoints)

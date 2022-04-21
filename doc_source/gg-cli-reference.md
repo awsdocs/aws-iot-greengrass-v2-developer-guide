@@ -3,10 +3,10 @@
 The Greengrass CLI provides a command line interface to interact locally with your AWS IoT Greengrass core device\. Greengrass CLI commands use the following format\.
 
 ```
-greengrass-cli <command> <subcommand> [arguments]
+$ greengrass-cli <command> <subcommand> [arguments]
 ```
 
-By default, the `greengrass-cli` executable in the `/greengrass/v2/bin/` folder interacts with the version of the AWS IoT Greengrass Core software running in the `/greengrass/v2` folder\. If you call an executable that is not placed in this location, or if you want to interact with AWS IoT Greengrass Core software in a different location, then you must use one of the following methods to explicitly specify the root path of the AWS IoT Greengrass Core software that you want to interact with:
+By default, the `greengrass-cli` executable file in the `/greengrass/v2/bin/` folder interacts with the version of the AWS IoT Greengrass Core software running in the `/greengrass/v2` folder\. If you call an executable that is not placed in this location, or if you want to interact with AWS IoT Greengrass Core software in a different location, then you must use one of the following methods to explicitly specify the root path of the AWS IoT Greengrass Core software that you want to interact with:
 + Set the `GGC_ROOT_PATH` environment variable to `/greengrass/v2`\.
 + Add the `--ggcRootPath /greengrass/v2` argument to your command as shown in the following example\.
 

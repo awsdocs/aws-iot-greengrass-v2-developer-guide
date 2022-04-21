@@ -11,7 +11,7 @@ You can also specify a global lifecycle that isn't in a manifest\. In the global
 After the AWS IoT Greengrass Core software selects a manifest that matches the core device, it does the following to identify the lifecycle steps to use:
 + If the selected manifest defines a lifecycle, the core device uses that lifecycle\.
 + If the selected manifest doesn't define a lifecycle, the core device uses the global lifecycle\. The core device does the following to identify which sections of the global lifecycle to use:
-  + If the manifest defines selection keys, the core device uses the sections of the global lifecycle that have the manifest's selection keys\.
+  + If the manifest defines selection keys, the core device uses the sections of the global lifecycle that contain the manifest's selection keys\.
   + If the manifest doesn't define selection keys, the core device uses the sections of the global lifecycle that don't have selection keys\. This behavior is equivalent to a manifest that defines the `all` selection\.
 
 **Important**  <a name="recipe-core-device-manifest-requirement"></a>
@@ -118,20 +118,20 @@ This object contains the following information:
 Use inverse domain name format to avoid name collision within your company\. For example, if your company owns `example.com` and you work on a radio project, you can name a custom platform attribute `com.example.radio.RadioModule`\. This helps avoid platform attribute name collisions within your company\.
 For example, you might define a platform attribute, `com.example.radio.RadioModule`, to specify a different manifest based on which radio module is available on a core device\. Each manifest can include different artifacts that apply to different hardware configurations, so that you deploy the minimal set of software to the core device\.  
   `Lifecycle`   
-An object that defines how to install and run the component on the platform that this manifest defines\. You can also define a [global lifecycle](#global-lifecycle-definition) that applies to all platforms\. The core device uses the global lifecycle only if the manifest to use doesn't specify a lifecycle\.  
+An object or string that defines how to install and run the component on the platform that this manifest defines\. You can also define a [global lifecycle](#global-lifecycle-definition) that applies to all platforms\. The core device uses the global lifecycle only if the manifest to use doesn't specify a lifecycle\.  
 You define this lifecycle within a manifest\. The lifecycle steps that you specify here apply to only the platform that this manifest defines\. You can also define a [global lifecycle](#global-lifecycle-definition) that applies to all platforms\.
-This object contains the following information:    
+This object or string contains the following information:    
   `Setenv`   
 \(Optional\) A dictionary of environment variables to provide to all lifecycle scripts\. You can override these environment variables with `Setenv` in each lifecycle script\.  
   `Bootstrap`   
-\(Optional\) An object that defines the script to run when the AWS IoT Greengrass Core software deploys the component\. This lifecycle step runs before the [install lifecycle step](#install-lifecycle-definition) in the following cases:  
+\(Optional\) An object or string that defines the script to run when the AWS IoT Greengrass Core software deploys the component\. This lifecycle step runs before the [install lifecycle step](#install-lifecycle-definition) in the following cases:  
 + The component deploys to the core device for the first time\.
 + The component version changes\.
 + The bootstrap script changes as the result of a component configuration update\.
 You can use this lifecycle step to restart the AWS IoT Greengrass Core software or restart the core device\. This lets you develop a component that performs a restart after it installs operating system updates or runtime updates, for example\.  
 After the AWS IoT Greengrass Core software completes the bootstrap step for all components that have a bootstrap step in a deployment, the software restarts\.  
 You must configure the AWS IoT Greengrass Core software as a system service to restart the AWS IoT Greengrass Core software or the core device\. If you don't configure the AWS IoT Greengrass Core software as a system service, the software won't restart\. For more information, see [Configure the Greengrass nucleus as a system service](configure-greengrass-core-v2.md#configure-system-service)\.
-This object contains the following information:    
+This object or string contains the following information:    
 `Script`  
 The script to run\. The exit code of this script defines the restart instruction\. Use the following exit codes:  
 + `0` – Don't restart the AWS IoT Greengrass Core software or the core device\. The AWS IoT Greengrass Core software still restarts after all components bootstrap\.
@@ -146,9 +146,9 @@ Default: 120 seconds
 `Setenv`  <a name="recipe-lifecycle-environment"></a>
 \(Optional\) The dictionary of environment variables to provide to the script\. These environment variables override the variables that you provide in `Lifecycle.Setenv`\.  
   `Install`   
-\(Optional\) An object that defines the script to run when the component installs\. The AWS IoT Greengrass Core software also runs this lifecycle step when each time the software launches\.  
+\(Optional\) An object or string that defines the script to run when the component installs\. The AWS IoT Greengrass Core software also runs this lifecycle step when each time the software launches\.  
 If the `Install` script exits with a success code, the component enters the `INSTALLED` state\.  
-This object contains the following information:    
+This object or string contains the following information:    
 `Script`  <a name="recipe-lifecycle-script"></a>
 The script to run\.  
 `RequiresPrivilege`  <a name="recipe-lifecycle-requiresprivilege"></a>
@@ -163,11 +163,11 @@ Default: 120 seconds
 `Setenv`  <a name="recipe-lifecycle-environment"></a>
 \(Optional\) The dictionary of environment variables to provide to the script\. These environment variables override the variables that you provide in `Lifecycle.Setenv`\.  
   `Run`   
-\(Optional\) An object that defines the script to run when the component starts\.  
+\(Optional\) An object or string that defines the script to run when the component starts\.  
 The component enters the `RUNNING` state when this lifecycle step runs\. If the `Run` script exits with a success code, the component enters the `FINISHED` state\.  
 Components that depend on this component start when this lifecycle step runs\. To run a background process, such as a service that dependent components use, use the `Startup` lifecycle step instead\.  
 You can define only one `Startup` or `Run` lifecycle\.
-This object contains the following information:    
+This object or string contains the following information:    
 `Script`  <a name="recipe-lifecycle-script"></a>
 The script to run\.  
 `RequiresPrivilege`  <a name="recipe-lifecycle-requiresprivilege"></a>
@@ -182,11 +182,11 @@ This lifecycle step doesn't timeout by default\. If you omit this timeout, the `
 `Setenv`  <a name="recipe-lifecycle-environment"></a>
 \(Optional\) The dictionary of environment variables to provide to the script\. These environment variables override the variables that you provide in `Lifecycle.Setenv`\.  
   `Startup`   
-\(Optional\) An object that defines the background process to run when the component starts\.  
+\(Optional\) An object or string that defines the background process to run when the component starts\.  
 Use `Startup` to run a command that must exit successfully before dependent components can start\. For example, you might define a `Startup` step that starts the MySQL process with `/etc/init.d/mysqld start`\.  
 The component enters the `STARTING` state when this lifecycle step runs\. If the `Startup` script exits with a success code, the component enters the `RUNNING` state\. Then, dependent components can start\.  
 You can define only one `Startup` or `Run` lifecycle\.
-This object contains the following information:    
+This object or string contains the following information:    
 `Script`  <a name="recipe-lifecycle-script"></a>
 The script to run\.  
 `RequiresPrivilege`  <a name="recipe-lifecycle-requiresprivilege"></a>
@@ -201,10 +201,10 @@ Default: 120 seconds
 `Setenv`  <a name="recipe-lifecycle-environment"></a>
 \(Optional\) The dictionary of environment variables to provide to the script\. These environment variables override the variables that you provide in `Lifecycle.Setenv`\.  
   `Shutdown`   
-\(Optional\) An object that defines the script to run when the component shuts down\.  
+\(Optional\) An object or string that defines the script to run when the component shuts down\.  
 If you start a background process in `Startup`, use the `Shutdown` step to stop that process when the component shuts down\. For example, you might define a `Shutdown` step that stops the MySQL process with `/etc/init.d/mysqld stop`\.  
 The component enters the `STOPPING` state when this lifecycle step runs\.  
-This object contains the following information:    
+This object or string contains the following information:    
 `Script`  <a name="recipe-lifecycle-script"></a>
 The script to run\.  
 `RequiresPrivilege`  <a name="recipe-lifecycle-requiresprivilege"></a>
@@ -219,9 +219,9 @@ Default: 15 seconds\.
 `Setenv`  <a name="recipe-lifecycle-environment"></a>
 \(Optional\) The dictionary of environment variables to provide to the script\. These environment variables override the variables that you provide in `Lifecycle.Setenv`\.  
   `Recover`   
-\(Optional\) An object that defines the script to run when the component encounters an error\.  
+\(Optional\) An object or string that defines the script to run when the component encounters an error\.  
 This step runs when a component enters the `ERRORED` state\. If the component becomes `ERRORED` three times without successfully recovering, the component changes to the `BROKEN` state\. To fix a `BROKEN` component, you must deploy it again\.  
-This object contains the following information:    
+This object or string contains the following information:    
 `Script`  <a name="recipe-lifecycle-script"></a>
 The script to run\.  
 `RequiresPrivilege`  <a name="recipe-lifecycle-requiresprivilege"></a>
@@ -392,6 +392,8 @@ The name of the core device's AWS IoT thing\.
 
 You can reference the following recipe examples to help you create recipes for your components\.
 
+AWS IoT Greengrass curates an index of Greengrass components, called the Greengrass Software Catalog\. This catalog tracks Greengrass components that are developed by the Greengrass community\. From this catalog, you can download, modify, and deploy components to create your Greengrass applications\. For more information, see [Community components](greengrass-software-catalog.md)\.
+
 **Topics**
 + [Hello World component recipe](#recipe-example-hello-world)
 + [Python runtime component example](#recipe-example-python-runtime)
@@ -478,7 +480,7 @@ The following recipe describes a component that installs Python\. This component
   "ComponentName": "com.example.PythonRuntime",
   "ComponentDescription": "Installs Python 3.7",
   "ComponentPublisher": "Amazon",
-  "ComponentVersion": "1.1.0",
+  "ComponentVersion": "3.7.0",
   "Manifests": [
     {
       "Platform": {
@@ -502,7 +504,7 @@ RecipeFormatVersion: '2020-01-25'
 ComponentName: com.example.PythonRuntime
 ComponentDescription: Installs Python 3.7
 ComponentPublisher: Amazon
-ComponentVersion: '1.1.0'
+ComponentVersion: '3.7.0'
 Manifests:
   - Platform:
       os: linux

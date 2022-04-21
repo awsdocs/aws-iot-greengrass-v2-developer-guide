@@ -223,7 +223,7 @@ You can also revise a deployment other than the latest revision for the target\.
 
 1. \(Optional\) Define how the deployment stops, rolls out, or times out\. AWS IoT Greengrass uses AWS IoT Core jobs to send deployments to core devices, so these options are identical to the configuration options for AWS IoT Core jobs\. For more information, see [Job rollout and abort configuration](https://docs.aws.amazon.com/iot/latest/developerguide/job-rollout-abort.html) in the *AWS IoT Developer Guide*\.
 
-   To define the job options, add an `iotJobConfigurations` object to `deployment.json`\. Then, define the options to configure\.
+   To define the job options, add an `iotJobConfiguration` object to `deployment.json`\. Then, define the options to configure\.
 
    Your deployment in `deployment.json` may look similar to the following example:
 
@@ -253,7 +253,7 @@ You can also revise a deployment other than the latest revision for the target\.
        },
        "failureHandlingPolicy": "ROLLBACK"
      },
-     "iotJobConfigurations": {
+     "iotJobConfiguration": {
        "abortConfig": {
          "criteriaList": [
            {

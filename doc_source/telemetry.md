@@ -3,9 +3,11 @@
 System health telemetry data is diagnostic data that can help you monitor the performance of critical operations on your Greengrass core devices\. You can create projects and applications to retrieve, analyze, transform, and report telemetry data from your edge devices\. Domain experts, such as process engineers, can use these applications to gain insights into fleet health\.
 
 You can use the following methods to gather telemetry data from your Greengrass core devices:
-+ **Nucleus emitter component**—The nucleus emitter component \(`aws.greengrass.telemetry.NucleusEmitter`\) on your Greengrass core device publishes telemetry data to the `$local/greengrass/telemetry` topic by default\. You can use the data that is published to this topic to act locally on your core device, even when your device has limited connectivity to the cloud\. Optionally, you can also configure the component to publish telemetry data to an AWS IoT Core MQTT topic of your choice\.
++ **Nucleus telemetry emitter component**—The [nucleus telemetry emitter component](nucleus-emitter-component.md) \(`aws.greengrass.telemetry.NucleusEmitter`\) on a Greengrass core device publishes telemetry data to the `$local/greengrass/telemetry` topic by default\. You can use the data that is published to this topic to act locally on your core device, even when your device has limited connectivity to the cloud\. Optionally, you can also configure the component to publish telemetry data to an AWS IoT Core MQTT topic of your choice\.
 
-  You must deploy the nucleus emitter component to your core device to publish telemetry data\. There are no costs associated with publishing telemetry data to the local topic\. However, the use of an MQTT topic to publish data to the cloud is subject to [AWS IoT Core pricing](https://aws.amazon.com/iot-core/pricing/)\.
+  You must deploy the nucleus emitter component to a core device to publish telemetry data\. There are no costs associated with publishing telemetry data to the local topic\. However, the use of an MQTT topic to publish data to the AWS Cloud is subject to [AWS IoT Core pricing](http://aws.amazon.com/iot-core/pricing/)\.
+
+  <a name="greengrass-software-catalog-influxdb-telemetry-publisher"></a>AWS IoT Greengrass provides several [community components](greengrass-software-catalog.md) to help you analyze and visualize telemetry data locally on your core device using InfluxDB and Grafana\. These components use telemetry data from the nucleus emitter component\. For more information, see the README for the [InfluxDB publisher component](https://github.com/awslabs/aws-greengrass-labs-telemetry-influxdbpublisher)\.
 + **Telemetry agent**—The telemetry agent on Greengrass core devices collects local telemetry data and publishes it to Amazon EventBridge without requiring any customer interaction\. Core devices publish telemetry data to EventBridge on a best effort basis\. For example, core devices might fail to deliver telemetry data while offline\. 
 
   The telemetry agent feature is enabled by default for all Greengrass core devices\. You automatically start to receive data as soon as you set up a Greengrass core device\. Aside from your data link costs, the data transfer from the core device to AWS IoT Core is without charge\. This is because the agent publishes to an AWS reserved topic\. However, depending on your use case, you might incur costs when you receive or process the data\.
@@ -14,7 +16,7 @@ Amazon EventBridge is an event bus service that you can use to connect your appl
 
 To ensure that the the AWS IoT Greengrass Core software functions properly, AWS IoT Greengrass uses the data for development and quality improvement purposes\. This feature also helps inform new and enhanced edge capabilities\. AWS IoT Greengrass retains telemetry data for up to seven days\.
 
-This section describes how to configure and use the telemetry agent\. For information about configuring the nucleus emitter component, see [Nucleus telemetry emitter](nucleus-emitter-component.md)\.
+This section describes how to configure and use the telemetry agent\. For information about configuring the nucleus telemetry emitter component, see [Nucleus telemetry emitter](nucleus-emitter-component.md)\.
 
 **Topics**
 + [Telemetry metrics](#telemetry-metrics)

@@ -53,6 +53,15 @@ The following considerations apply when you use file system logs:
   ```
 
 ------
+#### [ Windows Command Prompt \(CMD\) ]
+
+  ```
+  type C:\greengrass\v2\logs\com.example.HelloWorld.log
+  ```
+
+  <a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
+
+------
 #### [ PowerShell ]
 
   ```
@@ -206,11 +215,11 @@ To configure a core device to write a Greengrass component's logs to CloudWatch 
 ```
 {
   "logsUploaderConfiguration": {
-    "componentLogsConfiguration": [
-      {
-        "componentName": "com.example.HelloWorld"
+    "componentLogsConfigurationMap": {
+      "com.example.HelloWorld": {
+      
       }
-    ]
+    }
   }
 }
 ```

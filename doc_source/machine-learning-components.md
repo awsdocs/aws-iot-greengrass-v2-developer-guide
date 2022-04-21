@@ -2,7 +2,7 @@
 
 AWS IoT Greengrass provides the following machine learning components that you can deploy to supported devices to [perform machine learning inference](perform-machine-learning-inference.md) using models trained in Amazon SageMaker or with your own pre\-trained models that are stored in Amazon S3\. <a name="ml-component-types"></a>
 
-AWS\-provided machine learning components are broadly categorized as follows:
+AWS provides the following categories of machine learning components:
 + **Model component**—Contains machine learning models as Greengrass artifacts\.
 + **Runtime component**—Contains the script that installs the machine learning framework and its dependencies on the Greengrass core device\.
 + **Inference component**—Contains the inference code and includes component dependencies to install the machine learning framework and download pre\-trained machine learning models\.
@@ -19,14 +19,15 @@ Several AWS\-provided components depend on specific minor versions of the Greeng
 
 | Component | Description | Depends on nucleus | [Component type](develop-greengrass-components.md#component-types) | Supported OS | [Open source](open-source.md) | 
 | --- | --- | --- | --- | --- | --- | 
+| [Lookout for Vision Edge Agent](lookout-for-vision-edge-agent-component.md) | Deploys the Amazon Lookout for Vision runtime on the Greengrass core device, so you can use computer vision to find defects in industrial products\. | No | Generic | Linux | No | 
 | [SageMaker Edge Manager](sagemaker-edge-manager-component.md) | Deploys the Amazon SageMaker Edge Manager agent on the Greengrass core device\. | Yes | Generic | Linux, Windows | No | 
 | [DLR image classification](dlr-image-classification-component.md) | Inference component that uses the DLR image classification model store and the DLR runtime component as dependencies to install DLR, download sample image classification models, and perform image classification inference on supported devices\. | Yes | Generic | Linux, Windows | No | 
 | [DLR object detection](dlr-object-detection-component.md) | Inference component that uses the DLR object detection model store and the DLR runtime component as dependencies to install DLR, download sample object detection models, and perform object detection inference on supported devices\. | Yes | Generic | Linux, Windows | No | 
 | [DLR image classification model store](dlr-image-classification-model-store-component.md) | Model component that contains sample ResNet\-50 image classification models as Greengrass artifacts\. | Yes | Generic | Linux, Windows | No | 
 | [DLR object detection model store](dlr-object-detection-model-store-component.md) | Model component that contains sample YOLOv3 object detection models as Greengrass artifacts\. | Yes | Generic | Linux, Windows | No | 
-| [DLR installer](dlr-component.md) | Runtime component that contains an installation script that is used to install DLR and its dependencies on the Greengrass core device\. | Yes | Generic | Linux, Windows | No | 
+| [DLR runtime](dlr-component.md) | Runtime component that contains an installation script that is used to install DLR and its dependencies on the Greengrass core device\. | Yes | Generic | Linux, Windows | No | 
 | [TensorFlow Lite image classification](tensorflow-lite-image-classification-component.md) | Inference component that uses the TensorFlow Lite image classification model store and the TensorFlow Lite runtime component as dependencies to install TensorFlow Lite, download sample image classification models, and perform image classification inference on supported devices\. | Yes | Generic | Linux, Windows | No | 
 | [TensorFlow Lite object detection](tensorflow-lite-object-detection-component.md) | Inference component that uses the TensorFlow Lite object detection model store and the TensorFlow Lite runtime component as dependencies to install TensorFlow Lite, download sample object detection models, and perform object detection inference on supported devices\. | Yes | Generic | Linux, Windows | No | 
 | [TensorFlow Lite image classification model store](tensorflow-lite-image-classification-model-store-component.md) | Model component that contains a sample MobileNet v1 model as a Greengrass artifact\. | Yes | Generic | Linux, Windows | No | 
 | [TensorFlow Lite object detection model store](tensorflow-lite-object-detection-model-store-component.md) | Model component that contains a sample Single Shot Detection \(SSD\) MobileNet model as a Greengrass artifact\. | Yes | Generic | Linux, Windows | No | 
-| [TensorFlow Lite installer](tensorflow-lite-component.md) | Runtime component that contains an installation script that is used to install TensorFlow Lite and its dependencies on the Greengrass core device\. | Yes | Generic | Linux, Windows | No | 
+| [TensorFlow Lite runtime](tensorflow-lite-component.md) | Runtime component that contains an installation script that is used to install TensorFlow Lite and its dependencies on the Greengrass core device\. | Yes | Generic | Linux, Windows | No | 

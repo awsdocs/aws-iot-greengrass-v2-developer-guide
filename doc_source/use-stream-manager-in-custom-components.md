@@ -1,6 +1,6 @@
 # Create custom components that use stream manager<a name="use-stream-manager-in-custom-components"></a>
 
-Use stream manager in custom Greengrass components to store, process, and export IoT device data\. Use the procedures and examples in this section to create component recipes, artifacts, and applications that work with stream manager\. For more information about how to develop and test components, see [Create local AWS IoT Greengrass components](create-components.md)\.
+Use stream manager in custom Greengrass components to store, process, and export IoT device data\. Use the procedures and examples in this section to create component recipes, artifacts, and applications that work with stream manager\. For more information about how to develop and test components, see [Create AWS IoT Greengrass components](create-components.md)\.
 
 **Topics**
 + [Define component recipes that use stream manager](#stream-manager-recipes)
@@ -76,7 +76,7 @@ The Stream Manager SDK for Java is available as a JAR file that you can use to c
 
 ------
 
-   For more information about how to develop and test components, see [Create local AWS IoT Greengrass components](create-components.md)\.
+   For more information about how to develop and test components, see [Create AWS IoT Greengrass components](create-components.md)\.
 
 ### Use the Stream Manager SDK for Python<a name="use-stream-manager-sdk-python"></a>
 
@@ -240,7 +240,7 @@ The Stream Manager SDK for Python is available as source code that you can inclu
          },
          "Lifecycle": {
            "Install": "pip3 install --user -r {artifacts:path}/requirements.txt",
-           "Run": "set PYTHONPATH=\"%PYTHONPATH%;{artifacts:decompressedPath}/stream_manager_sdk\" & py -3 {artifacts:path}/stream_manager_s3.py"
+           "Run": "set \"PYTHONPATH=%PYTHONPATH%;{artifacts:decompressedPath}/stream_manager_sdk\" & py -3 {artifacts:path}/stream_manager_s3.py"
          },
          "Artifacts": [
            {
@@ -290,7 +290,7 @@ The Stream Manager SDK for Python is available as source code that you can inclu
        Lifecycle:
          Install: pip3 install --user -r {artifacts:path}/requirements.txt
          Run: |
-           set PYTHONPATH="%PYTHONPATH%;{artifacts:decompressedPath}/stream_manager_sdk"
+           set "PYTHONPATH=%PYTHONPATH%;{artifacts:decompressedPath}/stream_manager_sdk"
            py -3 {artifacts:path}/stream_manager_s3.py
        Artifacts:
          - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.StreamManagerS3Python/1.0.0/stream_manager_sdk.zip
@@ -301,7 +301,7 @@ The Stream Manager SDK for Python is available as source code that you can inclu
 
 ------
 
-   For more information about how to develop and test components, see [Create local AWS IoT Greengrass components](create-components.md)\.
+   For more information about how to develop and test components, see [Create AWS IoT Greengrass components](create-components.md)\.
 
 ### Use the Stream Manager SDK for JavaScript<a name="use-stream-manager-sdk-javascript"></a>
 
@@ -462,7 +462,7 @@ The Stream Manager SDK for JavaScript is available as source code that you can i
          },
          "Lifecycle": {
            "Install": "npm install {artifacts:decompressedPath}/stream-manager-sdk/aws-greengrass-stream-manager-sdk",
-           "Run": "set NODE_PATH=\"%NODE_PATH%;{work:path}/node_modules\" & node {artifacts:path}/index.js"
+           "Run": "set \"NODE_PATH=%NODE_PATH%;{work:path}/node_modules\" & node {artifacts:path}/index.js"
          },
          "Artifacts": [
            {
@@ -508,7 +508,7 @@ The Stream Manager SDK for JavaScript is available as source code that you can i
        Lifecycle:
          Install: npm install {artifacts:decompressedPath}/stream-manager-sdk/aws-greengrass-stream-manager-sdk
          Run: |
-           set NODE_PATH="%NODE_PATH%;{work:path}/node_modules"
+           set "NODE_PATH=%NODE_PATH%;{work:path}/node_modules"
            node {artifacts:path}/index.js
        Artifacts:
          - URI: s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.StreamManagerS3JS/1.0.0/stream-manager-sdk.zip
@@ -518,7 +518,7 @@ The Stream Manager SDK for JavaScript is available as source code that you can i
 
 ------
 
-   For more information about how to develop and test components, see [Create local AWS IoT Greengrass components](create-components.md)\.
+   For more information about how to develop and test components, see [Create AWS IoT Greengrass components](create-components.md)\.
 
 ## Connect to stream manager in application code<a name="connect-to-stream-manager"></a>
 

@@ -76,7 +76,7 @@ Default: `false`
 The configuration file that you specify replaces the existing configuration file on the core device\. This erases the existing configuration, which includes the components and component configurations on the core device\.
 
 `-tp`, `--trusted-plugin`  
-\(Optional\) The path to a JAR file to load as a trusted plugin\. Use this option to provide provisioning plugin JAR files, such as to install with [fleet provisioning](fleet-provisioning.md) or [custom provisioning](custom-provisioning.md)\.
+\(Optional\) The path to a JAR file to load as a trusted plugin\. Use this option to provide provisioning plugin JAR files, such as to install with [fleet provisioning](fleet-provisioning.md) or [custom provisioning](custom-provisioning.md), or to install with the private key and certificate in a [hardware security module](hardware-security.md)\.
 
 `-s`, `--start`  
 \(Optional\) You can start the AWS IoT Greengrass Core software after it installs and, optionally, provisions resources\.  

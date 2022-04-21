@@ -89,9 +89,9 @@ This component must be able to perform outbound requests to the following endpoi
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#log-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ 2\.2\.1 ]
+#### [ 2\.2\.1 \- 2\.2\.3 ]
 
-The following table lists the dependencies for version 2\.2\.1 of this component\.
+The following table lists the dependencies for versions 2\.2\.1 \- 2\.2\.3 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -200,6 +200,15 @@ Choose from the following log levels, listed here in level order:  <a name="nucl
 + `WARN`
 + `ERROR`
 Default: `INFO`  
+`diskSpaceLimit`  <a name="log-manager-component-configuration-component-disk-space-limit"></a>
+\(Optional\) The maximum total size of all log files for this component, in the unit you specify in `diskSpaceLimitUnit`\. After the total size of this component's log files exceeds this maximum total size, the AWS IoT Greengrass Core software deletes this component's oldest log files\.  
+This parameter is related to the [log size limit](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-system-logs-limit) parameter \(`totalLogsSizeKB`\) of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. The AWS IoT Greengrass Core software uses the minimum of the two values as the maximum total log size for this component\.  
+`diskSpaceLimitUnit`  <a name="log-manager-component-configuration-disk-space-limit-unit"></a>
+\(Optional\) The unit for the `diskSpaceLimit`\. Choose from the following options:  
++ `KB` – kilobytes
++ `MB` – megabytes
++ `GB` – gigabytes
+Default: `KB`  
 `logFileDirectoryPath`  <a name="log-manager-component-configuration-component-log-file-dir-path"></a>
 \(Optional\) The path to the folder that contains this component's log files\.  
 You don't need to specify this parameter for Greengrass components that print to standard output \(stdout\) and standard error \(stderr\)\.  
@@ -211,18 +220,12 @@ If your component or application rotates log files, specify a regex that matches
 + `hello_world.log` – The most recent log file for the Hello World application\.
 + `hello_world_2020_12_15_17_0.log` – An older log file for the Hello World application\.
 Default: `componentName\\w*.log`, where *componentName* is the name of the component for this log configuration\.  
-`diskSpaceLimit`  <a name="log-manager-component-configuration-component-disk-space-limit"></a>
-\(Optional\) The maximum total size of all log files for this component, in the unit you specify in `diskSpaceLimitUnit`\. After the total size of this component's log files exceeds this maximum total size, the AWS IoT Greengrass Core software deletes this component's oldest log files\.  
-This parameter is related to the [log size limit](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-system-logs-limit) parameter \(`totalLogsSizeKB`\) of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. The AWS IoT Greengrass Core software uses the minimum of the two values as the maximum total log size for this component\.  
-`diskSpaceLimitUnit`  <a name="log-manager-component-configuration-disk-space-limit-unit"></a>
-\(Optional\) The unit for the `diskSpaceLimit`\. Choose from the following options:  
-+ `KB` – kilobytes
-+ `MB` – megabytes
-+ `GB` – gigabytes
-Default: `KB`  
 `deleteLogFileAfterCloudUpload`  <a name="log-manager-component-configuration-delete-log-file-after-cloud-upload"></a>
 \(Optional\) You can delete a log file after the log manager component uploads the logs to CloudWatch Logs\.  
-Default: `false`
+Default: `false`  
+`multiLineStartPattern`  <a name="log-manager-component-configuration-component-multi-line-start-pattern"></a>
+\(Optional\) A regular expression that identifies when a log message on a new line is a new log message\. If the regular expression doesn't match the new line, the log manager component appends the new line to the log message for the previous line\.  
+By default, the log manager component checks if the line starts with a whitespace character, such as a tab or space\. If it doesn't, the log manager handles that line as a new log message\. Otherwise, it appends that line to the current log message\. This behavior ensures that the log manager component doesn't split messages that span multiple lines, such as stack traces\.
 
   `periodicUploadIntervalSec`   
 \(Optional\) The period in seconds at which the log manager component checks for new log files to upload\.  
@@ -241,11 +244,11 @@ The following example configuration specifies to upload system logs and `com.exa
       "diskSpaceLimitUnit": "MB",
       "deleteLogFileAfterCloudUpload": "false"
     },
-    "componentLogsConfiguration": {
+    "componentLogsConfigurationMap": {
       "com.example.HelloWorld": {
         "minimumLogLevel": "INFO",
-        "diskSpaceLimit": "10",
-        "diskSpaceLimitUnit": "KB",
+        "diskSpaceLimit": "20",
+        "diskSpaceLimitUnit": "MB",
         "deleteLogFileAfterCloudUpload": "false"
       }
     }
@@ -297,6 +300,15 @@ Choose from the following log levels, listed here in level order:  <a name="nucl
 + `WARN`
 + `ERROR`
 Default: `INFO`  
+`diskSpaceLimit`  <a name="log-manager-component-configuration-component-disk-space-limit"></a>
+\(Optional\) The maximum total size of all log files for this component, in the unit you specify in `diskSpaceLimitUnit`\. After the total size of this component's log files exceeds this maximum total size, the AWS IoT Greengrass Core software deletes this component's oldest log files\.  
+This parameter is related to the [log size limit](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-system-logs-limit) parameter \(`totalLogsSizeKB`\) of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. The AWS IoT Greengrass Core software uses the minimum of the two values as the maximum total log size for this component\.  
+`diskSpaceLimitUnit`  <a name="log-manager-component-configuration-disk-space-limit-unit"></a>
+\(Optional\) The unit for the `diskSpaceLimit`\. Choose from the following options:  
++ `KB` – kilobytes
++ `MB` – megabytes
++ `GB` – gigabytes
+Default: `KB`  
 `logFileDirectoryPath`  <a name="log-manager-component-configuration-component-log-file-dir-path"></a>
 \(Optional\) The path to the folder that contains this component's log files\.  
 You don't need to specify this parameter for Greengrass components that print to standard output \(stdout\) and standard error \(stderr\)\.  
@@ -308,18 +320,12 @@ If your component or application rotates log files, specify a regex that matches
 + `hello_world.log` – The most recent log file for the Hello World application\.
 + `hello_world_2020_12_15_17_0.log` – An older log file for the Hello World application\.
 Default: `componentName\\w*.log`, where *componentName* is the name of the component for this log configuration\.  
-`diskSpaceLimit`  <a name="log-manager-component-configuration-component-disk-space-limit"></a>
-\(Optional\) The maximum total size of all log files for this component, in the unit you specify in `diskSpaceLimitUnit`\. After the total size of this component's log files exceeds this maximum total size, the AWS IoT Greengrass Core software deletes this component's oldest log files\.  
-This parameter is related to the [log size limit](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-system-logs-limit) parameter \(`totalLogsSizeKB`\) of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. The AWS IoT Greengrass Core software uses the minimum of the two values as the maximum total log size for this component\.  
-`diskSpaceLimitUnit`  <a name="log-manager-component-configuration-disk-space-limit-unit"></a>
-\(Optional\) The unit for the `diskSpaceLimit`\. Choose from the following options:  
-+ `KB` – kilobytes
-+ `MB` – megabytes
-+ `GB` – gigabytes
-Default: `KB`  
 `deleteLogFileAfterCloudUpload`  <a name="log-manager-component-configuration-delete-log-file-after-cloud-upload"></a>
 \(Optional\) You can delete a log file after the log manager component uploads the logs to CloudWatch Logs\.  
-Default: `false`
+Default: `false`  
+`multiLineStartPattern`  <a name="log-manager-component-configuration-component-multi-line-start-pattern"></a>
+\(Optional\) A regular expression that identifies when a log message on a new line is a new log message\. If the regular expression doesn't match the new line, the log manager component appends the new line to the log message for the previous line\.  
+By default, the log manager component checks if the line starts with a whitespace character, such as a tab or space\. If it doesn't, the log manager handles that line as a new log message\. Otherwise, it appends that line to the current log message\. This behavior ensures that the log manager component doesn't split messages that span multiple lines, such as stack traces\.
 
  `periodicUploadIntervalSec`   
 \(Optional\) The period in seconds at which the log manager component checks for new log files to upload\.  
@@ -342,8 +348,8 @@ The following example configuration specifies to upload system logs and `com.exa
       {
         "componentName": "com.example.HelloWorld",
         "minimumLogLevel": "INFO",
-        "diskSpaceLimit": "10",
-        "diskSpaceLimitUnit": "KB",
+        "diskSpaceLimit": "20",
+        "diskSpaceLimitUnit": "MB",
         "deleteLogFileAfterCloudUpload": "false"
       }
     ]
@@ -395,14 +401,6 @@ Choose from the following log levels, listed here in level order:  <a name="nucl
 + `WARN`
 + `ERROR`
 Default: `INFO`  
-`logFileDirectoryPath`  
-The path to the folder that contains this component's log files\.  
-To upload a Greengrass component's logs, specify ***/greengrass/v2*/logs**, and replace */greengrass/v2* with your Greengrass root folder\.  
-`logFileRegex`  
-A regular expression that specifies the log file name format that the component or application uses\. The log manager component uses this regular expression to identify log files in the folder at `logFileDirectoryPath`\.  
-To upload a Greengrass component's logs, specify a regex that matches the rotated log file names\. For example, you might specify **com\.example\.HelloWorld\\\\w\*\.log** to upload logs for a Hello World component\. The `\\w*` pattern matches zero or more word characters, which includes alphanumeric characters and underscores\. This regex matches log files with and without timestamps in their name\. In this example, the log manager uploads the following log files:  
-+ `com.example.HelloWorld.log` – The most recent log file for the Hello World component\.
-+ `com.example.HelloWorld_2020_12_15_17_0.log` – An older log file for the Hello World component\. The Greengrass nucleus adds a rotating timestamp to the log files\.  
 `diskSpaceLimit`  <a name="log-manager-component-configuration-component-disk-space-limit"></a>
 \(Optional\) The maximum total size of all log files for this component, in the unit you specify in `diskSpaceLimitUnit`\. After the total size of this component's log files exceeds this maximum total size, the AWS IoT Greengrass Core software deletes this component's oldest log files\.  
 This parameter is related to the [log size limit](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-system-logs-limit) parameter \(`totalLogsSizeKB`\) of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. The AWS IoT Greengrass Core software uses the minimum of the two values as the maximum total log size for this component\.  
@@ -412,9 +410,20 @@ This parameter is related to the [log size limit](greengrass-nucleus-component.m
 + `MB` – megabytes
 + `GB` – gigabytes
 Default: `KB`  
+`logFileDirectoryPath`  
+The path to the folder that contains this component's log files\.  
+To upload a Greengrass component's logs, specify ***/greengrass/v2*/logs**, and replace */greengrass/v2* with your Greengrass root folder\.  
+`logFileRegex`  
+A regular expression that specifies the log file name format that the component or application uses\. The log manager component uses this regular expression to identify log files in the folder at `logFileDirectoryPath`\.  
+To upload a Greengrass component's logs, specify a regex that matches the rotated log file names\. For example, you might specify **com\.example\.HelloWorld\\\\w\*\.log** to upload logs for a Hello World component\. The `\\w*` pattern matches zero or more word characters, which includes alphanumeric characters and underscores\. This regex matches log files with and without timestamps in their name\. In this example, the log manager uploads the following log files:  
++ `com.example.HelloWorld.log` – The most recent log file for the Hello World component\.
++ `com.example.HelloWorld_2020_12_15_17_0.log` – An older log file for the Hello World component\. The Greengrass nucleus adds a rotating timestamp to the log files\.  
 `deleteLogFileAfterCloudUpload`  <a name="log-manager-component-configuration-delete-log-file-after-cloud-upload"></a>
 \(Optional\) You can delete a log file after the log manager component uploads the logs to CloudWatch Logs\.  
-Default: `false`
+Default: `false`  
+`multiLineStartPattern`  <a name="log-manager-component-configuration-component-multi-line-start-pattern"></a>
+\(Optional\) A regular expression that identifies when a log message on a new line is a new log message\. If the regular expression doesn't match the new line, the log manager component appends the new line to the log message for the previous line\.  
+By default, the log manager component checks if the line starts with a whitespace character, such as a tab or space\. If it doesn't, the log manager handles that line as a new log message\. Otherwise, it appends that line to the current log message\. This behavior ensures that the log manager component doesn't split messages that span multiple lines, such as stack traces\.
 
 `periodicUploadIntervalSec`  
 \(Optional\) The period in seconds at which the log manager component checks for new log files to upload\.  
@@ -439,8 +448,8 @@ The following example configuration specifies to upload system logs and `com.exa
         "minimumLogLevel": "INFO",
         "logFileDirectoryPath": "/greengrass/v2/logs",
         "logFileRegex": "com.example.HelloWorld\\w*.log",
-        "diskSpaceLimit": "10",
-        "diskSpaceLimitUnit": "KB",
+        "diskSpaceLimit": "20",
+        "diskSpaceLimitUnit": "MB",
         "deleteLogFileAfterCloudUpload": "false"
       }
     ]
@@ -456,7 +465,7 @@ The following example configuration specifies to upload system logs and `com.exa
 The log manager component uploads to the following log groups and log streams\.
 
 ------
-#### [ 2\.1\.x ]<a name="log-manager-log-group-stream-format"></a>
+#### [ 2\.1\.0 and later ]<a name="log-manager-log-group-stream-format"></a>
 
 **Log group name**  
 
@@ -561,6 +570,8 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.2\.3  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/log-manager-component.html)  | 
+|  2\.2\.2  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/log-manager-component.html)  | 
 |  2\.2\.1  |  Version updated for Greengrass nucleus version 2\.5\.0 release\.  | 
 |  2\.2\.0  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/log-manager-component.html)  | 
 |  2\.1\.3  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 

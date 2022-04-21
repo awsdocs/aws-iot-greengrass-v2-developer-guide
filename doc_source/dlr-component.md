@@ -1,8 +1,8 @@
-# DLR installer<a name="dlr-component"></a>
+# DLR runtime<a name="dlr-component"></a>
 
-The DLR installer component \(`variant.DLR`\) contains a script that installs [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) \(DLR\) and its dependencies in a virtual environment on your device\. The [DLR image classification](dlr-image-classification-component.md) and [DLR object detection](dlr-object-detection-component.md) components use this component as a dependency for installing DLR\. Component version 1\.6\.x installs DLR v1\.6\.0 and component version 1\.3\.x installs DLR v1\.3\.0\. 
+The DLR runtime component \(`variant.DLR`\) contains a script that installs [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) \(DLR\) and its dependencies in a virtual environment on your device\. The [DLR image classification](dlr-image-classification-component.md) and [DLR object detection](dlr-object-detection-component.md) components use this component as a dependency for installing DLR\. Component version 1\.6\.x installs DLR v1\.6\.0 and component version 1\.3\.x installs DLR v1\.3\.0\. 
 
-To use a different runtime, you can use the recipe of this component as a template to [create a custom runtime component](ml-customization.md)\. 
+To use a different runtime, you can use the recipe of this component as a template to [create a custom machine learning component](ml-customization.md)\. 
 
 **Topics**
 + [Versions](#dlr-component-versions)
@@ -66,9 +66,9 @@ For more information about endpoints and ports required for basic operation, see
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#dlr-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ 1\.6\.6 ]
+#### [ 1\.6\.6 and 1\.6\.7 ]
 
-The following table lists the dependencies for version 1\.6\.6 of this component\.
+The following table lists the dependencies for versions 1\.6\.6 and 1\.6\.7 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -76,9 +76,9 @@ The following table lists the dependencies for version 1\.6\.6 of this component
 | [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.6\.0 | Soft | 
 
 ------
-#### [ 1\.6\.5 and 1\.6\.4 ]
+#### [ 1\.6\.4 and 1\.6\.5 ]
 
-The following table lists the dependencies for versions 1\.6\.5 and 1\.6\.4 of this component\.
+The following table lists the dependencies for versions 1\.6\.4 and 1\.6\.5 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -145,15 +145,16 @@ This feature is available in v1\.6\.6 and later of this component\.
   `UseInstaller`   
 <a name="ml-config-useinstaller-desc-dlr"></a>\(Optional\) String value that defines whether to use the installer script in this component to install DLR and its dependencies\. Supported values are `true` and `false`\.   <a name="ml-config-useinstaller-libraries-dlr"></a>
 
-Set this value to `false` if you want to use a custom script for DLR installation, or if you want to include runtime dependencies in a pre\-built Linux image\. To use this component with the AWS\-provided DLR inference components, you will need to install the following libraries, including any dependencies, and make them available the to default Greengrass system user\.
+Set this value to `false` if you want to use a custom script for DLR installation, or if you want to include runtime dependencies in a pre\-built Linux image\. To use this component with the AWS\-provided DLR inference components, install the following libraries, including any dependencies, and make them available to the system user, such as `ggc_user`, that runs the ML components\.
 + [Python](https://www.python.org/downloads/) 3\.7 or later, including `pip` for your version of Python\.
 + [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) v1\.6\.0
 + [NumPy](https://numpy.org/install/)\.
 + [OpenCV\-Python](https://pypi.org/project/opencv-python/)\.
 + [AWS IoT Device SDK v2 for Python](https://github.com/aws/aws-iot-device-sdk-python-v2)\.
 + [AWS Common Runtime \(CRT\) Python](https://github.com/awslabs/aws-crt-python)\.
-+ [Picamera](https://picamera.readthedocs.io/en/release-1.13/), for Raspberry Pi devices only\.
-+ [`awscam` module](https://docs.aws.amazon.com/deeplens/latest/dg/deeplens-library-awscam-module.html), for AWS DeepLens devices only\.
++ [Picamera](https://picamera.readthedocs.io/en/release-1.13/) \(for Raspberry Pi devices only\)\.
++ [`awscam` module](https://docs.aws.amazon.com/deeplens/latest/dg/deeplens-library-awscam-module.html) \(for AWS DeepLens devices\)\.
++ libGL \(for Linux devices\)
 <a name="ml-config-useinstaller-default"></a>Default: `true`
 
 ## Usage<a name="dlr-component-usage"></a>
@@ -218,6 +219,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  1\.6\.7  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/dlr-component.html)  | 
 |  1\.6\.6  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/dlr-component.html)  | 
 |  1\.6\.5  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/dlr-component.html)  | 
 |  1\.6\.4  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 

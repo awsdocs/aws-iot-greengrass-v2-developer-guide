@@ -57,10 +57,10 @@ To use the AWS IoT Device SDK v2 for Python, a device must run Python 3\.6 or la
 
    ```
    python3 basic_discovery.py \
-     --thing-name MyClientDevice1 \
+     --thing_name MyClientDevice1 \
      --topic 'clients/MyClientDevice1/hello/world' \
      --message 'Hello World!' \
-     --root-ca ~/certs/AmazonRootCA1.pem \
+     --ca_file ~/certs/AmazonRootCA1.pem \
      --cert ~/certs/device.pem.crt \
      --key ~/certs/private.pem.key \
      --region us-east-1 \
@@ -340,9 +340,9 @@ Apache Maven
    + Replace *us\-east\-1* with the AWS Region where your client device and core device operate\.
 
    ```
-   DISCOVERY_SAMPLE_ARGS="--thingName MyClientDevice1 \
+   DISCOVERY_SAMPLE_ARGS="--thing_name MyClientDevice1 \
      --topic 'clients/MyClientDevice1/hello/world' \
-     --rootca $HOME/certs/AmazonRootCA1.pem \
+     --ca_file $HOME/certs/AmazonRootCA1.pem \
      --cert $HOME/certs/device.pem.crt \
      --key $HOME/certs/private.pem.key \
      --region us-east-1"

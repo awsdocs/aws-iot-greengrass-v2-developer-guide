@@ -394,7 +394,7 @@ AWS IoT Greengrass doesn't currently support this feature on Windows core device
 
 To allow your custom components to use some IPC operations, you must define *authorization policies* that allow the component to perform the operation on certain resources\. Each authorization policy defines a list of operations and a list of resources that the policy allows\. For example, the publish/subscribe messaging IPC service defines publish and subscribe operations for topic resources\. You can use the `*` wildcard to allow access to all operations or all resources\.
 
-You define authorization policies in the component recipe with the `accessControl` configuration parameter\. The `accessControl` object maps IPC service identifiers to lists of authorization policies\. You can define multiple authorization policies for each IPC service to control access\. Each authorization policy has a policy ID, which must be unique among all components\.
+You define authorization policies with the `accessControl` configuration parameter, which you can set in the component recipe or when you deploy the component\. The `accessControl` object maps IPC service identifiers to lists of authorization policies\. You can define multiple authorization policies for each IPC service to control access\. Each authorization policy has a policy ID, which must be unique among all components\.
 
 **Tip**  
 To create unique policy IDs, you can combine the component name, IPC service name, and a counter\. For example, a component named `com.example.HelloWorld` might define two publish/subscribe authorization policies with the following IDs:  
@@ -499,6 +499,81 @@ Manifests:
   - Lifecycle:
       Run: |-
         java -jar {artifacts:path}/HelloWorld.jar
+```
+
+**Example component configuration update with an authorization policy**  
+The following example configuration update in a deployment specifies to configure a component with an `accessControl` object that defines an authorization policy\. This policy authorizes the `com.example.HelloWorld` component to publish to the `test/topic` topic\.    
+**Configuration to merge**  
+
+```
+{
+  "accessControl": {
+    "aws.greengrass.ipc.pubsub": {
+      "com.example.HelloWorld:pubsub:1": {
+        "policyDescription": "Allows access to publish to test/topic.",
+        "operations": [
+          "aws.greengrass#PublishToTopic"
+        ],
+        "resources": [
+          "test/topic"
+        ]
+      }
+    }
+  }
+}
+```
+The following command creates a deployment to a core device\.  
+
+```
+aws greengrassv2 create-deployment --cli-input-json file://hello-world-deployment.json
+```
+The `hello-world-deployment.json` file contains the following JSON document\.  
+
+```
+{
+  "targetArn": "arn:aws:iot:us-west-2:123456789012:thing/MyGreengrassCore",
+  "deploymentName": "Deployment for MyGreengrassCore",
+  "components": {
+    "com.example.HelloWorld": {
+      "componentVersion": "1.0.0",
+      "configurationUpdate": {
+        "merge": "{\"accessControl\":{\"aws.greengrass.ipc.pubsub\":{\"com.example.HelloWorld:pubsub:1\":{\"policyDescription\":\"Allows access to publish to test/topic.\",\"operations\":[\"aws.greengrass#PublishToTopic\"],\"resources\":[\"test/topic\"]}}}}"
+      }
+    }
+  }
+}
+```
+The following [Greengrass CLI](greengrass-cli-component.md) command creates a local deployment on a core device\.  
+
+```
+sudo greengrass-cli deployment create \
+  --recipeDir recipes \
+  --artifactDir artifacts \
+  --merge "com.example.HelloWorld=1.0.0" \
+  --update-config hello-world-configuration.json
+```
+The `hello-world-configuration.json` file contains the following JSON document\.  
+
+```
+{
+  "com.example.HelloWorld": {
+    "MERGE": {
+      "accessControl": {
+        "aws.greengrass.ipc.pubsub": {
+          "com.example.HelloWorld:pubsub:1": {
+            "policyDescription": "Allows access to publish to test/topic.",
+            "operations": [
+              "aws.greengrass#PublishToTopic"
+            ],
+            "resources": [
+              "test/topic"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
 ```
 
 ## Subscribe to IPC event streams<a name="ipc-subscribe-operations"></a>
@@ -847,9 +922,8 @@ int main() {
         std::cerr << "Operation timed out while waiting for response from Greengrass Core." << std::endl;
         exit(-1);
     }
-
-    auto response = responseFuture.get();
     
+    auto response = responseFuture.get();
     if (!response) {
         // Handle error.
         auto errorType = response.GetResultType();

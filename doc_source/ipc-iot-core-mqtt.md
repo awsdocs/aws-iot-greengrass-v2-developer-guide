@@ -6,10 +6,22 @@ The AWS IoT Core MQTT messaging IPC service lets you send and receive MQTT messa
 This MQTT messaging IPC service lets you exchange messages with AWS IoT Core\. For more information about how to exchange messages between components, see [Publish/subscribe local messages](ipc-publish-subscribe.md)\.
 
 **Topics**
++ [Minimum SDK versions](#ipc-iot-core-mqtt-sdk-versions)
 + [Authorization](#ipc-iot-core-mqtt-authorization)
 + [PublishToIoTCore](#ipc-operation-publishtoiotcore)
 + [SubscribeToIoTCore](#ipc-operation-subscribetoiotcore)
 + [Examples](#ipc-iot-core-mqtt-examples)
+
+## Minimum SDK versions<a name="ipc-iot-core-mqtt-sdk-versions"></a>
+
+The following table lists the minimum versions of the AWS IoT Device SDK that you must use to publish and subscribe to MQTT messages to and from AWS IoT Core\.
+
+
+| SDK | Minimum version | 
+| --- | --- | 
+|  [AWS IoT Device SDK for Java v2](https://github.com/aws/aws-iot-device-sdk-java-v2)  |  v1\.2\.10  | 
+|  [AWS IoT Device SDK for Python v2](https://github.com/aws/aws-iot-device-sdk-python-v2)  |  v1\.5\.3  | 
+|  [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2)  |  Linux: v1\.13\.0; Windows: v1\.14\.6  | 
 
 ## Authorization<a name="ipc-iot-core-mqtt-authorization"></a>
 

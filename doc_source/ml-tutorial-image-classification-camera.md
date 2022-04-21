@@ -2,7 +2,7 @@
 
 This tutorial shows you how to use the [TensorFlow Lite image classification](tensorflow-lite-image-classification-component.md) inference component to perform sample image classification inference on images from a camera locally on a Greengrass core device\. This component includes the following component dependencies: 
 + TensorFlow Lite image classification model store component
-+ TensorFlow Lite component
++ TensorFlow Lite runtime component
 
 **Note**  
 This tutorial accesses the camera module for [Raspberry Pi](https://www.raspberrypi.org/), [NVIDIA Jetson Nano](https://developer.nvidia.com/embedded/jetson-nano), or [AWS DeepLens](https://aws.amazon.com/deeplens/) devices, but AWS IoT Greengrass supports other devices on Armv7l, Armv8, or x86\_64 platforms\. To set up a camera for a different device, consult the relevant documentation for your device\.
@@ -218,7 +218,7 @@ In this step, you configure and deploy the TensorFlow Lite image classification 
 1. Run the following command to deploy the TensorFlow Lite image classification component on the device:
 
    ```
-   $ aws greengrassv2 create-deployment \
+   aws greengrassv2 create-deployment \
        --cli-input-json file://path/to/deployment.json
    ```
 
@@ -234,8 +234,6 @@ After you deploy the component, you can view the inference results in the compon
   1. In the [AWS IoT console](https://console.aws.amazon.com/iot/) navigation menu, choose **Test, MQTT test client**\.
 
   1. Under **Subscriptions**, choose **ml/tflite/image\-classification**\.
-
-   
 + **Component log**—To view the inference results in the component log, run the following command on your Greengrass core device\. 
 
   ```

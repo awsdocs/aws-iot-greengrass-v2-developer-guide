@@ -6,11 +6,23 @@ The component configuration IPC service lets you do the following:
 + Validate component configuration updates before the nucleus applies them\.
 
 **Topics**
++ [Minimum SDK versions](#ipc-component-configuration-sdk-versions)
 + [GetConfiguration](#ipc-operation-getconfiguration)
 + [UpdateConfiguration](#ipc-operation-updateconfiguration)
 + [SubscribeToConfigurationUpdate](#ipc-operation-subscribetoconfigurationupdate)
 + [SubscribeToValidateConfigurationUpdates](#ipc-operation-subscribetovalidateconfigurationupdates)
 + [SendConfigurationValidityReport](#ipc-operation-sendconfigurationvalidityreport)
+
+## Minimum SDK versions<a name="ipc-component-configuration-sdk-versions"></a>
+
+The following table lists the minimum versions of the AWS IoT Device SDK that you must use to interact with component configuration\.
+
+
+| SDK | Minimum version | 
+| --- | --- | 
+|  [AWS IoT Device SDK for Java v2](https://github.com/aws/aws-iot-device-sdk-java-v2)  |  v1\.2\.10  | 
+|  [AWS IoT Device SDK for Python v2](https://github.com/aws/aws-iot-device-sdk-python-v2)  |  v1\.5\.3  | 
+|  [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2)  |  Linux: v1\.13\.0; Windows: v1\.14\.6  | 
 
 ## GetConfiguration<a name="ipc-operation-getconfiguration"></a>
 
@@ -34,6 +46,7 @@ The key path to the configuration value\. Specify a list where each entry is the
   }
 }
 ```
+To get the component's complete configuration, specify an empty list\.
 
 ### Response<a name="ipc-operation-getconfiguration-response"></a>
 
@@ -47,7 +60,7 @@ The requested configuration as an object\.
 
 ## UpdateConfiguration<a name="ipc-operation-updateconfiguration"></a>
 
-Updates a configuration value for a component on the core device\.
+Updates a configuration value for this component on the core device\.
 
 ### Request<a name="ipc-operation-updateconfiguration-request"></a>
 
@@ -102,6 +115,7 @@ The key path to the configuration value for which to subscribe\. Specify a list 
   }
 }
 ```
+To subscribe to updates for all values in the component's configuration, specify an empty list\.
 
 ### Response<a name="ipc-operation-subscribetoconfigurationupdate-response"></a>
 
@@ -148,7 +162,7 @@ The object that contains the new configuration\.
 
 Tell the nucleus whether or not a configuration update to this component is valid\. The deployment fails if you tell the nucleus that the new configuration isn't valid\. Use the [SubscribeToValidateConfigurationUpdates](#ipc-operation-subscribetovalidateconfigurationupdates) operation to subscribe to validate configuration updates\.
 
-If a component doesn't respond to a validate configuration update notification, the nucleus waits the amount of time that you specify in the deployment's configuration validation policy\. After that timeout, the nucleus proceeds with the deployment\. The default component validation timeout is 20 seconds\. For more information, see [Create deployments](create-deployments.md) and the [ConfigurationValidationPolicy](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_ConfigurationValidationPolicy.html) object that you can provide when you call the [CreateDeployment](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_CreateDeployment.html) operation\.
+If a component doesn't respond to a validate configuration update notification, the nucleus waits the amount of time that you specify in the deployment's configuration validation policy\. After that timeout, the nucleus proceeds with the deployment\. The default component validation timeout is 20 seconds\. For more information, see [Create deployments](create-deployments.md) and the [DeploymentConfigurationValidationPolicy](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_DeploymentConfigurationValidationPolicy.html) object that you can provide when you call the [CreateDeployment](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_CreateDeployment.html) operation\.
 
 ### Request<a name="ipc-operation-sendconfigurationvalidityreport-request"></a>
 

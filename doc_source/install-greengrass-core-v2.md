@@ -23,7 +23,7 @@ Choose one of the following options to install the AWS IoT Greengrass Core softw
   For more information, see [Install AWS IoT Greengrass Core software with automatic resource provisioning](quick-installation.md)\.
 + **Manual installation**
 
-  Choose this option to create the required AWS resources manually or to install behind a firewall or network proxy\. By using a manual installation, you don't need to give the installer permission to create resources in your AWS account, because you create the required AWS IoT and IAM resources\. You can also configure your device to connect on port 443 or through a network proxy\.
+  Choose this option to create the required AWS resources manually or to install behind a firewall or network proxy\. By using a manual installation, you don't need to give the installer permission to create resources in your AWS account, because you create the required AWS IoT and IAM resources\. You can also configure your device to connect on port 443 or through a network proxy\. You can also configure the AWS IoT Greengrass Core software to use a private key and certificate that you store in a hardware security module \(HSM\), Trusted Platform Module \(TPM\), or another cryptographic element\.
 
   For more information, see [Install AWS IoT Greengrass Core software with manual resource provisioning](manual-installation.md)\.
 + **Installation with AWS IoT fleet provisioning**

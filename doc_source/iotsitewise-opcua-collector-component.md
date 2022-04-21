@@ -76,40 +76,16 @@ This component writes `BatchPutAssetPropertyValue` messages to AWS IoT Greengras
 
 This component uses the following log file\.
 
-------
-#### [ Linux ]
-
 ```
 /greengrass/v2/logs/aws.iot.SiteWiseEdgeCollectorOpcua.log
 ```
 
-------
-#### [ Windows ]
-
-```
-C:\greengrass\v2\logs\aws.iot.SiteWiseEdgeCollectorOpcua.log
-```
-
-------
-
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
-
-------
-#### [ Linux ]
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
 
   ```
   sudo tail -f /greengrass/v2/logs/aws.iot.SiteWiseEdgeCollectorOpcua.log
   ```
-
-------
-#### [ Windows \(PowerShell\) ]
-
-  ```
-  Get-Content C:\greengrass\v2\logs\aws.iot.SiteWiseEdgeCollectorOpcua.log -Tail 10 -Wait
-  ```
-
-------
 
 ## Licenses<a name="iotsitewise-opcua-collector-component-licenses"></a>
 
@@ -122,6 +98,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.0\.3  |  Bug fixes and improvements\.  | 
 |  2\.0\.2  |  Bug fixes and improvements to asset priority syncing with edge\.  | 
 |  2\.0\.1  |  Initial version\.  | 
 

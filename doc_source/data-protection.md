@@ -18,3 +18,4 @@ For more information about data protection, see the [AWS Shared Responsibility M
 
 **Topics**
 + [Data encryption](data-encryption.md)
++ [Hardware security integration](hardware-security.md)

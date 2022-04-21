@@ -1,6 +1,8 @@
 # Test AWS IoT Greengrass components with local deployments<a name="test-components"></a>
 
-When you are ready to test your component, you can create a local deployment to install it to your Greengrass core device\.
+If you develop a Greengrass component on a core device, you can create a local deployment to install and test it\. Follow the steps in this section to create a local deployment\.
+
+If you develop the component on a different computer, such as a local development computer, you can't create a local deployment\. Instead, publish the component to the AWS IoT Greengrass service so that you can deploy it to Greengrass core devices to test it\. For more information, see [Publish components to deploy to your core devices](publish-components.md) and [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)\.
 
 **To test a component on an Greengrass core device**
 
@@ -53,7 +55,7 @@ When you are ready to test your component, you can create a local deployment to 
    ```
 
 ------
-#### [ Windows Cmmand Prompt \(CMD\) ]
+#### [ Windows Command Prompt \(CMD\) ]
 
    ```
    C:\greengrass\v2\bin\greengrass-cli deployment create ^
@@ -76,4 +78,4 @@ When you are ready to test your component, you can create a local deployment to 
 **Note**  
 You can also use the `greengrass-cli deployment create` command to set the value of your component's configuration parameters\. For more information, see [create](gg-cli-deployment.md#deployment-create)\.
 
-1. Test your component as it runs on the Greengrass core device\. When you finish this version of your component, you can upload it to the AWS IoT Greengrass service\. Then, you can deploy the component to other core devices\. For more information, see [Upload components to deploy to your core devicesUpload components to deploy](upload-components.md)\.
+1. Test your component as it runs on the Greengrass core device\. When you finish this version of your component, you can upload it to the AWS IoT Greengrass service\. Then, you can deploy the component to other core devices\. For more information, see [Publish components to deploy to your core devices](publish-components.md)\.

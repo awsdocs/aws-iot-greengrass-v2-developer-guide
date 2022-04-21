@@ -59,29 +59,163 @@ The following example demonstrates configuration updates for a dashboard compone
 }
 ```
 
-Then, you apply the following configuration update, which specifies a merge update but not a reset update\. This configuration tells the component to display the dashboard on HTTP port 8080 with data from two boilers\.
+### Industrial dashboard component recipe<a name="w875aac19c23c15c17b7b1"></a>
+
+------
+#### [ JSON ]
 
 ```
 {
-  "merge": {
-    "name": "Factory 2A",
-    "network": {
-      "useHttps": false,
-      "port": {
-        "http": 8080
+  "RecipeFormatVersion": "2020-01-25",
+  "ComponentName": "com.example.IndustrialDashboard",
+  "ComponentVersion": "1.0.0",
+  "ComponentDescription": "Displays information about industrial equipment.",
+  "ComponentPublisher": "Amazon",
+  "ComponentConfiguration": {
+    "DefaultConfiguration": {
+      "name": null,
+      "mode": "REQUEST",
+      "network": {
+        "useHttps": true,
+        "port": {
+          "http": 80,
+          "https": 443
+        },
+      },
+      "tags": []
+    }
+  },
+  "Manifests": [
+    {
+      "Platform": {
+        "os": "linux"
+      },
+      "Lifecycle": {
+        "Run": "python3 -u {artifacts:path}/industrial_dashboard.py"
       }
     },
-    "tags": [
-      "/boiler/1/temperature",
-      "/boiler/1/pressure",
-      "/boiler/2/temperature",
-      "/boiler/2/pressure"
-    ]
-  }
+    {
+      "Platform": {
+        "os": "windows"
+      },
+      "Lifecycle": {
+        "Run": "py -3 -u {artifacts:path}/industrial_dashboard.py"
+      }
+    }
+  ]
 }
 ```
 
-After this update, the dashboard component has the following configuration\.
+------
+#### [ YAML ]
+
+```
+---
+RecipeFormatVersion: '2020-01-25'
+ComponentName: com.example.IndustrialDashboard
+ComponentVersion: '1.0.0'
+ComponentDescription: Displays information about industrial equipment.
+ComponentPublisher: Amazon
+ComponentConfiguration:
+  DefaultConfiguration:
+    name: null
+    mode: REQUEST
+    network:
+      useHttps: true
+      port:
+        http: 80
+        https: 443
+    tags: []
+Manifests:
+  - Platform:
+      os: linux
+    Lifecycle:
+      Run: |
+        python3 -u {artifacts:path}/industrial_dashboard.py
+  - Platform:
+      os: windows
+    Lifecycle:
+      Run: |
+        py -3 -u {artifacts:path}/industrial_dashboard.py
+```
+
+------
+
+**Example 1: Merge update**  
+You create a deployment that applies the following configuration update, which specifies a merge update but not a reset update\. This configuration update tells the component to display the dashboard on HTTP port 8080 with data from two boilers\.    
+**Configuration to merge**  
+
+```
+{
+  "name": "Factory 2A",
+  "network": {
+    "useHttps": false,
+    "port": {
+      "http": 8080
+    }
+  },
+  "tags": [
+    "/boiler/1/temperature",
+    "/boiler/1/pressure",
+    "/boiler/2/temperature",
+    "/boiler/2/pressure"
+  ]
+}
+```
+The following command creates a deployment to a core device\.  
+
+```
+aws greengrassv2 create-deployment --cli-input-json file://dashboard-deployment.json
+```
+The `dashboard-deployment.json` file contains the following JSON document\.  
+
+```
+{
+  "targetArn": "arn:aws:iot:us-west-2:123456789012:thing/MyGreengrassCore",
+  "deploymentName": "Deployment for MyGreengrassCore",
+  "components": {
+    "com.example.IndustrialDashboard": {
+      "componentVersion": "1.0.0",
+      "configurationUpdate": {
+        "merge": "{\"name\":\"Factory 2A\",\"network\":{\"useHttps\":false,\"port\":{\"http\":8080}},\"tags\":[\"/boiler/1/temperature\",\"/boiler/1/pressure\",\"/boiler/2/temperature\",\"/boiler/2/pressure\"]}"
+      }
+    }
+  }
+}
+```
+The following [Greengrass CLI](greengrass-cli-component.md) command creates a local deployment on a core device\.  
+
+```
+sudo greengrass-cli deployment create \
+  --recipeDir recipes \
+  --artifactDir artifacts \
+  --merge "com.example.IndustrialDashboard=1.0.0" \
+  --update-config dashboard-configuration.json
+```
+The `dashboard-configuration.json` file contains the following JSON document\.  
+
+```
+{
+  "com.example.IndustrialDashboard": {
+    "MERGE": {
+      "name": "Factory 2A",
+      "network": {
+        "useHttps": false,
+        "port": {
+          "http": 8080
+        }
+      },
+      "tags": [
+        "/boiler/1/temperature",
+        "/boiler/1/pressure",
+        "/boiler/2/temperature",
+        "/boiler/2/pressure"
+      ]
+    }
+  }
+}
+```
+After this update, the dashboard component has the following configuration\.  
 
 ```
 {
@@ -103,26 +237,79 @@ After this update, the dashboard component has the following configuration\.
 }
 ```
 
-Then, apply the following configuration update to display the dashboard on the default HTTPS port with data from different boilers\.
+**Example 2: Reset and merge updates**  
+Then, you create a deployment that applies the following configuration update, which specifies a reset update and a merge update\. These updates specify to display the dashboard on the default HTTPS port with data from different boilers\. These updates modify the configuration that results from the configuration updates in the previous example\.    
+**Reset paths**  
+
+```
+[
+  "/network/useHttps",
+  "/tags"
+]
+```  
+**Configuration to merge**  
 
 ```
 {
-  "reset": [
-    "/network/useHttps",
-    "/tags"
-  ],
-  "merge": {
-    "tags": [
-      "/boiler/3/temperature",
-      "/boiler/3/pressure",
-      "/boiler/4/temperature",
-      "/boiler/4/pressure"
-    ]
+  "tags": [
+    "/boiler/3/temperature",
+    "/boiler/3/pressure",
+    "/boiler/4/temperature",
+    "/boiler/4/pressure"
+  ]
+}
+```
+The following command creates a deployment to a core device\.  
+
+```
+aws greengrassv2 create-deployment --cli-input-json file://dashboard-deployment2.json
+```
+The `dashboard-deployment2.json` file contains the following JSON document\.  
+
+```
+{
+  "targetArn": "arn:aws:iot:us-west-2:123456789012:thing/MyGreengrassCore",
+  "deploymentName": "Deployment for MyGreengrassCore",
+  "components": {
+    "com.example.IndustrialDashboard": {
+      "componentVersion": "1.0.0",
+      "configurationUpdate": {
+        "merge": "{\"tags\":[\"/boiler/3/temperature\",\"/boiler/3/pressure\",\"/boiler/4/temperature\",\"/boiler/4/pressure\"]}"
+      }
+    }
   }
 }
 ```
+The following [Greengrass CLI](greengrass-cli-component.md) command creates a local deployment on a core device\.  
 
-After this update, the dashboard component has the following configuration\.
+```
+sudo greengrass-cli deployment create \
+  --recipeDir recipes \
+  --artifactDir artifacts \
+  --merge "com.example.IndustrialDashboard=1.0.0" \
+  --update-config dashboard-configuration2.json
+```
+The `dashboard-configuration2.json` file contains the following JSON document\.  
+
+```
+{
+  "com.example.IndustrialDashboard": {
+    "RESET": [
+      "/network/useHttps",
+      "/tags"
+    ],
+    "MERGE": {
+      "tags": [
+        "/boiler/3/temperature",
+        "/boiler/3/pressure",
+        "/boiler/4/temperature",
+        "/boiler/4/pressure"
+      ]
+    }
+  }
+}
+```
+After this update, the dashboard component has the following configuration\.  
 
 ```
 {

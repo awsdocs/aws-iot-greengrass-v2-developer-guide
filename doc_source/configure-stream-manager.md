@@ -8,8 +8,16 @@ Stream manager provides the following parameters that you can configure when you
 
 **Storage directory**  <a name="STREAM_MANAGER_STORE_ROOT_DIR"></a>
 Parameter name: `STREAM_MANAGER_STORE_ROOT_DIR`  
-The absolute path of the local directory used to store streams\. This value must start with a forward slash \(for example, `/data`\)\.  
-For information about securing stream data, see [Local data security](manage-data-streams.md#stream-manager-security-stream-data)\.
+The absolute path of the local folder used to store streams\. This value must start with a forward slash \(for example, `/data`\)\.  
+<a name="stream-manager-store-root-dir-parameter-folder-requirements"></a>You must specify an existing folder, and the [system user who runs the stream manager component](configure-greengrass-core-v2.md#configure-component-user) must have permissions to read and write to this folder\. For example, you can run the following commands to create and configure a folder, `/var/greengrass/streams`, which you specify as the stream manager root folder\. These commands allow the default system user, `ggc_user`, to read and write to this folder\.  
+
+```
+sudo mkdir /var/greengrass/streams
+sudo chown ggc_user /var/greengrass/streams
+sudo chmod 700 /var/greengrass/streams
+```
+For information about securing stream data, see [Local data security](manage-data-streams.md#stream-manager-security-stream-data)\.  
+Default: `/greengrass/v2/work/aws.greengrass.StreamManager`
 
 **Server port**  
 Parameter name: `STREAM_MANAGER_SERVER_PORT`  

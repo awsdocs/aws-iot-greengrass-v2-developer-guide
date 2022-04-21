@@ -18,13 +18,12 @@ https://greengrass-ats.iot.region.amazonaws.com:port/greengrass/discover/thing/t
 For a list of supported AWS Regions and endpoints for the AWS IoT Greengrass discovery API, see [AWS IoT Greengrass V2 endpoints and quotas](https://docs.aws.amazon.com/general/latest/gr/greengrassv2.html) in the *AWS General Reference*\. This API operation is available only on the Greengrass data plane endpoint\. The control plane endpoint that you use to manage components and deployments is different from the data plane endpoint\.
 
 **Note**  
-The discovery API is the same for AWS IoT Greengrass V1 and AWS IoT Greengrass V2\. If you have client devices that connect to a AWS IoT Greengrass V1 core, you can connect them to AWS IoT Greengrass V2 core devices without changing the code on the client devices\. For more information, see [Greengrass Discovery RESTful API](https://docs.aws.amazon.com/greengrass/v1/developerguide/gg-discover-api.html) in the *AWS IoT Greengrass Version 1 Developer Guide*\.
+The discovery API is the same for AWS IoT Greengrass V1 and AWS IoT Greengrass V2\. If you have client devices that connect to an AWS IoT Greengrass V1 core, you can connect them to AWS IoT Greengrass V2 core devices without changing the code on the client devices\. For more information, see [Greengrass Discovery RESTful API](https://docs.aws.amazon.com/greengrass/v1/developerguide/gg-discover-api.html) in the *AWS IoT Greengrass Version 1 Developer Guide*\.
 
 **Topics**
 + [Discovery authentication and authorization](#greengrass-discover-auth)
 + [Request](#greengrass-discover-request)
 + [Response](#greengrass-discover-response)
-+ [Example discover response documents](#greengrass-discover-response-examples)
 + [Test the discovery API with cURL](#greengrass-discover-test-request)
 
 ## Discovery authentication and authorization<a name="greengrass-discover-auth"></a>
@@ -77,18 +76,12 @@ Clients that connect on port 443 must implement the [Application Layer Protocol 
 
 ## Response<a name="greengrass-discover-response"></a>
 
-Upon success, the response includes the standard HTTP headers plus the following code and body:
+Upon success, the response header includes the HTTP 200 status code and the response body contains the discover response document\.
 
-```
-HTTP 200
-BODY: response document
-```
-
-For more information, see [Example discover response documents](#greengrass-discover-response-examples)\.
-
-## Example discover response documents<a name="greengrass-discover-response-examples"></a>
-
+**Note**  
 Because AWS IoT Greengrass V2 uses the same discovery API as AWS IoT Greengrass V1, the response organizes information according to AWS IoT Greengrass V1 concepts, such as Greengrass groups\. The response contains a list of Greengrass groups\. In AWS IoT Greengrass V2, each core device is in its own group, where the group contains only that core device and its connectivity information\.
+
+### Example discover response documents<a name="greengrass-discover-response-examples"></a>
 
 The following document shows the response for a client device that is associated to one Greengrass core device\. The core device has one endpoint and one CA certificate\.
 

@@ -20,9 +20,9 @@ To complete this getting started tutorial, you need the following:
 + <a name="requirement-supported-region"></a>The use of an [AWS Region](https://en.wikipedia.org/wiki/Amazon_Web_Services#Availability_and_topology) that supports AWS IoT Greengrass V2\. For the list of supported Regions, see [AWS IoT Greengrass V2 endpoints and quotas](https://docs.aws.amazon.com/general/latest/gr/greengrassv2.html) in the *AWS General Reference*
 + An AWS Identity and Access Management \(IAM\) user with administrator permissions\.
 + A Windows, macOS, or Unix\-like development computer with an internet connection\.
-+ A device to set up as a Greengrass core device, such as a Raspberry Pi with [Raspberry Pi OS](https://www.raspberrypi.org/downloads/) \(previously called Raspbian\), or a Windows 10 device\. You must have administrator permissions on this device, or the ability to acquire administrator privileges, such as through `sudo`\.
++ A device to set up as a Greengrass core device, such as a Raspberry Pi with [Raspberry Pi OS](https://www.raspberrypi.org/downloads/) \(previously called Raspbian\), or a Windows 10 device\. You must have administrator permissions on this device, or the ability to acquire administrator privileges, such as through `sudo`\. This device must have an internet connection\.
 
-  You can also choose to use a different device that meets the requirements to install and run the AWS IoT Greengrass Core software and has an internet connection to the same network as your development computer\. For more information, see the environment setup information for your device type in [Setting up AWS IoT Greengrass core devices](setting-up.md)\.
+  You can also choose to use a different device that meets the requirements to install and run the AWS IoT Greengrass Core software\. For more information, see [Supported platforms and requirements](setting-up.md#installation-requirements)\.
 
   If your development computer meets these requirements, you can set it up as your Greengrass core device in this tutorial\.
 + [Python](https://www.python.org/downloads/) 3\.5 or later installed for all users on the device and added to the `PATH` environment variable\. On Windows, you must also have the Python Launcher for Windows installed for all users\.
@@ -47,7 +47,7 @@ You can run the following command to check the version of the AWS CLI that you h
 
   For more information, see [Installing, updating, and uninstalling the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and [Configuring the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) in the *AWS Command Line Interface User Guide*\.
 **Note**  
-If you use a Raspberry Pi or another 32\-bit ARM device, install AWS CLI V1\. AWS CLI V2 isn't available for 32\-bit ARM devices\. For more information, see [Installing, updating, and uninstalling the AWS CLI version 1](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv1.html)\.
+If you use a 32\-bit ARM device, such as a Raspberry Pi with a 32\-bit operating system, install AWS CLI V1\. AWS CLI V2 isn't available for 32\-bit ARM devices\. For more information, see [Installing, updating, and uninstalling the AWS CLI version 1](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv1.html)\.
 
 ## Step 1: Set up an AWS account<a name="getting-started-set-up-aws-account"></a>
 
@@ -67,7 +67,7 @@ If you do not have an AWS account, complete the following steps to create one\.
 **Note**  
 We strongly recommend that you adhere to the best practice of using the **Administrator** IAM user that follows and securely lock away the root user credentials\. Sign in as the root user only to perform a few [account and service management tasks](https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.html)\.
 
-1. In the navigation pane, choose **Users** and then choose **Add user**\.
+1. In the navigation pane, choose **Users** and then choose **Add users**\.
 
 1. For **User name**, enter **Administrator**\.
 
@@ -149,11 +149,98 @@ If your development computer uses an earlier version of Windows, you might not h
    OpenJDK 64-Bit Server VM (build 11.0.9.1+1-post-Debian-1deb10u2, mixed mode)
    ```
 
+### Set up a Linux device \(other\)<a name="getting-started-set-up-linux"></a><a name="set-up-linux-device-environment-procedure"></a>
+
+**To set up a Linux device for AWS IoT Greengrass V2**
+
+1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\. The following commands show you how to install OpenJDK on your device\.
+   + For Debian\-based or Ubuntu\-based distributions:
+
+     ```
+     sudo apt install default-jdk
+     ```
+   + For Red Hat\-based distributions:
+
+     ```
+     sudo yum install java-11-openjdk-devel
+     ```
+   + For Amazon Linux 2:
+
+     ```
+     sudo amazon-linux-extras install java-openjdk11
+     ```
+
+   When the installation completes, run the following command to verify that Java runs on your Raspberry Pi\.
+
+   ```
+   java -version
+   ```
+
+   The command prints the version of Java that runs on the device\. For example, on a Debian\-based distribution, the output might look similar to the following sample\.
+
+   ```
+   openjdk version "11.0.9.1" 2020-11-04
+   OpenJDK Runtime Environment (build 11.0.9.1+1-post-Debian-1deb10u2)
+   OpenJDK 64-Bit Server VM (build 11.0.9.1+1-post-Debian-1deb10u2, mixed mode)
+   ```
+
+1. \(Optional\) Create the default system user and group that runs components on the device\. You can also choose to let the AWS IoT Greengrass Core software installer create this user and group during installation with the `--component-default-user` installer argument\. For more information, see [Installer arguments](configure-installer.md)\.
+
+   ```
+   sudo useradd --system --create-home ggc_user
+   sudo groupadd --system ggc_group
+   ```
+
+1. Verify that the user that runs the AWS IoT Greengrass Core software \(typically `root`\), has permission to run `sudo` with any user and any group\.
+
+   1. Run the following command to open the `/etc/sudoers` file\.
+
+      ```
+      sudo visudo
+      ```
+
+   1. Verify that the permission for the user looks like the following example\.
+
+      ```
+      root    ALL=(ALL:ALL) ALL
+      ```
+
+1. \(Optional\) To [run containerized Lambda functions](run-lambda-functions.md), you must enable [cgroups](https://en.wikipedia.org/wiki/Cgroups) v1, and you must enable and mount the *memory* and *devices* cgroups\. If you don't plan to run containerized Lambda functions, you can skip this step\.
+
+   To enable these cgroups options, boot the device with the following Linux kernel parameters\.
+
+   ```
+   cgroup_enable=memory cgroup_memory=1 systemd.unified_cgroup_hierarchy=0
+   ```
+
+   For information about viewing and setting kernel parameters for your device, see the documentation for your operating system and boot loader\. Follow the instructions to permanently set the kernel parameters\.
+**Tip: Set kernel parameters on a Raspberry Pi**  
+If your device is a Raspberry Pi, you can complete the following steps to view and update its Linux kernel parameters:  
+Open the `/boot/cmdline.txt` file\. This file specifies Linux kernel parameters to apply when the Raspberry Pi boots\.  
+For example, on a Linux\-based system, you can run the following command to use GNU nano to open the file\.  
+
+      ```
+      sudo nano /boot/cmdline.txt
+      ```
+Verify that the `/boot/cmdline.txt` file contains the following kernel parameters\. The `systemd.unified_cgroup_hierarchy=0` parameter specifies to use cgroups v1 instead of cgroups v2\.  
+
+      ```
+      cgroup_enable=memory cgroup_memory=1 systemd.unified_cgroup_hierarchy=0
+      ```
+If the `/boot/cmdline.txt` file doesn't contain these parameters, or it contains these parameters with different values, update the file to contain these parameters and values\.
+If you updated the `/boot/cmdline.txt` file, reboot the Raspberry Pi to apply the changes\.  
+
+      ```
+      sudo reboot
+      ```
+
+1. Install all other required dependencies on your device as indicated by the list of requirements in [Device requirements](setting-up.md#greengrass-v2-requirements)\.
+
 ### Set up a Windows device<a name="getting-started-set-up-windows"></a><a name="set-up-windows-device-environment-procedure"></a>
 
 **To set up a Windows device for AWS IoT Greengrass V2**
 
-1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.\. You must use a 64\-bit version of the Java runtime on Windows devices\.
+1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.\.
 
 1. <a name="set-up-windows-device-environment-open-cmd"></a>Open the Windows Command Prompt \(`cmd.exe`\) as an administrator\.
 
@@ -201,7 +288,7 @@ Follow the steps in this section to set up your Raspberry Pi as a AWS IoT Greeng
 
    1. Choose your core device's operating system: **Linux** or **Windows**\.
 
-   1. <a name="installer-export-aws-credentials"></a>Provide your AWS credentials to the device so that the installer can provision the AWS IoT and IAM resources for your core device\. To increase security, you can get credentials for an IAM role that allows only the minimum permissions necessary to provision\. For more information, see [Minimal IAM policy for installer to provision resources](provision-minimal-iam-policy.md)\.
+   1. <a name="installer-export-aws-credentials"></a>Provide your AWS credentials to the device so that the installer can provision the AWS IoT and IAM resources for your core device\. To increase security, we recommend that you get temporary credentials for an IAM role that allows only the minimum permissions necessary to provision\. For more information, see [Minimal IAM policy for installer to provision resources](provision-minimal-iam-policy.md)\.
 **Note**  
 The installer doesn't save or store your credentials\.
 
@@ -549,7 +636,7 @@ aws greengrassv2 create-deployment \
   --target-arn "arn:aws:iot:region:account-id:thing/MyGreengrassCore" \
   --components '{
     "aws.greengrass.Cli": {
-      "componentVersion": "2.5.0"
+      "componentVersion": "2.5.5"
     }
   }'
 ```
@@ -560,7 +647,7 @@ aws greengrassv2 create-deployment \
 ```
 aws greengrassv2 create-deployment ^
   --target-arn "arn:aws:iot:region:account-id:thing/MyGreengrassCore" ^
-  --components "{\"aws.greengrass.Cli\":{\"componentVersion\":\"2.5.0\"}}"
+  --components "{\"aws.greengrass.Cli\":{\"componentVersion\":\"2.5.5\"}}"
 ```
 
 ------
@@ -569,7 +656,7 @@ aws greengrassv2 create-deployment ^
 ```
 aws greengrassv2 create-deployment `
   --target-arn "arn:aws:iot:region:account-id:thing/MyGreengrassCore" `
-  --components '{\"aws.greengrass.Cli\":{\"componentVersion\":\"2.5.0\"}}'
+  --components '{\"aws.greengrass.Cli\":{\"componentVersion\":\"2.5.5\"}}'
 ```
 
 ------
@@ -1172,9 +1259,9 @@ In this section, you complete these steps on your Greengrass core device to uplo
 
    1. In the [IAM console](https://console.aws.amazon.com/iam) navigation menu, choose **Role**, and then choose the *GreengrassV2TokenExchangeRole* role that you specified when you ran the AWS IoT Greengrass Core software\.
 
-   1. Under **Permissions**, choose **Attach policies**\.
+   1. Under **Permissions**, choose **Add permissions**, then choose **Attach policies**\.
 
-   1. On the **Attach Permissions** page, select the check box next to the `MyGreengrassV2ComponentArtifactPolicy` policy that you created, and then choose **Attach policy**\.
+   1. On the **Add permissions** page, select the check box next to the `MyGreengrassV2ComponentArtifactPolicy` policy that you created, and then choose **Attach policies**\.
 
 1. Use the component recipe to create a component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\.
 
@@ -1710,6 +1797,6 @@ For more information, see [Troubleshooting AWS IoT Greengrass V2](troubleshootin
 ## Next steps<a name="getting-started-next-steps"></a>
 
 You've completed this tutorial\. The AWS IoT Greengrass Core software and your Hello World component run on your device\. Also, your Hello World component is available in the AWS IoT Greengrass cloud service to deploy to other devices\. For more information about the topics that this tutorial explores, see the following:
-+ [Create local AWS IoT Greengrass components](create-components.md)
-+ [Upload components to deploy to your core devicesUpload components to deploy](upload-components.md)
++ [Create AWS IoT Greengrass components](create-components.md)
++ [Publish components to deploy to your core devices](publish-components.md)
 + [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)

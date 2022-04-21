@@ -107,27 +107,27 @@ This component provides the following configuration parameters that you can cust
 ------
 #### [ 2\.1\.x ]
 
-`defaultPort`  
-\(Optional\) The MQTT broker port to report when this component detects IP addresses\. You must specify this parameter if you configure the MQTT broker to use a different port than the default port 8883\.  
+`defaultPort`  <a name="ip-detector-component-configuration-default-port"></a>
+<a name="ip-detector-component-configuration-default-port-definition"></a>\(Optional\) The MQTT broker port to report when this component detects IP addresses\. You must specify this parameter if you configure the MQTT broker to use a different port than the default port 8883\.  
 Default: `8883`
 
 `includeIPv4LoopbackAddrs`  <a name="ip-detector-component-configuration-include-ipv4-loopback-addrs"></a>
-\(Optional\) You can enable this option to detect and report IPv4 loopback addresses\. These are IP addresses, such as `localhost`, where a device can communicate with itself\. Use this option in test environments where the core device and client device run on the same system\.  
+<a name="ip-detector-component-configuration-include-ipv4-loopback-addrs-definition"></a>\(Optional\) You can enable this option to detect and report IPv4 loopback addresses\. These are IP addresses, such as `localhost`, where a device can communicate with itself\. Use this option in test environments where the core device and client device run on the same system\.  
 Default: `false`
 
 `includeIPv4LinkLocalAddrs`  <a name="ip-detector-component-configuration-include-ipv4-link-local-addrs"></a>
-\(Optional\) You can enable this option to detect and report IPv4 [link\-local addresses](https://en.wikipedia.org/wiki/Link-local_address)\. Use this option if the core device's network doesn't have Dynamic Host Configuration Protocol \(DHCP\) or statically assigned IP addresses\.  
+<a name="ip-detector-component-configuration-include-ipv4-link-local-addrs-definition"></a>\(Optional\) You can enable this option to detect and report IPv4 [link\-local addresses](https://en.wikipedia.org/wiki/Link-local_address)\. Use this option if the core device's network doesn't have Dynamic Host Configuration Protocol \(DHCP\) or statically assigned IP addresses\.  
 Default: `false`
 
 ------
 #### [ 2\.0\.x ]
 
 `includeIPv4LoopbackAddrs`  <a name="ip-detector-component-configuration-include-ipv4-loopback-addrs"></a>
-\(Optional\) You can enable this option to detect and report IPv4 loopback addresses\. These are IP addresses, such as `localhost`, where a device can communicate with itself\. Use this option in test environments where the core device and client device run on the same system\.  
+<a name="ip-detector-component-configuration-include-ipv4-loopback-addrs-definition"></a>\(Optional\) You can enable this option to detect and report IPv4 loopback addresses\. These are IP addresses, such as `localhost`, where a device can communicate with itself\. Use this option in test environments where the core device and client device run on the same system\.  
 Default: `false`
 
 `includeIPv4LinkLocalAddrs`  <a name="ip-detector-component-configuration-include-ipv4-link-local-addrs"></a>
-\(Optional\) You can enable this option to detect and report IPv4 [link\-local addresses](https://en.wikipedia.org/wiki/Link-local_address)\. Use this option if the core device's network doesn't have Dynamic Host Configuration Protocol \(DHCP\) or statically assigned IP addresses\.  
+<a name="ip-detector-component-configuration-include-ipv4-link-local-addrs-definition"></a>\(Optional\) You can enable this option to detect and report IPv4 [link\-local addresses](https://en.wikipedia.org/wiki/Link-local_address)\. Use this option if the core device's network doesn't have Dynamic Host Configuration Protocol \(DHCP\) or statically assigned IP addresses\.  
 Default: `false`
 
 ------

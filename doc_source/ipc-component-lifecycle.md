@@ -7,12 +7,24 @@ Use the component lifecycle IPC service to:
 + Pause and resume component processes\.
 
 **Topics**
++ [Minimum SDK versions](#ipc-component-lifecycle-sdk-versions)
 + [Authorization](#ipc-component-lifecycle-authorization)
 + [UpdateState](#ipc-operation-updatestate)
 + [SubscribeToComponentUpdates](#ipc-operation-subscribetocomponentupdates)
 + [DeferComponentUpdate](#ipc-operation-defercomponentupdate)
 + [PauseComponent](#ipc-operation-pausecomponent)
 + [ResumeComponent](#ipc-operation-resumecomponent)
+
+## Minimum SDK versions<a name="ipc-component-lifecycle-sdk-versions"></a>
+
+The following table lists the minimum versions of the AWS IoT Device SDK that you must use to interact with component lifecycle\.
+
+
+| SDK | Minimum version | 
+| --- | --- | 
+|  [AWS IoT Device SDK for Java v2](https://github.com/aws/aws-iot-device-sdk-java-v2)  |  v1\.2\.10  | 
+|  [AWS IoT Device SDK for Python v2](https://github.com/aws/aws-iot-device-sdk-python-v2)  |  v1\.5\.3  | 
+|  [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2)  |  Linux: v1\.13\.0; Windows: v1\.14\.6  | 
 
 ## Authorization<a name="ipc-component-lifecycle-authorization"></a>
 

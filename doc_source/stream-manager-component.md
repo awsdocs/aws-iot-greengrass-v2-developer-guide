@@ -37,7 +37,7 @@ This component can be installed on core devices that run the following operating
 ## Requirements<a name="stream-manager-component-requirements"></a>
 
 This component has the following requirements:
-+ The [Authorize core devices to interact with AWS services](device-service-role.md) must allow access to the AWS Cloud destinations that you use with stream manager\. For more information, see:<a name="export-destinations-links"></a>
++ The [token exchange role](device-service-role.md) must allow access to the AWS Cloud destinations that you use with stream manager\. For more information, see:<a name="export-destinations-links"></a>
   + [AWS IoT Analytics channels](stream-export-configurations.md#export-to-iot-analytics)
   + [Amazon Kinesis data streams](stream-export-configurations.md#export-to-kinesis)
   + [AWS IoT SiteWise asset properties](stream-export-configurations.md#export-to-iot-sitewise)
@@ -60,9 +60,9 @@ This component must be able to perform outbound requests to the following endpoi
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#stream-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ 2\.0\.13 ]
+#### [ 2\.0\.13 and 2\.0\.14 ]
 
-The following table lists the dependencies for version 2\.0\.13 of this component\.
+The following table lists the dependencies for versions 2\.0\.13 and 2\.0\.14 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -134,7 +134,15 @@ For more information about component dependencies, see the [component recipe ref
 This component provides the following configuration parameters that you can customize when you deploy the component\.
 
 `STREAM_MANAGER_STORE_ROOT_DIR`  
-\(Optional\) The absolute path of the local directory used to store streams\. This value must start with a forward slash \(for example, `/data`\)\.
+\(Optional\) The absolute path of the local directory used to store streams\. This value must start with a forward slash \(for example, `/data`\)\.  
+<a name="stream-manager-store-root-dir-parameter-folder-requirements"></a>You must specify an existing folder, and the [system user who runs the stream manager component](configure-greengrass-core-v2.md#configure-component-user) must have permissions to read and write to this folder\. For example, you can run the following commands to create and configure a folder, `/var/greengrass/streams`, which you specify as the stream manager root folder\. These commands allow the default system user, `ggc_user`, to read and write to this folder\.  
+
+```
+sudo mkdir /var/greengrass/streams
+sudo chown ggc_user /var/greengrass/streams
+sudo chmod 700 /var/greengrass/streams
+```
+Default: `/greengrass/v2/work/aws.greengrass.StreamManager`
 
 `STREAM_MANAGER_SERVER_PORT`  
 \(Optional\) The local port number to use to communicate with stream manager\.  
@@ -221,8 +229,9 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.0\.14  |  This version contains bug fixes and improvements\.  | 
 |  2\.0\.13  |  Version updated for Greengrass nucleus version 2\.5\.0 release\.  | 
-| 2\.0\.12 | [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/stream-manager-component.html) | 
+| 2\.0\.12 |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/stream-manager-component.html)  | 
 |  2\.0\.11  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  2\.0\.10  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  2\.0\.9  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 

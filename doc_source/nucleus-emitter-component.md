@@ -1,6 +1,16 @@
 # Nucleus telemetry emitter<a name="nucleus-emitter-component"></a>
 
-The nucleus emitter component \(`aws.greengrass.telemetry.NucleusEmitter`\) gathers system health telemetry data and publishes it continually to a local topic and an AWS IoT Core MQTT topic\. This component enables you to gather real\-time system telemetry on your Greengrass core devices\. For information about the Greengrass telemetry agent that publishes system telemetry data to Amazon EventBridge, see [Gather system health telemetry data from AWS IoT Greengrass core devices](telemetry.md)\.
+The nucleus telemetry emitter component \(`aws.greengrass.telemetry.NucleusEmitter`\) gathers system health telemetry data and publishes it continually to a local topic and an AWS IoT Core MQTT topic\. This component enables you to gather real\-time system telemetry on your Greengrass core devices\. For information about the Greengrass telemetry agent that publishes system telemetry data to Amazon EventBridge, see [Gather system health telemetry data from AWS IoT Greengrass core devices](telemetry.md)\.
+
+By default, the nucleus telemetry emitter component publishes telemetry data every 60 seconds to the following local publish/subscribe topic\.
+
+```
+$local/greengrass/telemetry
+```
+
+The nucleus telemetry emitter component doesn't publish to an AWS IoT Core MQTT topic by default\. You can configure this component to publish to an AWS IoT Core MQTT topic when you deploy it\. The use of an MQTT topic to publish data to the AWS Cloud is subject to [AWS IoT Core pricing](http://aws.amazon.com/iot-core/pricing/)\.
+
+<a name="greengrass-software-catalog-influxdb-telemetry-publisher"></a>AWS IoT Greengrass provides several [community components](greengrass-software-catalog.md) to help you analyze and visualize telemetry data locally on your core device using InfluxDB and Grafana\. These components use telemetry data from the nucleus emitter component\. For more information, see the README for the [InfluxDB publisher component](https://github.com/awslabs/aws-greengrass-labs-telemetry-influxdbpublisher)\.
 
 **Topics**
 + [Versions](#nucleus-emitter-component-versions)
@@ -70,14 +80,15 @@ Default: `true`
 
 `mqttTopic`  
 \(Optional\) The AWS IoT Core MQTT topic to which this component publishes telemetry data\.  
-Set this value to the AWS IoT Core MQTT topic to which you want to publish telemetry data\. When this value is empty, the nucleus emitter doesn't publish telemetry data to the cloud\.   
+Set this value to the AWS IoT Core MQTT topic to which you want to publish telemetry data\. When this value is empty, the nucleus emitter doesn't publish telemetry data to the AWS Cloud\.   
+The use of an MQTT topic to publish data to the AWS Cloud is subject to [AWS IoT Core pricing](http://aws.amazon.com/iot-core/pricing/)\.
 Default: `""`
 
 `telemetryPublishIntervalMs`  
 \(Optional\) The amount of time \(in milliseconds\) between which the component publishes telemetry data\. If you set this value lower than the minimum supported value, the component uses the minimum value instead\.  
-Minimum: `500`  
-Default: `60000`  
 Lower publish intervals result in higher CPU usage on your core device\. We recommend that you start with the default publish interval and adjust it based on your device's CPU usage\.
+Minimum: `500`  
+Default: `60000`
 
 **Example: Configuration merge update**  
 The following example shows a sample configuration merge update that enables publishing telemetry data every 5 seconds to the `$local/greengrass/telemetry` topic and the `greengrass/myTelemetry` AWS IoT Core MQTT topic\.  

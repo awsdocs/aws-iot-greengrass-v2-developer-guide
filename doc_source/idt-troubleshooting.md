@@ -23,10 +23,13 @@ Before you run IDT for AWS IoT Greengrass, get the correct configuration files i
 If you are still having issues, see the following debugging process\.
 
 **Topics**
++ [Alias resolution errors](#alias-resolution-errors)
 + [Command not found errors while testing](#cmd-not-found)
 + [Conflict errors](#conflict-error)
 + [Could not start test error](#could-not-start-test)
 + [Docker qualification image exists errors](#docker-qualification-image-exists)
++ [Failed to read credential](#failed-to-read-credential-windows)
++ [Invalid signature exception](#invalid-signature-exception-lambda)
 + [Machine learning qualification errors](#machine-learning-qualification-failure)
 + [Parsing errors](#parse-error)
 + [Permission denied errors](#permission-denied-pwd-sudo)
@@ -38,6 +41,16 @@ If you are still having issues, see the following debugging process\.
 + [Throttling errors during Docker qualification](#throttling-docker-qualification)
 + [Timeout errors](#test-timeout)
 + [Version check errors](#version-compatibility-check-failure)
+
+### Alias resolution errors<a name="alias-resolution-errors"></a>
+
+When you run custom test suites, you might see the following error in the console and in the `test_manager.log`\. 
+
+```
+Couldn't resolve placeholders: couldn't do a json lookup: index out of range
+```
+
+This error can occur when the aliases configured in the IDT test orchestrator don't resolve correctly or if the resolved values aren't present in the configuration files\. To resolve this error, make sure that your `device.json` and `userdata.json ` contain the correct information required for your test suite\. For information about the configuration required for AWS IoT Greengrass qualification, see [Configure IDT settings to run the AWS IoT Greengrass qualification suite](set-config.md)\.
 
 ### Command not found errors while testing<a name="cmd-not-found"></a>
 
@@ -75,7 +88,7 @@ You might encounter errors that point to failures that occurred when the test wa
 
 ### Docker qualification image exists errors<a name="docker-qualification-image-exists"></a>
 
-The Docker application manager qualification tests use the `amazon/amazon-ec2-metadata-mock` container image in Docker Hub to qualify the device under test\.
+The Docker application manager qualification tests use the `amazon/amazon-ec2-metadata-mock` container image in Amazon ECR to qualify the device under test\.
 
 You might receive the following error if the image is already present in a Docker container on the device under test\.
 
@@ -84,6 +97,18 @@ The Docker image amazon/amazon-ec2-metadata-mock:version already exists on the d
 ```
 
 If you previously downloaded this image and ran the `amazon/amazon-ec2-metadata-mock` container on your device, make sure you remove this image from the device under test before you run the qualification tests\.
+
+### Failed to read credential<a name="failed-to-read-credential-windows"></a>
+
+When testing Windows devices, you might encounter the `Failed to read credential` error in the `greengrass.log` file if the user that you use to connect to the device under test is not set up in the credential manager on that device\. 
+
+To resolve this error, configure the user and password for the IDT user in the credential manager on the device under test\. This is the same user and password that you specify in the [`device.json` file](set-config.md#device-config)\.
+
+For more information, see [Configure user credentials for Windows devices](device-config-setup.md#configure-windows-user-for-idt)\.
+
+### Invalid signature exception<a name="invalid-signature-exception-lambda"></a>
+
+When you run Lambda qualification tests, you might encounter the `invalidsignatureexception` error if your IDT host machine experiences network access issues\. Reset your router and run the tests again\. 
 
 ### Machine learning qualification errors<a name="machine-learning-qualification-failure"></a>
 
@@ -141,6 +166,14 @@ When you run IDT on a host computer that uses macOS 10\.15, the notarization tic
 When IDT can't connect to a device under test, it logs connection failures in `/results/<execution-id>/logs/<test-case-id>.log`\. SSH messages appear at the top of this log file because connecting to a device under test is one of the first operations that IDT performs\.
 
 Most Windows configurations use the PuTTy terminal application to connect to Linux hosts\. This application requires that you convert standard PEM private key files into a proprietary Windows format called PPK\. If you configure SSH in your `device.json` file, use PEM files\. If you use a PPK file, IDT can't create an SSH connection with the AWS IoT Greengrass device and can't run tests\.
+
+Starting with IDT v4\.4\.0, if you haven't enabled SFTP on your device under test, then you might see the following error in the log file\.
+
+```
+SSH connection failed with EOF
+```
+
+To resolve this error, enable SFTP on your device\.
 
 ### Stream manager qualification errors<a name="stream-manager-qualification-failure"></a>
 

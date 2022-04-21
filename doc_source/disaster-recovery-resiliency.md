@@ -5,6 +5,7 @@ The AWS global infrastructure is built around Amazon Web Services Regions and Av
 For more information, see [AWS Global Infrastructure](http://aws.amazon.com/about-aws/global-infrastructure/)\.
 
 In addition to the AWS global infrastructure, AWS IoT Greengrass offers several features to help support your data resiliency and backup needs\.
-+ If the core loses internet connectivity, Greengrass devices can continue to communicate over the local network\.
-+ You can configure a Greengrass core device to write logs to the local file system and to CloudWatch Logs\. If the core loses connectivity, local logging can continue, but CloudWatch logs are sent with a limited number of retries\. After the retries are exhausted, the event is dropped\.  For more information, see the [log manager component](log-manager-component.md)\.
++ You can configure a Greengrass core device to write logs to the local file system and to CloudWatch Logs\. If the core device loses connectivity, it can continue to log messages on the file system\. When it reconnects, it writes the log messages to CloudWatch Logs\. For more information, see [Monitor AWS IoT Greengrass logs](monitor-logs.md)\.
++ If a core device loses power during a deployment, it resumes the deployment after the AWS IoT Greengrass Core software starts again\.
++ If a core device loses internet connectivity, Greengrass client devices can continue to communicate over the local network\.
 + You can author Greengrass components that read [stream manager](manage-data-streams.md) streams and send the data to local storage destinations\.

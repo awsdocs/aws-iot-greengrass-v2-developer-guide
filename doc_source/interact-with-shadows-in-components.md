@@ -21,11 +21,14 @@ The shadow IPC operations retrieve and update state information in local shadow 
 
 1. Add access control policies to the recipe for your custom component to allow the component to receive messages on local shadow topics\. For example, the following example access control policy allows the component to create, update, and delete the classic device shadow and the named shadow `myNamedShadow` for the device `MyThingName`\.
 
+------
+#### [ JSON ]
+
    ```
    {
      "accessControl": {
        "aws.greengrass.ShadowManager": {
-         "policyId1": {
+         "com.example.MyShadowComponent:shadow:1": {
            "policyDescription": "Allows access to shadows",
            "operations": [
              "aws.greengrass#GetThingShadow",
@@ -42,6 +45,25 @@ The shadow IPC operations retrieve and update state information in local shadow 
    }
    ```
 
+------
+#### [ YAML ]
+
+   ```
+   accessControl:
+     aws.greengrass.ShadowManager:
+       "com.example.MyShadowComponent:shadow:1":
+         policyDescription: Allows access to shadows
+         operations:
+           - 'aws.greengrass#GetThingShadow'
+           - 'aws.greengrass#UpdateThingShadow'
+           - 'aws.greengrass#DeleteThingShadow'
+         resources:
+           - $aws/things/MyThingName/shadow
+           - $aws/things/MyThingName/shadow/name/myNamedShadow
+   ```
+
+------
+
 1. Use the shadow IPC operations to retrieve and modify shadow state information\. For more information about using shadow IPC operations in component code, see [Interact with local shadows](ipc-local-shadows.md)\.
 
 ## React to shadow state changes<a name="react-shadow-events"></a>
@@ -54,11 +76,14 @@ Local shadow topics use the same format as the AWS IoT device shadow MQTT topics
 
 1. Add access control policies to the recipe for your custom component to allow the component to receive messages on local shadow topics\. For example, the following example access control policy allows the custom `com.example.MyShadowReactiveComponent` to receive messages on the `/update/delta` topic for the classic device shadow and the named shadow `myNamedShadow` for the device `MyThingName`\.
 
+------
+#### [ JSON ]
+
    ```
    {
      "accessControl": {
        "aws.greengrass.ipc.pubsub": {
-         "com.example.MyShadowReactivenComponent:pubsub:1": {
+         "com.example.MyShadowReactiveComponent:pubsub:1": {
            "policyDescription": "Allows access to shadow pubsub topics",
            "operations": [
              "aws.greengrass#SubscribeToTopic"
@@ -72,6 +97,23 @@ Local shadow topics use the same format as the AWS IoT device shadow MQTT topics
      }
    }
    ```
+
+------
+#### [ YAML ]
+
+   ```
+   accessControl:
+     aws.greengrass.ipc.pubsub:
+       "com.example.MyShadowReactiveComponent:pubsub:1":
+         policyDescription: Allows access to shadow pubsub topics
+         operations:
+           - 'aws.greengrass#SubscribeToTopic'
+         resources:
+           - $aws/things/MyThingName/shadow/update/delta
+           - $aws/things/MyThingName/shadow/name/myNamedShadow/update/delta
+   ```
+
+------
 
 1. To initiate a custom action in a component, use `SubscribeToTopic` IPC operations to subscribe to the shadow topics on which you want to receive messages\. For more information about using local publish/subscribe IPC operations in component code, see [Publish/subscribe local messages](ipc-publish-subscribe.md)\.
 

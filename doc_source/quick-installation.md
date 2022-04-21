@@ -21,7 +21,7 @@ Follow the steps in this section to set up a Linux or Windows device to use as y
 
 **To set up a Linux device for AWS IoT Greengrass V2**
 
-1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.\. The following commands show you how to install OpenJDK on your device\.
+1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\. The following commands show you how to install OpenJDK on your device\.
    + For Debian\-based or Ubuntu\-based distributions:
 
      ```
@@ -31,6 +31,11 @@ Follow the steps in this section to set up a Linux or Windows device to use as y
 
      ```
      sudo yum install java-11-openjdk-devel
+     ```
+   + For Amazon Linux 2:
+
+     ```
+     sudo amazon-linux-extras install java-openjdk11
      ```
 
    When the installation completes, run the following command to verify that Java runs on your Raspberry Pi\.
@@ -47,21 +52,54 @@ Follow the steps in this section to set up a Linux or Windows device to use as y
    OpenJDK 64-Bit Server VM (build 11.0.9.1+1-post-Debian-1deb10u2, mixed mode)
    ```
 
-1. \(Optional\) Create the default system user and group that runs components on your device\. You can also choose to let the AWS IoT Greengrass Core software installer create this user and group during installation with the `--component-default-user` installer argument\. For more information, see [Installer arguments](configure-installer.md)\.
+1. \(Optional\) Create the default system user and group that runs components on the device\. You can also choose to let the AWS IoT Greengrass Core software installer create this user and group during installation with the `--component-default-user` installer argument\. For more information, see [Installer arguments](configure-installer.md)\.
 
    ```
-   sudo adduser --system ggc_user
-   sudo addgroup --system ggc_group
+   sudo useradd --system --create-home ggc_user
+   sudo groupadd --system ggc_group
    ```
 
 1. Verify that the user that runs the AWS IoT Greengrass Core software \(typically `root`\), has permission to run `sudo` with any user and any group\.
 
-   1. Open the `/etc/sudoers` file\. 
+   1. Run the following command to open the `/etc/sudoers` file\.
+
+      ```
+      sudo visudo
+      ```
 
    1. Verify that the permission for the user looks like the following example\.
 
       ```
       root    ALL=(ALL:ALL) ALL
+      ```
+
+1. \(Optional\) To [run containerized Lambda functions](run-lambda-functions.md), you must enable [cgroups](https://en.wikipedia.org/wiki/Cgroups) v1, and you must enable and mount the *memory* and *devices* cgroups\. If you don't plan to run containerized Lambda functions, you can skip this step\.
+
+   To enable these cgroups options, boot the device with the following Linux kernel parameters\.
+
+   ```
+   cgroup_enable=memory cgroup_memory=1 systemd.unified_cgroup_hierarchy=0
+   ```
+
+   For information about viewing and setting kernel parameters for your device, see the documentation for your operating system and boot loader\. Follow the instructions to permanently set the kernel parameters\.
+**Tip: Set kernel parameters on a Raspberry Pi**  
+If your device is a Raspberry Pi, you can complete the following steps to view and update its Linux kernel parameters:  
+Open the `/boot/cmdline.txt` file\. This file specifies Linux kernel parameters to apply when the Raspberry Pi boots\.  
+For example, on a Linux\-based system, you can run the following command to use GNU nano to open the file\.  
+
+      ```
+      sudo nano /boot/cmdline.txt
+      ```
+Verify that the `/boot/cmdline.txt` file contains the following kernel parameters\. The `systemd.unified_cgroup_hierarchy=0` parameter specifies to use cgroups v1 instead of cgroups v2\.  
+
+      ```
+      cgroup_enable=memory cgroup_memory=1 systemd.unified_cgroup_hierarchy=0
+      ```
+If the `/boot/cmdline.txt` file doesn't contain these parameters, or it contains these parameters with different values, update the file to contain these parameters and values\.
+If you updated the `/boot/cmdline.txt` file, reboot the Raspberry Pi to apply the changes\.  
+
+      ```
+      sudo reboot
       ```
 
 1. Install all other required dependencies on your device as indicated by the list of requirements in [Device requirements](setting-up.md#greengrass-v2-requirements)\.
@@ -73,7 +111,7 @@ This feature is available for v2\.5\.0 and later of the [Greengrass nucleus comp
 
 **To set up a Windows device for AWS IoT Greengrass V2**
 
-1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.\. You must use a 64\-bit version of the Java runtime on Windows devices\.
+1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.\.
 
 1. <a name="set-up-windows-device-environment-open-cmd"></a>Open the Windows Command Prompt \(`cmd.exe`\) as an administrator\.
 
@@ -100,7 +138,7 @@ On Windows devices, the LocalSystem account runs the Greengrass nucleus, and you
 Provide your AWS credentials to your device so that the installer can provision the required AWS resources\. For more information about the required permissions, see [Minimal IAM policy for installer to provision resources](provision-minimal-iam-policy.md)\.
 
 **To provide AWS credentials to the device**
-+ <a name="installer-export-aws-credentials"></a>Provide your AWS credentials to the device so that the installer can provision the AWS IoT and IAM resources for your core device\. To increase security, you can get credentials for an IAM role that allows only the minimum permissions necessary to provision\. For more information, see [Minimal IAM policy for installer to provision resources](provision-minimal-iam-policy.md)\.
++ <a name="installer-export-aws-credentials"></a>Provide your AWS credentials to the device so that the installer can provision the AWS IoT and IAM resources for your core device\. To increase security, we recommend that you get temporary credentials for an IAM role that allows only the minimum permissions necessary to provision\. For more information, see [Minimal IAM policy for installer to provision resources](provision-minimal-iam-policy.md)\.
 **Note**  
 The installer doesn't save or store your credentials\.
 

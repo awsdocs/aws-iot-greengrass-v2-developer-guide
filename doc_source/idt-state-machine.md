@@ -1,5 +1,8 @@
 # Configure the IDT state machine<a name="idt-state-machine"></a>
 
+**Important**  
+Starting in IDT v4\.5\.1, this state machine is deprecated\. We strongly recommend that you use the new test orchestrator\. For more information, see [Configure the IDT test orchestrator](idt-test-orchestrator.md)\.
+
 A state machine is a construct that controls the test suite execution flow\. It determines the starting state of a test suite, manages state transitions based on user\-defined rules, and continues to transition through those states until it reaches the end state\. 
 
 If your test suite doesn't include a user\-defined state machine, IDT will generate a state machine for you\. The default state machine performs the following functions:
@@ -94,7 +97,7 @@ Optional\. An array of test case IDs from the group specified in `TestGroup`\. B
 + When both `TestGroup` and `TestCases` are specified, IDT runs the specified test cases from the test group\. 
 + When `TestCases` are specified but `TestGroup` is not specified, IDT runs the specified test cases\.
 + When `TestGroup` is specified, but `TestCases` is not specified, IDT runs all of the test cases within the specified test group\.
-+ When neither `TestGroup` or `TestCases` is specified, IDT runs all test cases from the test group that the test runner selects from the IDT CLI\. To enable group selection for test runners, you must include both `RunTask` and `Choice` states in your `statemachine.json` file\. For an example of how this works, see [Example state machine: Run user\-selected test groups](#allow-specific-groups)\.
++ When neither `TestGroup` or `TestCases` is specified, IDT runs all test cases from the test group that the test runner selects from the IDT CLI\. To enable group selection for test runners, you must include both `RunTask` and `Choice` states in your `state_machine.json` file\. For an example of how this works, see [Example state machine: Run user\-selected test groups](#allow-specific-groups)\.
 
   For more information about enabling IDT CLI commands for test runners, see [Enable IDT CLI commands](create-test-executables.md#idt-cli-coop)\.
 

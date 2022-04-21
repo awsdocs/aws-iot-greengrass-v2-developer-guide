@@ -4,7 +4,7 @@ The secret manager component \(`aws.greengrass.SecretManager`\) deploys secrets 
 
 To access this component's secrets in your custom Greengrass components, use the [GetSecretValue](ipc-secret-manager.md#ipc-operation-getsecretvalue) operation in the AWS IoT Device SDK\. For more information, see [Use the AWS IoT Device SDK to communicate with the Greengrass nucleus, other components, and AWS IoT CoreCommunicate with the Greengrass nucleus, other components, and AWS IoT Core](interprocess-communication.md) and [Retrieve secret values](ipc-secret-manager.md)\.
 
-This component encrypts secrets on the core device to keep your credentials and passwords secure until you need to use them\.
+This component encrypts secrets on the core device to keep your credentials and passwords secure until you need to use them\. It uses the core device's private key to encrypt and decrypt secrets\.
 
 **Topics**
 + [Versions](#secret-manager-component-versions)
@@ -64,6 +64,7 @@ If you use a customer\-managed AWS Key Management Service key to encrypt secrets
   + [Authentication and access control for AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/auth-and-access.html)
   + [Actions, resources, and context keys you can use in an IAM policy or secret policy for AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/reference_iam-permissions.html)
 + Custom components must define an authorization policy that allows `aws.greengrass#GetSecretValue` to get secrets that you store with this component\. In this authorization policy, you can restrict components' access to specific secrets\. For more information, see [secret manager IPC authorization](ipc-secret-manager.md#ipc-secret-manager-authorization)\.
++ \(Optional\) If you store the core device's private key and certificate in a [hardware security module](hardware-security.md), the private key must have the `unwrap` permission, and the public key must have the `wrap` permission\.
 
 ### Endpoints and ports<a name="secret-manager-component-endpoints"></a>
 
@@ -213,7 +214,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
-|  2\.1\.0  |  Version updated for Greengrass nucleus version 2\.5\.0 release\.  | 
+|  2\.1\.0  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/secret-manager-component.html)  | 
 |  2\.0\.9  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  2\.0\.8  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  2\.0\.7  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 

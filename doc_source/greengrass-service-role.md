@@ -1,11 +1,11 @@
 # Greengrass service role<a name="greengrass-service-role"></a>
 
-The Greengrass service role is an AWS Identity and Access Management \(IAM\) service role that authorizes AWS IoT Greengrass to access resources from AWS services on your behalf\. This role makes it possible for AWS IoT Greengrass to verify the identity of client devices and manage core device connectivity information\.
+<a name="greengrass-service-role-intro"></a>The Greengrass service role is an AWS Identity and Access Management \(IAM\) service role that authorizes AWS IoT Greengrass to access resources from AWS services on your behalf\. This role makes it possible for AWS IoT Greengrass to verify the identity of client devices and manage core device connectivity information\.
 
 **Note**  
 AWS IoT Greengrass V1 also uses this role to perform essential tasks\. For more information, see [Greengrass service role](https://docs.aws.amazon.com/greengrass/v1/developerguide/service-role.html) in the *AWS IoT Greengrass V1 Developer Guide*\.
 
-To allow AWS IoT Greengrass to access your resources, the Greengrass service role must be associated with your AWS account and specify AWS IoT Greengrass as a trusted entity\. The role must include the [AWSGreengrassResourceAccessRolePolicy](https://console.aws.amazon.com/iam/home#/policies/arn:aws:iam::aws:policy/service-role/AWSGreengrassResourceAccessRolePolicy) managed policy or a custom policy that defines equivalent permissions for the AWS IoT Greengrass features that you use\. AWS maintains this policy, which defines the set of permissions that AWS IoT Greengrass uses to access your AWS resources\.
+To allow AWS IoT Greengrass to access your resources, the Greengrass service role must be associated with your AWS account and specify AWS IoT Greengrass as a trusted entity\. The role must include the [AWSGreengrassResourceAccessRolePolicy](https://console.aws.amazon.com/iam/home#/policies/arn:aws:iam::aws:policy/service-role/AWSGreengrassResourceAccessRolePolicy) managed policy or a custom policy that defines equivalent permissions for the AWS IoT Greengrass features that you use\. AWS maintains this policy, which defines the set of permissions that AWS IoT Greengrass uses to access your AWS resources\. For more information, see [AWS managed policy: AWSGreengrassResourceAccessRolePolicy](security-iam-aws-managed-policies.md#aws-managed-policies-AWSGreengrassResourceAccessRolePolicy)\.
 
 You can reuse the same Greengrass service role across AWS Regions, but you must associate it with your account in every AWS Region where you use AWS IoT Greengrass\. If the service role isn't configured in the current AWS Region, core devices fail to verify client devices and fail to update connectivity information\.
 
@@ -23,7 +23,13 @@ In addition to the service role that authorizes service\-level access, you assig
 
 The AWS IoT console makes it easy to manage your Greengrass service role\. For example, when you configure client device discovery for a core device, the console checks whether your AWS account is attached to a Greengrass service role in the current AWS Region\. If not, the console can create and configure a service role for you\. For more information, see [Create the Greengrass service role \(console\)](#create-greengrass-service-role-console)\.
 
-Role management tasks
+You can use the console for the following role management tasks:
+
+**Topics**
++ [Find your Greengrass service role \(console\)](#get-greengrass-service-role-console)
++ [Create the Greengrass service role \(console\)](#create-greengrass-service-role-console)
++ [Change the Greengrass service role \(console\)](#update-greengrass-service-role-console)
++ [Detach the Greengrass service role \(console\)](#remove-greengrass-service-role-console)
 
 **Note**  
 The user who is signed in to the console must have permissions to view, create, or change the service role\.
@@ -110,24 +116,21 @@ You can use the AWS CLI for the following role management tasks:
 + [Create the Greengrass service role \(CLI\)](#create-service-role)
 + [Remove the Greengrass service role \(CLI\)](#remove-service-role)
 
-**Note**  
-AWS IoT Greengrass V2 uses AWS IoT Greengrass V1 API operations to manage the Greengrass service role\.
-
 ### Get the Greengrass service role \(CLI\)<a name="get-service-role"></a>
 
 Use the following procedure to find out if a Greengrass service role is associated with your AWS account in an AWS Region\.
 + Get the service role\. Replace *region* with your AWS Region \(for example, `us-west-2`\)\.
 
   ```
-  aws greengrass get-service-role-for-account --region region
+  aws greengrassv2 get-service-role-for-account --region region
   ```
 
   If a Greengrass service role is already associated with your account, the request returns the following role metadata\.
 
   ```
   {
-    "AssociatedAt": "timestamp",
-    "RoleArn": "arn:aws:iam::account-id:role/path/role-name"
+    "associatedAt": "timestamp",
+    "roleArn": "arn:aws:iam::account-id:role/path/role-name"
   }
   ```
 
@@ -214,14 +217,14 @@ Use the following steps to create a role and associate it with your AWS account\
 + Associate the role with your account\. Replace *role\-arn* with the service role ARN and *region* with your AWS Region \(for example, `us-west-2`\)\.
 
   ```
-  aws greengrass associate-service-role-to-account --role-arn role-arn --region region
+  aws greengrassv2 associate-service-role-to-account --role-arn role-arn --region region
   ```
 
   If successful, the request returns the following response\.
 
   ```
   {
-    "AssociatedAt": "timestamp"
+    "associatedAt": "timestamp"
   }
   ```
 
@@ -231,14 +234,14 @@ Use the following steps to disassociate the Greengrass service role from your AW
 + Disassociate the service role from your account\. Replace *region* with your AWS Region \(for example, `us-west-2`\)\.
 
   ```
-  aws greengrass disassociate-service-role-from-account --region region
+  aws greengrassv2 disassociate-service-role-from-account --region region
   ```
 
   If successful, the following response is returned\.
 
   ```
   {
-    "DisassociatedAt": "timestamp"
+    "disassociatedAt": "timestamp"
   }
   ```
 **Note**  
@@ -249,9 +252,9 @@ You should delete the service role if you're not using it in any AWS Region\. Fi
 + [Modifying a role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_manage_modify.html) in the *IAM User Guide*
 + [Deleting roles or instance profiles](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_manage_delete.html) in the *IAM User Guide*
 + AWS IoT Greengrass commands in the *AWS CLI Command Reference*
-  + [associate\-service\-role\-to\-account](https://docs.aws.amazon.com/cli/latest/reference/greengrass/associate-service-role-to-account.html)
-  + [disassociate\-service\-role\-from\-account](https://docs.aws.amazon.com/cli/latest/reference/greengrass/disassociate-service-role-from-account.html)
-  + [get\-service\-role\-for\-account](https://docs.aws.amazon.com/cli/latest/reference/greengrass/get-service-role-for-account.html)
+  + [associate\-service\-role\-to\-account](https://docs.aws.amazon.com/cli/latest/reference/greengrassv2/associate-service-role-to-account.html)
+  + [disassociate\-service\-role\-from\-account](https://docs.aws.amazon.com/cli/latest/reference/greengrassv2/disassociate-service-role-from-account.html)
+  + [get\-service\-role\-for\-account](https://docs.aws.amazon.com/cli/latest/reference/greengrassv2/get-service-role-for-account.html)
 + IAM commands in the *AWS CLI Command Reference*
   + [attach\-role\-policy](https://docs.aws.amazon.com/cli/latest/reference/iam/attach-role-policy.html)
   + [create\-role](https://docs.aws.amazon.com/cli/latest/reference/iam/create-role.html)

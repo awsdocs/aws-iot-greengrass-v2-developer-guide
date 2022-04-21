@@ -1,6 +1,6 @@
 # Configure settings for test runners<a name="set-custom-idt-config"></a>
 
-To run custom test suites, test runners must configure their settings based on the test suite that they want to run\. Settings are specified based on JSON configuration file templates located in the `<device-tester-extract-location>/configs/` folder\. If required, test runners must also set up AWS credentials that IDT will use to connect to the AWS cloud\. 
+To run custom test suites, test runners must configure their settings based on the test suite that they want to run\. Settings are specified based on configuration file templates located in the `<device-tester-extract-location>/configs/` folder\. If required, test runners must also set up AWS credentials that IDT will use to connect to the AWS cloud\. 
 
 As a test writer, you will need to configure these files to [debug your test suite](run-debug-custom-tests.md)\. You must provide instructions to test runners so that they can configure the following settings as needed to run your test suites\. 
 
@@ -70,7 +70,7 @@ An alphanumeric value that uniquely identifies the device under test\. The SKU i
 If you want to list your board in the AWS Partner Device Catalog, the SKU you specify here must match the SKU that you use in the listing process\.
 
 `features`  
-Optional\. An array that contains the device's supported features\. Device features are user\-defined values that you configure in your test suite\. You must provide your test runners with information about the feature names and values to include in the `device.json` file\. For example, if you want to test a device that functions as an MQTT server for other devices, then you can configure your test logic to validate specific supported levels for a feature named `MQTT_QOS`\. Test runners provide this feature name and set the feature value to the QOS levels supported by their device\. You can retrieve the provided information from the [IDT context](idt-context.md) with the `devicePool.features` query, or from the [state machine context](idt-state-machine.md#state-machine-context) with the `pool.features` query\.    
+Optional\. An array that contains the device's supported features\. Device features are user\-defined values that you configure in your test suite\. You must provide your test runners with information about the feature names and values to include in the `device.json` file\. For example, if you want to test a device that functions as an MQTT server for other devices, then you can configure your test logic to validate specific supported levels for a feature named `MQTT_QOS`\. Test runners provide this feature name and set the feature value to the QOS levels supported by their device\. You can retrieve the provided information from the [IDT context](idt-context.md) with the `devicePool.features` query, or from the [test orchestrator context](idt-state-machine.md#state-machine-context) with the `pool.features` query\.    
 `features.name`  
 The name of the feature\.  
 `features.value`  
@@ -124,7 +124,7 @@ This property applies only if `connectivity.protocol` is set to `ssh`\.
 Optional\. The name of the user to user inside the container\. The default value is the user provided in the Dockerfile\.  
 The default value is 22\.  
 This property applies only if `connectivity.protocol` is set to `ssh`\.
-To check if test runners configure the incorrect device connection for a test, you can retrieve `pool.Devices[0].Connectivity.Protocol` from the state machine context and compare it to the expected value in a `Choice` state\. If an incorrect protocol is used, then print a message using the `LogMessage` state and transition to the `Fail` state\.  
+To check if test runners configure the incorrect device connection for a test, you can retrieve `pool.Devices[0].Connectivity.Protocol` from the test orchestrator context and compare it to the expected value in a `Choice` state\. If an incorrect protocol is used, then print a message using the `LogMessage` state and transition to the `Fail` state\.  
 Alternatively, you can use error handling code to report a test failure for incorrect device types\.
 
 ## \(Optional\) Configure userdata\.json<a name="userdata-config-custom"></a>

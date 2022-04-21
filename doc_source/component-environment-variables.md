@@ -20,6 +20,10 @@ The AWS CLI uses this environment variable to identify the default Region to use
 `GGC_VERSION`  
 The version of the [Greengrass nucleus component](greengrass-nucleus-component.md) that runs on this Greengrass core device\.
 
+`GG_ROOT_CA_PATH`  
+This feature is available for v2\.5\.5 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.  
+The path to the root certificate authority \(CA\) certificate that the Greengrass nucleus uses\.
+
 `AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT`  
 The path to the IPC socket that components use to communicate with the AWS IoT Greengrass Core software\. For more information, see [Use the AWS IoT Device SDK to communicate with the Greengrass nucleus, other components, and AWS IoT CoreCommunicate with the Greengrass nucleus, other components, and AWS IoT Core](interprocess-communication.md)\.
 

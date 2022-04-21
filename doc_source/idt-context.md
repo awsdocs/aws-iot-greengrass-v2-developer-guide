@@ -73,7 +73,9 @@ Information provided by the test runner in the [`userdata.json` file](set-custom
 
 You can query the context using JSONPath notation from your JSON files and from your text executable with the `GetContextValue` and `GetContextString` APIs\. The syntax for JSONPath strings to access the IDT context varies as follows:
 + In `suite.json` and `test.json`, you use `{{query}}`\. That is, do not use the root element `$.` to start your expression\.
-+ In `statemachine.json`, you use `{{$.query}}`\.
++ In `test_orchestrator.yaml`, you use `{{query}}`\.
+
+  If you use the deprecated state machine, then in `state_machine.json`, you use `{{$.query}}`\.
 + In API commands, you use `query` or `{{$.query}}`, depending on the command\. For more information, see the inline documentation in the SDKs\. 
 
 The following table describes the operators in a typical JSONPath expression:

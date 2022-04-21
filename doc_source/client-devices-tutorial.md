@@ -29,7 +29,7 @@ To complete this tutorial, you must meet the following prerequisites:
 
 ## Review and update the core device AWS IoT policy<a name="update-core-device-iot-policy-client-devices"></a>
 
-To support client devices, a core device's AWS IoT policy must allow the following permissions:
+To support client devices, a core device's AWS IoT policy must allow the following permissions:<a name="core-device-iot-policy-client-device-permissions"></a>
 + `greengrass:PutCertificateAuthorities`
 + `greengrass:VerifyClientDeviceIdentity`
 + `greengrass:VerifyClientDeviceIoTCertificateAssociation`
@@ -42,27 +42,27 @@ In this section, you review the AWS IoT policies for your core device and add an
 
 **To review and update a core device's AWS IoT policy**
 
-1. <a name="update-iot-policy-open-greengrass-console"></a>In the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass) navigation menu, choose **Core devices**\.
+1. <a name="update-iot-policy-console-open-greengrass-console"></a>In the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass) navigation menu, choose **Core devices**\.
 
-1. <a name="update-iot-policy-choose-core-device"></a>On the **Core devices** page, choose the core device to update\.
+1. <a name="update-iot-policy-console-choose-core-device"></a>On the **Core devices** page, choose the core device to update\.
 
-1. <a name="update-iot-policy-choose-core-device-thing"></a>On the core device details page, choose the link to the core device's **Thing**\. This link opens the thing details page in the AWS IoT console\.
+1. <a name="update-iot-policy-console-choose-core-device-thing"></a>On the core device details page, choose the link to the core device's **Thing**\. This link opens the thing details page in the AWS IoT console\.
 
-1. <a name="update-iot-policy-choose-thing-security"></a>On the thing details page, choose **Certificates**\.
+1. <a name="update-iot-policy-console-choose-thing-security"></a>On the thing details page, choose **Certificates**\.
 
-1. <a name="update-iot-policy-choose-thing-certificate"></a>In the **Certificates** tab, choose the thing's active certificate\.
+1. <a name="update-iot-policy-console-choose-thing-certificate"></a>In the **Certificates** tab, choose the thing's active certificate\.
 
-1. <a name="update-iot-policy-choose-certificate-policies"></a>On the certificate details page, choose **Policies**\.
+1. <a name="update-iot-policy-console-choose-certificate-policies"></a>On the certificate details page, choose **Policies**\.
 
-1. <a name="update-iot-policy-choose-policy"></a>In the **Policies** tab, choose the AWS IoT policy to review and update\. You can add the required permissions to any policy that is attached to the core device's active certificate\.
-**Note**  
+1. <a name="update-iot-policy-console-choose-policy"></a>In the **Policies** tab, choose the AWS IoT policy to review and update\. You can add the required permissions to any policy that is attached to the core device's active certificate\.
+**Note**  <a name="quick-installation-iot-policies-note"></a>
 If you used the [AWS IoT Greengrass Core software installer to provision resources](quick-installation.md), you have two AWS IoT policies\. We recommend that you choose the policy named **GreengrassV2IoTThingPolicy**, if it exists\. Core devices that you create with the quick installer use this policy name by default\. If you add permissions to this policy, you are also granting these permissions to other core devices that use this policy\.
 
-1. <a name="update-iot-policy-edit-policy"></a>In the policy overview, choose **Edit policy document**\.
+1. <a name="update-iot-policy-console-edit-policy"></a>In the policy overview, choose **Edit policy document**\.
 
 1. Review the policy for the required permissions, and add any required permissions that are missing\.
 
-1. <a name="update-iot-policy-save-policy"></a>Choose **Save as new version**\.
+1. <a name="update-iot-policy-console-save-policy"></a>Choose **Save as new version**\.
 
 ## Enable client device support<a name="enable-client-device-support"></a>
 
@@ -258,10 +258,10 @@ This topic is the same topic where you configured the MQTT bridge to relay messa
 
    ```
    python3 basic_discovery.py \
-     --thing-name MyClientDevice1 \
+     --thing_name MyClientDevice1 \
      --topic 'clients/MyClientDevice1/hello/world' \
      --message 'Hello World!' \
-     --root-ca ~/certs/AmazonRootCA1.pem \
+     --ca_file ~/certs/AmazonRootCA1.pem \
      --cert ~/certs/device.pem.crt \
      --key ~/certs/private.pem.key \
      --region us-east-1 \
@@ -367,7 +367,7 @@ In this section, you update the MQTT bridge component to relay messages from cli
       + [Check deployment status](check-deployment-status.md)
       + [Monitor AWS IoT Greengrass logs](monitor-logs.md)
 
-1. Develop and deploy a Greengrass component that subscribes to Hello World messages from client devices\. For more information, see [Create local AWS IoT Greengrass components](create-components.md)\.
+1. Develop and deploy a Greengrass component that subscribes to Hello World messages from client devices\. For more information, see [Create AWS IoT Greengrass components](create-components.md)\.
 
    1. Create a component recipe with the following contents\. This recipe specifies installing the AWS IoT Device SDK v2 for Python and running a script that subscribes to the topic and prints messages\.
 
@@ -550,10 +550,10 @@ In this section, you update the MQTT bridge component to relay messages from cli
 
    ```
    python3 basic_discovery.py \
-     --thing-name MyClientDevice1 \
+     --thing_name MyClientDevice1 \
      --topic 'clients/MyClientDevice1/hello/world' \
      --message 'Hello World!' \
-     --root-ca ~/certs/AmazonRootCA1.pem \
+     --ca_file ~/certs/AmazonRootCA1.pem \
      --cert ~/certs/device.pem.crt \
      --key ~/certs/private.pem.key \
      --region us-east-1 \

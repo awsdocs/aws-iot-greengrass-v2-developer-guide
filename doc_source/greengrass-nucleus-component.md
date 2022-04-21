@@ -12,7 +12,7 @@ When the version of the nucleus component changes, or when you change certain co
 + [Operating system](#greengrass-nucleus-component-os-support)
 + [Requirements](#greengrass-nucleus-component-requirements)
 + [Dependencies](#greengrass-nucleus-component-dependencies)
-+ [Installation](#greengrass-nucleus-component-install)
++ [Download and installation](#greengrass-nucleus-component-install)
 + [Configuration](#greengrass-nucleus-component-configuration)
 + [Local log file](#greengrass-nucleus-component-log-file)
 + [Changelog](#greengrass-nucleus-component-changelog)
@@ -45,7 +45,7 @@ The Greengrass nucleus does not include any component dependencies\. However, se
 
 For more information about component dependencies, see the [component recipe reference](component-recipe-reference.md#recipe-reference-component-dependencies)\.
 
-## Installation<a name="greengrass-nucleus-component-install"></a>
+## Download and installation<a name="greengrass-nucleus-component-install"></a>
 
 You can download an installer that sets up the Greengrass nucleus component on your device\. This installer sets up your device as a Greengrass core device\. There are two types of installations that you can perform: a quick installation that creates required AWS resources for you, or a manual installation where you create the AWS resources yourself\. For more information, see [Install the AWS IoT Greengrass Core software](install-greengrass-core-v2.md)\.
 
@@ -77,8 +77,7 @@ If you configure an HTTPS proxy, you must add the proxy server CA certificate to
 + `host` – The host name or IP address of the proxy server\.
 + `port` – \(Optional\) The port number\. If you don't specify the port, then the Greengrass core device uses the following default values:
   + `http` – 80
-  + `https` – 443
-<a name="https-proxy-greengrass-nucleus-requirement"></a>Greengrass core devices must run [Greengrass nucleus ](#greengrass-nucleus-component) v2\.5\.0 or later to use HTTPS proxies\.  
+  + `https` – 443  
 `username`  
 \(Optional\) The user name that authenticates the proxy server\.  
 `password`  
@@ -205,8 +204,8 @@ This parameter is available in v2\.1\.0 and later of this component\.
 This object contains the following information:    
 `periodicStatusPublishIntervalSeconds`  
 \(Optional\) The amount of time \(in seconds\) between which the core device publishes device status to the AWS Cloud\.  
-Minimum: `86400`  
-Default: `86400`
+Minimum: `86400` \(24 hours\)  
+Default: `86400` \(24 hours\)
 
   `telemetry`   
 \(Optional\) The system health telemetry configuration for the core device\. For more information about telemetry metrics and how to act on telemetry data, see [Gather system health telemetry data from AWS IoT Greengrass core devices](telemetry.md)\.  
@@ -318,6 +317,11 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.5\.5  |  <a name="changelog-nucleus-2.5.5"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
+|  2\.5\.4  |  <a name="changelog-nucleus-2.5.4"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
+|  2\.5\.3  |  <a name="changelog-nucleus-2.5.3"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
+|  2\.5\.2  |  <a name="changelog-nucleus-2.5.2"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
+|  2\.5\.1  |   This version is no longer available\. The improvements in this version are available in later versions of this component\.  <a name="changelog-nucleus-2.5.1"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
 |  2\.5\.0  |  <a name="changelog-nucleus-2.5.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
 |  2\.4\.0  |  <a name="changelog-nucleus-2.4.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
 |  2\.3\.0  |  <a name="changelog-nucleus-2.3.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 

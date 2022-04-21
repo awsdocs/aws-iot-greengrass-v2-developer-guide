@@ -4,6 +4,9 @@ To develop a custom provisioning plugin, create a Java class that implements the
 
 After you develop a custom provisioning plugin, build it as a JAR file that you can provide to the AWS IoT Greengrass Core software installer to run your plugin during installation\. The installer runs your custom provisioning plugin in the same JVM that the installer uses, so you can create a JAR that contains only your plugin code\.
 
+**Note**  
+The [AWS IoT fleet provisioning plugin](fleet-provisioning.md) implements the `DeviceIdentityInterface` to use fleet provisioning during installation\. The fleet provisioning plugin is open source, so you can explore its source code to see an example of how to use the provisioning plugin interface\. For more information, see the [AWS IoT fleet provisioning plugin](https://github.com/aws-greengrass/aws-greengrass-fleet-provisioning-by-claim) on GitHub\.
+
 **Topics**
 + [Requirements](#custom-provisioning-plugin-requirements)
 + [Implement the DeviceIdentityInterface interface](#implement-device-identity-interface)

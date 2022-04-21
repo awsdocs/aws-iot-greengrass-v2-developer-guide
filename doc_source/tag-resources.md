@@ -2,6 +2,9 @@
 
 With tags, you can organize and manage your resources in AWS IoT Greengrass\. You can use tags to assign metadata to your resources, and you can use tags in IAM policies to define conditional access to your resources\.
 
+**Note**  
+Currently, Greengrass resource tags are not supported for AWS IoT billing groups or cost allocation reports\.
+
 ## Using tags in AWS IoT Greengrass V2<a name="tag-basics"></a>
 
 You can use tags to categorize your AWS IoT Greengrass resources by purpose, owner, environment, or any other classification for your use case\. When you have many resources of the same type, tags help you more readily identify a specific resource\.

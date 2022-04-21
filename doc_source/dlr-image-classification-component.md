@@ -1,6 +1,6 @@
 # DLR image classification<a name="dlr-image-classification-component"></a>
 
-The DLR image classification component \(`aws.greengrass.DLRImageClassification`\) contains sample inference code to perform image classification inference using [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) and resnet\-50 models\. This component uses the variant [DLR image classification model store](dlr-image-classification-model-store-component.md) and the [DLR installer](dlr-component.md) components as dependencies to download DLR and the sample models\. 
+The DLR image classification component \(`aws.greengrass.DLRImageClassification`\) contains sample inference code to perform image classification inference using [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) and resnet\-50 models\. This component uses the variant [DLR image classification model store](dlr-image-classification-model-store-component.md) and the [DLR runtime](dlr-component.md) components as dependencies to download DLR and the sample models\. 
 
 To use this inference component with a custom\-trained DLR model, [create a custom version](ml-customization.md#override-public-model-store) of the dependent model store component\. To use your own custom inference code, you can use the recipe of this component as a template to [create a custom inference component](ml-customization.md#create-inference-component)\.
 

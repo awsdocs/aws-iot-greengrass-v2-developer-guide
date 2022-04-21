@@ -4,13 +4,13 @@ You can create and place test case executables in a test suite folder in the fol
 + For test suites that use arguments or environment variables from the `test.json` files to determine which tests to run, you can create a single test case executable for the entire test suite, or a test executable for each test group in the test suite\.
 + For a test suite where you want to run specific tests based on specified commands, you create one test case executable for each test case in the test suite\.
 
-As a test writer, you can determine which approach is appropriate for your use case and structure your test case executable accordingly\. Make sure that your provide the correct test case executable path in each `test.json` file, and that the specified executable runs correctly\. 
+As a test writer, you can determine which approach is appropriate for your use case and structure your test case executable accordingly\. Make sure that you provide the correct test case executable path in each `test.json` file, and that the specified executable runs correctly\. 
 
 When all devices are ready for a test case to run, IDT reads the following files:
 + The `test.json` for the selected test case determines the processes to start and the environment variables to set\.
 + The `suite.json` for the test suite determines the environment variables to set\. 
 
-IDT starts the required test exexutable process based on the commands and arguments specified in the `test.json` file, and passes the required environment variables to the process\. 
+IDT starts the required test executable process based on the commands and arguments specified in the `test.json` file, and passes the required environment variables to the process\. 
 
 ## Use the IDT Client SDK<a name="idt-client-sdk"></a>
 
@@ -88,7 +88,7 @@ Specifies that IDT should run only the selected test groups or test cases\.
 Test runners can use these arguments with their `run-suite` command to specify the following test execution behavior:   
 + Run all tests inside the specified test groups\.
 + Run a selection of tests from within a specified test group\.
-To support these arguments, the state machine for your test suite must include a specific set of `RunTask` and `Choice` states in your state machine\. If you are not using a custom state machine, then the default IDT state machine includes the required states for you and you do not need to take additional action\. However, if you are using a custom state machine, then use [Example state machine: Run user\-selected test groups](idt-state-machine.md#allow-specific-groups) as a sample to add the required states in your state machine\.
+To support these arguments, the test orchestrator for your test suite must include a specific set of `RunTask` and `Choice` states in your test orchestrator\. If you are not using a custom state machine, then the default IDT test orchestrator includes the required states for you and you do not need to take additional action\. However, if you are using a custom test orchestrator, then use [Example state machine: Run user\-selected test groups](idt-state-machine.md#allow-specific-groups) as a sample to add the required states in your test orchestrator\.
 
 For more information about IDT CLI commands, see [Debug and run custom test suites](run-debug-custom-tests.md)\.
 

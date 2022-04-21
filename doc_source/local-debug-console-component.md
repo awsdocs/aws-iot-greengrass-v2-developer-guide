@@ -194,7 +194,7 @@ You can disable HTTPS\. For more information, see [Local debug console configura
 
 **To open the local debug console**
 
-1. <a name="local-debug-console-component-usage-forward-port"></a>\(Optional\) To view the local debug console on your development computer, you can forward the console's port over SSH\. However, you must first enable the `AllowTcpForwarding` option in your core device's SSH configuration file\. This option is enabled by default\. Run the following command on your development computer to view the dashboard at `http://localhost:1441` on your development computer\.
+1. <a name="local-debug-console-component-usage-forward-port"></a>\(Optional\) To view the local debug console on your development computer, you can forward the console's port over SSH\. However, you must first enable the `AllowTcpForwarding` option in your core device's SSH configuration file\. This option is enabled by default\. Run the following command on your development computer to view the dashboard at `localhost:1441` on your development computer\.
 
    ```
    ssh -L 1441:localhost:1441 -L 1442:localhost:1442 username@core-device-ip-address
@@ -282,7 +282,7 @@ If the certificate fingerprint doesn't match, go to [Step 2](#local-debug-consol
 
 **To open the local debug console**
 
-1. <a name="local-debug-console-component-usage-forward-port"></a>\(Optional\) To view the local debug console on your development computer, you can forward the console's port over SSH\. However, you must first enable the `AllowTcpForwarding` option in your core device's SSH configuration file\. This option is enabled by default\. Run the following command on your development computer to view the dashboard at `http://localhost:1441` on your development computer\.
+1. <a name="local-debug-console-component-usage-forward-port"></a>\(Optional\) To view the local debug console on your development computer, you can forward the console's port over SSH\. However, you must first enable the `AllowTcpForwarding` option in your core device's SSH configuration file\. This option is enabled by default\. Run the following command on your development computer to view the dashboard at `localhost:1441` on your development computer\.
 
    ```
    ssh -L 1441:localhost:1441 -L 1442:localhost:1442 username@core-device-ip-address

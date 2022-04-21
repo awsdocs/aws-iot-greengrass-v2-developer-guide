@@ -289,7 +289,7 @@ The following example defines a deployment for a Linux\-based device that config
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.5.0",
+      "version": "2.5.5",
       "configurationUpdate": {
         "merge": "{\"runWithDefault\":{\"posixUser\":\"ggc_user:ggc_group\"}}"
       }
@@ -348,9 +348,9 @@ The following example defines a deployment that configures the CPU time limit to
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.5.0",
+      "version": "2.5.5",
       "configurationUpdate": {
-        "merge": "{\"runWithDefault\":{\"cpu\":2,\"memory\":102400}}"
+        "merge": "{\"runWithDefault\":{\"systemResourceLimits\":\"cpu\":2,\"memory\":102400}}}"
       }
     }
   }
@@ -401,7 +401,7 @@ The following example defines a deployment that configures MQTT over port 443\. 
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.5.0",
+      "version": "2.5.5",
       "configurationUpdate": {
         "merge": "{\"mqtt\":{\"port\":443}}"
       }
@@ -430,7 +430,7 @@ The following example defines a deployment that configures HTTPS over port 443\.
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.5.0",
+      "version": "2.5.5",
       "configurationUpdate": {
         "merge": "{\"greengrassDataPlanePort\":443}"
       }
@@ -475,7 +475,7 @@ The following example defines a deployment that configures a network proxy\. The
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.5.0",
+      "version": "2.5.5",
       "configurationUpdate": {
         "merge": "{\"networkProxy\":{\"noProxyAddresses\":\"http://192.168.0.1,www.example.com\",\"proxy\":{\"url\":\"https://my-proxy-server:1100\",\"username\":\"Mary_Major\",\"password\":\"pass@word1357\"}}}"
       }
@@ -539,8 +539,7 @@ If you configure an HTTPS proxy, you must add the proxy server CA certificate to
 + `host` – The host name or IP address of the proxy server\.
 + `port` – \(Optional\) The port number\. If you don't specify the port, then the Greengrass core device uses the following default values:
   + `http` – 80
-  + `https` – 443
-<a name="https-proxy-greengrass-nucleus-requirement"></a>Greengrass core devices must run [Greengrass nucleus ](greengrass-nucleus-component.md) v2\.5\.0 or later to use HTTPS proxies\.  
+  + `https` – 443  
 `username`  
 \(Optional\) The user name that authenticates the proxy server\.  
 `password`  

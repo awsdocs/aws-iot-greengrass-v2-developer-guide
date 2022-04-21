@@ -49,17 +49,40 @@ This component has the following requirements:
   For more information, see [Run a Docker container](run-docker-container.md)\.
 **Note**  
 If you don't specify the image tag or image digest in the artifact URI for an image, then the Docker application manager pulls the latest available version of that image when you deploy your custom Docker container component\. To ensure that all of your core devices run the same version of an image, we recommend that you include the image tag or image digest in the artifact URI\.
-+ <a name="docker-user-permissions-requirement"></a>The system user that runs a Docker container component must have root or administrator permissions, or you must configure Docker to run it as a non\-root or non\-admistrator user\. On Linux devices, you can add a user to the `docker` group to call `docker` commands without `sudo`\. On Windows devices, you can add a user to the `docker-users` group to call `docker` commands without adminstrator privileges\.
++ <a name="docker-user-permissions-requirement"></a>The system user that runs a Docker container component must have root or administrator permissions, or you must configure Docker to run it as a non\-root or non\-admistrator user\.
+  + On Linux devices, you can add a user to the `docker` group to call `docker` commands without `sudo`\.
+  + On Windows devices, you can add a user to the `docker-users` group to call `docker` commands without adminstrator privileges\.
 
-  On Linux, to add `ggc_user`, or the non\-root user that you use to run AWS IoT Greengrass, to the `docker` group that you configure, run the following command\.
+------
+#### [ Linux or Unix ]
+
+  To add `ggc_user`, or the non\-root user that you use to run Docker container components, to the `docker` group, run the following command\.
 
   ```
-  sudo usermod -aG docker user-name
+  sudo usermod -aG docker ggc_user
   ```
 
-  For more information, see the following Docker documentation:
-  + Linux: [Manage Docker as a non\-root user](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user)
-  + Windows: [Install Docker Desktop on Windows](https://docs.docker.com/desktop/windows/install/#install-docker-desktop-on-windows)
+  For more information, see [Manage Docker as a non\-root user](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user)\.
+
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+  To add `ggc_user`, or the user that you use to run Docker container components, to the `docker-users` group, run the following command as an administrator\.
+
+  ```
+  net localgroup docker-users ggc_user /add
+  ```
+
+------
+#### [ Windows PowerShell ]
+
+  To add `ggc_user`, or the user that you use to run Docker container components, to the `docker-users` group, run the following command as an administrator\.
+
+  ```
+  Add-LocalGroupMember -Group docker-users -Member ggc_user
+  ```
+
+------
 + <a name="docker-proxy-requirement"></a>If you [configure the AWS IoT Greengrass Core software to use a network proxy](configure-greengrass-core-v2.md#configure-alpn-network-proxy), you must [configure Docker to use the same proxy server](https://docs.docker.com/network/proxy/)\.
 + If your Docker images are stored in an Amazon ECR private registry, then you must include the token exchange service component as a dependency in the Docker container component\. Also, the [Greengrass device role](device-service-role.md) must allow the `ecr:GetAuthorizationToken`, `ecr:BatchGetImage`, and `ecr:GetDownloadUrlForLayer` actions, as shown in the following example IAM policy\.
 

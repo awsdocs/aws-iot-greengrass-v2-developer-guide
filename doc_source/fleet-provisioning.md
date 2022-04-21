@@ -6,6 +6,9 @@ With AWS IoT fleet provisioning, you can configure AWS IoT to generate and secur
 
 AWS IoT Greengrass provides an AWS IoT fleet provisioning plugin that you can use to install the AWS IoT Greengrass Core software using AWS resources created by AWS IoT fleet provisioning\. The fleet provisioning plugin uses *provisioning by claim*\. Devices use a provisioning claim certificate and private key to obtain a unique X\.509 device certificate and private key that they can use for regular operations\. You can embed the claim certificate and private key in each device during manufacturing, so your customers can activate devices later when each device comes online\. You can use the same claim certificate and private key for multiple devices\. For more information, see [Provisioning by claim](https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#claim-based) in the *AWS IoT Core Developer Guide*\.
 
+**Note**  
+The fleet provisioning plugin doesn't currently support storing private key and certificate files in a hardware security module \(HSM\)\. To use an HSM, [install the AWS IoT Greengrass Core software with manual provisioning](manual-installation.md)\.
+
 To install the AWS IoT Greengrass Core software with AWS IoT fleet provisioning, you must set up resources in your AWS account that AWS IoT uses to provision Greengrass core devices\. These resources include a provisioning template, claim certificates, and a [token exchange IAM role](device-service-role.md)\. After you create these resources, you can reuse them to provision multiple core devices in a fleet\. For more information, see [Set up AWS IoT fleet provisioning for Greengrass core devices](fleet-provisioning-setup.md)\.
 
 **Important**  <a name="install-greengrass-core-requirements-note"></a>
@@ -68,10 +71,7 @@ To help you better manage the number of devices, and which devices, that registe
 
 **To download claim certificates to the device**
 
-1. Copy the claim certificate and private key to the device\.
-
-   For example, you might run the `scp` command on your development computer to copy the claim certificate and private key from a folder named `claim-certs` on your development computer to the device\.
-   + Replace *device\-ip\-address* with the IP address of your device\.
+1. Copy the claim certificate and private key to the device\. If SSH and SCP are enabled on the development computer and the device, you can use the `scp` command on your development computer to transfer the claim certificate and private key\. The following example command transfers these files a folder named `claim-certs` on your development computer to the device\. Replace *device\-ip\-address* with the IP address of your device\.
 
    ```
    scp -r claim-certs/ device-ip-address:~
@@ -171,7 +171,7 @@ Follow the steps in this section to set up a Linux or Windows device to use as y
 
 **To set up a Linux device for AWS IoT Greengrass V2**
 
-1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.\. The following commands show you how to install OpenJDK on your device\.
+1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\. The following commands show you how to install OpenJDK on your device\.
    + For Debian\-based or Ubuntu\-based distributions:
 
      ```
@@ -181,6 +181,11 @@ Follow the steps in this section to set up a Linux or Windows device to use as y
 
      ```
      sudo yum install java-11-openjdk-devel
+     ```
+   + For Amazon Linux 2:
+
+     ```
+     sudo amazon-linux-extras install java-openjdk11
      ```
 
    When the installation completes, run the following command to verify that Java runs on your Raspberry Pi\.
@@ -197,21 +202,54 @@ Follow the steps in this section to set up a Linux or Windows device to use as y
    OpenJDK 64-Bit Server VM (build 11.0.9.1+1-post-Debian-1deb10u2, mixed mode)
    ```
 
-1. \(Optional\) Create the default system user and group that runs components on your device\. You can also choose to let the AWS IoT Greengrass Core software installer create this user and group during installation with the `--component-default-user` installer argument\. For more information, see [Installer arguments](configure-installer.md)\.
+1. \(Optional\) Create the default system user and group that runs components on the device\. You can also choose to let the AWS IoT Greengrass Core software installer create this user and group during installation with the `--component-default-user` installer argument\. For more information, see [Installer arguments](configure-installer.md)\.
 
    ```
-   sudo adduser --system ggc_user
-   sudo addgroup --system ggc_group
+   sudo useradd --system --create-home ggc_user
+   sudo groupadd --system ggc_group
    ```
 
 1. Verify that the user that runs the AWS IoT Greengrass Core software \(typically `root`\), has permission to run `sudo` with any user and any group\.
 
-   1. Open the `/etc/sudoers` file\. 
+   1. Run the following command to open the `/etc/sudoers` file\.
+
+      ```
+      sudo visudo
+      ```
 
    1. Verify that the permission for the user looks like the following example\.
 
       ```
       root    ALL=(ALL:ALL) ALL
+      ```
+
+1. \(Optional\) To [run containerized Lambda functions](run-lambda-functions.md), you must enable [cgroups](https://en.wikipedia.org/wiki/Cgroups) v1, and you must enable and mount the *memory* and *devices* cgroups\. If you don't plan to run containerized Lambda functions, you can skip this step\.
+
+   To enable these cgroups options, boot the device with the following Linux kernel parameters\.
+
+   ```
+   cgroup_enable=memory cgroup_memory=1 systemd.unified_cgroup_hierarchy=0
+   ```
+
+   For information about viewing and setting kernel parameters for your device, see the documentation for your operating system and boot loader\. Follow the instructions to permanently set the kernel parameters\.
+**Tip: Set kernel parameters on a Raspberry Pi**  
+If your device is a Raspberry Pi, you can complete the following steps to view and update its Linux kernel parameters:  
+Open the `/boot/cmdline.txt` file\. This file specifies Linux kernel parameters to apply when the Raspberry Pi boots\.  
+For example, on a Linux\-based system, you can run the following command to use GNU nano to open the file\.  
+
+      ```
+      sudo nano /boot/cmdline.txt
+      ```
+Verify that the `/boot/cmdline.txt` file contains the following kernel parameters\. The `systemd.unified_cgroup_hierarchy=0` parameter specifies to use cgroups v1 instead of cgroups v2\.  
+
+      ```
+      cgroup_enable=memory cgroup_memory=1 systemd.unified_cgroup_hierarchy=0
+      ```
+If the `/boot/cmdline.txt` file doesn't contain these parameters, or it contains these parameters with different values, update the file to contain these parameters and values\.
+If you updated the `/boot/cmdline.txt` file, reboot the Raspberry Pi to apply the changes\.  
+
+      ```
+      sudo reboot
       ```
 
 1. Install all other required dependencies on your device as indicated by the list of requirements in [Device requirements](setting-up.md#greengrass-v2-requirements)\.
@@ -223,7 +261,7 @@ This feature is available for v2\.5\.0 and later of the [Greengrass nucleus comp
 
 **To set up a Windows device for AWS IoT Greengrass V2**
 
-1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.\. You must use a 64\-bit version of the Java runtime on Windows devices\.
+1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.\.
 
 1. <a name="set-up-windows-device-environment-open-cmd"></a>Open the Windows Command Prompt \(`cmd.exe`\) as an administrator\.
 
@@ -327,6 +365,9 @@ If you downloaded the latest version of the software, you install v2\.4\.0 or la
 You can download the latest version of the AWS IoT fleet provisioning plugin from the following location:
 + [https://d2s8p88vqu9w66\.cloudfront\.net/releases/aws\-greengrass\-FleetProvisioningByClaim/fleetprovisioningbyclaim\-latest\.jar](https://d2s8p88vqu9w66.cloudfront.net/releases/aws-greengrass-FleetProvisioningByClaim/fleetprovisioningbyclaim-latest.jar)
 
+**Note**  
+The fleet provisioning plugin is open source\. To view its source code, see the [AWS IoT fleet provisioning plugin](https://github.com/aws-greengrass/aws-greengrass-fleet-provisioning-by-claim) on GitHub\.
+
 **To download the AWS IoT fleet provisioning plugin**
 + On your device, download the AWS IoT fleet provisioning plugin to a file named `aws.greengrass.FleetProvisioningByClaim.jar`\. Replace *GreengrassInstaller* with the folder that you want to use\.
 
@@ -386,14 +427,17 @@ For more information about the arguments that you can specify, see [Installer ar
 
    Copy the following YAML content into the file\. This partial configuration file specifies parameters for the fleet provisioning plugin\. For more information about the options that you can specify, see [Configure the AWS IoT fleet provisioning plugin](fleet-provisioning-configuration.md)\.
 
+------
+#### [ Linux or Unix ]
+
    ```
    ---
    services:
      aws.greengrass.Nucleus:
-       version: "2.5.0"
+       version: "2.5.5"
      aws.greengrass.FleetProvisioningByClaim:
        configuration:
-         rootPath: /greengrass/v2
+         rootPath: "/greengrass/v2"
          awsRegion: "us-west-2"
          iotDataEndpoint: "device-data-prefix-ats.iot.us-west-2.amazonaws.com"
          iotCredentialEndpoint: "device-credentials-prefix.credentials.iot.us-west-2.amazonaws.com"
@@ -407,9 +451,37 @@ For more information about the arguments that you can specify, see [Installer ar
            ThingGroupName: "MyGreengrassCoreGroup"
    ```
 
+------
+#### [ Windows ]
+
+   ```
+   ---
+   services:
+     aws.greengrass.Nucleus:
+       version: "2.5.5"
+     aws.greengrass.FleetProvisioningByClaim:
+       configuration:
+         rootPath: "C:\\greengrass\\v2"
+         awsRegion: "us-west-2"
+         iotDataEndpoint: "device-data-prefix-ats.iot.us-west-2.amazonaws.com"
+         iotCredentialEndpoint: "device-credentials-prefix.credentials.iot.us-west-2.amazonaws.com"
+         iotRoleAlias: "GreengrassCoreTokenExchangeRoleAlias"
+         provisioningTemplate: "GreengrassFleetProvisioningTemplate"
+         claimCertificatePath: "C:\\greengrass\\v2\\claim-certs\\claim.pem.crt"
+         claimCertificatePrivateKeyPath: "C:\\greengrass\\v2\\claim-certs\\claim.private.pem.key"
+         rootCaPath: "C:\\greengrass\\v2\\AmazonRootCA1.pem"
+         templateParameters:
+           ThingName: "MyGreengrassCore"
+           ThingGroupName: "MyGreengrassCoreGroup"
+   ```
+
+------
+
    Then, do the following:
-   + Replace *2\.5\.0* with the version of the AWS IoT Greengrass Core software\.
+   + Replace *2\.5\.5* with the version of the AWS IoT Greengrass Core software\.
    + Replace each instance of */greengrass/v2* or *C:\\greengrass\\v2* with the Greengrass root folder\.
+**Note**  
+On Windows devices, you must specify path separators as double backslashes \(`\\`\), such as `C:\\greengrass\\v2`\.
    + Replace *us\-west\-2* with the AWS Region where you created the provisioning template and other resources\.
    + Replace the `iotDataEndpoint` with your AWS IoT data endpoint\.
    + Replace the `iotCredentialEndpoint` with your AWS IoT credentials endpoint\.
@@ -425,7 +497,7 @@ In this configuration file, you can customize other configuration options such a
    ---
    services:
      aws.greengrass.Nucleus:
-       version: "2.5.0"
+       version: "2.5.5"
        configuration:
          mqtt:
            port: 443
@@ -438,7 +510,7 @@ In this configuration file, you can customize other configuration options such a
              password: "pass@word1357"
      aws.greengrass.FleetProvisioningByClaim:
        configuration:
-         rootPath: /greengrass/v2
+         rootPath: "/greengrass/v2"
          awsRegion: "us-west-2"
          iotDataEndpoint: "device-data-prefix-ats.iot.us-west-2.amazonaws.com"
          iotCredentialEndpoint: "device-credentials-prefix.credentials.iot.us-west-2.amazonaws.com"
@@ -447,6 +519,41 @@ In this configuration file, you can customize other configuration options such a
          claimCertificatePath: "/greengrass/v2/claim-certs/claim.pem.crt"
          claimCertificatePrivateKeyPath: "/greengrass/v2/claim-certs/claim.private.pem.key"
          rootCaPath: "/greengrass/v2/AmazonRootCA1.pem"
+         templateParameters:
+           ThingName: "MyGreengrassCore"
+           ThingGroupName: "MyGreengrassCoreGroup"
+         mqttPort: 443
+         proxyUrl: "http://my-proxy-server:1100"
+         proxyUserName: "Mary_Major"
+         proxyPassword: "pass@word1357"
+   ```
+
+   ```
+   ---
+   services:
+     aws.greengrass.Nucleus:
+       version: "2.5.5"
+       configuration:
+         mqtt:
+           port: 443
+         greengrassDataPlanePort: 443
+         networkProxy:
+           noProxyAddresses: "http://192.168.0.1,www.example.com"
+           proxy:
+             url: "http://my-proxy-server:1100"
+             username: "Mary_Major"
+             password: "pass@word1357"
+     aws.greengrass.FleetProvisioningByClaim:
+       configuration:
+         rootPath: "C:\\greengrass\\v2"
+         awsRegion: "us-west-2"
+         iotDataEndpoint: "device-data-prefix-ats.iot.us-west-2.amazonaws.com"
+         iotCredentialEndpoint: "device-credentials-prefix.credentials.iot.us-west-2.amazonaws.com"
+         iotRoleAlias: "GreengrassCoreTokenExchangeRoleAlias"
+         provisioningTemplate: "GreengrassFleetProvisioningTemplate"
+         claimCertificatePath: "C:\\greengrass\\v2\\claim-certs\\claim.pem.crt"
+         claimCertificatePrivateKeyPath: "C:\\greengrass\\v2\\claim-certs\\claim.private.pem.key"
+         rootCaPath: "C:\\greengrass\\v2\\AmazonRootCA1.pem"
          templateParameters:
            ThingName: "MyGreengrassCore"
            ThingGroupName: "MyGreengrassCoreGroup"

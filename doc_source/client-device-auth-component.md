@@ -39,10 +39,18 @@ This component can be installed on core devices that run the following operating
 This component has the following requirements:
 + The [Greengrass service role](greengrass-service-role.md) must be associated to your AWS account and allow the `iot:DescribeCertificate` permission\.
 + The core device's AWS IoT policy must allow the following permissions:
-  + `greengrass:PutCertificateAuthorities`
+  + `greengrass:GetConnectivityInfo`, where the resources include the ARN of the core device that runs this component
+  + `greengrass:VerifyClientDeviceIoTCertificateAssociation`, where the resources include the Amazon Resource Name \(ARN\) of each client device that connects to the core device
   + `greengrass:VerifyClientDeviceIdentity`
-  + `greengrass:VerifyClientDeviceIoTCertificateAssociation`
-  + `greengrass:GetConnectivityInfo`
+  + `greengrass:PutCertificateAuthorities`
+  + `iot:Publish`, where the resources include the ARN of the following MQTT topic:
+    + `$aws/things/coreDeviceThingName*-gci/shadow/get`
+  + `iot:Subscribe`, where the resources include the ARNs of the following MQTT topic filters:
+    + `$aws/things/coreDeviceThingName*-gci/shadow/update/delta`
+    + `$aws/things/coreDeviceThingName*-gci/shadow/get/accepted`
+  + `iot:Receive`, where the resources include the ARNs of the following MQTT topics:
+    + `$aws/things/coreDeviceThingName*-gci/shadow/update/delta`
+    + `$aws/things/coreDeviceThingName*-gci/shadow/get/accepted`
 
   For more information, see [AWS IoT policies for data plane operations](device-auth.md#iot-policies) and [Minimal AWS IoT policy to support client devices](device-auth.md#client-device-support-minimal-iot-policy)\.
 

@@ -1,6 +1,6 @@
 # DLR object detection<a name="dlr-object-detection-component"></a>
 
-The DLR object detection component \(`aws.greengrass.DLRObjectDetection`\) contains sample inference code to perform object detection inference using [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) and sample pre\-trained models\. This component uses the variant [DLR object detection model store](dlr-object-detection-model-store-component.md) and the [DLR installer](dlr-component.md) components as dependencies to download DLR and the sample models\. 
+The DLR object detection component \(`aws.greengrass.DLRObjectDetection`\) contains sample inference code to perform object detection inference using [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) and sample pre\-trained models\. This component uses the variant [DLR object detection model store](dlr-object-detection-model-store-component.md) and the [DLR runtime](dlr-component.md) components as dependencies to download DLR and the sample models\. 
 
 To use this inference component with a custom\-trained DLR model, [create a custom version](ml-customization.md#override-public-model-store) of the dependent model store component\. To use your own custom inference code, you can use the recipe of this component as a template to [create a custom inference component](ml-customization.md#create-inference-component)\.
 

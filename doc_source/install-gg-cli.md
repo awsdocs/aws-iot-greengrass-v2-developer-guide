@@ -8,7 +8,7 @@ This section describes the steps to deploy the Greengrass CLI component\. For in
 
 ## Prerequisites<a name="gg-cli-prereqs"></a>
 
-You must meet the following requirements to deploy the Greengrass CLI component:
+To deploy the Greengrass CLI component, you must meet the following requirements:
 + AWS IoT Greengrass Core software installed and configured on your core device\. For more information, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\. 
 + To use the AWS CLI to deploy the Greengrass CLI, you must have installed and configured the AWS CLI\. For more information, see [Configuring the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) in the *AWS Command Line Interface User Guide*\.
 + <a name="greengrass-cli-authorization-requirement"></a>You must be authorized to use the Greengrass CLI to interact with the AWS IoT Greengrass Core software\. Do one of the following to use the Greengrass CLI:
@@ -34,7 +34,7 @@ Complete the following steps to deploy the Greengrass CLI component to your core
 
 1. On the **Specify target** page, under **Deployment targets**, in the **Target name** list, choose the Greengrass group that you want to deploy to, and choose **Next**\.
 
-1. On the **Select components** page, verify that the `aws.greengrass.Cli` component is selected, and choose **Next**\.
+1. On the **Select components** page, verify that the **aws\.greengrass\.Cli** component is selected, and choose **Next**\.
 
 1. On the **Configure components** page, keep the default configuration settings, and choose **Next**\.
 
@@ -51,7 +51,7 @@ Complete the following steps to deploy the Greengrass CLI component to your core
      "targetArn":"targetArn",
      "components": {
        "aws.greengrass.Cli": {
-         "componentVersion": "2.5.0",
+         "componentVersion": "2.5.5",
          "configurationUpdate": {
            "merge": "{\"AuthorizedPosixGroups\":\"<group1>,<group2>,...,<groupN>\",\"AuthorizedWindowsGroups\":\"<group1>,<group2>,...,<groupN>\"}"
          }

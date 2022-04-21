@@ -76,7 +76,7 @@ This component has the following requirements:
 + AWS IoT Device Defender configured to use the Detect feature to monitor violations\. For more information, see [Detect](https://docs.aws.amazon.com/iot/latest/developerguide/device-defender-detect.html) in the *AWS IoT Core Developer Guide*\.
 + The [psutil](https://pypi.org/project/psutil/) library installed on the core device\. Version 5\.7\.0 is the latest version that is verified to work with the component\.
 + The [cbor](https://pypi.org/project/cbor/) library installed on the core device\. Version 1\.0\.0 is the latest version that is verified to work with the component\.
-+ <a name="connector-component-legacy-subscription-router-dependency"></a>To receive output data from this component, you must merge the following configuration update for the [legacy subscription router component](legacy-subscription-router-component.md) when you deploy this component\. The legacy subscription router component \(`aws.greengrass.LegacySubscriptionRouter`\) is a dependency of this component\. This configuration specifies the topic where this component publishes responses\.
++ <a name="connector-component-legacy-subscription-router-dependency"></a>To receive output data from this component, you must merge the following configuration update for the [legacy subscription router component](legacy-subscription-router-component.md) \(`aws.greengrass.LegacySubscriptionRouter`\) when you deploy this component\. This configuration specifies the topic where this component publishes responses\.
 
 ------
 #### [ Legacy subscription router v2\.1\.x ]
@@ -126,9 +126,9 @@ You must update the Lambda function version on the legacy subscription router ev
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#device-defender-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ 3\.0\.0 ]
+#### [ 3\.0\.0 \- 3\.0\.1 ]
 
-The following table lists the dependencies for version 3\.0\.0 of this component\.
+The following table lists the dependencies for versions 3\.0\.0 and 3\.0\.1 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -232,11 +232,11 @@ Default: 300 seconds
 
  `UseInstaller`   
 \(Optional\) Boolean value that defines whether to use the installer script in this component to install this component's dependencies\.  
-
-Set this value to `false` if you want to use a custom script to install dependencies, or if you want to include runtime dependencies in a pre\-built Linux image\. To use this component, you will need to install the following libraries, including any dependencies, and make them available to the default Greengrass system user\.
+Set this value to `false` if you want to use a custom script to install dependencies, or if you want to include runtime dependencies in a pre\-built Linux image\. To use this component, you must install the following libraries, including any dependencies, and make them available to the default Greengrass system user\.  
 + [AWS IoT Device SDK v2 for Python](https://github.com/aws/aws-iot-device-sdk-python-v2)
 + [cbor](https://pypi.org/project/cbor/) library\. Version 1\.0\.0 is the latest version that is verified to work with the component\.
 + [psutil](https://pypi.org/project/psutil/) library\. Version 5\.7\.0 is the latest version that is verified to work with the component\.
+On core devices that you configure to use an HTTPS proxy, you must set this value to `false`\. This component's installer script doesn't support operation behind an HTTPS proxy\.
 Default: `true`
 
 ------
@@ -441,13 +441,26 @@ C:\greengrass\v2\logs\aws.greengrass.DeviceDefender.log
 
 The following table describes the changes in each version of the component\.
 
+------
+#### [ v3\.x ]
+
+
+|  **Version**  |  **Changes**  | 
+| --- | --- | 
+|  3\.0\.1  |  Fixes an issue with how the component calculates delta values for metrics\.  | 
+|  3\.0\.0  |   This version is no longer available\. The improvements in this version are available in later versions of this component\.  Initial version\.  | 
+
+------
+#### [ v2\.x ]
+
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
 |  2\.0\.8  |  Version updated for Greengrass nucleus version 2\.5\.0 release\.  | 
-|  3\.0\.0  |  <a name="changelog-device-defender-3.0.0-major-version-changes"></a>This version of the AWS IoT Device Defender component expects different configuration parameters than version 2\.x\. If you use a non\-default configuration for version 2\.x, and you want to upgrade from v2\.x to v3\.x, you must update the component's configuration\. For more information, see [AWS IoT Device Defender component configuration](#device-defender-component-configuration)\. <a name="changelog-device-defender-3.0.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/device-defender-component.html)  | 
 |  2\.0\.7  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  2\.0\.6  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
 |  2\.0\.5  |  Version updated for Greengrass nucleus version 2\.2\.0 release\.  | 
 |  2\.0\.4  |  Version updated for Greengrass nucleus version 2\.1\.0 release\.  | 
 |  2\.0\.3  |  Initial version\.  | 
+
+------

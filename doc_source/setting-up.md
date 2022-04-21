@@ -11,6 +11,9 @@ This section describes advanced installation and configuration of the AWS IoT Gr
 
 Before you begin, make sure you meet the following requirements to install and run the AWS IoT Greengrass Core software\.
 
+**Tip**  
+You can search for devices that are qualified for AWS IoT Greengrass V2 in the [AWS Partner Device Catalog](https://devices.amazonaws.com/search?kw=%22HSI%22&page=1)\.
+
 **Topics**
 + [Supported platforms](#greengrass-v2-supported-platforms)
 + [Device requirements](#greengrass-v2-requirements)
@@ -60,11 +63,13 @@ You can use AWS IoT Device Tester for AWS IoT Greengrass to verify that your dev
 + Minimum 96 MB RAM allocated to the AWS IoT Greengrass Core software\. This requirement doesn't include components that run on the core device\. For more information, see [Control memory allocation with JVM options](configure-greengrass-core-v2.md#jvm-tuning)\.
 + Java Runtime Environment \(JRE\) version 8 or greater\. To use Java to develop custom components, you must install a Java Development Kit \(JDK\)\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.
 + [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.25 or greater\.
-+ The user that runs the AWS IoT Greengrass Core software \(typically `root`\), must have permission to run `sudo` with any user and any group\. The `/etc/sudoers` file must give this user permission to run `sudo` as other groups\. The permission for the user in `/etc/sudoers` should look like the following example\.
++ You must run the AWS IoT Greengrass Core software as a root user\. Use `sudo`, for example\.
++ The root user that runs the AWS IoT Greengrass Core software, such as `root`, must have permission to run `sudo` with any user and any group\. The `/etc/sudoers` file must give this user permission to run `sudo` as other groups\. The permission for the user in `/etc/sudoers` should look like the following example\.
 
   ```
   root    ALL=(ALL:ALL) ALL
   ```
++ The core device must be able to perform outbound requests to a set of endpoints and ports\. For more information, see [Allow device traffic through a proxy or firewall](allow-device-traffic.md)\.
 + The `/tmp` directory must be mounted with `exec` permissions\.
 + All of the following shell commands:
   + `ps -ax -o pid,ppid`
@@ -91,8 +96,12 @@ You can use AWS IoT Device Tester for AWS IoT Greengrass to verify that your dev
 #### [ Windows ]
 + Minimum 256 MB disk space available for the AWS IoT Greengrass Core software\. This requirement doesn't include components deployed to the core device\.
 + Minimum 160 MB RAM allocated to the AWS IoT Greengrass Core software\. This requirement doesn't include components that run on the core device\. For more information, see [Control memory allocation with JVM options](configure-greengrass-core-v2.md#jvm-tuning)\.
-+ A 64\-bit version of Java Runtime Environment \(JRE\) version 8 or greater\. To use Java to develop custom components, you must install a Java Development Kit \(JDK\)\. We recommend [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\. 
++ Java Runtime Environment \(JRE\) version 8 or greater\. To use Java to develop custom components, you must install a Java Development Kit \(JDK\)\. We recommend [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\. 
+**Note**  
+To use version 2\.5\.0 of the [Greengrass nucleus](greengrass-nucleus-component.md), you must use a 64\-bit version of the Java Runtime Environment \(JRE\)\. Greengrass nucleus version 2\.5\.1 supports 32\-bit and 64\-bit JREs\.
++ The user who installs the AWS IoT Greengrass Core software must be an administrator\.
 + Each user that runs component processes must exist in the LocalSystem account, and the user's name and password must be in the Credential Manager instance for the LocalSystem account\. You can set up this user when you follow instructions to [install the AWS IoT Greengrass Core software](install-greengrass-core-v2.md)\.
++ The core device must be able to perform outbound requests to a set of endpoints and ports\. For more information, see [Allow device traffic through a proxy or firewall](allow-device-traffic.md)\.
 
 ------
 
@@ -100,7 +109,6 @@ You can use AWS IoT Device Tester for AWS IoT Greengrass to verify that your dev
 
 Your device must meet the following requirements to run Lambda functions:
 + A Linux\-based operating system\.
-+ You must run the AWS IoT Greengrass Core software as a root user\. Use `sudo`, for example\.
 + Your device must have the `mkfifo` shell command\.
 + Your device must run the programming language libraries that a Lambda function requires\. You must install the required libraries on the device and add them to the `PATH` environment variable\.
   + [Python](https://www.python.org/) version 3\.8 for functions that use the Python 3\.8 runtime\.
@@ -113,9 +121,19 @@ Your device must meet the following requirements to run Lambda functions:
   For more information about AWS IoT Greengrass support for Lambda runtimes, see [Run AWS Lambda functions](run-lambda-functions.md)\.
 + To run containerized Lambda functions, your device must meet the following requirements:
   + Linux kernel version 4\.4 or later\.
-  + The kernel must support [cgroups](https://en.wikipedia.org/wiki/Cgroups), and you must enable and mount the following cgroups:
+  + The kernel must support [cgroups](https://en.wikipedia.org/wiki/Cgroups) v1, and you must enable and mount the following cgroups:
     + The *memory* cgroup for AWS IoT Greengrass to set the memory limit for containerized Lambda functions\.
     + The *devices* cgroup for containerized Lambda functions to access system devices or volumes\.
+
+    The AWS IoT Greengrass Core software doesn't support cgroups v2\.
+
+    To meet this requirement, boot the device with the following Linux kernel parameters\.
+
+    ```
+    cgroup_enable=memory cgroup_memory=1 systemd.unified_cgroup_hierarchy=0
+    ```
+**Tip**  
+On a Raspberry Pi, edit the `/boot/cmdline.txt` file to set the device's kernel parameters\.
   + You must enable the following Linux kernel configurations on the device:
     + Namespace:
       + `CONFIG_IPC_NS`
@@ -172,7 +190,7 @@ If you do not have an AWS account, complete the following steps to create one\.
 **Note**  
 We strongly recommend that you adhere to the best practice of using the **Administrator** IAM user that follows and securely lock away the root user credentials\. Sign in as the root user only to perform a few [account and service management tasks](https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.html)\.
 
-1. In the navigation pane, choose **Users** and then choose **Add user**\.
+1. In the navigation pane, choose **Users** and then choose **Add users**\.
 
 1. For **User name**, enter **Administrator**\.
 

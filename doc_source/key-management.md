@@ -5,4 +5,4 @@ It's the responsibility of the customer to guarantee secure storage of cryptogra
 **Note**  
 The key and certificate are also referred to as the core private key and the core device certificate\.
 
-A Greengrass core supports private key storage using file system permissions\. If you use file system\-based private keys, you are responsible for their secure storage on the core device\.
+A Greengrass core device supports private key storage using file system permissions or a [hardware security module](hardware-security.md)\. If you use file system\-based private keys, you are responsible for their secure storage on the core device\.

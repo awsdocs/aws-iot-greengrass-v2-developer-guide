@@ -4,23 +4,59 @@ The AWS IoT Greengrass Core software includes an installer that sets up your dev
 
 When you manually install the AWS IoT Greengrass Core software, you can also configure the device to use a network proxy or connect to AWS on port 443\. You might need to specify these configuration options if your device runs behind a firewall or a network proxy, for example\. For more information, see [Connect on port 443 or through a network proxy](configure-greengrass-core-v2.md#configure-alpn-network-proxy)\.
 
+You can also configure the AWS IoT Greengrass Core software to use a hardware security module \(HSM\) through the [PKCS\#11 interface](https://en.wikipedia.org/wiki/PKCS_11)\. This feature enables you to securely store private key and certificate files so that they aren't exposed or duplicated in software\. You can store private keys and certificates on a hardware module such as an HSM, a Trusted Platform Module \(TPM\), or another cryptographic element\. This feature is available on Linux devices only\. For more information about hardware security and requirements to use it, see [Hardware security integration](hardware-security.md)\.
+
 **Important**  <a name="install-greengrass-core-requirements-note"></a>
 Before you download the AWS IoT Greengrass Core software, check that your core device meets the [requirements](setting-up.md#greengrass-v2-requirements) to install and run the AWS IoT Greengrass Core software v2\.0\.
 
 **Topics**
-+ [Create an AWS IoT thing](#create-iot-thing)
 + [Retrieve AWS IoT endpoints](#retrieve-iot-endpoints)
++ [Create an AWS IoT thing](#create-iot-thing)
++ [Create the thing certificate](#create-thing-certificate)
++ [Configure the thing certificate](#configure-thing-certificate)
 + [Create a token exchange role](#create-token-exchange-role)
 + [Download certificates to the device](#download-thing-certificates)
 + [Set up the device environment](#set-up-device-environment)
 + [Download the AWS IoT Greengrass Core software](#download-greengrass-core-v2)
 + [Install the AWS IoT Greengrass Core software](#run-greengrass-core-v2-installer-manual)
 
+## Retrieve AWS IoT endpoints<a name="retrieve-iot-endpoints"></a>
+
+Get the AWS IoT endpoints for your AWS account, and save them to use later\. Your device uses these endpoints to connect to AWS IoT\. Do the following:
+
+1. Get the AWS IoT data endpoint for your AWS account\.
+
+   ```
+   aws iot describe-endpoint --endpoint-type iot:Data-ATS
+   ```
+
+   The response looks similar to the following example, if the request succeeds\.
+
+   ```
+   {
+     "endpointAddress": "device-data-prefix-ats.iot.us-west-2.amazonaws.com"
+   }
+   ```
+
+1. Get the AWS IoT credentials endpoint for your AWS account\.
+
+   ```
+   aws iot describe-endpoint --endpoint-type iot:CredentialProvider
+   ```
+
+   The response looks similar to the following example, if the request succeeds\.
+
+   ```
+   {
+     "endpointAddress": "device-credentials-prefix.credentials.iot.us-west-2.amazonaws.com"
+   }
+   ```
+
 ## Create an AWS IoT thing<a name="create-iot-thing"></a>
 
-AWS IoT *things* represent devices and logical entities that connect to AWS IoT\. Greengrass core devices are AWS IoT things\. When you register a device as an AWS IoT thing, that device can use a digital certificate to authenticate with AWS\. This certificate allows the device to communicate with AWS IoT and AWS IoT Greengrass\.
+AWS IoT *things* represent devices and logical entities that connect to AWS IoT\. Greengrass core devices are AWS IoT things\. When you register a device as an AWS IoT thing, that device can use a digital certificate to authenticate with AWS\.
 
-In this section, you create an AWS IoT thing and download certificates that your device can use to connect to AWS\. 
+In this section, you create an AWS IoT thing that represents your device\.
 
 **To create an AWS IoT thing**
 
@@ -42,6 +78,47 @@ The thing name can't contain colon \(`:`\) characters\.
      "thingId": "8cb4b6cd-268e-495d-b5b9-1713d71dbf42"
    }
    ```
+
+1. \(Optional\) Add the AWS IoT thing to a new or existing thing group\. You use thing groups to manage fleets of Greengrass core devices\. When you deploy software components to your devices, you can target individual devices or groups of devices\. You can add a device to a thing group with an active Greengrass deployment to deploy that thing group's software components to the device\. Do the following:
+
+   1. \(Optional\) Create an AWS IoT thing group\.
+      + Replace *MyGreengrassCoreGroup* with the name of the thing group to create\.
+**Note**  <a name="install-argument-thing-group-name-constraint"></a>
+The thing group name can't contain colon \(`:`\) characters\.
+
+      ```
+      aws iot create-thing-group --thing-group-name MyGreengrassCoreGroup
+      ```
+
+      The response looks similar to the following example, if the request succeeds\.
+
+      ```
+      {
+        "thingGroupName": "MyGreengrassCoreGroup",
+        "thingGroupArn": "arn:aws:iot:us-west-2:123456789012:thinggroup/MyGreengrassCoreGroup",
+        "thingGroupId": "4df721e1-ff9f-4f97-92dd-02db4e3f03aa"
+      }
+      ```
+
+   1. Add the AWS IoT thing to a thing group\.
+      + Replace *MyGreengrassCore* with the name of your AWS IoT thing\.
+      + Replace *MyGreengrassCoreGroup* with the name of the thing group\.
+
+      ```
+      aws iot add-thing-to-thing-group --thing-name MyGreengrassCore --thing-group-name MyGreengrassCoreGroup
+      ```
+
+      The command doesn't have any output if the request succeeds\.
+
+## Create the thing certificate<a name="create-thing-certificate"></a>
+
+When you register a device as an AWS IoT thing, that device can use a digital certificate to authenticate with AWS\. This certificate allows the device to communicate with AWS IoT and AWS IoT Greengrass\.
+
+In this section, you create and download certificates that your device can use to connect to AWS\.
+
+If you want to configure the AWS IoT Greengrass Core software to use a hardware security module \(HSM\) to securely store the private key and certificate, follow the steps to create the certificate from a private key in an HSM\. Otherwise, follow the steps to create the certificate and private key in the AWS IoT service\. The hardware security feature is available on Linux devices only\. For more information about hardware security and requirements to use it, see [Hardware security integration](hardware-security.md)\.
+
+### Create the certificate and private key in the AWS IoT service<a name="create-thing-certificate-cloud"></a>
 
 1. Create a folder where you download the certificates for the AWS IoT thing\.
 
@@ -84,6 +161,69 @@ The thing name can't contain colon \(`:`\) characters\.
      }
    }
    ```
+
+   Save the certificate's Amazon Resource Name \(ARN\) to use to configure the certificate later\.
+
+### Create the certificate from a private key in an HSM<a name="create-thing-certificate-hardware-security"></a>
+
+**Note**  
+This feature is available for v2\.5\.3 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. AWS IoT Greengrass doesn't currently support this feature on Windows core devices\. 
+
+1. On the core device, initialize a PKCS\#11 token in the HSM, and generate a private key\. The private key must be an RSA key with an RSA\-2048 key size, or larger\. Check the documentation for your HSM to learn how to initialize the token and generate the private key\. If your HSM supports object IDs, specify an object ID when you generate the private key\. Save the slot ID, user PIN, object label, object ID \(if your HSM uses one\) that you specify when you initialize the token and generate the private key\. You use these values later when you import the thing certificate to the HSM and configure the AWS IoT Greengrass Core software\.
+
+1. Create a certificate signing request \(CSR\) from the private key\. AWS IoT uses this CSR to create a thing certificate for the private key that you generated in the HSM\. For information about how to create a CSR from the private key, see the documentation for your HSM\. The CSR is a file, such as `iotdevicekey.csr`\.
+
+1. Copy the CSR from the device to your development computer\. If SSH and SCP are enabled on the development computer and the device, you can use the `scp` command on your development computer to transfer the CSR\. Replace *device\-ip\-address* with the IP address of your device, and replace *\~/iotdevicekey\.csr* with the path to the CSR file on the device\.
+
+   ```
+   scp device-ip-address:~/iotdevicekey.csr iotdevicekey.csr
+   ```
+
+1. On your development computer, create a folder where you download the certificate for the AWS IoT thing\.
+
+   ```
+   mkdir greengrass-v2-certs
+   ```
+
+1. Use the CSR file to create and download the certificate for the AWS IoT thing to your development computer\.
+
+   ```
+   aws iot create-certificate-from-csr --set-as-active --certificate-signing-request=file://iotdevicekey.csr --certificate-pem-outfile greengrass-v2-certs/device.pem.crt
+   ```
+
+   The response looks similar to the following example, if the request succeeds\.
+
+   ```
+   {
+     "certificateArn": "arn:aws:iot:us-west-2:123456789012:cert/aa0b7958770878eabe251d8a7ddd547f4889c524c9b574ab9fbf65f32248b1d4",
+     "certificateId": "aa0b7958770878eabe251d8a7ddd547f4889c524c9b574ab9fbf65f32248b1d4",
+     "certificatePem": "-----BEGIN CERTIFICATE-----
+   MIICiTCCAfICCQD6m7oRw0uXOjANBgkqhkiG9w
+    0BAQUFADCBiDELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAldBMRAwDgYDVQQHEwdTZ
+    WF0dGxlMQ8wDQYDVQQKEwZBbWF6b24xFDASBgNVBAsTC0lBTSBDb25zb2xlMRIw
+    EAYDVQQDEwlUZXN0Q2lsYWMxHzAdBgkqhkiG9w0BCQEWEG5vb25lQGFtYXpvbi5
+    jb20wHhcNMTEwNDI1MjA0NTIxWhcNMTIwNDI0MjA0NTIxWjCBiDELMAkGA1UEBh
+    MCVVMxCzAJBgNVBAgTAldBMRAwDgYDVQQHEwdTZWF0dGxlMQ8wDQYDVQQKEwZBb
+    WF6b24xFDASBgNVBAsTC0lBTSBDb25zb2xlMRIwEAYDVQQDEwlUZXN0Q2lsYWMx
+    HzAdBgkqhkiG9w0BCQEWEG5vb25lQGFtYXpvbi5jb20wgZ8wDQYJKoZIhvcNAQE
+    BBQADgY0AMIGJAoGBAMaK0dn+a4GmWIWJ21uUSfwfEvySWtC2XADZ4nB+BLYgVI
+    k60CpiwsZ3G93vUEIO3IyNoH/f0wYK8m9TrDHudUZg3qX4waLG5M43q7Wgc/MbQ
+    ITxOUSQv7c7ugFFDzQGBzZswY6786m86gpEIbb3OhjZnzcvQAaRHhdlQWIMm2nr
+    AgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAtCu4nUhVVxYUntneD9+h8Mg9q6q+auN
+    KyExzyLwaxlAoo7TJHidbtS4J5iNmZgXL0FkbFFBjvSfpJIlJ00zbhNYS5f6Guo
+    EDmFJl0ZxBHjJnyp378OD8uTs7fLvjx79LjSTbNYiytVbZPQUQ5Yaxu2jXnimvw
+    3rrszlaEXAMPLE=
+   -----END CERTIFICATE-----"
+   }
+   ```
+
+   Save the certificate's ARN to use to configure the certificate later\.
+
+## Configure the thing certificate<a name="configure-thing-certificate"></a>
+
+Attach the thing certificate to the AWS IoT thing that you created earlier, and add an AWS IoT policy to the certificate to define the AWS IoT permissions for the core device\.
+
+**To configure the thing's certificate**
 
 1. Attach the certificate to the AWS IoT thing\.
    + Replace *MyGreengrassCore* with the name of your AWS IoT thing\.
@@ -176,69 +316,6 @@ The thing name can't contain colon \(`:`\) characters\.
       ```
 
       The command doesn't have any output if the request succeeds\.
-
-1. \(Optional\) Add the AWS IoT thing to a new or existing thing group\. You use thing groups to manage fleets of Greengrass core devices\. When you deploy software components to your devices, you can choose to target individual devices or groups of devices\. You can add a device to a thing group with an active Greengrass deployment to deploy that thing group's software components to the device\. Do the following:
-
-   1. \(Optional\) Create an AWS IoT thing group\.
-      + Replace *MyGreengrassCoreGroup* with the name of the thing group to create\.
-**Note**  <a name="install-argument-thing-group-name-constraint"></a>
-The thing group name can't contain colon \(`:`\) characters\.
-
-      ```
-      aws iot create-thing-group --thing-group-name MyGreengrassCoreGroup
-      ```
-
-      The response looks similar to the following example, if the request succeeds\.
-
-      ```
-      {
-        "thingGroupName": "MyGreengrassCoreGroup",
-        "thingGroupArn": "arn:aws:iot:us-west-2:123456789012:thinggroup/MyGreengrassCoreGroup",
-        "thingGroupId": "4df721e1-ff9f-4f97-92dd-02db4e3f03aa"
-      }
-      ```
-
-   1. Add the AWS IoT thing to a thing group\.
-      + Replace *MyGreengrassCore* with the name of your AWS IoT thing\.
-      + Replace *MyGreengrassCoreGroup* with the name of the thing group\.
-
-      ```
-      aws iot add-thing-to-thing-group --thing-name MyGreengrassCore --thing-group-name MyGreengrassCoreGroup
-      ```
-
-      The command doesn't have any output if the request succeeds\.
-
-## Retrieve AWS IoT endpoints<a name="retrieve-iot-endpoints"></a>
-
-Get the AWS IoT endpoints for your AWS account, and save them to use later\. Your device uses these endpoints to connect to AWS IoT\. Do the following:
-
-1. Get the AWS IoT data endpoint for your AWS account\.
-
-   ```
-   aws iot describe-endpoint --endpoint-type iot:Data-ATS
-   ```
-
-   The response looks similar to the following example, if the request succeeds\.
-
-   ```
-   {
-     "endpointAddress": "device-data-prefix-ats.iot.us-west-2.amazonaws.com"
-   }
-   ```
-
-1. Get the AWS IoT credentials endpoint for your AWS account\.
-
-   ```
-   aws iot describe-endpoint --endpoint-type iot:CredentialProvider
-   ```
-
-   The response looks similar to the following example, if the request succeeds\.
-
-   ```
-   {
-     "endpointAddress": "device-credentials-prefix.credentials.iot.us-west-2.amazonaws.com"
-   }
-   ```
 
 ## Create a token exchange role<a name="create-token-exchange-role"></a>
 
@@ -462,12 +539,15 @@ To create a role alias, you must have permission to pass the token exchange IAM 
 
 ## Download certificates to the device<a name="download-thing-certificates"></a>
 
-Earlier, you downloaded your device's certificates to your development computer\. In this section, you copy these certificates to your device set up the device with the certificates that it uses to connect to AWS IoT\.
+Earlier, you downloaded your device's certificate to your development computer\. In this section, you copy the certificate to your device set up the device with the certificates that it uses to connect to AWS IoT\. If you use an HSM, you also import the certificate file into the HSM in this section\.
++ If you created the thing certificate and private key in the AWS IoT service earlier, follow the steps to download the certificates with private key and certificate files\.
++ If you created the thing certificate from a private key in a hardware security module \(HSM\) earlier, follow the steps to download the certificates with the private key and certificate in an HSM\.
+
+### Download certificates with private key and certificate files<a name="download-thing-certificates-without-hardware-security"></a>
 
 **To download certificates to the device**
 
-1. Copy the AWS IoT thing certificates from your development computer to the device\. You might be able to use the `scp` command, for example\.
-   + Replace *device\-ip\-address* with the IP of your device\.
+1. <a name="installation-copy-thing-certificate-to-device"></a>Copy the AWS IoT thing certificate from your development computer to the device\. If SSH and SCP are enabled on the development computer and the device, you can use the `scp` command on your development computer to transfer the certificate\. Replace *device\-ip\-address* with the IP address of your device\.
 
    ```
    scp -r greengrass-v2-certs/ device-ip-address:~
@@ -561,6 +641,89 @@ Earlier, you downloaded your device's certificates to your development computer\
 
 ------
 
+### Download certificates with the private key and certificate in an HSM<a name="download-thing-certificates-with-hardware-security"></a>
+
+**Note**  
+This feature is available for v2\.5\.3 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. AWS IoT Greengrass doesn't currently support this feature on Windows core devices\. 
+
+**To download certificates to the device**
+
+1. <a name="installation-copy-thing-certificate-to-device"></a>Copy the AWS IoT thing certificate from your development computer to the device\. If SSH and SCP are enabled on the development computer and the device, you can use the `scp` command on your development computer to transfer the certificate\. Replace *device\-ip\-address* with the IP address of your device\.
+
+   ```
+   scp -r greengrass-v2-certs/ device-ip-address:~
+   ```
+
+1. <a name="installation-create-greengrass-root-folder"></a>Create the Greengrass root folder on the device\. You'll later install the AWS IoT Greengrass Core software to this folder\.
+
+------
+#### [ Linux or Unix ]
+   + Replace */greengrass/v2* with the folder to use\.
+
+   ```
+   sudo mkdir -p /greengrass/v2
+   ```
+
+------
+#### [ Windows Command Prompt ]
+   + Replace *C:\\greengrass\\v2* with the folder to use\.
+
+   ```
+   mkdir C:\greengrass\v2
+   ```
+
+------
+#### [ PowerShell ]
+   + Replace *C:\\greengrass\\v2* with the folder to use\.
+
+   ```
+   mkdir C:\greengrass\v2
+   ```
+
+------
+
+1. <a name="installation-set-greengrass-root-folder-permissions"></a>\(Linux only\) Set the permissions of the parent of the Greengrass root folder\.
+   + Replace */greengrass* with the parent of the root folder\.
+
+   ```
+   sudo chmod 755 /greengrass
+   ```
+
+1. Import the thing certificate file, `~/greengrass-v2-certs/device.pem.crt`, into the HSM\. Check the documentation for your HSM to learn how to import certificates into it\. Import the certificate using the same token, slot ID, user PIN, object label, and object ID \(if your HSM uses one\) where you generated the private key in the HSM earlier\.
+**Note**  
+If you generated the private key earlier without an object ID, and the certificate has an object ID, set the private key's object ID to the same value as the certificate\. Check the documentation for your HSM to learn how to set the object ID for the private key object\.
+
+1. \(Optional\) Delete the thing certificate file, so that it exists only in the HSM\.
+
+   ```
+   rm ~/greengrass-v2-certs/device.pem.crt
+   ```
+
+1. <a name="installation-download-root-ca-certificate"></a>Download the Amazon root certificate authority \(CA\) certificate\. AWS IoT certificates are associated with Amazon's root CA certificate by default\.
+
+------
+#### [ Linux or Unix ]
+
+   ```
+   sudo curl -o /greengrass/v2/AmazonRootCA1.pem https://www.amazontrust.com/repository/AmazonRootCA1.pem
+   ```
+
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+   ```
+   curl -o C:\greengrass\v2\AmazonRootCA1.pem https://www.amazontrust.com/repository/AmazonRootCA1.pem
+   ```
+
+------
+#### [ PowerShell ]
+
+   ```
+   iwr -Uri https://www.amazontrust.com/repository/AmazonRootCA1.pem -OutFile C:\greengrass\v2\AmazonRootCA1.pem
+   ```
+
+------
+
 ## Set up the device environment<a name="set-up-device-environment"></a>
 
 Follow the steps in this section to set up a Linux or Windows device to use as your AWS IoT Greengrass core device\.
@@ -569,7 +732,7 @@ Follow the steps in this section to set up a Linux or Windows device to use as y
 
 **To set up a Linux device for AWS IoT Greengrass V2**
 
-1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.\. The following commands show you how to install OpenJDK on your device\.
+1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\. The following commands show you how to install OpenJDK on your device\.
    + For Debian\-based or Ubuntu\-based distributions:
 
      ```
@@ -579,6 +742,11 @@ Follow the steps in this section to set up a Linux or Windows device to use as y
 
      ```
      sudo yum install java-11-openjdk-devel
+     ```
+   + For Amazon Linux 2:
+
+     ```
+     sudo amazon-linux-extras install java-openjdk11
      ```
 
    When the installation completes, run the following command to verify that Java runs on your Raspberry Pi\.
@@ -595,21 +763,54 @@ Follow the steps in this section to set up a Linux or Windows device to use as y
    OpenJDK 64-Bit Server VM (build 11.0.9.1+1-post-Debian-1deb10u2, mixed mode)
    ```
 
-1. \(Optional\) Create the default system user and group that runs components on your device\. You can also choose to let the AWS IoT Greengrass Core software installer create this user and group during installation with the `--component-default-user` installer argument\. For more information, see [Installer arguments](configure-installer.md)\.
+1. \(Optional\) Create the default system user and group that runs components on the device\. You can also choose to let the AWS IoT Greengrass Core software installer create this user and group during installation with the `--component-default-user` installer argument\. For more information, see [Installer arguments](configure-installer.md)\.
 
    ```
-   sudo adduser --system ggc_user
-   sudo addgroup --system ggc_group
+   sudo useradd --system --create-home ggc_user
+   sudo groupadd --system ggc_group
    ```
 
 1. Verify that the user that runs the AWS IoT Greengrass Core software \(typically `root`\), has permission to run `sudo` with any user and any group\.
 
-   1. Open the `/etc/sudoers` file\. 
+   1. Run the following command to open the `/etc/sudoers` file\.
+
+      ```
+      sudo visudo
+      ```
 
    1. Verify that the permission for the user looks like the following example\.
 
       ```
       root    ALL=(ALL:ALL) ALL
+      ```
+
+1. \(Optional\) To [run containerized Lambda functions](run-lambda-functions.md), you must enable [cgroups](https://en.wikipedia.org/wiki/Cgroups) v1, and you must enable and mount the *memory* and *devices* cgroups\. If you don't plan to run containerized Lambda functions, you can skip this step\.
+
+   To enable these cgroups options, boot the device with the following Linux kernel parameters\.
+
+   ```
+   cgroup_enable=memory cgroup_memory=1 systemd.unified_cgroup_hierarchy=0
+   ```
+
+   For information about viewing and setting kernel parameters for your device, see the documentation for your operating system and boot loader\. Follow the instructions to permanently set the kernel parameters\.
+**Tip: Set kernel parameters on a Raspberry Pi**  
+If your device is a Raspberry Pi, you can complete the following steps to view and update its Linux kernel parameters:  
+Open the `/boot/cmdline.txt` file\. This file specifies Linux kernel parameters to apply when the Raspberry Pi boots\.  
+For example, on a Linux\-based system, you can run the following command to use GNU nano to open the file\.  
+
+      ```
+      sudo nano /boot/cmdline.txt
+      ```
+Verify that the `/boot/cmdline.txt` file contains the following kernel parameters\. The `systemd.unified_cgroup_hierarchy=0` parameter specifies to use cgroups v1 instead of cgroups v2\.  
+
+      ```
+      cgroup_enable=memory cgroup_memory=1 systemd.unified_cgroup_hierarchy=0
+      ```
+If the `/boot/cmdline.txt` file doesn't contain these parameters, or it contains these parameters with different values, update the file to contain these parameters and values\.
+If you updated the `/boot/cmdline.txt` file, reboot the Raspberry Pi to apply the changes\.  
+
+      ```
+      sudo reboot
       ```
 
 1. Install all other required dependencies on your device as indicated by the list of requirements in [Device requirements](setting-up.md#greengrass-v2-requirements)\.
@@ -621,7 +822,7 @@ This feature is available for v2\.5\.0 and later of the [Greengrass nucleus comp
 
 **To set up a Windows device for AWS IoT Greengrass V2**
 
-1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.\. You must use a 64\-bit version of the Java runtime on Windows devices\.
+1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.\.
 
 1. <a name="set-up-windows-device-environment-open-cmd"></a>Open the Windows Command Prompt \(`cmd.exe`\) as an administrator\.
 
@@ -731,6 +932,10 @@ For more information about the arguments that you can specify, see [Installer ar
 
 **Note**  
 <a name="jvm-tuning-note"></a>If you are running AWS IoT Greengrass on a device with limited memory, you can control the amount of memory that AWS IoT Greengrass Core software uses\. To control memory allocation, you can set JVM heap size options in the `jvmOptions` configuration parameter in your nucleus component\. For more information, see [Control memory allocation with JVM options](configure-greengrass-core-v2.md#jvm-tuning)\.
++ If you created the thing certificate and private key in the AWS IoT service earlier, follow the steps to install the AWS IoT Greengrass Core software with private key and certificate files\.
++ If you created the thing certificate from a private key in a hardware security module \(HSM\) earlier, follow the steps to install the AWS IoT Greengrass Core software with the private key and certificate in an HSM\.
+
+### Install the AWS IoT Greengrass Core software with private key and certificate files<a name="manual-installation-without-hardware-security"></a>
 
 **To install the AWS IoT Greengrass Core software**
 
@@ -762,7 +967,7 @@ For more information about the arguments that you can specify, see [Installer ar
    services:
      aws.greengrass.Nucleus:
        componentType: "NUCLEUS"
-       version: "2.5.0"
+       version: "2.5.5"
        configuration:
          awsRegion: "us-west-2"
          iotRoleAlias: "GreengrassCoreTokenExchangeRoleAlias"
@@ -771,9 +976,9 @@ For more information about the arguments that you can specify, see [Installer ar
    ```
 
    Then, do the following:
-   + Replace each instance of */greengrass/v2* or *C:\\greengrass\\v2* with the Greengrass root folder\.
+   + Replace each instance of */greengrass/v2* with the Greengrass root folder\.
    + Replace *MyGreengrassCore* with the name of the AWS IoT thing\.
-   + Replace *2\.5\.0* with the version of the AWS IoT Greengrass Core software\.
+   + Replace *2\.5\.5* with the version of the AWS IoT Greengrass Core software\.
    + Replace *us\-west\-2* with the AWS Region where you created the resources\.
    + Replace *GreengrassCoreTokenExchangeRoleAlias* with the name of the token exchange role alias\.
    + Replace the `iotDataEndpoint` with your AWS IoT data endpoint\.
@@ -792,12 +997,12 @@ In this configuration file, you can customize other nucleus configuration option
    services:
      aws.greengrass.Nucleus:
        componentType: "NUCLEUS"
-       version: "2.5.0"
+       version: "2.5.5"
        configuration:
          awsRegion: "us-west-2"
+         iotRoleAlias: "GreengrassCoreTokenExchangeRoleAlias"
          iotCredEndpoint: "device-credentials-prefix.credentials.iot.us-west-2.amazonaws.com"
          iotDataEndpoint: "device-data-prefix-ats.iot.us-west-2.amazonaws.com"
-         iotRoleAlias: "GreengrassCoreTokenExchangeRoleAlias"
          mqtt:
            port: 443
          greengrassDataPlanePort: 443
@@ -847,6 +1052,157 @@ In this configuration file, you can customize other nucleus configuration option
    ```
 
 ------
+
+   <a name="installer-setup-system-service-output-message"></a>If you specify `--setup-system-service true`, the installer prints `Successfully set up Nucleus as a system service` if it set up and ran the software as a system service\. Otherwise, the installer doesn't output any message if it installs the software successfully\.
+**Note**  <a name="installer-deploy-dev-tools-without-provision"></a>
+You can't use the `deploy-dev-tools` argument to deploy local development tools when you run the installer without the `--provision true` argument\. For information about deploying the Greengrass CLI directly on your device, see [Greengrass Command Line Interface](gg-cli.md)\.
+
+1. <a name="installer-verify-installation"></a>Verify the installation by viewing the files in the root folder\.
+
+------
+#### [ Linux or Unix ]
+
+   ```
+   ls /greengrass/v2
+   ```
+
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+   ```
+   dir C:\greengrass\v2
+   ```
+
+------
+#### [ PowerShell ]
+
+   ```
+   ls C:\greengrass\v2
+   ```
+
+------
+
+   If the installation succeeded, the root folder contains several folders, such as `config`, `packages`, and `logs`\.
+
+### Install the AWS IoT Greengrass Core software with the private key and certificate in an HSM<a name="manual-installation-with-hardware-security"></a>
+
+**Note**  
+This feature is available for v2\.5\.3 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. AWS IoT Greengrass doesn't currently support this feature on Windows core devices\. 
+
+**To install the AWS IoT Greengrass Core software**
+
+1. <a name="installer-check-greengrass-core-software-version"></a>Check the version of the AWS IoT Greengrass Core software\.
+   + Replace *GreengrassInstaller* with the path to the folder that contains the software\.
+
+   ```
+   java -jar ./GreengrassInstaller/lib/Greengrass.jar --version
+   ```
+
+1. To enable the AWS IoT Greengrass Core software to use the private key and certificate in the HSM, install the [PKCS\#11 provider component](pkcs11-provider-component.md) when you install the AWS IoT Greengrass Core software\. The PKCS\#11 provider component is a plugin that you can configure during installation\. You can download the latest version of the PKCS\#11 provider component from the following location:
+   + [https://d2s8p88vqu9w66\.cloudfront\.net/releases/Pkcs11Provider/aws\.greengrass\.crypto\.Pkcs11Provider\-latest\.jar](https://d2s8p88vqu9w66.cloudfront.net/releases/Pkcs11Provider/aws.greengrass.crypto.Pkcs11Provider-latest.jar)
+
+   Download the PKCS\#11 provider plugin to a file named `aws.greengrass.crypto.Pkcs11Provider.jar`\. Replace *GreengrassInstaller* with the folder that you want to use\.
+
+   ```
+   curl -s https://d2s8p88vqu9w66.cloudfront.net/releases/Pkcs11Provider/aws.greengrass.crypto.Pkcs11Provider-latest.jar > GreengrassInstaller/aws.greengrass.crypto.Pkcs11Provider.jar
+   ```
+
+   <a name="core-software-license"></a>By downloading this software, you agree to the [Greengrass Core Software License Agreement](https://greengrass-release-license.s3.us-west-2.amazonaws.com/greengrass-license-v1.pdf)\.
+
+1. Use a text editor to create a configuration file named `config.yaml` to provide to the installer\.
+
+   <a name="nano-command-intro"></a>For example, on a Linux\-based system, you can run the following command to use GNU nano to create the file\.
+
+   ```
+   nano GreengrassInstaller/config.yaml
+   ```
+
+   Copy the following YAML content into the file\. This partial configuration file specifies system parameters, Greengrass nucleus parameters, and PKCS\#11 provider parameters\.
+
+   ```
+   ---
+   system:
+     certificateFilePath: "pkcs11:object=iotdevicekey;type=cert"
+     privateKeyPath: "pkcs11:object=iotdevicekey;type=private"
+     rootCaPath: "/greengrass/v2/AmazonRootCA1.pem"
+     rootpath: "/greengrass/v2"
+     thingName: "MyGreengrassCore"
+   services:
+     aws.greengrass.Nucleus:
+       componentType: "NUCLEUS"
+       version: "2.5.5"
+       configuration:
+         awsRegion: "us-west-2"
+         iotRoleAlias: "GreengrassCoreTokenExchangeRoleAlias"
+         iotDataEndpoint: "device-data-prefix-ats.iot.us-west-2.amazonaws.com"
+         iotCredEndpoint: "device-credentials-prefix.credentials.iot.us-west-2.amazonaws.com"
+     aws.greengrass.crypto.Pkcs11Provider:
+       configuration:
+         name: "softhsm_pkcs11"
+         library: "/usr/local/Cellar/softhsm/2.6.1/lib/softhsm/libsofthsm2.so"
+         slot: 1
+         userPin: "1234"
+   ```
+
+   Then, do the following:
+   + Replace each instance of *iotdevicekey* in the PKCS\#11 URIs with the object label where you created the private key and imported the certificate\.
+   + Replace each instance of */greengrass/v2* with the Greengrass root folder\.
+   + Replace *MyGreengrassCore* with the name of the AWS IoT thing\.
+   + Replace *2\.5\.5* with the version of the AWS IoT Greengrass Core software\.
+   + Replace *us\-west\-2* with the AWS Region where you created the resources\.
+   + Replace *GreengrassCoreTokenExchangeRoleAlias* with the name of the token exchange role alias\.
+   + Replace the `iotDataEndpoint` with your AWS IoT data endpoint\.
+   + Replace the `iotCredEndpoint` with your AWS IoT credentials endpoint\.
+   + Replace the configuration parameters for the `aws.greengrass.crypto.Pkcs11Provider` component with the values for the HSM configuration on the core device\.
+**Note**  
+In this configuration file, you can customize other nucleus configuration options such as the ports and network proxy to use, as shown in the following example\. For more information, see [Greengrass nucleus configuration](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration)\.  
+
+   ```
+   ---
+   system:
+     certificateFilePath: "pkcs11:object=iotdevicekey;type=cert"
+     privateKeyPath: "pkcs11:object=iotdevicekey;type=private"
+     rootCaPath: "/greengrass/v2/AmazonRootCA1.pem"
+     rootpath: "/greengrass/v2"
+     thingName: "MyGreengrassCore"
+   services:
+     aws.greengrass.Nucleus:
+       componentType: "NUCLEUS"
+       version: "2.5.5"
+       configuration:
+         awsRegion: "us-west-2"
+         iotRoleAlias: "GreengrassCoreTokenExchangeRoleAlias"
+         iotDataEndpoint: "device-data-prefix-ats.iot.us-west-2.amazonaws.com"
+         iotCredEndpoint: "device-credentials-prefix.credentials.iot.us-west-2.amazonaws.com"
+         mqtt:
+           port: 443
+         greengrassDataPlanePort: 443
+         networkProxy:
+           noProxyAddresses: "http://192.168.0.1,www.example.com"
+           proxy:
+             url: "https://my-proxy-server:1100"
+             username: "Mary_Major"
+             password: "pass@word1357"
+     aws.greengrass.crypto.Pkcs11Provider:
+       configuration:
+         name: "softhsm_pkcs11"
+         library: "/usr/local/Cellar/softhsm/2.6.1/lib/softhsm/libsofthsm2.so"
+         slot: 1
+         userPin: "1234"
+   ```
+
+1. Run the installer, and specify `--init-config` to provide the configuration file\.
+   + Replace */greengrass/v2* with the Greengrass root folder\.
+   + Replace each instance of *GreengrassInstaller* with the folder where you unpacked the installer\.
+
+   ```
+   sudo -E java -Droot="/greengrass/v2" -Dlog.store=FILE \
+     -jar ./GreengrassInstaller/lib/Greengrass.jar \
+     --trusted-plugin ./GreengrassInstaller/aws.greengrass.crypto.Pkcs11Provider.jar \
+     --init-config ./GreengrassInstaller/config.yaml \
+     --component-default-user ggc_user:ggc_group \
+     --setup-system-service true
+   ```
 
    <a name="installer-setup-system-service-output-message"></a>If you specify `--setup-system-service true`, the installer prints `Successfully set up Nucleus as a system service` if it set up and ran the software as a system service\. Otherwise, the installer doesn't output any message if it installs the software successfully\.
 **Note**  <a name="installer-deploy-dev-tools-without-provision"></a>

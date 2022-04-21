@@ -66,7 +66,7 @@ Use the following command to list all of the test cases in a test group\.
 devicetester_[linux | mac | win]_x86-64 list-test-cases --group-id <group-id>
 ```
 
-We recommend that you run the dependency checker test group to make sure all Greengrass dependencies are installed before you run related test groups\. For example:
+We recommend that you run the full qualification test suite, which runs test group dependencies in the correct order\. If you choose to run specific test groups, we recommend that you first run the dependency checker test group to make sure all Greengrass dependencies are installed before you run related test groups\. For example:
 + Run `coredependencies` before running core qualification test groups\.
 
 ## IDT for AWS IoT Greengrass V2 commands<a name="bk-cli"></a>
@@ -92,7 +92,7 @@ Lists the test cases in a given test group\. The following option is supported:
 `run-suite`  
 Runs a suite of tests on a pool of devices\. The following are some supported options:  
 + `suite-id`\. The test suite version to run\. If not specified, IDT uses the latest version in the `tests` folder\.
-+ `group-id`\. The test groups to run, as a comma\-separated list\. If not specified, IDT runs all test groups in the test suite\.
++ `group-id`\. The test groups to run, as a comma\-separated list\. If not specified, IDT runs all appropriate test groups in the test suite depending on the configured settings in `device.json`\. IDT doesn't run any test groups that the device doesn't support based on your configured settings, even if those test groups are specified in the `group-id` list\.
 + `test-id`\. The test cases to run, as a comma\-separated list\. When specified, `group-id` must specify a single group\.
 + `pool-id`\. The device pool to test\. You must specify a pool if you have multiple device pools defined in your `device.json` file\.
 + `stop-on-first-failure`\. Configures IDT to stop running on the first failure\. Use this option with `group-id` when you want to debug the specified test groups\. Do not use this option when running a full test\-suite to generate a qualification report\.

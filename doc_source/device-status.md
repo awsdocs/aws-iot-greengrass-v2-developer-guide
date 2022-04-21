@@ -7,7 +7,12 @@ Core devices have the following health statuses:
 + `UNHEALTHY` – The AWS IoT Greengrass Core software or a component is in an error state on the core device\.
 
 **Note**  
-AWS IoT Greengrass relies on individual devices to send status updates to the AWS Cloud\. If the AWS IoT Greengrass Core software isn't running on the device, or if device isn't connected to the AWS Cloud, then the reported status of that device might not reflect its current status\. The status timestamp indicates when the device status was last updated\.
+AWS IoT Greengrass relies on individual devices to send status updates to the AWS Cloud\. If the AWS IoT Greengrass Core software isn't running on the device, or if device isn't connected to the AWS Cloud, then the reported status of that device might not reflect its current status\. The status timestamp indicates when the device status was last updated\.  
+Core devices send status updates at the following times:  
+When the AWS IoT Greengrass Core software starts
+When the core device receives a deployment from the AWS Cloud
+When the status of any component on the core device becomes `BROKEN`
+At a [regular interval that you can configure](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-fss), which defaults to 24 hours
 
 **Topics**
 + [Check health of a core device](#check-core-device-health-status)
@@ -52,3 +57,5 @@ You can check the status, such as lifecycle state, of the software components on
   ```
 
   The response contains the list of components that run on the core device\. Each entry in the list contains the lifecycle state of the component\.
+**Note**  
+This list doesn't include components that are deployed from local deployments or components that are deployed as dependencies of other components\.

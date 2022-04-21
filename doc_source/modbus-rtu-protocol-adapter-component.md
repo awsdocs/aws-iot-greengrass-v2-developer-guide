@@ -24,6 +24,7 @@ This component provides similar functionality to the Modbus RTU protocol adapter
 ## Versions<a name="modbus-rtu-protocol-adapter-component-versions"></a>
 
 This component has the following versions:
++ 2\.1\.x
 + 2\.0\.x
 
 ## Type<a name="modbus-rtu-protocol-adapter-component-type"></a>
@@ -42,7 +43,7 @@ This component has the following requirements:
 + <a name="core-device-lambda-function-requirements"></a>Your core device must meet the requirements to run Lambda functions\. If you want the core device to run containerized Lambda functions, the device must meet the requirements to do so\. For more information, see [Lambda function requirements](setting-up.md#greengrass-v2-lambda-requirements)\.
 + <a name="public-component-python3-requirement"></a>[Python](https://www.python.org/) version 3\.7 installed on the core device and added to the PATH environment variable\.
 + A physical connection between the AWS IoT Greengrass core device and the Modbus devices\. The core device must be physically connected to the Modbus RTU network through a serial port, such as a USB port\.
-+ <a name="connector-component-legacy-subscription-router-dependency"></a>To receive output data from this component, you must merge the following configuration update for the [legacy subscription router component](legacy-subscription-router-component.md) when you deploy this component\. The legacy subscription router component \(`aws.greengrass.LegacySubscriptionRouter`\) is a dependency of this component\. This configuration specifies the topic where this component publishes responses\.
++ <a name="connector-component-legacy-subscription-router-dependency"></a>To receive output data from this component, you must merge the following configuration update for the [legacy subscription router component](legacy-subscription-router-component.md) \(`aws.greengrass.LegacySubscriptionRouter`\) when you deploy this component\. This configuration specifies the topic where this component publishes responses\.
 
 ------
 #### [ Legacy subscription router v2\.1\.x ]
@@ -90,9 +91,9 @@ You must update the Lambda function version on the legacy subscription router ev
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#modbus-rtu-protocol-adapter-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ 2\.0\.8 ]
+#### [ 2\.0\.8 and 2\.1\.0 ]
 
-The following table lists the dependencies for version 2\.0\.8 of this component\.
+The following table lists the dependencies for versions 2\.0\.8 and 2\.1\.0 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -178,30 +179,48 @@ This component provides the following configuration parameters that you can cust
 **Note**  <a name="connector-component-lambda-parameters"></a>
 This component's default configuration includes Lambda function parameters\. We recommend that you edit only the following parameters to configure this component on your devices\.
 
+------
+#### [ v2\.1\.x ]
+
 `lambdaParams`  
 An object that contains the parameters for this component's Lambda function\. This object contains the following information:    
 `EnvironmentVariables`  
 An object that contains the Lambda function's parameters\. This object contains the following information:    
-`ModbusLocalPort`  
-The absolute path to the physical Modbus serial port on the device, such as `/dev/ttyS2`\.  
-To run this component in a container, you must define this path as a [system device](#modbus-rtu-protocol-adapter-configuration-devices) that the component can access\. This component runs in a container by default\.  
-This component has read/write access to the device\.
+`ModbusLocalPort`  <a name="modbus-rtu-protocol-adapter-configuration-modbuslocalport"></a>
+The absolute path to the physical Modbus serial port on the core device, such as `/dev/ttyS2`\.  
+To run this component in a container, you must define this path as a system device \(in `containerParams.devices`\) that the component can access\. This component runs in a container by default\.  
+This component must have read/write access to the device\.  
+`ModbusBaudRate`  
+\(Optional\) A string value that specifies the baud rate for serial communication with local Modbus TCP devices\.  
+Default: `9600`  
+`ModbusByteSize`  
+\(Optional\) A string value that specifies the size of a byte in serial communication with local Modbus TCP devices\. Choose `5`, `6`, `7`, or `8` bits\.  
+Default: `8`  
+`ModbusParity`  
+\(Optional\) The parity mode to use to verify data integrity in serial communication with local Modbus TCP devices\.  
++ `E` – Verify data integrity with even parity\.
++ `O` – Verify data integrity with odd parity\.
++ `N` – Don't verify data integrity\.
+Default: `N`  
+`ModbusStopBits`  
+\(Optional\) A string value that specifies the number of bits that indicate the end of a byte in serial communication with local Modbus TCP devices\.  
+Default: `1`
 
-`containerMode`  <a name="connector-component-container-mode-parameter"></a>
+`containerMode`  <a name="modbus-rtu-protocol-adapter-configuration-containermode"></a>
 \(Optional\) The containerization mode for this component\. Choose from the following options:  
 + `GreengrassContainer` – The component runs in an isolated runtime environment inside the AWS IoT Greengrass container\.
 
-  If you specify this option, you specify a [system device](#modbus-rtu-protocol-adapter-configuration-devices) to give the container access to the Modbus device\.
+  If you specify this option, you must specify a system device \(in `containerParams.devices`\) to give the container access to the Modbus device\.
 + `NoContainer` – The component doesn't run in an isolated runtime environment\.
 Default: `GreengrassContainer`
 
-`containerParams`  
+`containerParams`  <a name="modbus-rtu-protocol-adapter-configuration-containerparams"></a>
 <a name="connector-component-container-params-description"></a>\(Optional\) An object that contains the container parameters for this component\. The component uses these parameters if you specify `GreengrassContainer` for `containerMode`\.  
 This object contains the following information:    
 `memorySize`  
 <a name="connector-component-container-params-memory-size-description"></a>\(Optional\) The amount of memory \(in kilobytes\) to allocate to the component\.  
 Defaults to 512 MB \(525,312 KB\)\.  
-  `devices`   
+`devices`  
 \(Optional\) An object that specifies the system devices that the component can access in a container\.  
 To run this component in a container, you must specify the system device that you configure in the `ModbusLocalPort` environment variable\.
 This object contains the following information:    
@@ -229,7 +248,7 @@ Default: `Pubsub`
 `topic`  
 \(Optional\) The topic to which the component subscribes to receive messages\. If you specify `IotCore` for `type`, you can use MQTT wildcards \(`+` and `#`\) in this topic\.
 
-**Example: Configuration merge update \(container mode\)**  
+**Example: Configuration merge update \(container mode\)**  <a name="modbus-rtu-protocol-adapter-configuration-example-container-mode"></a>
 
 ```
 {
@@ -251,7 +270,7 @@ Default: `Pubsub`
 }
 ```
 
-**Example: Configuration merge update \(no container mode\)**  
+**Example: Configuration merge update \(no container mode\)**  <a name="modbus-rtu-protocol-adapter-configuration-example-no-container-mode"></a>
 
 ```
 {
@@ -263,6 +282,97 @@ Default: `Pubsub`
   "containerMode": "NoContainer"
 }
 ```
+
+------
+#### [ v2\.0\.x ]
+
+`lambdaParams`  
+An object that contains the parameters for this component's Lambda function\. This object contains the following information:    
+`EnvironmentVariables`  
+An object that contains the Lambda function's parameters\. This object contains the following information:    
+`ModbusLocalPort`  <a name="modbus-rtu-protocol-adapter-configuration-modbuslocalport"></a>
+The absolute path to the physical Modbus serial port on the core device, such as `/dev/ttyS2`\.  
+To run this component in a container, you must define this path as a system device \(in `containerParams.devices`\) that the component can access\. This component runs in a container by default\.  
+This component must have read/write access to the device\.
+
+`containerMode`  <a name="modbus-rtu-protocol-adapter-configuration-containermode"></a>
+\(Optional\) The containerization mode for this component\. Choose from the following options:  
++ `GreengrassContainer` – The component runs in an isolated runtime environment inside the AWS IoT Greengrass container\.
+
+  If you specify this option, you must specify a system device \(in `containerParams.devices`\) to give the container access to the Modbus device\.
++ `NoContainer` – The component doesn't run in an isolated runtime environment\.
+Default: `GreengrassContainer`
+
+`containerParams`  <a name="modbus-rtu-protocol-adapter-configuration-containerparams"></a>
+<a name="connector-component-container-params-description"></a>\(Optional\) An object that contains the container parameters for this component\. The component uses these parameters if you specify `GreengrassContainer` for `containerMode`\.  
+This object contains the following information:    
+`memorySize`  
+<a name="connector-component-container-params-memory-size-description"></a>\(Optional\) The amount of memory \(in kilobytes\) to allocate to the component\.  
+Defaults to 512 MB \(525,312 KB\)\.  
+`devices`  
+\(Optional\) An object that specifies the system devices that the component can access in a container\.  
+To run this component in a container, you must specify the system device that you configure in the `ModbusLocalPort` environment variable\.
+This object contains the following information:    
+`0` – This is an array index as a string\.  
+An object that contains the following information:    
+`path`  
+The path to the system device on the core device\. This must have the same value as the value that you configure for `ModbusLocalPort`\.  
+`permission`  
+\(Optional\) The permission to access the system device from the container\. This value must be `rw`, which specifies that the component has read/write access to the system device\.  
+Default: `rw`  
+`addGroupOwner`  
+\(Optional\) Whether or not to add the system group that runs the component as an owner of the system device\.  
+Default: `true`
+
+`pubsubTopics`  <a name="connector-component-pubsub-topics-parameter"></a>
+\(Optional\) An object that contains the topics where the component subscribes to receive messages\. You can specify each topic and whether the component subscribes to MQTT topics from AWS IoT Core or local publish/subscribe topics\.  
+This object contains the following information:    
+`0` – This is an array index as a string\.  
+An object that contains the following information:    
+`type`  
+\(Optional\) The type of publish/subscribe messaging that this component uses to subscribe to messages\. Choose from the following options:  
++ `Pubsub` – Subscribe to local publish/subscribe messages\. If you choose this option, the topic can't contain MQTT wildcards\. For more information about how to send messages from custom component when you specify this option, see [Publish/subscribe local messages](ipc-publish-subscribe.md)\.
++ `IotCore` – Subscribe to AWS IoT Core MQTT messages\. If you choose this option, the topic can contain MQTT wildcards\. For more information about how to send messages from custom components when you specify this option, see [Publish/subscribe AWS IoT Core MQTT messages](ipc-iot-core-mqtt.md)\.
+Default: `Pubsub`  
+`topic`  
+\(Optional\) The topic to which the component subscribes to receive messages\. If you specify `IotCore` for `type`, you can use MQTT wildcards \(`+` and `#`\) in this topic\.
+
+**Example: Configuration merge update \(container mode\)**  <a name="modbus-rtu-protocol-adapter-configuration-example-container-mode"></a>
+
+```
+{
+  "lambdaExecutionParameters": {
+    "EnvironmentVariables": {
+      "ModbusLocalPort": "/dev/ttyS2"
+    }
+  },
+  "containerMode": "GreengrassContainer",
+  "containerParams": {
+    "devices": {
+      "0": {
+        "path": "/dev/ttyS2",
+        "permission": "rw",
+        "addGroupOwner": true
+      }
+    }
+  }
+}
+```
+
+**Example: Configuration merge update \(no container mode\)**  <a name="modbus-rtu-protocol-adapter-configuration-example-no-container-mode"></a>
+
+```
+{
+  "lambdaExecutionParameters": {
+    "EnvironmentVariables": {
+      "ModbusLocalPort": "/dev/ttyS2"
+    }
+  },
+  "containerMode": "NoContainer"
+}
+```
+
+------
 
 ## Input data<a name="modbus-rtu-protocol-adapter-component-input-data"></a>
 
@@ -756,40 +866,16 @@ If the request targets a nonexistent device or if the Modbus RTU network is not 
 
 This component uses the following log file\.
 
-------
-#### [ Linux ]
-
 ```
 /greengrass/v2/logs/aws.greengrass.Modbus.log
 ```
 
-------
-#### [ Windows ]
-
-```
-C:\greengrass\v2\logs\aws.greengrass.Modbus.log
-```
-
-------
-
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
-
-------
-#### [ Linux ]
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
 
   ```
   sudo tail -f /greengrass/v2/logs/aws.greengrass.Modbus.log
   ```
-
-------
-#### [ Windows \(PowerShell\) ]
-
-  ```
-  Get-Content C:\greengrass\v2\logs\aws.greengrass.Modbus.log -Tail 10 -Wait
-  ```
-
-------
 
 ## Licenses<a name="modbus-rtu-protocol-adapter-component-licenses"></a>
 
@@ -806,6 +892,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.1\.0  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/modbus-rtu-protocol-adapter-component.html)  | 
 |  2\.0\.8  |  Version updated for Greengrass nucleus version 2\.5\.0 release\.  | 
 |  2\.0\.7  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  2\.0\.6  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 

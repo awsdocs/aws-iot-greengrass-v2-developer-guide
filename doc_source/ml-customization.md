@@ -455,8 +455,8 @@ Create your inference code and then upload it to an S3 bucket\. For information 
      "ImageName": "cat.jpeg",
      "InferenceInterval": 3600,
      "ModelResourceKey": {
-       "armv7l": "DLR-resnet50-armv7l-cpu-ImageClassification"
-       "x86_64": "DLR-resnet50-x86_64-cpu-ImageClassification"
+       "armv7l": "DLR-resnet50-armv7l-cpu-ImageClassification",
+       "x86_64": "DLR-resnet50-x86_64-cpu-ImageClassification",
        "aarch64": "DLR-resnet50-aarch64-cpu-ImageClassification"
      }
    }

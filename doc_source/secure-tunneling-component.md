@@ -57,9 +57,9 @@ This component must be able to perform outbound requests to the following endpoi
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#secure-tunneling-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ 1\.0\.5 ]
+#### [ 1\.0\.5 and 1\.0\.6 ]
 
-The following table lists the dependencies for version 1\.0\.5 of this component\.
+The following table lists the dependencies for versions 1\.0\.5 and 1\.0\.6 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -176,40 +176,16 @@ The following example configuration specifies to allow this component to open se
 
 This component uses the following log file\.
 
-------
-#### [ Linux ]
-
 ```
 /greengrass/v2/logs/aws.greengrass.SecureTunneling.log
 ```
 
-------
-#### [ Windows ]
-
-```
-C:\greengrass\v2\logs\aws.greengrass.SecureTunneling.log
-```
-
-------
-
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
-
-------
-#### [ Linux ]
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
 
   ```
   sudo tail -f /greengrass/v2/logs/aws.greengrass.SecureTunneling.log
   ```
-
-------
-#### [ Windows \(PowerShell\) ]
-
-  ```
-  Get-Content C:\greengrass\v2\logs\aws.greengrass.SecureTunneling.log -Tail 10 -Wait
-  ```
-
-------
 
 ## Licenses<a name="secure-tunneling-component-licenses"></a>
 
@@ -230,6 +206,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  1\.0\.6  |  This version contains bug fixes\.  | 
 |  1\.0\.5  |  Version updated for Greengrass nucleus version 2\.5\.0 release\.  | 
 |  1\.0\.4  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  1\.0\.3  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 

@@ -254,7 +254,7 @@ In this step, you configure and deploy the following components to your core dev
 1. Run the following command to deploy the components on the device:
 
    ```
-   $ aws greengrassv2 create-deployment \
+   aws greengrassv2 create-deployment \
        --cli-input-json file://path/to/deployment.json
    ```
 

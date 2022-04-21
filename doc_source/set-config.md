@@ -97,6 +97,10 @@ You must provide this information using the `device.json` template located in ` 
       {
         "name": "streamManagement",
         "value": "yes | no"
+      }, 
+      {
+        "name": "hsi", 
+        "value": "hsm | no" 
       }
     ],
     "devices": [
@@ -150,12 +154,16 @@ Enabling this feature also validates <a name="description-ml-inference-phrase"><
 Valid values are any combination of `dlr` and `tensorflowlite`, or `no`\.  
 `docker`  
 <a name="description-docker"></a>Validates that the device meets all required technical dependencies to use the AWS\-provided Docker application manager \(`aws.greengrass.DockerApplicationManager`\) component\.  
-Enabling this feature also validates <a name="description-docker-app-manager-qual-phrase"></a>that the device can download a Docker container image from [Amazon Elastic Container Registry \(Amazon ECR\)](https://aws.amazon.com/ecr/)\.  
+Enabling this feature also validates <a name="description-docker-app-manager-qual-phrase"></a>that the device can download a Docker container image from Amazon ECR \.  
 Valid values are any combination of `yes` or `no`\.  
 `streamManagement`  
 <a name="description-sm"></a>Validates that the device can download, install, and run the [AWS IoT Greengrass stream manager](manage-data-streams.md)\.  
-Valid values are any combination of `yes` or `no`\.
+Valid values are any combination of `yes` or `no`\.  
+`hsi`  
+<a name="description-hsi"></a>Validates that the device can authenticate connections to the AWS IoT and AWS IoT Greengrass services using a private key and certificate that are stored in a hardware security module \(HSM\)\. This test also verifies that the AWS\-provided [PKCS\#11 provider component](pkcs11-provider-component.md) can interface with the HSM using a vendor\-provided PKCS\#11 library\. For more information, see [Hardware security integration](hardware-security.md)\.  
+Valid values are `hsm` or `no`\.
 IDT v4\.2\.0 and later versions support testing the `ml`, `docker`, and `streamManagement` features\. If you don't want to test these features, set the corresponding value to `no`\. 
+Testing the `hsi` is available only with IDT v4\.5\.1 and later versions\.
 
 `devices.id`  
 A user\-defined unique identifier for the device being tested\.
@@ -201,7 +209,7 @@ The user name for signing in to the device being tested\.
 
 ## Configure userdata\.json<a name="userdata-config"></a>
 
-IDT for AWS IoT Greengrass V2 also needs additional information about the location of test artifacts and AWS IoT Greengrass software versions\.
+IDT for AWS IoT Greengrass V2 also needs additional information about the location of test artifacts and AWS IoT Greengrass software\.
 
 You must provide this information using the `userdata.json` template located in ` <device_tester_extract_location>/configs/userdata.json`:
 
@@ -209,7 +217,18 @@ You must provide this information using the `userdata.json` template located in 
 {
     "TempResourcesDirOnDevice": "/path/to/temp/folder",
     "InstallationDirRootOnDevice": "/path/to/installation/folder",
-    "GreengrassNucleusZip": "/path/to/aws.greengrass.nucleus.zip"
+    "GreengrassNucleusZip": "/path/to/aws.greengrass.nucleus.zip",
+    "GreengrassV2TokenExchangeRole": "custom-iam-role-name",
+	"hsm": {
+        "greengrassPkcsPluginJar": "/path/to/aws.greengrass.crypto.Pkcs11Provider-latest.jar",
+        "pkcs11ProviderLibrary": "/path/to/pkcs11-vendor-library",
+        "slotId": "slot-id",
+        "slotLabel": "slot-label",
+        "slotUserPin": "slot-pin",
+        "keyLabel": "key-label",
+        "preloadedCertificateArn": "certificate-arn"
+        "rootCA": "path/to/root-ca"
+    }
 }
 ```
 
@@ -217,7 +236,7 @@ All properties that contain values are required as described here:
 
 `TempResourcesDirOnDevice`  
 The full path to a temporary folder on the device under test in which to store test artifacts\. Make sure that sudo permissions are not required to write to this directory\.   
-The contents of this folder are deleted when IDT finishes running a test\.
+IDT deletes the contents of this folder when it finishes running a test\.
 
 `InstallationDirRootOnDevice`  
 The full path to a folder on the device in which to install AWS IoT Greengrass\.  
@@ -228,7 +247,34 @@ sudo chmod 755 folder-name
 ```
 
 `GreengrassNucleusZip`  
-The full path to the Greengrass nucleus ZIP \(`greengrass-nucleus-latest.zip`\) file on your host computer\.
-
-**Note**  
+The full path to the Greengrass nucleus ZIP \(`greengrass-nucleus-latest.zip`\) file on your host computer\.  
 For information about the supported versions of the Greengrass nucleus for IDT for AWS IoT Greengrass, see [Latest IDT version for AWS IoT Greengrass V2](dev-test-versions.md#idt-latest-version)\.
+
+  `GreengrassV2TokenExchangeRole`  
+Optional\. The custom IAM role that you want to use as the token exchange role that the device under test assumes to interact with AWS resources\.   
+IDT uses this custom IAM role instead of creating the default token exchange role during the test run\. If you use a custom role, you can update the [IAM permissions for the test user](dev-tst-prereqs.md#configure-idt-permissions) to exclude the `iamResourcesUpdate` statement that allows the user to create and delete IAM roles and policies\. 
+For more information about creating a custom IAM role as your token exchange role, see [Configure a custom token exchange role](device-config-setup.md#configure-custom-tes-role-for-idt)\.
+
+`hsm`  
+This feature is available for IDT v4\.5\.1 and later\.  
+Optional\. The configuration information for testing with an AWS IoT Greengrass Hardware Security Module \(HSM\)\. Otherwise, the `hsm` property should be omitted\. For more information, see [Hardware security integration](hardware-security.md)\.  
+<a name="connectivity-protocol-ssh-only"></a>This property applies only if `connectivity.protocol` is set to `ssh`\.    
+`hsm.greengrassPkcsPluginJar`  
+The full path to the [PKCS\#11 provider component](pkcs11-provider-component.md) that you download to the IDT host machine\. AWS IoT Greengrass provides this component as JAR file that you can download to specify as a provisioning plugin during installation\. You can download the latest version of the component's JAR file as the following URL: [https://d2s8p88vqu9w66\.cloudfront\.net/releases/Pkcs11Provider/aws\.greengrass\.crypto\.Pkcs11Provider\-latest\.jar](https://d2s8p88vqu9w66.cloudfront.net/releases/Pkcs11Provider/aws.greengrass.crypto.Pkcs11Provider-latest.jar)\.  
+`hsm.pkcs11ProviderLibrary`  
+The full path to the PKCS\#11 library that is provided by the hardware security module \(HSM\) vendor to interact with the HSM\.  
+`hsm.slotId`  
+The slot ID that is used to identify the HSM slot to which you load the key and certificate\.  
+`hsm.slotLabel`  
+The slot label that is used to identify the HSM slot to which you load the key and certificate\.  
+`hsm.slotUserPin`  
+The user PIN that IDT uses to authenticate AWS IoT Greengrass Core software to the HSM\.  
+As security best practice, don't use the same user PIN on production devices\.  
+`hsm.keyLabel`  
+The label used to identify the key in the hardware module\. Both the key and the certificate must use the same key label\.  
+`hsm.preloadedCertificateArn`  
+The Amazon Resource Name \(ARN\) of the uploaded device certificate in the AWS IoT cloud\.  
+You must have previously generated this certificate using the key in the HSM, imported it into your HSM, and uploaded it to the AWS IoT cloud\. For information about generating and importing the certificate, see the documentation for your HSM\.  
+You must upload the certificate to the same account and region that you provide in [config\.json\.](#cfg-aws-gg)\. For more information about uploading your certificate to AWS IoT, see [Register a client certificate manually](https://docs.aws.amazon.com/iot/latest/developerguide/manual-cert-registration.html) in the *AWS IoT Developer Guide*\.  
+`hsm.rootCAPath`  
+Optional\. The full path on the IDT host machine to the root certificate authority \(CA\) that signed your certificate\. This is required if the certificate in your HSM created is not signed by the Amazon root CA\.
