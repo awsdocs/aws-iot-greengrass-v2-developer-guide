@@ -614,7 +614,7 @@ Manifests:
         Unarchive: ZIP
       - URI: s3//DOC-EXAMPLE-BUCKET/hello-world2.py
   - Lifecycle:
-      Install:
+      Start:
         Skipif: onpath git
         Script: sudo apt-get install git
     Artifacts:
