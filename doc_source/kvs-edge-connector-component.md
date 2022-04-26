@@ -49,7 +49,7 @@ This component can be installed on Linux core devices only\.
 
 This component has the following requirements:
 + You can deploy this component to only single core devices, because the component configuration must be unique for each core device\. You can't deploy this component to groups of core devices\.
-+ [GStreamer](https://gstreamer.freedesktop.org) 1\.8\.4 or later installed on the core device\. For more information, see [Installing GStreamer](https://gstreamer.freedesktop.org/documentation/installing/index.html?gi-language=c)\.
++ [GStreamer](https://gstreamer.freedesktop.org) 1\.18\.4 or later installed on the core device\. For more information, see [Installing GStreamer](https://gstreamer.freedesktop.org/documentation/installing/index.html?gi-language=c)\.
 
   On a device with `apt`, you can run the following commands to install GStreamer\.
 
@@ -123,7 +123,7 @@ This component must be able to perform outbound requests to the following endpoi
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#kvs-edge-connector-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
-The following table lists the dependencies for version 1\.0\.0 of this component\.
+The following table lists the dependencies for versions 1\.0\.0 to 1\.0\.4 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -181,6 +181,9 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  1\.0\.4  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/kvs-edge-connector-component.html)  | 
+|  1\.0\.3  |  General bug fixes and improvements\.  | 
+|  1\.0\.1  |  General bug fixes and improvements\.  | 
 |  1\.0\.0  |  Initial version\.  | 
 
 ## See also<a name="kvs-edge-connector-component-see-also"></a>

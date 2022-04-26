@@ -32,7 +32,9 @@ Before you begin, review the [requirements]() to run Lambda functions on Greengr
 
 On the **Create component** page, under **Lambda function configuration**, configure the following parameters to use to run the Lambda function\.
 
-1. \(Optional\) Add the list of event sources to which the Lambda function subscribes for work messages\. The Lambda function is called when it receives a message from an event source\. You can subscribe this function to local publish/subscribe messages and AWS IoT Core MQTT messages\.
+1. \(Optional\) Add the list of event sources to which the Lambda function subscribes for work messages\. You can specify event sources to subscribe this function to local publish/subscribe messages and AWS IoT Core MQTT messages\. The Lambda function is called when it receives a message from an event source\.
+**Note**  
+To subscribe this function to messages from other Lambda functions or components, deploy the [legacy subscription router component](legacy-subscription-router-component.md) when you deploy this Lambda function component\. When you deploy the legacy subscription router component, specify the subscriptions that the Lambda function uses\.
 
    Under **Event sources**, do the following to add an event source:
 
@@ -101,7 +103,7 @@ Under **Lambda function configuration, Additional parameters, Platforms**, do th
 Component dependencies identify additional AWS\-provided components or custom components that your function uses\. When you deploy the Lambda function component, the deployment includes these dependencies for your function to run\.
 
 **Important**  <a name="import-v1-lambda-note"></a>
-To import a Lambda function that you created to run on AWS IoT Greengrass V1, you must define individual component dependencies for the features that your function uses, such as subscriptions, secrets, and stream manager\. Define these components as [hard dependencies](component-recipe-reference.md) so that your Lambda function component restarts if the dependency changes state\. For more information, see [Run V1 Lambda functions](move-from-v1.md#run-v1-lambda-functions)\.
+To import a Lambda function that you created to run on AWS IoT Greengrass V1, you must define individual component dependencies for the features that your function uses, such as secrets, local shadows, and stream manager\. Define these components as [hard dependencies](component-recipe-reference.md) so that your Lambda function component restarts if the dependency changes state\. For more information, see [Import V1 Lambda functions](set-up-v2-test-device.md#run-v1-lambda-functions)\.
 
 Under **Lambda function configuration, Additional parameters, Component dependencies**, complete the following steps to specify the component dependencies for your Lambda function\.
 

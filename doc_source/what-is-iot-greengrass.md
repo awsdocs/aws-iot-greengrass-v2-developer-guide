@@ -17,4 +17,4 @@ Next, follow the [getting started tutorial](getting-started.md) to try out the b
 
 For current users of AWS IoT Greengrass, we recommend the following topics to help you understand the new features in AWS IoT Greengrass Version 2, and learn how to move from version 1 to version 2:
 + [What's new in AWS IoT Greengrass Version 2](greengrass-v2-whats-new.md)
-+ [Move from AWS IoT Greengrass Version 1](move-from-v1.md)
++ [Migrate from AWS IoT Greengrass Version 1](migrate-from-v1.md)

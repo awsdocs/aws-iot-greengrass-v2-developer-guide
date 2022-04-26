@@ -30,7 +30,7 @@ If you initialize a template or community component that uses the zip build syst
       },
       "Artifacts": [
         {
-          "URI": "s3://{COMPONENT_NAME}/{COMPONENT_VERSION}/HelloWorld.zip",
+          "URI": "s3://{BUCKET_NAME}/{COMPONENT_NAME}/{COMPONENT_VERSION}/HelloWorld.zip",
           "Unarchive": "ZIP"
         }
       ],

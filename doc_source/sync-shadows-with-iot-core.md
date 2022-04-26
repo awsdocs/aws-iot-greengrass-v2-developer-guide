@@ -10,6 +10,7 @@ You can also specify whether the shadow manager component syncs shadows in real 
 + [Prerequisites](#shadow-sync-prereqs)
 + [Configure the shadow manager component](#configure-shadow-manager-for-sync)
 + [Sync local shadows](#sync-local-shadows)
++ [Shadow merge conflict behavior](#shadow-merge-behavior)
 
 ## Prerequisites<a name="shadow-sync-prereqs"></a>
 
@@ -73,5 +74,10 @@ This configuration update specifies to sync shadows with AWS IoT Core in real ti
 When the Greengrass core device is connected to the AWS IoT cloud, the shadow manager performs the following tasks for the shadows that you specify in the component configuration:
 + Retrieves the reported state information from the cloud shadow document in AWS IoT Core\. 
 + Updates locally stored shadow documents to synchronize the device state\. 
-+ Publishes the device’s current state to the cloud shadow document\.
++ Publishes the device's current state to the cloud shadow document\.
 
+## Shadow merge conflict behavior<a name="shadow-merge-behavior"></a>
+
+In some cases, such as when the core device is disconnected from the internet, a shadow might change in the local shadow service and in the AWS IoT cloud before the shadow manager synchronizes the changes\. As a result, the desired and reported states differ between the local shadow service and the AWS IoT cloud\. When the shadow manager synchronizes the shadow, it merges the changes according to the following behavior:
++ When there's a merge conflict in a shadow's desired state, the shadow manager overwrites the conflicting section of the local shadow document with the value from the AWS IoT cloud\.
++ When there's a merge conflict in a shadow's reported state, the shadow manager overwrites the conflicting section of the shadow in the AWS IoT cloud with the value from the local shadow document\.

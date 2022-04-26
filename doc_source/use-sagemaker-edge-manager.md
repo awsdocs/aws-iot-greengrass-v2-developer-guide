@@ -20,7 +20,7 @@ When you use SageMaker Edge Manager with AWS IoT Greengrass, your workflow inclu
 
 1. Deploy the SageMaker Edge Manager component, the packaged model component, and the inference component to run your model on the SageMaker inference engine \(Edge Manager agent\) on your device\.
 
-For more information about creating edge packaging jobs and inference components that work with SageMaker Edge Manager, see [Create AWS IoT Greengrass V2 Components](https://docs.aws.amazon.com/sagemaker/latest/dg/edge-greengrass-custom-component.html.html) in the *Amazon SageMaker Developer Guide*\.
+For more information about creating edge packaging jobs and inference components that work with SageMaker Edge Manager, see [Deploy Model Package and Edge Manager Agent with AWS IoT Greengrass](https://docs.aws.amazon.com/sagemaker/latest/dg/edge-greengrass.html) in the *Amazon SageMaker Developer Guide*\.
 
 The [Get started with SageMaker Edge Manager](get-started-with-edge-manager-on-greengrass.md) tutorial shows you how to set up and use the SageMaker Edge Manager agent on an existing Greengrass core device, using AWS\-provided example code that you can use to create sample inference and model components\. 
 

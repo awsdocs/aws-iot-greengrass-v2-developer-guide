@@ -562,15 +562,16 @@ The following component recipe uses several recipe fields\.
           "Unarchive": "ZIP"
         },
         {
-          "URI": "s3//DOC-EXAMPLE-BUCKET/hello-world2.py"
+          "URI": "s3//DOC-EXAMPLE-BUCKET/hello_world_linux.py"
         }
       ]
     },
     {
       "Lifecycle": {
-        "Start": {
+        "Install": {
           "Skipif": "onpath git",
-          "Script": "sudo apt-get install git"
+          "Script": "sudo apt-get install git",
+          "RequiresPrivilege": "true"
         }
       },
       "Artifacts": [
@@ -612,11 +613,12 @@ Manifests:
     Artifacts:
       - URI: s3://DOC-EXAMPLE-BUCKET/hello_world.zip
         Unarchive: ZIP
-      - URI: s3//DOC-EXAMPLE-BUCKET/hello-world2.py
+      - URI: s3//DOC-EXAMPLE-BUCKET/hello_world_linux.py
   - Lifecycle:
       Install:
         Skipif: onpath git
         Script: sudo apt-get install git
+        RequiresPrivilege: true
     Artifacts:
       - URI: s3://DOC-EXAMPLE-BUCKET/hello_world.py
 ```

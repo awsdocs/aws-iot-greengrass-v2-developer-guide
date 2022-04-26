@@ -269,8 +269,8 @@ If you used the [AWS IoT Greengrass Core software installer to provision resourc
 
 **Important**  
 Later versions of the [Greengrass nucleus component](greengrass-nucleus-component.md) require additional permissions on the minimal AWS IoT policy\. You might need to [update your core devices' AWS IoT policies](#update-core-device-iot-policy) to grant additional permissions\.  
-Core devices that run Greengrass nucleus v2\.5\.0 and later require the `greengrass:ListThingGroupsForCoreDevice` permission\.
-Core devices that run Greengrass nucleus v2\.3\.0 and later require the `greengrass:GetDeploymentConfiguration` permission to support large deployment configuration documents\.
+Core devices that run Greengrass nucleus v2\.5\.0 and later use the `greengrass:ListThingGroupsForCoreDevice` permission to uninstall components when you remove a core device from a thing group\.
+Core devices that run Greengrass nucleus v2\.3\.0 and later use the `greengrass:GetDeploymentConfiguration` permission to support large deployment configuration documents\.
 
 The following example policy includes the minimum set of actions required to support basic Greengrass functionality for your core device\.
 + The policy includes the `*` wildcard after the core device thing name \(For example, `core-device-thing-name*`\)\. The core device uses the same device certificate to make multiple connections to AWS IoT Core, but the client ID in a connection might not be an exact match of the core device thing name\. This wildcard allows the core device to connect when it uses a client ID with a suffix\.

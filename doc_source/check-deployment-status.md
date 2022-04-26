@@ -32,7 +32,7 @@ You can check the status of a deployment that you identify by its target or its 
 
 You can check the status of a deployment job that applies to an individual core device\.
 
-**To check deployment job status \(AWS CLI\)**
+**To check deployment job statuses for a core device \(AWS CLI\)**
 + Run the following command to retrieve the status of all deployment jobs for a core device\. Replace *coreDeviceName* with the name of the core device to query\.
 
   ```

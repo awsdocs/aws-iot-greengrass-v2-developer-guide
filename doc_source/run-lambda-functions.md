@@ -5,7 +5,7 @@ AWS IoT Greengrass doesn't currently support this feature on Windows core device
 
 You can import AWS Lambda functions as components that run on AWS IoT Greengrass core devices\. You might want to do this in the following cases:
 + You have application code in Lambda functions that you want to deploy to core devices\.
-+ You have AWS IoT Greengrass V1 applications that you want to run on AWS IoT Greengrass V2 core devices\. For more information, see [Run AWS IoT Greengrass V1 applications on AWS IoT Greengrass V2](move-from-v1.md#run-v1-applications)\.
++ You have AWS IoT Greengrass V1 applications that you want to run on AWS IoT Greengrass V2 core devices\. For more information, see [Step 2: Create and deploy AWS IoT Greengrass V2 components to migrate AWS IoT Greengrass V1 applications](set-up-v2-test-device.md#run-v1-applications)\.
 
 Lambda functions include dependencies on the following components\. You don't need to define these components as dependencies when you import the function\. When you deploy the Lambda function component, the deployment includes these Lambda component dependencies\.
 + The [Lambda launcher component](lambda-launcher-component.md) \(`aws.greengrass.LambdaLauncher`\) handles processes and environment configuration\.

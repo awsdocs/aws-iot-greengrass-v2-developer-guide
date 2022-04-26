@@ -59,7 +59,7 @@ The following example demonstrates configuration updates for a dashboard compone
 }
 ```
 
-### Industrial dashboard component recipe<a name="w875aac19c23c15c17b7b1"></a>
+### Industrial dashboard component recipe<a name="w898aac19c23c15c17b7b1"></a>
 
 ------
 #### [ JSON ]
