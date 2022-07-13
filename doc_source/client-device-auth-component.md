@@ -243,15 +243,15 @@ The following example configuration specifies to allow client devices whose name
 ```
 
 **Example: Configuration merge update \(using a permissive policy\)**  
-The following example configuration specifies to allow client devices whose names start with `MyClientDevice` to connect and publish/subscribe on all topics\.  
+The following example configuration specifies to allow any client devices to connect and publish/subscribe on all topics\.  
 
 ```
 {
   "deviceGroups": {
     "formatVersion": "2021-03-05",
     "definitions": {
-      "MyDeviceGroup": {
-        "selectionRule": "thingName: MyClientDevice*",
+      "MyPermissiveDeviceGroup": {
+        "selectionRule": "thingName: *",
         "policyName": "MyPermissivePolicy"
       }
     },
