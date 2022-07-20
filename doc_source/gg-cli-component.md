@@ -35,7 +35,7 @@ Configuration: null
 
 ## list<a name="component-list"></a>
 
-Retrieve the names, component details, and runtime configuration for all root\-level components\. 
+Retrieve the name, version, status, and configuration of each root component\. A *root component* is a component that you specify in a deployment\. This response doesn't include components that are installed as dependencies of other components\.
 
 **Synopsis**  
 

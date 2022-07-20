@@ -10,9 +10,10 @@ To complete this tutorial, you need the following\.
 + An AWS account\. If you don't have one, see [Set up an AWS account](setting-up.md#set-up-aws-account)\. 
 + An AWS IAM user with permissions to provision the AWS IoT and IAM resources for a Greengrass core device\. The AWS IoT Greengrass Core software installer uses your AWS credentials to automatically provision these resources\. For information about the minimal IAM policy to automatically provision resources, see [Minimal IAM policy for installer to provision resources](provision-minimal-iam-policy.md)\.
 + An AWS IoT Greengrass Docker image\. This tutorial shows you how to pull the AWS IoT Greengrass Docker image from Docker Hub\. You can also [pull the AWS IoT Greengrass Docker image](run-greengrass-docker.md#pull-greengrass-docker-image) from Amazon Elastic Container Registry \(Amazon ECR\), or you can [build an image from the AWS IoT Greengrass Dockerfile](build-greengrass-dockerfile.md)\.
-+ <a name="docker-host-reqs"></a>A Linux\-based operating system with an internet connection\.
-+ <a name="docker-engine-reqs"></a>[Docker Engine](https://docs.docker.com/engine/install/) version 18\.09 or later\.
-+ <a name="docker-compose-reqs"></a>\(Optional\) [Docker Compose](https://docs.docker.com/compose/install/) version 1\.22 or later\. Docker Compose is required only if you want to use the Docker Compose CLI to run your Docker images\.
++ The host computer where you run the Docker container must meet the following requirements:
+  + <a name="docker-host-reqs"></a>A Linux\-based operating system with an internet connection\.
+  + <a name="docker-engine-reqs"></a>[Docker Engine](https://docs.docker.com/engine/install/) version 18\.09 or later\.
+  + <a name="docker-compose-reqs"></a>\(Optional\) [Docker Compose](https://docs.docker.com/compose/install/) version 1\.22 or later\. Docker Compose is required only if you want to use the Docker Compose CLI to run your Docker images\.
 
 ## Configure your AWS credentials<a name="configure-aws-credentials-for-docker"></a>
 
@@ -144,8 +145,6 @@ You can also download and use the latest version of the AWS\-provided Compose fi
    services:
      greengrass:
        init: true
-       build:
-         context: .
        container_name: aws-iot-greengrass
        image: amazon/aws-iot-greengrass:latest
        volumes:
@@ -185,7 +184,7 @@ You can then run the following command to access the container and explore AWS I
 docker exec -it container-id /bin/bash
 ```
 
-For information about creating a simple component, see [Step 4: Develop and test a component on your device](getting-started.md#create-first-component) in [Getting started with AWS IoT Greengrass V2](getting-started.md)
+For information about creating a simple component, see [Step 4: Develop and test a component on your device](getting-started.md#create-first-component) in [Tutorial: Getting started with AWS IoT Greengrass V2](getting-started.md)
 
 **Note**  <a name="run-greengrass-commands-in-docker-note"></a>
 When you use `docker exec` to run commands inside the Docker container, those commands are not logged in the Docker logs\. To log your commands in the Docker logs, attach an interactive shell to the Docker container\. For more information, see [Attach an interactive shell to the Docker container](docker-troubleshooting.md#debugging-docker-attach-shell)\.

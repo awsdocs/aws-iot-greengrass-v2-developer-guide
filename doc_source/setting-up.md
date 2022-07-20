@@ -111,12 +111,15 @@ Your device must meet the following requirements to run Lambda functions:
 + A Linux\-based operating system\.
 + Your device must have the `mkfifo` shell command\.
 + Your device must run the programming language libraries that a Lambda function requires\. You must install the required libraries on the device and add them to the `PATH` environment variable\.
+  + [Python](https://www.python.org/) version 3\.9 for functions that use the Python 3\.9 runtime\.
   + [Python](https://www.python.org/) version 3\.8 for functions that use the Python 3\.8 runtime\.
   + [Python](https://www.python.org/) version 3\.7 for functions that use the Python 3\.7 runtime\.
   + [Python](https://www.python.org/) version 2\.7 for functions that use the Python 2\.7 runtime\.
+  + [Node\.js](https://www.nodejs.org/) version 14\.x for functions that use the Node\.js 14\.x runtime\.
   + [Node\.js](https://www.nodejs.org/) version 12\.x for functions that use the Node\.js 12\.x runtime\.
   + [Node\.js](https://www.nodejs.org/) version 10\.x for functions that use the Node\.js 10\.x runtime\.
-  + [Java](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html) version 8 or later for functions that use the Java 8 runtime\.
+  + [Java](https://www.oracle.com/java/technologies/downloads/#java11) version 11 or later for functions that use the Java 11 runtime\.
+  + [Java](https://www.oracle.com/java/technologies/downloads/#java8) version 8 or later for functions that use the Java 8 runtime\.
 
   For more information about AWS IoT Greengrass support for Lambda runtimes, see [Run AWS Lambda functions](run-lambda-functions.md)\.
 + To run containerized Lambda functions, your device must meet the following requirements:

@@ -113,7 +113,7 @@ You must run PowerShell as an administrator to run these commands\.
 #### [ Windows \(PowerShell\) ]
 
    ```
-   Remove-Item -Path C:\greengrass\v2 -Recurse -Force
+   cmd.exe /c "rmdir /s /q C:\greengrass\v2"
    ```
 
 ------

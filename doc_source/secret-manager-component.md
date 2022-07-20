@@ -64,7 +64,7 @@ If you use a customer\-managed AWS Key Management Service key to encrypt secrets
   + [Authentication and access control for AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/auth-and-access.html)
   + [Actions, resources, and context keys you can use in an IAM policy or secret policy for AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/reference_iam-permissions.html)
 + Custom components must define an authorization policy that allows `aws.greengrass#GetSecretValue` to get secrets that you store with this component\. In this authorization policy, you can restrict components' access to specific secrets\. For more information, see [secret manager IPC authorization](ipc-secret-manager.md#ipc-secret-manager-authorization)\.
-+ \(Optional\) If you store the core device's private key and certificate in a [hardware security module](hardware-security.md), the private key must have the `unwrap` permission, and the public key must have the `wrap` permission\.
++ \(Optional\) If you store the core device's private key and certificate in a [hardware security module](hardware-security.md) \(HSM\), the HSM must support RSA keys, the private key must have the `unwrap` permission, and the public key must have the `wrap` permission\.
 
 ### Endpoints and ports<a name="secret-manager-component-endpoints"></a>
 
@@ -78,6 +78,16 @@ This component must be able to perform outbound requests to the following endpoi
 ## Dependencies<a name="secret-manager-component-dependencies"></a>
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#secret-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+
+------
+#### [ 2\.1\.1 ]
+
+The following table lists the dependencies for version 2\.1\.1 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.5\.0 <2\.7\.0 | Soft | 
 
 ------
 #### [ 2\.1\.0 ]
@@ -214,6 +224,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.1\.1  |  Version updated for Greengrass nucleus version 2\.6\.0 release\.  | 
 |  2\.1\.0  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/secret-manager-component.html)  | 
 |  2\.0\.9  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  2\.0\.8  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 

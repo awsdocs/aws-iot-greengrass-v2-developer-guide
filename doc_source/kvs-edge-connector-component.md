@@ -128,9 +128,8 @@ The following table lists the dependencies for versions 1\.0\.0 to 1\.0\.4 of th
 
 | Dependency | Compatible versions | Dependency type | 
 | --- | --- | --- | 
-| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.6\.0 | Hard | 
-| [Token exchange service](token-exchange-service-component.md) | ^2\.0\.0 | Hard | 
-| [Stream manager](stream-manager-component.md) | ^2\.0\.0 | Hard | 
+| [Token exchange service](token-exchange-service-component.md) | >=2\.0\.3 | Hard | 
+| [Stream manager](stream-manager-component.md) | >=2\.0\.9 | Hard | 
 
 For more information about component dependencies, see the [component recipe reference](component-recipe-reference.md#recipe-reference-component-dependencies)\.
 

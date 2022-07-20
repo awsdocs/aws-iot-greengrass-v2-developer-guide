@@ -28,7 +28,7 @@ The following table lists the minimum versions of the AWS IoT Device SDK that yo
 
 ## Authorization<a name="ipc-component-lifecycle-authorization"></a>
 
-To pause or resume other components from a custom component, you must define authorization policies that allows your component to manage other components\. For information about defining authorization policies, see [Authorize components to perform IPC operations](interprocess-communication.md#ipc-authorization-policies)\.
+To pause or resume other components from a custom component, you must define authorization policies that allow your component to manage other components\. For information about defining authorization policies, see [Authorize components to perform IPC operations](interprocess-communication.md#ipc-authorization-policies)\.
 
 Authorization policies for component lifecycle management have the following properties\.
 
@@ -40,6 +40,10 @@ Authorization policies for component lifecycle management have the following pro
 |  `aws.greengrass#PauseComponent`  |  Allows a component to pause the components that you specify\.  |  A component name, or `*` to allow access to all components\.  | 
 |  `aws.greengrass#ResumeComponent`  |  Allows a component to resume the components that you specify\.  |  A component name, or `*` to allow access to all components\.  | 
 |  `*`  |  Allows a component to pause and resume the components that you specify\.  |  A component name, or `*` to allow access to all components\.  | 
+
+### Authorization policy examples<a name="ipc-component-lifecycle-authorization-policy-examples"></a>
+
+You can reference the following authorization policy example to help you configure authorization policies for your components\.
 
 **Example authorization policy**  
 The following example authorization policy allows a component to pause and resume all components\.  
@@ -93,6 +97,9 @@ Local deployments don't notify components before updates\.
 
 **Event message type:** `ComponentUpdatePolicyEvents`
 
+**Tip**  
+You can follow a tutorial to learn how to develop a component that conditionally defers component updates\. For more information, see [Tutorial: Develop a Greengrass component that defers component updates](defer-component-updates-tutorial.md)\.
+
 ### Request<a name="ipc-operation-subscribetocomponentupdates-request"></a>
 
 This operation's request doesn't have any parameters\.
@@ -112,13 +119,17 @@ Whether or not the nucleus needs to restart to apply the update\.
 `postUpdateEvent` \(Python: `post_update_event`\)  
 \(Optional\) An event that indicates that the nucleus updated a component\. This object, `PostComponentUpdateEvent`, contains the following information:    
 `deploymentId` \(Python: `deployment_id`\)  
-The ID of the AWS IoT Greengrass deployment that updated the component\.
+The ID of the AWS IoT Greengrass deployment that updated the component\.  
+This property isn't currently used\.
 
 ## DeferComponentUpdate<a name="ipc-operation-defercomponentupdate"></a>
 
 Acknowledge or defer a component update that you discover with [SubscribeToComponentUpdates](#ipc-operation-subscribetocomponentupdates)\. You specify the amount of time to wait before the nucleus checks again if your component is ready to let the component update proceed\. You can also use this operation to tell the nucleus that your component is ready for the update\.
 
 If a component doesn't respond to the component update notification, the nucleus waits the amount of time that you specify in the deployment's component update policy\. After that timeout, the nucleus proceeds with the deployment\. The default component update timeout is 60 seconds\. For more information, see [Create deployments](create-deployments.md) and the [DeploymentComponentUpdatePolicy](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_DeploymentComponentUpdatePolicy.html) object that you can provide when you call the [CreateDeployment](https://docs.aws.amazon.com/greengrass/v2/APIReference/API_CreateDeployment.html) operation\.
+
+**Tip**  
+You can follow a tutorial to learn how to develop a component that conditionally defers component updates\. For more information, see [Tutorial: Develop a Greengrass component that defers component updates](defer-component-updates-tutorial.md)\.
 
 ### Request<a name="ipc-operation-defercomponentupdate-request"></a>
 

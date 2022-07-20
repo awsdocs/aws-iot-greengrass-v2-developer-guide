@@ -244,7 +244,9 @@ You can also specify tags \(`SSMResourceTags`\) to add to the Systems Manager ma
 
 1. <a name="deploy-component-configure-advanced-settings-step"></a>On the **Configure advanced settings** page, keep the default configuration settings, and choose **Next**\.
 
-1. <a name="deploy-component-review-and-deploy-step"></a>On the **Review** page, choose **Deploy**
+1. <a name="deploy-component-review-and-deploy-step"></a>On the **Review** page, choose **Deploy**\.
+
+   The deployment can take up to a minute to complete\.
 
 ### To deploy the Systems Manager Agent component \(AWS CLI\)<a name="deploy-ssm-agent-component-cli"></a>
 

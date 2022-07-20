@@ -2,7 +2,7 @@
 
 When you use the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass) to create a Lambda function component, you import an existing AWS Lambda function and then configure it to create a component that runs on your Greengrass device\.
 
-Before you begin, review the [requirements]() to run Lambda functions on Greengrass devices\.
+Before you begin, review the [requirements](https://docs.aws.amazon.com/greengrass/v2/developerguide/run-lambda-functions.html#run-lambda-functions-requirements) to run Lambda functions on Greengrass devices\.
 
 **Topics**
 + [Step 1: Choose a Lambda function to import](#import-lambda-console-choose-function)
@@ -39,8 +39,14 @@ To subscribe this function to messages from other Lambda functions or components
    Under **Event sources**, do the following to add an event source:
 
    1. For each event source that you add, specify the following options: 
-      + **Topic** – The name of the topic to subscribe for messages\.
-      + **Type** – The type of event source\.
+      + **Topic** – The topic to subscribe for messages\.
+      + **Type** – The type of event source\. Choose from the following options:
+        + **Local publish/subscribe** – Subscribe to local publish/subscribe messages\.
+
+          You can't use MQTT topic wildcards \(`+` and `#`\) in the **Topic** when you specify this type\.
+        + **AWS IoT Core MQTT** – Subscribe to AWS IoT Core MQTT messages\.
+
+          You can use MQTT topic wildcards \(`+` and `#`\) in the **Topic** when you specify this type\.
 
    1. To add another event source, choose **Add event source** and repeat the previous step\. To remove an event source, choose **Remove** next to the event source that you want to remove\.
 

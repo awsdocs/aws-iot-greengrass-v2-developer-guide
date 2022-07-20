@@ -1,6 +1,6 @@
-# MQTT broker \(Moquette\)<a name="mqtt-broker-moquette-component"></a>
+# MQTT 3\.1\.1 broker \(Moquette\)<a name="mqtt-broker-moquette-component"></a>
 
-The Moquette MQTT broker component \(`aws.greengrass.clientdevices.mqtt.Moquette`\) handles MQTT messages between client devices and a Greengrass core device\. This component provides a modified version of the [Moquette MQTT broker](https://github.com/moquette-io/moquette)\.
+The Moquette MQTT broker component \(`aws.greengrass.clientdevices.mqtt.Moquette`\) handles MQTT messages between client devices and a Greengrass core device\. This component provides a modified version of the [Moquette MQTT broker](https://github.com/moquette-io/moquette)\. Deploy this MQTT broker to run a lightweight MQTT broker\. For more information about how to choose an MQTT broker, see [Choose an MQTT broker](choose-local-mqtt-broker.md)\.
 
 This broker implements the MQTT 3\.1\.1 protocol\. It includes support for QoS 0, QoS 1, QoS 2 retained messages, last will messages, and persistent sessions\.
 
@@ -20,6 +20,8 @@ Client devices are local IoT devices that connect to a Greengrass core device to
 ## Versions<a name="mqtt-broker-moquette-component-versions"></a>
 
 This component has the following versions:
++ 2\.2\.x
++ 2\.1\.x
 + 2\.0\.x
 
 ## Type<a name="mqtt-broker-moquette-component-type"></a>
@@ -49,12 +51,37 @@ This component has the following requirements:
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#mqtt-broker-moquette-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
-The following table lists the dependencies for version 2\.0\.x of this component\.
+------
+#### [ 2\.2\.0 ]
+
+The following table lists the dependencies for version 2\.2\.0 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Client device auth](client-device-auth-component.md) | >=2\.0\.0 <2\.3\.0 | Hard | 
+
+------
+#### [ 2\.1\.0 ]
+
+The following table lists the dependencies for version 2\.1\.0 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Client device auth](client-device-auth-component.md) | >=2\.0\.0 <2\.2\.0 | Hard | 
+
+------
+#### [ 2\.0\.0 \- 2\.0\.2 ]
+
+The following table lists the dependencies for versions 2\.0\.0 through 2\.0\.2 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
 | --- | --- | --- | 
 | [Client device auth](client-device-auth-component.md) | >=2\.0\.0 <2\.1\.0 | Hard | 
+
+------
 
 For more information about component dependencies, see the [component recipe reference](component-recipe-reference.md#recipe-reference-component-dependencies)\.
 
@@ -131,6 +158,8 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.2\.0  |  Version updated for [client device auth](client-device-auth-component.md) version 2\.2\.0 release\.  | 
+|  2\.1\.0  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/mqtt-broker-moquette-component.html)  | 
 |  2\.0\.2  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/mqtt-broker-moquette-component.html)  | 
 |  2\.0\.1  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  2\.0\.0  |  Initial version\.  | 

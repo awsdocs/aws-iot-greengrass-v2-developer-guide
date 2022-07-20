@@ -289,7 +289,7 @@ The following example defines a deployment for a Linux\-based device that config
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.5.5",
+      "version": "2.6.0",
       "configurationUpdate": {
         "merge": "{\"runWithDefault\":{\"posixUser\":\"ggc_user:ggc_group\"}}"
       }
@@ -348,7 +348,7 @@ The following example defines a deployment that configures the CPU time limit to
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.5.5",
+      "version": "2.6.0",
       "configurationUpdate": {
         "merge": "{\"runWithDefault\":{\"systemResourceLimits\":\"cpu\":2,\"memory\":102400}}}"
       }
@@ -383,6 +383,14 @@ To use ALPN and enable HTTPS communication over port 443, your core device must 
 
 ### Configure MQTT over port 443<a name="configure-mqtt-port-443"></a>
 
+You can configure MQTT over port 443 on existing core devices or when you install the AWS IoT Greengrass Core software on a new core device\.
+
+**Topics**
++ [Configure MQTT over port 443 on existing core devices](#configure-mqtt-port-443-deployment)
++ [Configure MQTT over port 443 during installation](#configure-mqtt-port-443-installer)
+
+#### Configure MQTT over port 443 on existing core devices<a name="configure-mqtt-port-443-deployment"></a>
+
 You can use a deployment to configure MQTT over port 443 on a single core device or a group of core devices\. In this deployment, you update the [nucleus component](greengrass-nucleus-component.md) configuration\. The nucleus restarts when you update its `mqtt` configuration\.
 
 To configure MQTT over port 443, [create a deployment](create-deployments.md) that specifies the following configuration update for the `aws.greengrass.Nucleus` component\.
@@ -401,7 +409,7 @@ The following example defines a deployment that configures MQTT over port 443\. 
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.5.5",
+      "version": "2.6.0",
       "configurationUpdate": {
         "merge": "{\"mqtt\":{\"port\":443}}"
       }
@@ -410,9 +418,21 @@ The following example defines a deployment that configures MQTT over port 443\. 
 }
 ```
 
+#### Configure MQTT over port 443 during installation<a name="configure-mqtt-port-443-installer"></a>
+
+You can configure MQTT over port 443 when you install the AWS IoT Greengrass Core software on a core device\. Use the `--init-config` installer argument to configure MQTT over port 443\. You can specify this argument when you install with [manual provisioning](manual-installation.md), [fleet provisioning](fleet-provisioning.md), or [custom provisioning](custom-provisioning.md)\.
+
 ### Configure HTTPS over port 443<a name="configure-https-port-443"></a>
 
 This feature requires [Greengrass nucleus](greengrass-nucleus-component.md) v2\.0\.4 or later\.
+
+You can configure HTTPS over port 443 on existing core devices or when you install the AWS IoT Greengrass Core software on a new core device\.
+
+**Topics**
++ [Configure HTTPS over port 443 on existing core devices](#configure-https-port-443-deployment)
++ [Configure HTTPS over port 443 during installation](#configure-https-port-443-installer)
+
+#### Configure HTTPS over port 443 on existing core devices<a name="configure-https-port-443-deployment"></a>
 
 You can use a deployment to configure HTTPS over port 443 on a single core device or a group of core devices\. In this deployment, you update the [nucleus component](greengrass-nucleus-component.md) configuration\.
 
@@ -430,7 +450,7 @@ The following example defines a deployment that configures HTTPS over port 443\.
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.5.5",
+      "version": "2.6.0",
       "configurationUpdate": {
         "merge": "{\"greengrassDataPlanePort\":443}"
       }
@@ -439,9 +459,13 @@ The following example defines a deployment that configures HTTPS over port 443\.
 }
 ```
 
+#### Configure HTTPS over port 443 during installation<a name="configure-https-port-443-installer"></a>
+
+You can configure HTTPS over port 443 when you install the AWS IoT Greengrass Core software on a core device\. Use the `--init-config` installer argument to configure HTTPS over port 443\. You can specify this argument when you install with [manual provisioning](manual-installation.md), [fleet provisioning](fleet-provisioning.md), or [custom provisioning](custom-provisioning.md)\.
+
 ### Configure a network proxy<a name="configure-network-proxy"></a>
 
-Follow the procedure in this section to configure Greengrass core devices to connect to the internet through an HTTP or HTTPS network proxy\. For more information about the endpoints and ports that core devices use, see [Allow device traffic through a proxy or firewall](allow-device-traffic.md)\.
+Follow a procedure in this section to configure Greengrass core devices to connect to the internet through an HTTP or HTTPS network proxy\. For more information about the endpoints and ports that core devices use, see [Allow device traffic through a proxy or firewall](allow-device-traffic.md)\.
 
 **Important**  
 If your core device runs a version of the [Greengrass nucleus](greengrass-nucleus-component.md) earlier than v2\.4\.0, your device's role must allow the following permissions to use a network proxy:  
@@ -451,6 +475,14 @@ If your core device runs a version of the [Greengrass nucleus](greengrass-nucleu
 `iot:Subscribe`
 This is necessary because the device uses AWS credentials from the token exchange service to authenticate MQTT connections to AWS IoT\. The device uses MQTT to receive and install deployments from the AWS Cloud, so your device won't work unless you define these permissions on its role\. Devices typically use X\.509 certificates to authenticate MQTT connections, but devices can't do this to authenticate when they use a proxy\.  
 For more information about how to configure the device role, see [Authorize core devices to interact with AWS services](device-service-role.md)\.
+
+**Topics**
++ [Configure a network proxy on existing core devices](#configure-network-proxy-deployment)
++ [Configure a network proxy during installation](#configure-network-proxy-installer)
++ [Enable the core device to trust an HTTPS proxy](#https-proxy-certificate-trust)
++ [The networkProxy object](#network-proxy-object)
+
+#### Configure a network proxy on existing core devices<a name="configure-network-proxy-deployment"></a>
 
 You can use a deployment to configure a network proxy on a single core device or a group of core devices\. In this deployment, you update the [nucleus component](greengrass-nucleus-component.md) configuration\. The nucleus restarts when you update its `networkProxy` configuration\.
 
@@ -475,7 +507,7 @@ The following example defines a deployment that configures a network proxy\. The
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.5.5",
+      "version": "2.6.0",
       "configurationUpdate": {
         "merge": "{\"networkProxy\":{\"noProxyAddresses\":\"http://192.168.0.1,www.example.com\",\"proxy\":{\"url\":\"https://my-proxy-server:1100\",\"username\":\"Mary_Major\",\"password\":\"pass@word1357\"}}}"
       }
@@ -483,6 +515,10 @@ The following example defines a deployment that configures a network proxy\. The
   }
 }
 ```
+
+#### Configure a network proxy during installation<a name="configure-network-proxy-installer"></a>
+
+You can configure a network proxy when you install the AWS IoT Greengrass Core software on a core device\. Use the `--init-config` installer argument to configure the network proxy\. You can specify this argument when you install with [manual provisioning](manual-installation.md), [fleet provisioning](fleet-provisioning.md), or [custom provisioning](custom-provisioning.md)\.
 
 #### Enable the core device to trust an HTTPS proxy<a name="https-proxy-certificate-trust"></a>
 

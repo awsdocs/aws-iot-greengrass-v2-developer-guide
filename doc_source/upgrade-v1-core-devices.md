@@ -136,7 +136,7 @@ To reuse a core device's identity when you migrate it from V1 to V2, follow inst
 After you install the AWS IoT Greengrass Core software v2\.x on your device, create a deployment that includes the following resources\. To deploy components to a fleet of similar devices, create a deployment for a thing group that contains those devices\.
 + Lambda function components that you created from your V1 Lambda functions\. For more information, see [Run AWS Lambda functions](run-lambda-functions.md)\.
 + If you use V1 subscriptions, the [legacy subscription router component](legacy-subscription-router-component.md)\.
-+ If you use stream manager, the [stream manager component](stream-manager-component.md)\. For more information, see [Manage data streams on the AWS IoT Greengrass Core](manage-data-streams.md)\.
++ If you use stream manager, the [stream manager component](stream-manager-component.md)\. For more information, see [Manage data streams on Greengrass core devices](manage-data-streams.md)\.
 + If you use local secrets, the [secret manager component](secret-manager-component.md)\.
 + If you use V1 connectors, the [AWS\-provided connector components](set-up-v2-test-device.md#use-v1-connectors)\.
 + If you use Docker containers, the [Docker application manager component](docker-application-manager-component.md)\. For more information, see [Run a Docker container](run-docker-container.md)\.

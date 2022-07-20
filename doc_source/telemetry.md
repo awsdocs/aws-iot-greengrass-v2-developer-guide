@@ -167,7 +167,7 @@ The list of metrics\. A metric contains the following properties:
 `N`  
 The name of the metric\.  
 `Sum`  
-The aggregated metric value\. The telemetry agent adds new values to the previous total, so the sum is a value that increases constantly\. You can use the timestamp to find the value of a specific aggregation\. For example, to find the latest aggregated value, subtract the previous timestamped value from the latest timestamped value\.   
+The sum of the metric's values in this telemetry event\.  
 `U`  
 The unit of the metric value\.
 

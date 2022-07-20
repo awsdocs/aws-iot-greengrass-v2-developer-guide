@@ -124,8 +124,8 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
-|  2\.1\.3  |   This version is no longer available, except in the US East \(Ohio\), Canada \(Central\), and AWS GovCloud \(US\-East\) Regions\. This component version requires Java version 11 or greater to run\.  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-publisher-component.html)  | 
-|  2\.1\.2  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-publisher-component.html)  | 
+|  2\.1\.4  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-publisher-component.html)  | 
+|  2\.1\.3  |   This version is no longer available, except in the US East \(Ohio\), Canada \(Central\), and AWS GovCloud \(US\-East\) Regions\. This component version requires Java version 11 or greater to run\. The improvements in this version are available in later versions of this component\.  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-publisher-component.html)  | 
 |  2\.1\.2  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-publisher-component.html)  | 
 |  2\.1\.1  |  Bug fixes and improvements\.  | 
 |  2\.1\.0  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-publisher-component.html)  | 

@@ -49,7 +49,7 @@ To use the AWS IoT Device SDK v2 for Python, a device must run Python 3\.6 or la
    ```
 
 1. <a name="test-client-device-communications-application-intro"></a>Run the sample Greengrass discovery application\. This application expects arguments that specify the client device thing name, the MQTT topic and message to use, and the certificates that authenticate and secure the connection\. The following example sends a Hello World message to the `clients/MyClientDevice1/hello/world` topic\.<a name="test-client-device-communications-application-command-replace"></a>
-   + Replace both instances of *MyClientDevice1* with the client device's thing name\.
+   + Replace *MyClientDevice1* with the client device's thing name\.
    + Replace *\~/certs/AmazonRootCA1\.pem* with the path to the Amazon root CA certificate on the client device\.
    + Replace *\~/certs/device\.pem\.crt* with the path to the device certificate on the client device\.
    + Replace *\~/certs/private\.pem\.key* with the path to the private key file on the client device\.
@@ -164,7 +164,7 @@ In this section, you use Greengrass discovery sample in the [AWS IoT Device SDK 
       ```
 
 1. <a name="test-client-device-communications-application-scanner-intro"></a>Run the sample Greengrass discovery application\. This application expects arguments that specify the client device thing name, the MQTT topic to use, and the certificates that authenticate and secure the connection\. The following example subscribes to the `clients/MyClientDevice1/hello/world` topic and publishes a message that you enter on the command line to the same topic\.<a name="test-client-device-communications-application-command-replace"></a>
-   + Replace both instances of *MyClientDevice1* with the client device's thing name\.
+   + Replace *MyClientDevice1* with the client device's thing name\.
    + Replace *\~/certs/AmazonRootCA1\.pem* with the path to the Amazon root CA certificate on the client device\.
    + Replace *\~/certs/device\.pem\.crt* with the path to the device certificate on the client device\.
    + Replace *\~/certs/private\.pem\.key* with the path to the private key file on the client device\.
@@ -248,7 +248,7 @@ To use the AWS IoT Device SDK v2 for JavaScript, a device must run Node v10\.0 o
    ```
 
 1. <a name="test-client-device-communications-application-intro"></a>Run the sample Greengrass discovery application\. This application expects arguments that specify the client device thing name, the MQTT topic and message to use, and the certificates that authenticate and secure the connection\. The following example sends a Hello World message to the `clients/MyClientDevice1/hello/world` topic\.<a name="test-client-device-communications-application-command-replace"></a>
-   + Replace both instances of *MyClientDevice1* with the client device's thing name\.
+   + Replace *MyClientDevice1* with the client device's thing name\.
    + Replace *\~/certs/AmazonRootCA1\.pem* with the path to the Amazon root CA certificate on the client device\.
    + Replace *\~/certs/device\.pem\.crt* with the path to the device certificate on the client device\.
    + Replace *\~/certs/private\.pem\.key* with the path to the private key file on the client device\.

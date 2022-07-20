@@ -112,13 +112,15 @@ The thing group name can't contain colon \(`:`\) characters\.
 
 ## Create the thing certificate<a name="create-thing-certificate"></a>
 
-When you register a device as an AWS IoT thing, that device can use a digital certificate to authenticate with AWS\. This certificate allows the device to communicate with AWS IoT and AWS IoT Greengrass\.
+<a name="create-thing-certificate-intro-1"></a>When you register a device as an AWS IoT thing, that device can use a digital certificate to authenticate with AWS\. This certificate allows the device to communicate with AWS IoT and AWS IoT Greengrass\.
 
-In this section, you create and download certificates that your device can use to connect to AWS\.
+<a name="create-thing-certificate-intro-2"></a>In this section, you create and download certificates that your device can use to connect to AWS\.
 
-If you want to configure the AWS IoT Greengrass Core software to use a hardware security module \(HSM\) to securely store the private key and certificate, follow the steps to create the certificate from a private key in an HSM\. Otherwise, follow the steps to create the certificate and private key in the AWS IoT service\. The hardware security feature is available on Linux devices only\. For more information about hardware security and requirements to use it, see [Hardware security integration](hardware-security.md)\.
+<a name="create-thing-certificate-intro-3"></a>If you want to configure the AWS IoT Greengrass Core software to use a hardware security module \(HSM\) to securely store the private key and certificate, follow the steps to create the certificate from a private key in an HSM\. Otherwise, follow the steps to create the certificate and private key in the AWS IoT service\. The hardware security feature is available on Linux devices only\. For more information about hardware security and requirements to use it, see [Hardware security integration](hardware-security.md)\.
 
-### Create the certificate and private key in the AWS IoT service<a name="create-thing-certificate-cloud"></a>
+### Create the certificate and private key in the AWS IoT service<a name="create-thing-certificate-cloud"></a><a name="create-thing-certificate-cloud-steps"></a>
+
+**To create the thing certificate**
 
 1. Create a folder where you download the certificates for the AWS IoT thing\.
 
@@ -169,7 +171,14 @@ If you want to configure the AWS IoT Greengrass Core software to use a hardware 
 **Note**  
 This feature is available for v2\.5\.3 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. AWS IoT Greengrass doesn't currently support this feature on Windows core devices\. 
 
-1. On the core device, initialize a PKCS\#11 token in the HSM, and generate a private key\. The private key must be an RSA key with an RSA\-2048 key size, or larger\. Check the documentation for your HSM to learn how to initialize the token and generate the private key\. If your HSM supports object IDs, specify an object ID when you generate the private key\. Save the slot ID, user PIN, object label, object ID \(if your HSM uses one\) that you specify when you initialize the token and generate the private key\. You use these values later when you import the thing certificate to the HSM and configure the AWS IoT Greengrass Core software\.
+**To create the thing certificate**
+
+1. On the core device, initialize a PKCS\#11 token in the HSM, and generate a private key\. The private key must be an RSA key with an RSA\-2048 key size \(or larger\) or an ECC key\.
+**Note**  <a name="hardware-security-module-requirements-key-notes"></a>
+To use a hardware security module with ECC keys, you must use [Greengrass nucleus](greengrass-nucleus-component.md) v2\.5\.6 or later\.  
+To use a hardware security module and [secret manager](secret-manager-component.md), you must use a hardware security module with RSA keys\.
+
+   Check the documentation for your HSM to learn how to initialize the token and generate the private key\. If your HSM supports object IDs, specify an object ID when you generate the private key\. Save the slot ID, user PIN, object label, object ID \(if your HSM uses one\) that you specify when you initialize the token and generate the private key\. You use these values later when you import the thing certificate to the HSM and configure the AWS IoT Greengrass Core software\.
 
 1. Create a certificate signing request \(CSR\) from the private key\. AWS IoT uses this CSR to create a thing certificate for the private key that you generated in the HSM\. For information about how to create a CSR from the private key, see the documentation for your HSM\. The CSR is a file, such as `iotdevicekey.csr`\.
 
@@ -403,7 +412,6 @@ In this section, you create a token exchange IAM role and an AWS IoT role alias 
           {
             "Effect": "Allow",
             "Action": [
-              "iot:DescribeCertificate",
               "logs:CreateLogGroup",
               "logs:CreateLogStream",
               "logs:PutLogEvents",
@@ -539,7 +547,7 @@ To create a role alias, you must have permission to pass the token exchange IAM 
 
 ## Download certificates to the device<a name="download-thing-certificates"></a>
 
-Earlier, you downloaded your device's certificate to your development computer\. In this section, you copy the certificate to your device set up the device with the certificates that it uses to connect to AWS IoT\. If you use an HSM, you also import the certificate file into the HSM in this section\.
+Earlier, you downloaded your device's certificate to your development computer\. In this section, you copy the certificate to your core device to set up the device with the certificates that it uses to connect to AWS IoT\. You also download the Amazon root certificate authority \(CA\) certificate\. If you use an HSM, you also import the certificate file into the HSM in this section\.
 + If you created the thing certificate and private key in the AWS IoT service earlier, follow the steps to download the certificates with private key and certificate files\.
 + If you created the thing certificate from a private key in a hardware security module \(HSM\) earlier, follow the steps to download the certificates with the private key and certificate in an HSM\.
 
@@ -822,7 +830,7 @@ This feature is available for v2\.5\.0 and later of the [Greengrass nucleus comp
 
 **To set up a Windows device for AWS IoT Greengrass V2**
 
-1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.\.
+1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.
 
 1. <a name="set-up-windows-device-environment-open-cmd"></a>Open the Windows Command Prompt \(`cmd.exe`\) as an administrator\.
 
@@ -967,7 +975,7 @@ For more information about the arguments that you can specify, see [Installer ar
    services:
      aws.greengrass.Nucleus:
        componentType: "NUCLEUS"
-       version: "2.5.5"
+       version: "2.6.0"
        configuration:
          awsRegion: "us-west-2"
          iotRoleAlias: "GreengrassCoreTokenExchangeRoleAlias"
@@ -978,7 +986,7 @@ For more information about the arguments that you can specify, see [Installer ar
    Then, do the following:
    + Replace each instance of */greengrass/v2* with the Greengrass root folder\.
    + Replace *MyGreengrassCore* with the name of the AWS IoT thing\.
-   + Replace *2\.5\.5* with the version of the AWS IoT Greengrass Core software\.
+   + Replace *2\.6\.0* with the version of the AWS IoT Greengrass Core software\.
    + Replace *us\-west\-2* with the AWS Region where you created the resources\.
    + Replace *GreengrassCoreTokenExchangeRoleAlias* with the name of the token exchange role alias\.
    + Replace the `iotDataEndpoint` with your AWS IoT data endpoint\.
@@ -997,7 +1005,7 @@ In this configuration file, you can customize other nucleus configuration option
    services:
      aws.greengrass.Nucleus:
        componentType: "NUCLEUS"
-       version: "2.5.5"
+       version: "2.6.0"
        configuration:
          awsRegion: "us-west-2"
          iotRoleAlias: "GreengrassCoreTokenExchangeRoleAlias"
@@ -1130,7 +1138,7 @@ This feature is available for v2\.5\.3 and later of the [Greengrass nucleus comp
    services:
      aws.greengrass.Nucleus:
        componentType: "NUCLEUS"
-       version: "2.5.5"
+       version: "2.6.0"
        configuration:
          awsRegion: "us-west-2"
          iotRoleAlias: "GreengrassCoreTokenExchangeRoleAlias"
@@ -1148,7 +1156,7 @@ This feature is available for v2\.5\.3 and later of the [Greengrass nucleus comp
    + Replace each instance of *iotdevicekey* in the PKCS\#11 URIs with the object label where you created the private key and imported the certificate\.
    + Replace each instance of */greengrass/v2* with the Greengrass root folder\.
    + Replace *MyGreengrassCore* with the name of the AWS IoT thing\.
-   + Replace *2\.5\.5* with the version of the AWS IoT Greengrass Core software\.
+   + Replace *2\.6\.0* with the version of the AWS IoT Greengrass Core software\.
    + Replace *us\-west\-2* with the AWS Region where you created the resources\.
    + Replace *GreengrassCoreTokenExchangeRoleAlias* with the name of the token exchange role alias\.
    + Replace the `iotDataEndpoint` with your AWS IoT data endpoint\.
@@ -1168,7 +1176,7 @@ In this configuration file, you can customize other nucleus configuration option
    services:
      aws.greengrass.Nucleus:
        componentType: "NUCLEUS"
-       version: "2.5.5"
+       version: "2.6.0"
        configuration:
          awsRegion: "us-west-2"
          iotRoleAlias: "GreengrassCoreTokenExchangeRoleAlias"

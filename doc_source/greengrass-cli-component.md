@@ -2,7 +2,7 @@
 
 The Greengrass CLI component \(`aws.greengrass.Cli`\) provides a local command\-line interface that you can use on core devices to develop and debug components locally\. The Greengrass CLI lets you create local deployments and restart components on the core device, for example\.
 
-You can install this component when you install the AWS IoT Greengrass Core software\. For more information, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
+You can install this component when you install the AWS IoT Greengrass Core software\. For more information, see [Tutorial: Getting started with AWS IoT Greengrass V2](getting-started.md)\.
 
 **Important**  
 <a name="local-dev-tools-production-environment-warning"></a>We recommend that you use this component in only development environments, not production environments\. This component provides access to information and operations that you typically won't need in a production environment\. Follow the principle of least privilege by deploying this component to only core devices where you need it\.
@@ -58,6 +58,7 @@ For more information, see [Greengrass Command Line Interface](gg-cli.md)\.
 ## Versions<a name="greengrass-cli-component-versions"></a>
 
 This component has the following versions:
++ 2\.6\.x
 + 2\.5\.x
 + 2\.4\.x
 + 2\.3\.x
@@ -92,9 +93,19 @@ This component has the following requirements:
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#greengrass-cli-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ 2\.5\.0 \- 2\.5\.4 ]
+#### [ 2\.6\.0 ]
 
-The following table lists the dependencies for versions 2\.5\.0 through 2\.5\.4 of this component\.
+The following table lists the dependencies for versions 2\.6\.0 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.5\.0 <2\.7\.0 | Soft | 
+
+------
+#### [ 2\.5\.0 \- 2\.5\.6 ]
+
+The following table lists the dependencies for versions 2\.5\.0 through 2\.5\.6 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -247,6 +258,9 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.6\.0  |  <a name="changelog-greengrass-cli-2.6.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-cli-component.html)  | 
+|  2\.5\.6  |  Version updated for Greengrass nucleus version 2\.5\.6 release\.  | 
+|  2\.5\.5  |  Version updated for Greengrass nucleus version 2\.5\.5 release\.  | 
 |  2\.5\.4  |  Version updated for Greengrass nucleus version 2\.5\.4 release\.  | 
 |  2\.5\.3  |  Version updated for Greengrass nucleus version 2\.5\.3 release\.  | 
 |  2\.5\.2  |  Version updated for Greengrass nucleus version 2\.5\.2 release\.  | 

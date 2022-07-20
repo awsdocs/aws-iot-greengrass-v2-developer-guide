@@ -4,12 +4,12 @@ You can install the Greengrass CLI in one of the following ways:
 + Use the `--deploy-dev-tools` argument when you first set up AWS IoT Greengrass Core software on your device\. You must also specify `--provision true` to apply this argument\.
 + Deploy the Greengrass CLI component \(`aws.greengrass.Cli`\) on your device\.
 
-This section describes the steps to deploy the Greengrass CLI component\. For information about installing the Greengrass CLI during initial setup, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
+This section describes the steps to deploy the Greengrass CLI component\. For information about installing the Greengrass CLI during initial setup, see [Tutorial: Getting started with AWS IoT Greengrass V2](getting-started.md)\.
 
 ## Prerequisites<a name="gg-cli-prereqs"></a>
 
 To deploy the Greengrass CLI component, you must meet the following requirements:
-+ AWS IoT Greengrass Core software installed and configured on your core device\. For more information, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\. 
++ AWS IoT Greengrass Core software installed and configured on your core device\. For more information, see [Tutorial: Getting started with AWS IoT Greengrass V2](getting-started.md)\. 
 + To use the AWS CLI to deploy the Greengrass CLI, you must have installed and configured the AWS CLI\. For more information, see [Configuring the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) in the *AWS Command Line Interface User Guide*\.
 + <a name="greengrass-cli-authorization-requirement"></a>You must be authorized to use the Greengrass CLI to interact with the AWS IoT Greengrass Core software\. Do one of the following to use the Greengrass CLI:
   + Use the system user that runs the AWS IoT Greengrass Core software\.
@@ -51,7 +51,7 @@ Complete the following steps to deploy the Greengrass CLI component to your core
      "targetArn":"targetArn",
      "components": {
        "aws.greengrass.Cli": {
-         "componentVersion": "2.5.5",
+         "componentVersion": "2.6.0",
          "configurationUpdate": {
            "merge": "{\"AuthorizedPosixGroups\":\"<group1>,<group2>,...,<groupN>\",\"AuthorizedWindowsGroups\":\"<group1>,<group2>,...,<groupN>\"}"
          }

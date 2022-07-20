@@ -25,9 +25,10 @@ Search for devices that support this feature in the [AWS Partner Device Catalog]
 You must meet the following requirements to use an HSM on a Greengrass core device:
 + [Greengrass nucleus](greengrass-nucleus-component.md) v2\.5\.3 or later installed on the core device\. You can choose a compatible version when you install the AWS IoT Greengrass Core software on a core device\.
 + The [PKCS\#11 provider component](pkcs11-provider-component.md) installed on the core device\. You can download and install this component when you install the AWS IoT Greengrass Core software on a core device\.
-+ <a name="hardware-security-module-requirements-rsa-key"></a>A hardware security module that supports RSA keys with an RSA\-2048 key size \(or larger\) and the [PKCS\#1 v1\.5](https://tools.ietf.org/html/rfc2313) signature scheme\.
-**Important**  
-Currently, AWS IoT Greengrass doesn't support ECC keys\. For information about keys that are supported, see the documentation for your HSM\.
++ <a name="hardware-security-module-requirements-key"></a>A hardware security module that supports the [PKCS\#1 v1\.5](https://tools.ietf.org/html/rfc2313) signature scheme and RSA keys with an RSA\-2048 key size \(or larger\) or ECC keys\.
+**Note**  <a name="hardware-security-module-requirements-key-notes"></a>
+To use a hardware security module with ECC keys, you must use [Greengrass nucleus](greengrass-nucleus-component.md) v2\.5\.6 or later\.  
+To use a hardware security module and [secret manager](secret-manager-component.md), you must use a hardware security module with RSA keys\.
 + <a name="hardware-security-module-requirements-pkcs11-provider-library"></a>A PKCS\#11 provider library that the AWS IoT Greengrass Core software can load at runtime \(using libdl\) to invoke PKCS\#11 functions\. The PKCS\#11 provider library must implement the following PKCS\#11 API operations:
   + `C_Initialize`
   + `C_Finalize`
@@ -175,7 +176,9 @@ The user PIN to use to access the slot\.
 
 1. <a name="deploy-component-configure-advanced-settings-step"></a>On the **Configure advanced settings** page, keep the default configuration settings, and choose **Next**\.
 
-1. <a name="deploy-component-review-and-deploy-step"></a>On the **Review** page, choose **Deploy**
+1. <a name="deploy-component-review-and-deploy-step"></a>On the **Review** page, choose **Deploy**\.
+
+   The deployment can take up to a minute to complete\.
 
 #### To deploy the PKCS\#11 provider component \(AWS CLI\)<a name="deploy-pkcs11-provider-component-cli"></a>
 

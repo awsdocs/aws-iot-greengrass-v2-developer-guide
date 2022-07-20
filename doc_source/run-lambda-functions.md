@@ -27,10 +27,13 @@ Your core devices and Lambda functions must meet the following requirements for 
 **Tip**  
 You can create a component that installs the programming language, and then specify that component as a dependency of your Lambda function component\.
 + Your Lambda function must use one of the following runtimes:
+  + Python 3\.9 – `python3.9`
   + Python 3\.8 – `python3.8`
   + Python 3\.7 – `python3.7`
   + Python 2\.7 – `python2.7` \*
+  + Java 11 – `java11`
   + Java 8 – `java8`
+  + Node\.js 14 – `nodejs14.x`
   + Node\.js 12 – `nodejs12.x`
   + Node\.js 10 – `nodejs10.x` \*
 

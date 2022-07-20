@@ -46,7 +46,9 @@ This component has the following requirements:
     Architecture: x86\_64 \(AMD64\)
 + The Greengrass core device must allow inbound traffic on port 443\.
 + The Greengrass core device must allow outbound traffic on port 443 and 8883\.
-+ The following ports are reserved for use by AWS IoT SiteWise: 80, 443, 3001, 8000, 8081, 8082, 8084, 8085, 8445, 8086, 9000, 9500, and 11080\. Using a reserved port for traffic can result in a terminated connection\.
++ The following ports are reserved for use by AWS IoT SiteWise: 80, 443, 3001, 8000, 8081, 8082, 8084, 8085, 8086, 8087, 8445, 9000, 9500, and 11080\. Using a reserved port for traffic can result in a terminated connection\.
+**Note**  
+Port 8087 is required only for version 2\.0\.15 and later of this component\.
 + The [Greengrass device role](https://docs.aws.amazon.com/greengrass/v2/developerguide/device-service-role.html) must have permissions that allow you to use AWS IoT SiteWise gateways on your AWS IoT Greengrass V2 devices\. For more information, see [Requirements](https://docs.aws.amazon.com/iot-sitewise/latest/userguide/configure-gateway-ggv2.html#gateway-requirements) in the *AWS IoT SiteWise User Guide*\.
 
 ### Endpoints and ports<a name="iotsitewise-processor-component-endpoints"></a>
@@ -101,7 +103,7 @@ This component uses the following log file\.
 
 This component includes the following third\-party software/licensing:
 
-### <a name="w898aac11c69c23b5b1b1"></a>
+### <a name="w999aac11c73c23b5b1b1"></a>
 + Apache\-2\.0
 + MIT
 + BSD\-2\-Clause
@@ -132,6 +134,14 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.0\.16  |  This version contains bug fixes and improvements\.  | 
+|  2\.0\.15  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-processor-component.html)  | 
+|  2\.0\.14  |  This version contains bug fixes and improvements\.  | 
+|  2\.0\.13  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-processor-component.html)  | 
+|  2\.0\.9  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-processor-component.html)  | 
+|  2\.0\.7  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-processor-component.html)  | 
+|  2\.0\.6  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-processor-component.html)  | 
+|  2\.0\.5  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-processor-component.html)  | 
 |  2\.0\.2  |  Initial version\.  | 
 
 ## See also<a name="iotsitewise-processor-component-see-also"></a>

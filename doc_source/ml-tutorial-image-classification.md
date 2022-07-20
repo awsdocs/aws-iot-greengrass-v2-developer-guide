@@ -18,11 +18,16 @@ In this tutorial you deploy the sample inference component to perform image clas
 ## Prerequisites<a name="ml-tutorial-prereqs"></a>
 
 To complete this tutorial, you need the following:
-+ A Linux Greengrass core device\. If you don't have one, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
++ A Linux Greengrass core device\. If you don't have one, see [Tutorial: Getting started with AWS IoT Greengrass V2](getting-started.md)\.
 + If you are using an Armv7l device such as Raspberry Pi, dependencies for OpenCV Python installed on the device\. Run the following command to install the dependencies: 
 
   ```
   sudo apt-get install libopenjp2-7 libilmbase23 libopenexr-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libgtk-3-0 libwebp-dev
+  ```
++ <a name="ml-req-rpi-bullseye-numpy"></a>If you are using a Raspberry Pi that runs Raspberry Pi OS Bullseye, NumPy 1\.22\.4 or later installed on the device\. Raspberry Pi OS Bullseye includes an earlier version of NumPy, so you can run the following command to upgrade NumPy on the device\.
+
+  ```
+  pip3 install --upgrade numpy
   ```
 
 ## Step 1: Subscribe to the default notifications topic<a name="ml-image-classification-subscribe"></a>

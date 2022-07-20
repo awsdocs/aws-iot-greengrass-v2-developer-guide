@@ -25,7 +25,7 @@ You also need the following:
   + [NVIDIA Jetson Nano](https://developer.nvidia.com/embedded/jetson-nano)
   + [AWS DeepLens](https://aws.amazon.com/deeplens/)
 
-  For information about setting up a Greengrass core device, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
+  For information about setting up a Greengrass core device, see [Tutorial: Getting started with AWS IoT Greengrass V2](getting-started.md)\.
 + For Raspberry Pi or NVIDIA Jetson Nano devices, [Raspberry Pi Camera Module V2 \- 8 megapixel, 1080p](https://www.amazon.com/Raspberry-Pi-Camera-Module-Megapixel/dp/B01ER2SKFS)\. To learn how to set up the camera, see [Connecting the camera](https://www.raspberrypi.org/documentation/usage/camera/) in the Raspberry Pi documentation\. 
 + Dependencies for OpenCV Python installed on the device\. This requirement is applicable only for Armv7l devices such as the Raspberry Pi that is used in this tutorial\. You don't need to meet this requirement for other devices\. 
 
@@ -33,6 +33,11 @@ You also need the following:
 
   ```
   sudo apt-get install libopenjp2-7 libilmbase23 libopenexr-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libgtk-3-0 libwebp-dev
+  ```
++ <a name="ml-req-rpi-bullseye-numpy"></a>If you are using a Raspberry Pi that runs Raspberry Pi OS Bullseye, NumPy 1\.22\.4 or later installed on the device\. Raspberry Pi OS Bullseye includes an earlier version of NumPy, so you can run the following command to upgrade NumPy on the device\.
+
+  ```
+  pip3 install --upgrade numpy
   ```
 
 ## Step 1: Configure the camera module on your device<a name="ml-tutorial-image-classification-camera-install"></a>

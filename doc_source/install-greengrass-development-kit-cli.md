@@ -19,14 +19,14 @@ To install a specific version of the GDK CLI, replace *versionTag* with the vers
    python3 -m pip install -U git+https://github.com/aws-greengrass/aws-greengrass-gdk-cli.git@versionTag
    ```
 
-1. Run the following command to verify that the GDK CLI installed successfully\.
+1. <a name="gdk-cli-verify-installation"></a>Run the following command to verify that the GDK CLI installed successfully\.
 
    ```
    gdk --help
    ```
 
    If the `gdk` command isn't found, add its folder to PATH\.
-   + On Linux devices, add `/home/MyUser/.local/bin` to PATH\.
+   + On Linux devices, add `/home/MyUser/.local/bin` to PATH, and replace *MyUser* with the name of your user\.
    + On Windows devices, add `PythonPath\Scripts` to PATH, and replace *PythonPath* with the path to the Python folder on your device\.
 
 You can now use the GDK CLI to create, build, and publish Greengrass components\. For more information about how to use the GDK CLI, see [AWS IoT Greengrass Development Kit Command\-Line Interface commands](greengrass-development-kit-cli-commands.md)\.

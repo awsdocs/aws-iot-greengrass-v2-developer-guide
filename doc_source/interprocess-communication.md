@@ -21,6 +21,8 @@ The IPC interface supports two types of operations:
 + [Interact with component configuration](ipc-component-configuration.md)
 + [Retrieve secret values](ipc-secret-manager.md)
 + [Interact with local shadows](ipc-local-shadows.md)
++ [Manage local deployments and components](ipc-local-deployments-components.md)
++ [Authenticate and authorize client devices](ipc-client-device-auth.md)
 
 ## Supported SDKs for interprocess communication<a name="ipc-requirements"></a>
 
@@ -441,6 +443,37 @@ IPC service identifier:
 
 ------
 
+### Wildcards in authorization policies<a name="ipc-authorization-policy-wildcards"></a>
+
+You can use the `*` wildcard in the `resources` element of IPC authorization policies to allow access to multiple resources in a single authorization policy\.
++ In all versions of the [Greengrass nucleus](greengrass-nucleus-component.md), you can specify a single `*` character as a resource to allow access to all resources\.
++ In [Greengrass nucleus](greengrass-nucleus-component.md) v2\.6\.0 and later, you can specify the `*` character in a resource to match any combination of characters\. For example, you can specify `factory/1/devices/Thermostat*/status` to allow access to a status topic for all thermostat devices in a factory, where each device's name begins with `Thermostat`\.
+
+When you define authorization policies for the AWS IoT Core MQTT IPC service, you can also use MQTT wildcards \(`+` and `#`\) to match multiple resources\. For more information, see [MQTT wildcards in AWS IoT Core MQTT IPC authorization policies](ipc-iot-core-mqtt.md#ipc-iot-core-mqtt-authorization-mqtt-wildcards)\.
+
+### Recipe variables in authorization policies<a name="ipc-authorization-policy-recipe-variables"></a>
+
+If you use [Greengrass nucleus](greengrass-nucleus-component.md) v2\.6\.0 or later, you can use the `{iot:thingName}` [recipe variable](component-recipe-reference.md#recipe-variables) in authorization policies\. When you need an authorization policy that includes the core device's name, such as for MQTT topics or device shadows, you can use this recipe variable to configure a single authorization policy for a group of core devices\. For example, you can allow a component access to the following resource for shadow IPC operations\.
+
+```
+$aws/things/{iot:thingName}/shadow/
+```
+
+### Special characters in authorization policies<a name="ipc-authorization-policy-special-characters"></a>
+
+To specify a literal `*` or `?` character in an authorization policy, you must use an escape sequence\. The following escape sequences instruct the AWS IoT Greengrass Core software to use the literal value instead of the character's special meaning\. For example, the `*` character is a [wildcard](#ipc-authorization-policy-wildcards) that matches any combination of characters\.
+
+
+| Literal character | Escape sequence | Notes | 
+| --- | --- | --- | 
+|  `*`  |  `${*}`  |  | 
+|  `?`  |  `${?}`  |  AWS IoT Greengrass doesn't currently support the `?` wildcard, which matches any single character\.  | 
+|  `$`  |  `${$}`  |  Use this escape sequence to match a resource that contains `${`\. For example, to match a resource named `${resourceName}`, you must specify `${$}{resourceName}`\. Otherwise, to match a resource that contains `$`, you can use a literal `$`, such as to allow access to a topic that begins with `$aws`\.  | 
+
+### Authorization policy examples<a name="ipc-authorization-policy-examples"></a>
+
+You can reference the following authorization policy examples to help you configure authorization policies for your components\.
+
 **Example component recipe with an authorization policy**  
 The following example component recipe includes an `accessControl` object defines an authorization policy\. This policy authorizes the `com.example.HelloWorld` component to publish to the `test/topic` topic\.  
 
@@ -827,8 +860,9 @@ request = SubscribeToTopicRequest()
 request.topic = topic
 handler = StreamHandler()
 operation = ipc_client.new_subscribe_to_topic(handler) 
-future = operation.activate(request)
-future.result(TIMEOUT)
+operation.activate(request)
+future_response = operation.get_response()
+future_response.result(TIMEOUT)
 
 # Keep the main thread alive, or the process will exit.
 while True:

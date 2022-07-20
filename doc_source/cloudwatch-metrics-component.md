@@ -26,6 +26,7 @@ This component provides similar functionality to the CloudWatch metrics connecto
 ## Versions<a name="cloudwatch-metrics-component-versions"></a>
 
 This component has the following versions:
++ 3\.1\.x
 + 3\.0\.x
 + 2\.1\.x
 + 2\.0\.x
@@ -35,12 +36,12 @@ For information about changes in each version of the component, see the [changel
 ## Type<a name="cloudwatch-metrics-component-type"></a>
 
 ------
-#### [ 3\.0\.x ]
+#### [ v3\.x ]
 
 <a name="public-component-type-generic"></a>This <a name="public-component-type-generic-phrase"></a>component is a generic component \(`aws.greengrass.generic`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs the component's lifecycle scripts\.
 
 ------
-#### [ 2\.0\.x ]
+#### [ v2\.x ]
 
 <a name="public-component-type-lambda"></a>This <a name="public-component-type-lambda-phrase"></a>component is a Lambda component \(`aws.greengrass.lambda`\)\. The [Greengrass nucleus](greengrass-nucleus-component.md) runs this component's Lambda function using the [Lambda launcher component](lambda-launcher-component.md)\.
 
@@ -51,14 +52,14 @@ For information about changes in each version of the component, see the [changel
 ## Operating system<a name="cloudwatch-metrics-component-os-support"></a>
 
 ------
-#### [ 3\.0\.x ]
+#### [ v3\.x ]
 
 This component can be installed on core devices that run the following operating systems:
 + Linux
 + Windows
 
 ------
-#### [ 2\.0\.x ]
+#### [ v2\.x ]
 
 This component can be installed on Linux core devices only\.
 
@@ -69,7 +70,7 @@ This component can be installed on Linux core devices only\.
 This component has the following requirements:
 
 ------
-#### [ 3\.0\.x ]
+#### [ 3\.x ]
 + <a name="public-component-python3-requirement"></a>[Python](https://www.python.org/) version 3\.7 installed on the core device and added to the PATH environment variable\.
 + The [Greengrass device role](device-service-role.md) must allow the `cloudwatch:PutMetricData` action, as shown in the following example IAM policy\.
 
@@ -91,7 +92,7 @@ This component has the following requirements:
   For more information, see [Amazon CloudWatch permissions reference](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/permissions-reference-cw.html) in the *Amazon CloudWatch User Guide*\.
 
 ------
-#### [ 2\.0\.x \- 2\.1\.x ]
+#### [ 2\.x ]
 + <a name="core-device-lambda-function-requirements"></a>Your core device must meet the requirements to run Lambda functions\. If you want the core device to run containerized Lambda functions, the device must meet the requirements to do so\. For more information, see [Lambda function requirements](setting-up.md#greengrass-v2-lambda-requirements)\.
 + <a name="public-component-python3-requirement"></a>[Python](https://www.python.org/) version 3\.7 installed on the core device and added to the PATH environment variable\.
 + The [Greengrass device role](device-service-role.md) must allow the `cloudwatch:PutMetricData` action, as shown in the following example IAM policy\.
@@ -171,15 +172,28 @@ This component must be able to perform outbound requests to the following endpoi
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#cloudwatch-metrics-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ 3\.0\.0 ]
+#### [ 3\.0\.0 and 3\.1\.0 ]
 
-The following table lists the dependencies for version 3\.0\.0 of this component\.
+The following table lists the dependencies for versions 3\.0\.0 and 3\.1\.0 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
 | --- | --- | --- | 
 | [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <3\.0\.0 | Soft | 
 | [Token exchange service](token-exchange-service-component.md) | >=0\.0\.0 | Hard | 
+
+------
+#### [ 2\.1\.1 ]
+
+The following table lists the dependencies for version 2\.1\.1 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.7\.0  | Hard | 
+| [Lambda launcher](lambda-launcher-component.md) | ^2\.0\.0  | Hard | 
+| [Lambda runtimes](lambda-runtimes-component.md) | ^2\.0\.0  | Soft | 
+| [Token exchange service](token-exchange-service-component.md) | ^2\.0\.0  | Hard | 
 
 ------
 #### [ 2\.0\.8 \- 2\.1\.0 ]
@@ -268,7 +282,7 @@ For more information about component dependencies, see the [component recipe ref
 This component provides the following configuration parameters that you can customize when you deploy the component\.
 
 ------
-#### [ 3\.0\.x ]
+#### [ v3\.x ]
 
  `PublishInterval`   
 \(Optional\) The maximum number of seconds to wait before the component publishes batched metrics for a given namespace\. To configure the component to publish metrics as it receives them, which means without batching, specify `0`\.  
@@ -365,7 +379,7 @@ Default:
 ```
 
 ------
-#### [ 2\.0\.x \- 2\.1\.x ]
+#### [ v2\.x ]
 
 **Note**  <a name="connector-component-lambda-parameters"></a>
 This component's default configuration includes Lambda function parameters\. We recommend that you edit only the following parameters to configure this component on your devices\.
@@ -614,6 +628,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  3\.1\.0  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/cloudwatch-metrics-component.html)  | 
 |  3\.0\.0  |  <a name="changelog-cloudwatch-metrics-3.0.0-major-version-changes"></a>This version of the CloudWatch metrics component expects different configuration parameters than version 2\.x\. If you use a non\-default configuration for version 2\.x, and you want to upgrade from v2\.x to v3\.x, you must update the component's configuration\. For more information, see [CloudWatch metrics component configuration](#cloudwatch-metrics-component-configuration)\. <a name="changelog-cloudwatch-metrics-3.0.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/cloudwatch-metrics-component.html)  | 
 
 ------
@@ -622,6 +637,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.1\.1  |  Version updated for Greengrass nucleus version 2\.6\.0 release\.  | 
 |  2\.1\.0  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/cloudwatch-metrics-component.html)  | 
 |  2\.0\.8  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/cloudwatch-metrics-component.html)  | 
 |  2\.0\.7  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 

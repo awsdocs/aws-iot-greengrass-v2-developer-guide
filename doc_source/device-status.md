@@ -58,4 +58,4 @@ You can check the status, such as lifecycle state, of the software components on
 
   The response contains the list of components that run on the core device\. Each entry in the list contains the lifecycle state of the component\.
 **Note**  
-This list doesn't include components that are deployed from local deployments or components that are deployed as dependencies of other components\.
+This list doesn't include components that are deployed as dependencies of other components\.

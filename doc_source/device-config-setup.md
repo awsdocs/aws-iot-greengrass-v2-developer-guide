@@ -241,7 +241,7 @@ This section describes the device requirements to run IDT tests for optional Doc
 IDT for AWS IoT Greengrass V2 provides Docker qualification tests to validate that your devices can use the AWS\-provided [Docker application manager](docker-application-manager-component.md) component to download Docker container images that you can run using custom Docker container components\. For information about creating custom Docker components, see [Run a Docker container](run-docker-container.md)\.
 
 To run Docker qualification tests, your devices under test must meet the following requirements to deploy the Docker application manager component\.
-+ <a name="docker-engine-requirement"></a>[Docker Engine](https://docs.docker.com/engine/) 1\.9\.1 or later installed on your Greengrass core device\. Version 20\.10 is the latest version that is verified to work with the connector\. You must install Docker directly on the core device before you deploy custom components that run Docker containers\. 
++ <a name="docker-engine-requirement"></a>[Docker Engine](https://docs.docker.com/engine/) 1\.9\.1 or later installed on the Greengrass core device\. Version 20\.10 is the latest version that is verified to work with the AWS IoT Greengrass Core software\. You must install Docker directly on the core device before you deploy components that run Docker containers\.
 + <a name="docker-daemon-requirement"></a>The Docker daemon started and running on the core device before you deploy this component\. 
 + <a name="docker-user-permissions-requirement"></a>The system user that runs a Docker container component must have root or administrator permissions, or you must configure Docker to run it as a non\-root or non\-admistrator user\.
   + On Linux devices, you can add a user to the `docker` group to call `docker` commands without `sudo`\.
@@ -293,6 +293,11 @@ To run ML qualification tests, your devices under test must meet the following r
 
   ```
   pip3 install opencv-python
+  ```
++ On Raspberry Pi devices that run Raspberry Pi OS Bullseye, NumPy 1\.22\.4 or later installed on the device\. Raspberry Pi OS Bullseye includes an earlier version of NumPy, so you can run the following command to upgrade NumPy on the device\.
+
+  ```
+  pip3 install --upgrade numpy
   ```
 
 ### HSM qualification requirements<a name="idt-config-hsm-components"></a>

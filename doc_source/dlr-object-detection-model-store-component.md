@@ -49,10 +49,25 @@ This component has the following requirements:<a name="ml-component-requirements
   ```
   pip3 install opencv-python
   ```
++ On Raspberry Pi devices that run Raspberry Pi OS Bullseye, NumPy 1\.22\.4 or later installed on the device\. Raspberry Pi OS Bullseye includes an earlier version of NumPy, so you can run the following command to upgrade NumPy on the device\.
+
+  ```
+  pip3 install --upgrade numpy
+  ```
 
 ## Dependencies<a name="dlr-object-detection-model-store-component-dependencies"></a>
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#dlr-object-detection-model-store-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+
+------
+#### [ 2\.1\.7 ]
+
+The following table lists the dependencies for version 2\.1\.7 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.7\.0 | Soft | 
 
 ------
 #### [ 2\.1\.5 and 2\.1\.6 ]
@@ -131,6 +146,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.1\.7  |  Version updated for Greengrass nucleus version 2\.6\.0 release\.  | 
 |  2\.1\.6  |  Adds a CPU model to fix an issue on Armv8 \(AArch64\) devices\.  | 
 |  2\.1\.5  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/dlr-object-detection-model-store-component.html)  | 
 |  2\.1\.4  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 

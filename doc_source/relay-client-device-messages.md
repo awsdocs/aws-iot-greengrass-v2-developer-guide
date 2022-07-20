@@ -17,7 +17,7 @@ The MQTT bridge uses QoS 1 to publish and subscribe to AWS IoT Core, even when a
 
 The MQTT bridge component consumes a list of topic mappings that each specify a message source and a message destination\. To relay messages between client devices and AWS IoT Core, deploy the MQTT bridge component, and specify each source and destination topic in the component configuration\.
 
-<a name="create-mqtt-bridge-deployment-info"></a>To deploy the MQTT bridge component to a core device or group of core devices, [create a deployment](create-deployments.md) that includes the `aws.greengrass.clientdevices.mqtt.Bridge` component\. Specify the topic mappings, `mqttTopicMapping` in the MQTT bridge component configuration in the deployment\.
+<a name="create-mqtt-bridge-deployment-info"></a>To deploy the MQTT bridge component to a core device or group of core devices, [create a deployment](create-deployments.md) that includes the `aws.greengrass.clientdevices.mqtt.Bridge` component\. Specify the topic mappings, `mqttTopicMapping`, in the MQTT bridge component configuration in the deployment\.
 
 The following example defines a deployment that configures the MQTT bridge component to relay messages on topics that match the `clients/+/hello/world` topic filter from client devices to AWS IoT Core\. The `merge` configuration update requires a serialized JSON object\. For more information, see [Update component configurations](update-component-configurations.md)\.
 

@@ -4,10 +4,12 @@ This tutorial shows you how to install and run AWS IoT Greengrass Core software 
 
 **Topics**
 + [Prerequisites](#docker-manual-provisioning-prereqs)
-+ [Create an AWS IoT thing](#create-iot-thing)
-+ [Download the Amazon root certification authority](#download-root-ca)
 + [Retrieve AWS IoT endpoints](#retrieve-iot-endpoints)
++ [Create an AWS IoT thing](#create-iot-thing)
++ [Create the thing certificate](#create-thing-certificate)
++ [Configure the thing certificate](#configure-thing-certificate)
 + [Create a token exchange role](#create-token-exchange-role)
++ [Download certificates to the device](#download-thing-certificates)
 + [Create a configuration file](#create-docker-install-configuration-file)
 + [Create an environment file](#create-env-file-manual-provisioning)
 + [Run the AWS IoT Greengrass Core software in a container](#run-greengrass-image-manual-provisioning)
@@ -18,9 +20,42 @@ This tutorial shows you how to install and run AWS IoT Greengrass Core software 
 To complete this tutorial, you need the following:
 + An AWS account\. If you don't have one, see [Set up an AWS account](setting-up.md#set-up-aws-account)\. 
 + An AWS IoT Greengrass Docker image\. This tutorial shows you how to pull the AWS IoT Greengrass Docker image from Docker Hub\. You can also [pull the AWS IoT Greengrass Docker image](run-greengrass-docker.md#pull-greengrass-docker-image) from Amazon Elastic Container Registry \(Amazon ECR\), or you can [build an image from the AWS IoT Greengrass Dockerfile](build-greengrass-dockerfile.md)\.
-+ <a name="docker-host-reqs"></a>A Linux\-based operating system with an internet connection\.
-+ <a name="docker-engine-reqs"></a>[Docker Engine](https://docs.docker.com/engine/install/) version 18\.09 or later\.
-+ <a name="docker-compose-reqs"></a>\(Optional\) [Docker Compose](https://docs.docker.com/compose/install/) version 1\.22 or later\. Docker Compose is required only if you want to use the Docker Compose CLI to run your Docker images\.
++ The host computer where you run the Docker container must meet the following requirements:
+  + <a name="docker-host-reqs"></a>A Linux\-based operating system with an internet connection\.
+  + <a name="docker-engine-reqs"></a>[Docker Engine](https://docs.docker.com/engine/install/) version 18\.09 or later\.
+  + <a name="docker-compose-reqs"></a>\(Optional\) [Docker Compose](https://docs.docker.com/compose/install/) version 1\.22 or later\. Docker Compose is required only if you want to use the Docker Compose CLI to run your Docker images\.
+
+## Retrieve AWS IoT endpoints<a name="retrieve-iot-endpoints"></a>
+
+Get the AWS IoT endpoints for your AWS account, and save them to use later\. Your device uses these endpoints to connect to AWS IoT\. Do the following:
+
+1. Get the AWS IoT data endpoint for your AWS account\.
+
+   ```
+   aws iot describe-endpoint --endpoint-type iot:Data-ATS
+   ```
+
+   The response looks similar to the following example, if the request succeeds\.
+
+   ```
+   {
+     "endpointAddress": "device-data-prefix-ats.iot.us-west-2.amazonaws.com"
+   }
+   ```
+
+1. Get the AWS IoT credentials endpoint for your AWS account\.
+
+   ```
+   aws iot describe-endpoint --endpoint-type iot:CredentialProvider
+   ```
+
+   The response looks similar to the following example, if the request succeeds\.
+
+   ```
+   {
+     "endpointAddress": "device-credentials-prefix.credentials.iot.us-west-2.amazonaws.com"
+   }
+   ```
 
 ## Create an AWS IoT thing<a name="create-iot-thing"></a>
 
@@ -80,47 +115,155 @@ The thing group name can't contain colon \(`:`\) characters\.
 
       The command doesn't have any output if the request succeeds\.
 
-## Download the Amazon root certification authority<a name="download-root-ca"></a>
+## Create the thing certificate<a name="create-thing-certificate"></a>
 
-In the previous step, you downloaded the certificates for your AWS IoT thing\. In this step, you download the Amazon root certificate authority \(CA\) certificate\. AWS IoT certificates are associated with Amazon's root CA certificate by default\.
+<a name="create-thing-certificate-intro-1"></a>When you register a device as an AWS IoT thing, that device can use a digital certificate to authenticate with AWS\. This certificate allows the device to communicate with AWS IoT and AWS IoT Greengrass\.
 
-Run the following command to download the root CA certificate\.
+<a name="create-thing-certificate-intro-2"></a>In this section, you create and download certificates that your device can use to connect to AWS\.<a name="create-thing-certificate-cloud-steps"></a>
 
-```
-curl -o ./greengrass-v2-certs/AmazonRootCA1.pem https://www.amazontrust.com/repository/AmazonRootCA1.pem
-```
+**To create the thing certificate**
 
-## Retrieve AWS IoT endpoints<a name="retrieve-iot-endpoints"></a>
-
-Get the AWS IoT endpoints for your AWS account, and save them to use later\. Your device uses these endpoints to connect to AWS IoT\. Do the following:
-
-1. Get the AWS IoT data endpoint for your AWS account\.
+1. Create a folder where you download the certificates for the AWS IoT thing\.
 
    ```
-   aws iot describe-endpoint --endpoint-type iot:Data-ATS
+   mkdir greengrass-v2-certs
    ```
 
-   The response looks similar to the following example, if the request succeeds\.
+1. Create and download the certificates for the AWS IoT thing\.
 
    ```
-   {
-     "endpointAddress": "device-data-prefix-ats.iot.us-west-2.amazonaws.com"
-   }
-   ```
-
-1. Get the AWS IoT credentials endpoint for your AWS account\.
-
-   ```
-   aws iot describe-endpoint --endpoint-type iot:CredentialProvider
+   aws iot create-keys-and-certificate --set-as-active --certificate-pem-outfile greengrass-v2-certs/device.pem.crt --public-key-outfile greengrass-v2-certs/public.pem.key --private-key-outfile greengrass-v2-certs/private.pem.key
    ```
 
    The response looks similar to the following example, if the request succeeds\.
 
    ```
    {
-     "endpointAddress": "device-credentials-prefix.credentials.iot.us-west-2.amazonaws.com"
+     "certificateArn": "arn:aws:iot:us-west-2:123456789012:cert/aa0b7958770878eabe251d8a7ddd547f4889c524c9b574ab9fbf65f32248b1d4",
+     "certificateId": "aa0b7958770878eabe251d8a7ddd547f4889c524c9b574ab9fbf65f32248b1d4",
+     "certificatePem": "-----BEGIN CERTIFICATE-----
+   MIICiTCCAfICCQD6m7oRw0uXOjANBgkqhkiG9w
+    0BAQUFADCBiDELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAldBMRAwDgYDVQQHEwdTZ
+    WF0dGxlMQ8wDQYDVQQKEwZBbWF6b24xFDASBgNVBAsTC0lBTSBDb25zb2xlMRIw
+    EAYDVQQDEwlUZXN0Q2lsYWMxHzAdBgkqhkiG9w0BCQEWEG5vb25lQGFtYXpvbi5
+    jb20wHhcNMTEwNDI1MjA0NTIxWhcNMTIwNDI0MjA0NTIxWjCBiDELMAkGA1UEBh
+    MCVVMxCzAJBgNVBAgTAldBMRAwDgYDVQQHEwdTZWF0dGxlMQ8wDQYDVQQKEwZBb
+    WF6b24xFDASBgNVBAsTC0lBTSBDb25zb2xlMRIwEAYDVQQDEwlUZXN0Q2lsYWMx
+    HzAdBgkqhkiG9w0BCQEWEG5vb25lQGFtYXpvbi5jb20wgZ8wDQYJKoZIhvcNAQE
+    BBQADgY0AMIGJAoGBAMaK0dn+a4GmWIWJ21uUSfwfEvySWtC2XADZ4nB+BLYgVI
+    k60CpiwsZ3G93vUEIO3IyNoH/f0wYK8m9TrDHudUZg3qX4waLG5M43q7Wgc/MbQ
+    ITxOUSQv7c7ugFFDzQGBzZswY6786m86gpEIbb3OhjZnzcvQAaRHhdlQWIMm2nr
+    AgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAtCu4nUhVVxYUntneD9+h8Mg9q6q+auN
+    KyExzyLwaxlAoo7TJHidbtS4J5iNmZgXL0FkbFFBjvSfpJIlJ00zbhNYS5f6Guo
+    EDmFJl0ZxBHjJnyp378OD8uTs7fLvjx79LjSTbNYiytVbZPQUQ5Yaxu2jXnimvw
+    3rrszlaEXAMPLE=
+   -----END CERTIFICATE-----",
+     "keyPair": {
+       "PublicKey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkEXAMPLEQEFAAOCAQ8AMIIBCgKCAQEAEXAMPLE1nnyJwKSMHw4h\nMMEXAMPLEuuN/dMAS3fyce8DW/4+EXAMPLEyjmoF/YVF/gHr99VEEXAMPLE5VF13\n59VK7cEXAMPLE67GK+y+jikqXOgHh/xJTwo+sGpWEXAMPLEDz18xOd2ka4tCzuWEXAMPLEahJbYkCPUBSU8opVkR7qkEXAMPLE1DR6sx2HocliOOLtu6Fkw91swQWEXAMPLE\GB3ZPrNh0PzQYvjUStZeccyNCx2EXAMPLEvp9mQOUXP6plfgxwKRX2fEXAMPLEDa\nhJLXkX3rHU2xbxJSq7D+XEXAMPLEcw+LyFhI5mgFRl88eGdsAEXAMPLElnI9EesG\nFQIDAQAB\n-----END PUBLIC KEY-----\n",
+       "PrivateKey": "-----BEGIN RSA PRIVATE KEY-----\nkey omitted for security reasons\n-----END RSA PRIVATE KEY-----\n"
+     }
    }
    ```
+
+   Save the certificate's Amazon Resource Name \(ARN\) to use to configure the certificate later\.
+
+## Configure the thing certificate<a name="configure-thing-certificate"></a>
+
+Attach the thing certificate to the AWS IoT thing that you created earlier, and add an AWS IoT policy to the certificate to define the AWS IoT permissions for the core device\.
+
+**To configure the thing's certificate**
+
+1. Attach the certificate to the AWS IoT thing\.
+   + Replace *MyGreengrassCore* with the name of your AWS IoT thing\.
+   + Replace the certificate Amazon Resource Name \(ARN\) with the ARN of the certificate that you created in the previous step\.
+
+   ```
+   aws iot attach-thing-principal --thing-name MyGreengrassCore --principal arn:aws:iot:us-west-2:123456789012:cert/aa0b7958770878eabe251d8a7ddd547f4889c524c9b574ab9fbf65f32248b1d4
+   ```
+
+   The command doesn't have any output if the request succeeds\.
+
+1. Create and attach an AWS IoT policy that defines the AWS IoT permissions for your Greengrass core device\. The following policy allows access to all MQTT topics and Greengrass operations, so your device works with custom applications and future changes that require new Greengrass operations\. You can restrict this policy down based on your use case\. For more information, see [Minimal AWS IoT policy for AWS IoT Greengrass V2 core devices](device-auth.md#greengrass-core-minimal-iot-policy)\.
+
+   If you have set up a Greengrass core device before, you can attach its AWS IoT policy instead of creating a new one\.
+
+   Do the following:
+
+   1. Create a file that contains the AWS IoT policy document that Greengrass core devices require\.
+
+      <a name="nano-command-intro"></a>For example, on a Linux\-based system, you can run the following command to use GNU nano to create the file\.
+
+      ```
+      nano greengrass-v2-iot-policy.json
+      ```
+
+      Copy the following JSON into the file\.
+
+      ```
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "iot:Publish",
+              "iot:Subscribe",
+              "iot:Receive",
+              "iot:Connect",
+              "greengrass:*"
+            ],
+            "Resource": [
+              "*"
+            ]
+          }
+        ]
+      }
+      ```
+
+   1. Create an AWS IoT policy from the policy document\.
+      + Replace *GreengrassV2IoTThingPolicy* with the name of the policy to create\.
+
+      ```
+      aws iot create-policy --policy-name GreengrassV2IoTThingPolicy --policy-document file://greengrass-v2-iot-policy.json
+      ```
+
+      The response looks similar to the following example, if the request succeeds\.
+
+      ```
+      {
+        "policyName": "GreengrassV2IoTThingPolicy",
+        "policyArn": "arn:aws:iot:us-west-2:123456789012:policy/GreengrassV2IoTThingPolicy",
+        "policyDocument": "{
+          \"Version\": \"2012-10-17\",
+          \"Statement\": [
+            {
+              \"Effect\": \"Allow\",
+              \"Action\": [
+                \"iot:Publish\",
+                \"iot:Subscribe\",
+                \"iot:Receive\",
+                \"iot:Connect\",
+                \"greengrass:*\"
+              ],
+              \"Resource\": [
+                \"*\"
+              ]
+            }
+          ]
+        }",
+        "policyVersionId": "1"
+      }
+      ```
+
+   1. Attach the AWS IoT policy to the AWS IoT thing's certificate\.
+      + Replace *GreengrassV2IoTThingPolicy* with the name of the policy to attach\.
+      + Replace the target ARN with the ARN of the certificate for your AWS IoT thing\.
+
+      ```
+      aws iot attach-policy --policy-name GreengrassV2IoTThingPolicy --target arn:aws:iot:us-west-2:123456789012:cert/aa0b7958770878eabe251d8a7ddd547f4889c524c9b574ab9fbf65f32248b1d4
+      ```
+
+      The command doesn't have any output if the request succeeds\.
 
 ## Create a token exchange role<a name="create-token-exchange-role"></a>
 
@@ -208,7 +351,6 @@ In this section, you create a token exchange IAM role and an AWS IoT role alias 
           {
             "Effect": "Allow",
             "Action": [
-              "iot:DescribeCertificate",
               "logs:CreateLogGroup",
               "logs:CreateLogStream",
               "logs:PutLogEvents",
@@ -342,9 +484,46 @@ To create a role alias, you must have permission to pass the token exchange IAM 
 
       The command doesn't have any output if the request succeeds\.
 
+## Download certificates to the device<a name="download-thing-certificates"></a>
+
+Earlier, you downloaded your device's certificate to your development computer\. In this section, you download the Amazon root certificate authority \(CA\) certificate\. Then, if you plan to run the AWS IoT Greengrass Core software in Docker on a different computer than your development computer, you copy the certificates to that host computer\. The AWS IoT Greengrass Core software uses these certificates to connect to the AWS IoT cloud service\.
+
+**To download certificates to the device**
+
+1. On your development computer, download the Amazon root certificate authority \(CA\) certificate\. AWS IoT certificates are associated with Amazon's root CA certificate by default\.
+
+------
+#### [ Linux or Unix ]
+
+   ```
+   sudo curl -o ./greengrass-v2-certs/AmazonRootCA1.pem https://www.amazontrust.com/repository/AmazonRootCA1.pem
+   ```
+
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+   ```
+   curl -o .\greengrass-v2-certs\AmazonRootCA1.pem https://www.amazontrust.com/repository/AmazonRootCA1.pem
+   ```
+
+------
+#### [ PowerShell ]
+
+   ```
+   iwr -Uri https://www.amazontrust.com/repository/AmazonRootCA1.pem -OutFile .\greengrass-v2-certs\AmazonRootCA1.pem
+   ```
+
+------
+
+1. If you plan to run the AWS IoT Greengrass Core software in Docker on a different device than your development computer, copy the certificates to the host computer\. If SSH and SCP are enabled on the development computer and the host computer, you can use the `scp` command on your development computer to transfer the certificates\. Replace *device\-ip\-address* with the IP address of your host computer\.
+
+   ```
+   scp -r greengrass-v2-certs/ device-ip-address:~
+   ```
+
 ## Create a configuration file<a name="create-docker-install-configuration-file"></a>
 
-1. Create a folder where you place your configuration file\.
+1. On the host computer, create a folder where you place your configuration file\.
 
    ```
    mkdir ./greengrass-v2-config
@@ -414,7 +593,7 @@ This tutorial uses an environment file to set the environment variables that wil
    Then, replace the following values\.
    + */greengrass/v2*\. The path to the root folder to use to install the AWS IoT Greengrass Core software\.
    + *region*\. The AWS Region where you created your AWS IoT resources\. You must specify the same value for the `awsRegion` configuration parameter in your [configuration file](#create-docker-install-configuration-file)\.
-   + */tmp/config/*\. The directory to which you mount the configuration file when you start the Docker container\.
+   + */tmp/config/*\. The folder where you mount the configuration file when you start the Docker container\.
 **Note**  <a name="docker-local-dev-tools-production-environment-warning"></a>
 You can set the `DEPLOY_DEV_TOOLS` environment variable to `true` to deploy the [Greengrass CLI component](greengrass-cli-component.md), which enables you to develop custom components inside of the Docker container\. <a name="local-dev-tools-production-environment-warning"></a>We recommend that you use this component in only development environments, not production environments\. This component provides access to information and operations that you typically won't need in a production environment\. Follow the principle of least privilege by deploying this component to only core devices where you need it\.
 
@@ -425,7 +604,7 @@ This tutorial shows you how to pull the latest AWS IoT Greengrass Docker image f
 ------
 #### [ Docker ]
 
-1. Run the following command to pull the latest AWS IoT Greengrass Docker image from Docker Hub\.
+1. Run the following command to pull the latest AWS IoT Greengrass Docker image from Amazon ECR Public\.
 
    ```
    docker pull amazon/aws-iot-greengrass:latest
@@ -481,8 +660,8 @@ You can also download and use the latest version of the AWS\-provided Compose fi
        container_name: aws-iot-greengrass
        image: amazon/aws-iot-greengrass:latest
        volumes:
-         - path/to/greengrass-v2-config:/tmp/config/:ro
-         - path/to/greengrass-v2-certs:/tmp/certs:ro 
+         - /path/to/greengrass-v2-config:/tmp/config/:ro
+         - /path/to/greengrass-v2-certs:/tmp/certs:ro 
        env_file: .env
        ports:
          - "8883:8883"
@@ -516,7 +695,7 @@ You can then run the following command to access the container and explore AWS I
 docker exec -it container-id /bin/bash
 ```
 
-For information about creating a simple component, see [Step 4: Develop and test a component on your device](getting-started.md#create-first-component) in [Getting started with AWS IoT Greengrass V2](getting-started.md)
+For information about creating a simple component, see [Step 4: Develop and test a component on your device](getting-started.md#create-first-component) in [Tutorial: Getting started with AWS IoT Greengrass V2](getting-started.md)
 
 **Note**  <a name="run-greengrass-commands-in-docker-note"></a>
 When you use `docker exec` to run commands inside the Docker container, those commands are not logged in the Docker logs\. To log your commands in the Docker logs, attach an interactive shell to the Docker container\. For more information, see [Attach an interactive shell to the Docker container](docker-troubleshooting.md#debugging-docker-attach-shell)\.

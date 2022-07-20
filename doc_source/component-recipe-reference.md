@@ -123,30 +123,8 @@ You define this lifecycle within a manifest\. The lifecycle steps that you speci
 This object or string contains the following information:    
   `Setenv`   
 \(Optional\) A dictionary of environment variables to provide to all lifecycle scripts\. You can override these environment variables with `Setenv` in each lifecycle script\.  
-  `Bootstrap`   
-\(Optional\) An object or string that defines the script to run when the AWS IoT Greengrass Core software deploys the component\. This lifecycle step runs before the [install lifecycle step](#install-lifecycle-definition) in the following cases:  
-+ The component deploys to the core device for the first time\.
-+ The component version changes\.
-+ The bootstrap script changes as the result of a component configuration update\.
-You can use this lifecycle step to restart the AWS IoT Greengrass Core software or restart the core device\. This lets you develop a component that performs a restart after it installs operating system updates or runtime updates, for example\.  
-After the AWS IoT Greengrass Core software completes the bootstrap step for all components that have a bootstrap step in a deployment, the software restarts\.  
-You must configure the AWS IoT Greengrass Core software as a system service to restart the AWS IoT Greengrass Core software or the core device\. If you don't configure the AWS IoT Greengrass Core software as a system service, the software won't restart\. For more information, see [Configure the Greengrass nucleus as a system service](configure-greengrass-core-v2.md#configure-system-service)\.
-This object or string contains the following information:    
-`Script`  
-The script to run\. The exit code of this script defines the restart instruction\. Use the following exit codes:  
-+ `0` – Don't restart the AWS IoT Greengrass Core software or the core device\. The AWS IoT Greengrass Core software still restarts after all components bootstrap\.
-+ `100` – Request to restart the AWS IoT Greengrass Core software\.
-+ `101` – Request to restart the core device\.
-Exit codes 100 to 199 are reserved for special behavior\. Other exit codes represent script errors\.  
-`RequiresPrivilege`  <a name="recipe-lifecycle-requiresprivilege"></a>
-\(Optional\) You can run the script with root privileges\. If you set this option to `true`, then the AWS IoT Greengrass Core software runs this lifecycle script as root instead of as the system user that you configure to run this component\. Defaults to `false`\.  
-`Timeout`  <a name="recipe-lifecycle-timeout"></a>
-\(Optional\) The maximum amount of time in seconds that the script can run before the AWS IoT Greengrass Core software terminates the process\.  
-Default: 120 seconds  
-`Setenv`  <a name="recipe-lifecycle-environment"></a>
-\(Optional\) The dictionary of environment variables to provide to the script\. These environment variables override the variables that you provide in `Lifecycle.Setenv`\.  
   `Install`   
-\(Optional\) An object or string that defines the script to run when the component installs\. The AWS IoT Greengrass Core software also runs this lifecycle step when each time the software launches\.  
+\(Optional\) An object or string that defines the script to run when the component installs\. The AWS IoT Greengrass Core software also runs this lifecycle step each time the software launches\.  
 If the `Install` script exits with a success code, the component enters the `INSTALLED` state\.  
 This object or string contains the following information:    
 `Script`  <a name="recipe-lifecycle-script"></a>
@@ -233,6 +211,29 @@ The script to run\.
 `Timeout`  
 \(Optional\) The maximum amount of time in seconds that the script can run before the AWS IoT Greengrass Core software terminates the process\.  
 Default: 60 seconds\.  
+`Setenv`  <a name="recipe-lifecycle-environment"></a>
+\(Optional\) The dictionary of environment variables to provide to the script\. These environment variables override the variables that you provide in `Lifecycle.Setenv`\.  
+  `Bootstrap`   
+\(Optional\) An object or string that defines a script that requires the AWS IoT Greengrass Core software or core device to restart\. This lets you develop a component that performs a restart after it installs operating system updates or runtime updates, for example\.  
+To install updates or dependencies that don't require the AWS IoT Greengrass Core software or device to restart, use the [install lifecycle](#install-lifecycle-definition)\.
+This lifecycle step runs before the install lifecycle step in the following cases when the AWS IoT Greengrass Core software deploys the component:  
++ The component deploys to the core device for the first time\.
++ The component version changes\.
++ The bootstrap script changes as the result of a component configuration update\.
+After the AWS IoT Greengrass Core software completes the bootstrap step for all components that have a bootstrap step in a deployment, the software restarts\.  
+You must configure the AWS IoT Greengrass Core software as a system service to restart the AWS IoT Greengrass Core software or the core device\. If you don't configure the AWS IoT Greengrass Core software as a system service, the software won't restart\. For more information, see [Configure the Greengrass nucleus as a system service](configure-greengrass-core-v2.md#configure-system-service)\.
+This object or string contains the following information:    
+`Script`  
+The script to run\. The exit code of this script defines the restart instruction\. Use the following exit codes:  
++ `0` – Don't restart the AWS IoT Greengrass Core software or the core device\. The AWS IoT Greengrass Core software still restarts after all components bootstrap\.
++ `100` – Request to restart the AWS IoT Greengrass Core software\.
++ `101` – Request to restart the core device\.
+Exit codes 100 to 199 are reserved for special behavior\. Other exit codes represent script errors\.  
+`RequiresPrivilege`  <a name="recipe-lifecycle-requiresprivilege"></a>
+\(Optional\) You can run the script with root privileges\. If you set this option to `true`, then the AWS IoT Greengrass Core software runs this lifecycle script as root instead of as the system user that you configure to run this component\. Defaults to `false`\.  
+`Timeout`  <a name="recipe-lifecycle-timeout"></a>
+\(Optional\) The maximum amount of time in seconds that the script can run before the AWS IoT Greengrass Core software terminates the process\.  
+Default: 120 seconds  
 `Setenv`  <a name="recipe-lifecycle-environment"></a>
 \(Optional\) The dictionary of environment variables to provide to the script\. These environment variables override the variables that you provide in `Lifecycle.Setenv`\.  
   `Selections`   
@@ -336,7 +337,11 @@ Lifecycle:
 
 ## Recipe variables<a name="recipe-variables"></a>
 
-Recipe variables expose information from the current component and nucleus for you to use in your recipes\. You can use recipe variables within lifecycle definitions in component recipes\. For example, use a recipe variable to pass component configuration parameters to an application that you run in a lifecycle script\.
+Recipe variables expose information from the current component and nucleus for you to use in your recipes\. For example, you can use a recipe variable to pass component configuration parameters to an application that you run in a lifecycle script\.
+
+You can use recipe variables in the following sections of component recipes:
++ Lifecycle definitions\.
++ Component configuration definitions, if you use [Greengrass nucleus](greengrass-nucleus-component.md) v2\.6\.0 or later\. You can also use recipes variables when you [deploy component configuration updates](update-component-configurations.md#merge-configuration-update-recipe-variables)\.
 
 Recipe variables use `{recipe_variable}` syntax\. The curly braces indicate a recipe variable\.
 
@@ -345,6 +350,7 @@ AWS IoT Greengrass supports the following recipe variables:
 `component_dependency_name:configuration:json_pointer`  
 The value of a configuration parameter for the component that this recipe defines or for a component on which this component depends\.  
 You can use this variable to provide a parameter to a script that you run in the component lifecycle\.  
+AWS IoT Greengrass supports this recipe variable only in component lifecycle definitions\.
 This recipe variable has the following inputs:  
 + <a name="recipe-variable-component-dependency-name"></a>`component_dependency_name` – \(Optional\) The name of the component dependency to query\. Omit this segment to query the component that this recipe defines\. You can specify only direct dependencies\.
 + `json_pointer` – The JSON pointer to the configuration value to evaluate\. JSON pointers start with a forward slash `/`\. To identify a value in a nested component configuration, use forward slashes \(`/`\) to separate the keys for each level in the configuration\. You can use a number as a key to specify an index in a list\. For more information, see the [JSON pointer specification](https://tools.ietf.org/html/rfc6901)\.
@@ -488,7 +494,7 @@ The following recipe describes a component that installs Python\. This component
         "architecture": "amd64"
       },
       "Lifecycle": {
-        "Install": "apt-get install python3.7"
+        "Install": "apt-get update\napt-get install python3.7"
       }
     }
   ]
@@ -510,7 +516,8 @@ Manifests:
       os: linux
       architecture: amd64
     Lifecycle:
-      Install:
+      Install: |
+        apt-get update
         apt-get install python3.7
 ```
 

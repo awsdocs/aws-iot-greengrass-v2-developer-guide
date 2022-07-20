@@ -57,9 +57,19 @@ This component must be able to perform outbound requests to the following endpoi
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#secure-tunneling-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ 1\.0\.5 and 1\.0\.6 ]
+#### [ 1\.0\.8 ]
 
-The following table lists the dependencies for versions 1\.0\.5 and 1\.0\.6 of this component\.
+The following table lists the dependencies for version 1\.0\.8 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.0\.0 <2\.7\.0  | Soft | 
+
+------
+#### [ 1\.0\.5 \- 1\.0\.7 ]
+
+The following table lists the dependencies for versions 1\.0\.5 through 1\.0\.7 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -206,6 +216,8 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  1\.0\.8  |  Version updated for Greengrass nucleus version 2\.6\.0 release\.  | 
+|  1\.0\.7  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/secure-tunneling-component.html)  | 
 |  1\.0\.6  |  This version contains bug fixes\.  | 
 |  1\.0\.5  |  Version updated for Greengrass nucleus version 2\.5\.0 release\.  | 
 |  1\.0\.4  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 

@@ -17,7 +17,7 @@ Greengrass core devices use the following endpoints and ports for basic operatio
 |  `greengrass-ats.iot.region.amazonaws.com`   | 8443 or 443 | Yes |  Used for data plane operations, such as installing deployments and working with client devices\.   | 
 |  `prefix-ats.iot.region.amazonaws.com`   |  MQTT: 8883 or 443 HTTPS: 8443 or 443  | Yes |  Used for data plane operations for device management, such as MQTT communication and shadow sync with AWS IoT Core\.   | 
 |  `prefix.credentials.iot.region.amazonaws.com`  | 443 | Yes |  Used to acquire AWS credentials, which the core device uses to download component artifacts from Amazon S3 and perform other operations\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.  | 
-|  `*.s3.amazonaws.com`  | 443 | Yes |  Used for deployments\. This format includes the `*` character, because endpoint prefixes are controlled internally and might change at any time\.  | 
+|  `*.s3.amazonaws.com` `*.s3.region.amazonaws.com`  | 443 | Yes |  Used for deployments\. This format includes the `*` character, because endpoint prefixes are controlled internally and might change at any time\.  | 
 |  `data.iot.region.amazonaws.com`  | 443 | No |  Required if the core device runs a version of the [Greengrass nucleus](greengrass-nucleus-component.md) earlier than v2\.4\.0 and is configured to use a network proxy\. The core device uses this endpoint for MQTT communication with AWS IoT Core when behind a proxy\. For more information, see [Configure a network proxy](configure-greengrass-core-v2.md#configure-network-proxy)\.  | 
 
 ## Endpoints for installation with automatic provisioning<a name="automatic-provisioning-endpoints"></a>

@@ -24,6 +24,7 @@ Before you download the AWS IoT Greengrass Core software, check that your core d
 + [Install the AWS IoT Greengrass Core software](#run-greengrass-core-v2-installer-fleet)
 + [Set up AWS IoT fleet provisioning for Greengrass core devices](fleet-provisioning-setup.md)
 + [Configure the AWS IoT fleet provisioning plugin](fleet-provisioning-configuration.md)
++ [AWS IoT fleet provisioning plugin changelog](fleet-provisioning-changelog.md)
 
 ## Prerequisites<a name="fleet-provisioning-prerequisites"></a>
 
@@ -261,7 +262,7 @@ This feature is available for v2\.5\.0 and later of the [Greengrass nucleus comp
 
 **To set up a Windows device for AWS IoT Greengrass V2**
 
-1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.\.
+1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.
 
 1. <a name="set-up-windows-device-environment-open-cmd"></a>Open the Windows Command Prompt \(`cmd.exe`\) as an administrator\.
 
@@ -366,6 +367,12 @@ You can download the latest version of the AWS IoT fleet provisioning plugin fro
 + [https://d2s8p88vqu9w66\.cloudfront\.net/releases/aws\-greengrass\-FleetProvisioningByClaim/fleetprovisioningbyclaim\-latest\.jar](https://d2s8p88vqu9w66.cloudfront.net/releases/aws-greengrass-FleetProvisioningByClaim/fleetprovisioningbyclaim-latest.jar)
 
 **Note**  
+You can download a specific version of the AWS IoT fleet provisioning plugin from the following location\. Replace *version* with the version to download\. For more information about each version of the fleet provisioning plugin, see [AWS IoT fleet provisioning plugin changelog](fleet-provisioning-changelog.md)\.  
+
+```
+https://d2s8p88vqu9w66.cloudfront.net/releases/aws-greengrass-FleetProvisioningByClaim/fleetprovisioningbyclaim-version.jar
+```
+
 The fleet provisioning plugin is open source\. To view its source code, see the [AWS IoT fleet provisioning plugin](https://github.com/aws-greengrass/aws-greengrass-fleet-provisioning-by-claim) on GitHub\.
 
 **To download the AWS IoT fleet provisioning plugin**
@@ -434,7 +441,7 @@ For more information about the arguments that you can specify, see [Installer ar
    ---
    services:
      aws.greengrass.Nucleus:
-       version: "2.5.5"
+       version: "2.6.0"
      aws.greengrass.FleetProvisioningByClaim:
        configuration:
          rootPath: "/greengrass/v2"
@@ -458,7 +465,7 @@ For more information about the arguments that you can specify, see [Installer ar
    ---
    services:
      aws.greengrass.Nucleus:
-       version: "2.5.5"
+       version: "2.6.0"
      aws.greengrass.FleetProvisioningByClaim:
        configuration:
          rootPath: "C:\\greengrass\\v2"
@@ -478,7 +485,7 @@ For more information about the arguments that you can specify, see [Installer ar
 ------
 
    Then, do the following:
-   + Replace *2\.5\.5* with the version of the AWS IoT Greengrass Core software\.
+   + Replace *2\.6\.0* with the version of the AWS IoT Greengrass Core software\.
    + Replace each instance of */greengrass/v2* or *C:\\greengrass\\v2* with the Greengrass root folder\.
 **Note**  
 On Windows devices, you must specify path separators as double backslashes \(`\\`\), such as `C:\\greengrass\\v2`\.
@@ -497,7 +504,7 @@ In this configuration file, you can customize other configuration options such a
    ---
    services:
      aws.greengrass.Nucleus:
-       version: "2.5.5"
+       version: "2.6.0"
        configuration:
          mqtt:
            port: 443
@@ -532,7 +539,7 @@ In this configuration file, you can customize other configuration options such a
    ---
    services:
      aws.greengrass.Nucleus:
-       version: "2.5.5"
+       version: "2.6.0"
        configuration:
          mqtt:
            port: 443
@@ -561,6 +568,23 @@ In this configuration file, you can customize other configuration options such a
          proxyUrl: "http://my-proxy-server:1100"
          proxyUserName: "Mary_Major"
          proxyPassword: "pass@word1357"
+   ```
+To use an HTTPS proxy, you must use version 1\.1\.0 or later of the fleet provisioning plugin\. You must additionally specify the `rootCaPath` under `system`, as shown in the following example\.  
+
+   ```
+   ---
+   system:
+     rootCaPath: "/greengrass/v2/AmazonRootCA1.pem"
+   services:
+     ...
+   ```
+
+   ```
+   ---
+   system:
+     rootCaPath: "C:\\greengrass\\v2\\AmazonRootCA1.pem"
+   services:
+     ...
    ```
 
 1. Run the installer\. Specify `--trusted-plugin` to provide the fleet provisioning plugin, and specify `--init-config` to provide the configuration file\.

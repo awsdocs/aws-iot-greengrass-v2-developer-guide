@@ -20,8 +20,8 @@ In your custom component, include the Docker image URI as an artifact to retriev
 ## Requirements<a name="run-docker-container-requirements"></a>
 
 To run a Docker container in a component, you need the following:
-+ A Greengrass core device\. If you don't have one, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
-+ <a name="docker-engine-requirement"></a>[Docker Engine](https://docs.docker.com/engine/) 1\.9\.1 or later installed on your Greengrass core device\. Version 20\.10 is the latest version that is verified to work with the connector\. You must install Docker directly on the core device before you deploy custom components that run Docker containers\. 
++ A Greengrass core device\. If you don't have one, see [Tutorial: Getting started with AWS IoT Greengrass V2](getting-started.md)\.
++ <a name="docker-engine-requirement"></a>[Docker Engine](https://docs.docker.com/engine/) 1\.9\.1 or later installed on the Greengrass core device\. Version 20\.10 is the latest version that is verified to work with the AWS IoT Greengrass Core software\. You must install Docker directly on the core device before you deploy components that run Docker containers\.
 **Tip**  
 You can also configure the core device to install Docker Engine when the component installs\. For example, the following install script installs Docker Engine before it loads the Docker image\. This install script works on Debian\-based Linux distributions, such as Ubuntu\. If you configure the component to install Docker Engine with this command, you may need to set `RequiresPrivilege` to `true` in the lifecycle script to run the installation and `docker` commands\. For more information, see [AWS IoT Greengrass component recipe reference](component-recipe-reference.md)\.  
 
@@ -98,6 +98,7 @@ In addition to these requirements, you must also meet the following requirements
   ```
 
   For information about running Docker containers from images stored in an Amazon ECR private repository, see [Run a Docker container from a private image in Amazon ECR](#run-docker-container-private-ecr)\.
++ To use Docker images stored in an Amazon ECR private repository, the private repository must be in the same AWS Region as the core device\.
 + If your Docker images or Compose files are stored in an S3 bucket, the [Greengrass device role](device-service-role.md) must allow the `s3:GetObject` permission to allow core devices to download the images as component artifacts, as shown in the following example IAM policy\. 
 
   ```
@@ -644,7 +645,7 @@ Manifests:
 
 ## Use stream manager in Docker container components \(Linux\)<a name="docker-container-stream-manager"></a>
 
-You can use the [stream manager component](stream-manager-component.md) to manage data streams in Greengrass components\. This component enables you to process data streams and transfer high\-volume IoT data to the AWS Cloud\. AWS IoT Greengrass provides a stream manager SDK that you use to interact with the stream manager component\. For more information, see [Manage data streams on the AWS IoT Greengrass Core](manage-data-streams.md)\.
+You can use the [stream manager component](stream-manager-component.md) to manage data streams in Greengrass components\. This component enables you to process data streams and transfer high\-volume IoT data to the AWS Cloud\. AWS IoT Greengrass provides a stream manager SDK that you use to interact with the stream manager component\. For more information, see [Manage data streams on Greengrass core devices](manage-data-streams.md)\.
 
 **Note**  
 The example in this section works only on Linux core devices\.

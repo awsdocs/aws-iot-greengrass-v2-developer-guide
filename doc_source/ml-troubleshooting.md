@@ -26,6 +26,7 @@ If a component is installed correctly, then the component log contains the locat
 + [Error: ModuleNotFoundError: No module named '<library>'](#troubleshooting-venv-errors-not-found)
 + [No CUDA\-capable device is detected](#troubleshooting-cuda-error)
 + [No such file or directory](#troubleshooting-venv-errors-no-such-file)
++ [RuntimeError: module compiled against API version 0xf but this version of NumPy is <version>](#troubleshooting-rpi-numpy-version-error)
 + [Memory errors](#troubleshooting-memory-errors)
 + [Disk space errors](#troubleshooting-disk-space-errors)
 + [Timeout errors](#troubleshooting-timeout-errors)
@@ -134,6 +135,21 @@ By default *MLRootPath* is set to `/greengrass/v2/work/component-name/greengrass
 
 **Note**  
 For the DLR component v1\.3\.x, you set the `MLRootPath` parameter in the configuration of the inference component, and the default value is `$HOME/greengrass_ml`\.
+
+## RuntimeError: module compiled against API version 0xf but this version of NumPy is <version><a name="troubleshooting-rpi-numpy-version-error"></a>
+
+You might see the following errors when you run machine learning inference on a Raspberry Pi running Raspberry Pi OS Bullseye\.
+
+```
+RuntimeError: module compiled against API version 0xf but this version of numpy is 0xd
+ImportError: numpy.core.multiarray failed to import
+```
+
+This error occurs because Raspberry Pi OS Bullseye includes an earlier version of NumPy than the version that OpenCV requires\. To fix this issue, run the following command to upgrade NumPy to the latest version\.
+
+```
+pip3 install --upgrade numpy
+```
 
 ## Memory errors<a name="troubleshooting-memory-errors"></a>
 

@@ -48,7 +48,8 @@ Use this parameter only when you must override the default settings used by the 
 
 **Logging level**  
 Parameter name: `LOG_LEVEL`  
-The logging configuration for the component\. Choose from the following log levels, listed here in level order:  
+The logging level for the component\. Choose from the following log levels, listed here in level order:  
++ `TRACE`
 + `DEBUG`
 + `INFO`
 + `WARN`
@@ -61,6 +62,6 @@ The minimum size \(in bytes\) of a part in a multipart upload to Amazon S3\. Str
 Stream manager uses the stream's `sizeThresholdForMultipartUploadBytes` property to determine whether to export to Amazon S3 as a single or multipart upload\. User\-defined Greengrass components set this threshold when they create a stream that exports to Amazon S3\. The default threshold is 5 MB\.
 
 ## See also<a name="configure-stream-manager-see-also"></a>
-+ [Manage data streams on the AWS IoT Greengrass Core](manage-data-streams.md)
++ [Manage data streams on Greengrass core devices](manage-data-streams.md)
 + [Use StreamManagerClient to work with streams](work-with-streams.md)
 + [Export configurations for supported AWS Cloud destinations](stream-export-configurations.md)

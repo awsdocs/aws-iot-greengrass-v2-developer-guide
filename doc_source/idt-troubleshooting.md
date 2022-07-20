@@ -24,7 +24,6 @@ If you are still having issues, see the following debugging process\.
 
 **Topics**
 + [Alias resolution errors](#alias-resolution-errors)
-+ [Command not found errors while testing](#cmd-not-found)
 + [Conflict errors](#conflict-error)
 + [Could not start test error](#could-not-start-test)
 + [Docker qualification image exists errors](#docker-qualification-image-exists)
@@ -38,7 +37,6 @@ If you are still having issues, see the following debugging process\.
 + [Security exception on macOS](#security-exception-macos)
 + [SSH connection errors](#ssh-connect-errors)
 + [Stream manager qualification errors](#stream-manager-qualification-failure)
-+ [Throttling errors during Docker qualification](#throttling-docker-qualification)
 + [Timeout errors](#test-timeout)
 + [Version check errors](#version-compatibility-check-failure)
 
@@ -51,24 +49,6 @@ Couldn't resolve placeholders: couldn't do a json lookup: index out of range
 ```
 
 This error can occur when the aliases configured in the IDT test orchestrator don't resolve correctly or if the resolved values aren't present in the configuration files\. To resolve this error, make sure that your `device.json` and `userdata.json ` contain the correct information required for your test suite\. For information about the configuration required for AWS IoT Greengrass qualification, see [Configure IDT settings to run the AWS IoT Greengrass qualification suite](set-config.md)\.
-
-### Command not found errors while testing<a name="cmd-not-found"></a>
-
-You need an older version of the OpenSSL library \(libssl1\.0\.0\) to run tests on AWS IoT Greengrass devices\. Most current Linux distributions use libssl version 1\.0\.2 or later \(v1\.1\.0\)\.
-
-For example, on a Raspberry Pi, run the following commands to install the required version of libssl:
-
-1. 
-
-   ```
-   wget http://ftp.us.debian.org/debian/pool/main/o/openssl/libssl1.0.0_1.0.2l-1~bpo8+1_armhf.deb
-   ```
-
-1. 
-
-   ```
-   sudo dpkg -i libssl1.0.0_1.0.2l-1~bpo8+1_armhf.deb
-   ```
 
 ### Conflict errors<a name="conflict-error"></a>
 
@@ -184,20 +164,6 @@ Failed to upload data to S3
 ```
 
 This error can occur when stream manager uses the AWS credentials in the `~/root/.aws/credentials` file on your device instead of using the environment credentials that IDT exports to the device under test\. To prevent this issue, delete the `credentials` file on your device, and re\-run the qualification test\.
-
-### Throttling errors during Docker qualification<a name="throttling-docker-qualification"></a>
-
-Docker Hub limits the number of pull requests that anonymous and Free Docker Hub users can make\. When you run IDT tests for Docker qualification, you might receive one of the following errors if you exceed the rate limits for anonymous or free user pull requests:
-
-```
-ERROR: toomanyrequests: Too Many Requests.
-```
-
-```
-You have reached your pull rate limit.
-```
-
-To resolve these errors, you can wait for a few hours before you run the qualification test\. If you plan on consistently running a large number of tests, which can result in submitting a large number of pull requests, see the [Docker Hub website](https://www.docker.com/increase-rate-limits) for information about rate limits, and options for authenticating and upgrading your Docker account\. 
 
 ### Timeout errors<a name="test-timeout"></a>
 

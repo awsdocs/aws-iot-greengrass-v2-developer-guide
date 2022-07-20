@@ -25,7 +25,7 @@ The following table lists the minimum versions of the AWS IoT Device SDK that yo
 
 ## Authorization<a name="ipc-iot-core-mqtt-authorization"></a>
 
-To use AWS IoT Core MQTT messaging in a custom component, you must define authorization policies that allows your component to send and receive messages on topics\. For information about defining authorization policies, see [Authorize components to perform IPC operations](interprocess-communication.md#ipc-authorization-policies)\.
+To use AWS IoT Core MQTT messaging in a custom component, you must define authorization policies that allow your component to send and receive messages on topics\. For information about defining authorization policies, see [Authorize components to perform IPC operations](interprocess-communication.md#ipc-authorization-policies)\.
 
 Authorization policies for AWS IoT Core MQTT messaging have the following properties\.
 
@@ -34,11 +34,29 @@ Authorization policies for AWS IoT Core MQTT messaging have the following proper
 
 | Operation | Description | Resources | 
 | --- | --- | --- | 
-|  `aws.greengrass#PublishToIoTCore`  |  Allows a component to publish messages to AWS IoT Core on the MQTT topics that you specify\.  |  A topic string, such as `test/topic`, or `*` to allow access to all topics\. This topic string supports MQTT topic wildcards \(`#` and `+`\)\.  | 
-|  `aws.greengrass#SubscribeToIoTCore`  |  Allows a component to subscribe to messages from AWS IoT Core on the topics that you specify\.  |  A topic string, such as `test/topic`, or `*` to allow access to all topics\. This topic string supports MQTT topic wildcards \(`#` and `+`\)\.  | 
-|  `*`  |  Allows a component to publish and subscribe to AWS IoT Core MQTT messages for the topics that you specify\.  |  A topic string, such as `test/topic`, or `*` to allow access to all topics\. This topic string supports MQTT topic wildcards \(`#` and `+`\)\.  | 
+|  `aws.greengrass#PublishToIoTCore`  |  Allows a component to publish messages to AWS IoT Core on the MQTT topics that you specify\.  |  A topic string, such as `test/topic`, or `*` to allow access to all topics\. You can use MQTT topic wildcards \(`#` and `+`\) to match multiple resources\.  | 
+|  `aws.greengrass#SubscribeToIoTCore`  |  Allows a component to subscribe to messages from AWS IoT Core on the topics that you specify\.  |  A topic string, such as `test/topic`, or `*` to allow access to all topics\. You can use MQTT topic wildcards \(`#` and `+`\) to match multiple resources\.  | 
+|  `*`  |  Allows a component to publish and subscribe to AWS IoT Core MQTT messages for the topics that you specify\.  |  A topic string, such as `test/topic`, or `*` to allow access to all topics\. You can use MQTT topic wildcards \(`#` and `+`\) to match multiple resources\.  | 
 
-**Example authorization policy**  
+### MQTT wildcards in AWS IoT Core MQTT authorization policies<a name="ipc-iot-core-mqtt-authorization-mqtt-wildcards"></a>
+
+You can use MQTT wildcards in AWS IoT Core MQTT IPC authorization policies\. Components can publish and subscribe to topics that match the topic filter that you allow in an authorization policy\. For example, if a component's authorization policy grants access to `test/topic/#`, the component can subscribe to `test/topic/#`, and it can publish and subscribe to `test/topic/filter`\.
+
+### Recipe variables in AWS IoT Core MQTT authorization policies<a name="ipc-iot-core-mqtt-authorization-recipe-variables"></a>
+
+If you use v2\.6\.0 or later of the [Greengrass nucleus](greengrass-nucleus-component.md), you can use the `{iot:thingName}` recipe variable in authorization policies\. This feature enables you to configure a single authorization policy for a group of core devices, where each core device can access only topics that contain its own name\. For example, you can allow a component access to the following topic resource\.
+
+```
+devices/{iot:thingName}/messages
+```
+
+For more information, see [Recipe variables](component-recipe-reference.md#recipe-variables) and [Use recipe variables in merge updates](update-component-configurations.md#merge-configuration-update-recipe-variables)\.
+
+### Authorization policy examples<a name="ipc-iot-core-mqtt-authorization-policy-examples"></a>
+
+You can reference the following authorization policy examples to help you configure authorization policies for your components\.
+
+**Example authorization policy with unrestricted access**  
 The following example authorization policy allows a component to publish and subscribe to all topics\.  
 
 ```
@@ -53,6 +71,52 @@ The following example authorization policy allows a component to publish and sub
         ],
         "resources": [
           "*"
+        ]
+      }
+    }
+  }
+}
+```
+
+**Example authorization policy with limited access**  
+The following example authorization policy allows a component to publish and subscribe to two topics named `factory/1/events` and `factory/1/actions`\.  
+
+```
+{
+  "accessControl": {
+    "aws.greengrass.ipc.mqttproxy": {
+      "com.example.MyIoTCorePubSubComponent:mqttproxy:1": {
+        "policyDescription": "Allows access to publish/subscribe to factory 1 topics.",
+        "operations": [
+          "aws.greengrass#PublishToIoTCore",
+          "aws.greengrass#SubscribeToIoTCore"
+        ],
+        "resources": [
+          "factory/1/actions",
+          "factory/1/events"
+        ]
+      }
+    }
+  }
+}
+```
+
+**Example authorization policy for a group of core devices**  
+This example uses a feature that is available for v2\.6\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. Greengrass nucleus v2\.6\.0 adds support for most [recipe variables](component-recipe-reference.md#recipe-variables), such as `{iot:thingName}`, in component configurations\.
+The following example authorization policy allows a component to publish and subscribe to a topic that contains the name of the core device that runs the component\.  
+
+```
+{
+  "accessControl": {
+    "aws.greengrass.ipc.mqttproxy": {
+      "com.example.MyIoTCorePubSubComponent:mqttproxy:1": {
+        "policyDescription": "Allows access to publish/subscribe to all topics.",
+        "operations": [
+          "aws.greengrass#PublishToIoTCore",
+          "aws.greengrass#SubscribeToIoTCore"
+        ],
+        "resources": [
+          "factory/1/devices/{iot:thingName}/controls"
         ]
       }
     }
@@ -187,8 +251,8 @@ request.payload = bytes(message, "utf-8")
 request.qos = qos
 operation = ipc_client.new_publish_to_iot_core()
 operation.activate(request)
-future = operation.get_response()
-future.result(TIMEOUT)
+future_response = operation.get_response()
+future_response.result(TIMEOUT)
 ```
 
 ------
@@ -473,7 +537,8 @@ request.topic_name = topic
 request.qos = qos
 handler = StreamHandler()
 operation = ipc_client.new_subscribe_to_iot_core(handler)
-future = operation.activate(request)
+operation.activate(request)
+future_response = operation.get_response() 
 future.result(TIMEOUT)
 
 # Keep the main thread alive, or the process will exit.

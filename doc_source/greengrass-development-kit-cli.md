@@ -15,7 +15,7 @@ To install and use the Greengrass Development Kit CLI, you need the following:
 
   For GDK CLI version 1\.0\.0, [Python](https://www.python.org/downloads/) 3\.8 or later installed on your development computer\.
 + [Git](https://git-scm.com/) installed on your development computer\.
-+ AWS Command Line Interface \(AWS CLI\) installed and configured with credentials on your development computer\. For more information, see [Installing, updating, and uninstalling the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and [Configuring the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) in the *AWS Command Line Interface User Guide*\.
++ <a name="development-component-aws-cli-prerequisite"></a>AWS Command Line Interface \(AWS CLI\) installed and configured with credentials on your development computer\. For more information, see [Installing, updating, and uninstalling the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and [Configuring the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) in the *AWS Command Line Interface User Guide*\.
 **Note**  
 If you use a Raspberry Pi or another 32\-bit ARM device, install AWS CLI V1\. AWS CLI V2 isn't available for 32\-bit ARM devices\. For more information, see [Installing, updating, and uninstalling the AWS CLI version 1](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv1.html)\.
 + To use the GDK CLI to publish components to the AWS IoT Greengrass service, you must have the following permissions:

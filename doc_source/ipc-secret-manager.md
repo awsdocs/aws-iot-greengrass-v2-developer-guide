@@ -32,6 +32,10 @@ Authorization policies for secret manager have the following properties\.
 | --- | --- | --- | 
 |  `aws.greengrass#GetSecretValue` or `*`  |  Allows a component to get the value of secrets that are encrypted on the core device\.  |  A Secrets Manager secret ARN, or `*` to allow access to all secrets\.  | 
 
+### Authorization policy examples<a name="ipc-secret-manager-authorization-policy-examples"></a>
+
+You can reference the following authorization policy example to help you configure authorization policies for your components\.
+
 **Example authorization policy**  
 The following example authorization policy allows a component to get the value of any secret on the core device\.  
 We recommend that in a production environment, you reduce the scope of the authorization policy, so that the component retrieves only the secrets that it uses\. You can change the `*` wildcard to a list of secret ARNs when you deploy the component\.
@@ -64,15 +68,15 @@ This operation is similar to the Secrets Manager operation that you can use to g
 
 This operation's request has the following parameters:
 
-`secretId`  
+`secretId` \(Python: `secret_id`\)  
 The name of the secret to get\. You can specify either the Amazon Resource Name \(ARN\) or the friendly name of the secret\.
 
-`versionId`  
+`versionId` \(Python: `version_id`\)  
 \(Optional\) The ID of the version to get\.  
 You can specify either `versionId` or `versionStage`\.  
 If you don't specify `versionId` or `versionStage`, this operation defaults to the version with the `AWSCURRENT` label\.
 
-`versionStage`  
+`versionStage` \(Python: `version_stage`\)  
 \(Optional\) The staging label of the version to get\.  
 You can specify either `versionId` or `versionStage`\.  
 If you don't specify `versionId` or `versionStage`, this operation defaults to the version with the `AWSCURRENT` label\.
@@ -81,20 +85,20 @@ If you don't specify `versionId` or `versionStage`, this operation defaults to t
 
 This operation's response has the following information:
 
-`secretId`  
+`secretId` \(Python: `secret_id`\)  
 The ID of the secret\.
 
-`versionId`  
+`versionId` \(Python: `version_id`\)  
 The ID of this version of the secret\.
 
-`versionStage`  
+`versionStage` \(Python: `version_stage`\)  
 The list of staging labels attached to this version of the secret\.
 
-`secretValue`  
+`secretValue` \(Python: `secret_value`\)  
 The value of this version of the secret\. This object, `SecretValue`, contains the following information\.    
-`secretString`  
+`secretString` \(Python: `secret_string`\)  
 The decrypted part of the protected secret information that you provided to Secrets Manager as a string\.  
-`secretBinary`  
+`secretBinary` \(Python: `secret_binary`\)  
 \(Optional\) The decrypted part of the protected secret information that you provided to Secrets Manager as binary data in the form of a byte array\. This property contains the binary data as a base64\-encoded string\.  
 This property isn't used if you created the secret in the Secrets Manager console\.
 
@@ -198,8 +202,8 @@ request.secret_id = secret_id
 request.version_stage = 'AWSCURRENT'
 operation = ipc_client.new_get_secret_value()
 operation.activate(request)
-futureResponse = operation.get_response()
-response = futureResponse.result(TIMEOUT)
+future_response = operation.get_response()
+response = future_response.result(TIMEOUT)
 secret_json = json.loads(response.secret_value.secret_string)
 # Handle secret value.
 ```
@@ -358,10 +362,10 @@ try:
     request.secret_id = secret_id
     operation = ipc_client.new_get_secret_value()
     operation.activate(request)
-    futureResponse = operation.get_response()
+    future_response = operation.get_response()
 
     try:
-        response = futureResponse.result(TIMEOUT)
+        response = future_response.result(TIMEOUT)
         secret_json = json.loads(response.secret_value.secret_string)
         print('Successfully got secret: ' + secret_id)
         print('Secret value: ' + str(secret_json))

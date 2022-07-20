@@ -110,7 +110,6 @@ In this section, you create a token exchange IAM role and an AWS IoT role alias 
           {
             "Effect": "Allow",
             "Action": [
-              "iot:DescribeCertificate",
               "logs:CreateLogGroup",
               "logs:CreateLogStream",
               "logs:PutLogEvents",

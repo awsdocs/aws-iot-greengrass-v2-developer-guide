@@ -39,10 +39,11 @@ You can upgrade your AWS IoT Greengrass Core software by deploying new versions 
 
 AWS IoT Greengrass Version 2 consists of the following elements:
 + **Software distributions**
-  + The Greengrass nucleus component, which is the minimum installation of the AWS IoT Greengrass Core software\. This component manages deployments, orchestration, and lifecycle management of Greengrass components\.
-  + Additional optional components provided by AWS that integrate with services, protocols, and software\.
-  + The AWS IoT Device SDK, which contains the interprocess communication \(IPC\) SDK and the Greengrass discovery SDK for client devices\.
-  + The Stream Manager SDK\.
+  + The [Greengrass nucleus component](greengrass-nucleus-component.md), which is the minimum installation of the AWS IoT Greengrass Core software\. This component manages deployments, orchestration, and lifecycle management of Greengrass components\.
+  + Additional optional [AWS\-provided components](public-components.md) that integrate with services, protocols, and software\.
+  + [Greengrass development tools](greengrass-development-tools.md), which you can use to create, test, build, publish, and deploy custom Greengrass components\.
+  + The AWS IoT Device SDK, which contains the [interprocess communication \(IPC\) library](interprocess-communication.md) for custom Greengrass components and the [Greengrass discovery library](greengrass-discover-api.md) for client devices\.
+  + The Stream Manager SDK, which you can use to [manage data streams](manage-data-streams.md) on core devices\.
 + **Cloud service**
   + AWS IoT Greengrass V2 API
   + AWS IoT Greengrass V2 console
@@ -50,7 +51,7 @@ AWS IoT Greengrass Version 2 consists of the following elements:
 ### AWS IoT Greengrass Core software<a name="greengrass-core-software"></a>
 
 You can use the AWS IoT Greengrass Core software that runs on your edge devices to do the following:
-+ Process data streams on the local device with automatic exports to the AWS Cloud\. For more information, see [Manage data streams on the AWS IoT Greengrass Core](manage-data-streams.md)\.
++ Process data streams on the local device with automatic exports to the AWS Cloud\. For more information, see [Manage data streams on Greengrass core devices](manage-data-streams.md)\.
 + Support MQTT messaging between AWS IoT and components\. For more information, see [Publish/subscribe AWS IoT Core MQTT messages](ipc-iot-core-mqtt.md)\.
 + Interact with local devices that connect and communicate over MQTT\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.
 + Support local publish and subscribe messaging between components\. For more information, see [Publish/subscribe local messages](ipc-publish-subscribe.md)\.

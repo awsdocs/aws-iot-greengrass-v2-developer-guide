@@ -40,6 +40,12 @@ You can merge null values and empty strings, lists, and objects\.
 You can't use merge updates for the purpose of inserting or appending an element to a list\. You can replace an entire list, or you can define an object where each element has a unique key\.  
 <a name="configuration-value-type-note"></a>AWS IoT Greengrass uses JSON for configuration values\. JSON specifies a number type but doesn't differentiate between integers and floats\. As a result, configuration values might convert to floats in AWS IoT Greengrass\. To ensure that your component uses the correct data type, we recommend that you define numeric configuration values as strings\. Then, have your component parse them as integers or floats\. This ensures that your configuration values have the same type in the configuration and on your core device\.
 
+### Use recipe variables in merge updates<a name="merge-configuration-update-recipe-variables"></a>
+
+This feature is available for v2\.6\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.
+
+You can use recipe variables, other than the `component_dependency_name:configuration:json_pointer` recipe variable, in merge updates\. For example, you can use the `{iot:thingName}` recipe variable in a merge update to include the core device's AWS IoT thing name in a component configuration value, such as an [interprocess communication \(IPC\) authorization policy](interprocess-communication.md#ipc-authorization-policies)\.
+
 ## Examples<a name="configuration-update-example"></a>
 
 The following example demonstrates configuration updates for a dashboard component that has the following default configuration\. This example component displays information about industrial equipment\.
@@ -59,7 +65,7 @@ The following example demonstrates configuration updates for a dashboard compone
 }
 ```
 
-### Industrial dashboard component recipe<a name="w898aac19c23c15c17b7b1"></a>
+### Industrial dashboard component recipe<a name="w999aac19c23c15c17b7b1"></a>
 
 ------
 #### [ JSON ]

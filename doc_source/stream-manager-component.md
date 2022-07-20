@@ -2,7 +2,7 @@
 
 The stream manager component \(`aws.greengrass.StreamManager`\) enables you to process data streams to transfer to the AWS Cloud from Greengrass core devices\.
 
-For more information about how to configure and use stream manager in custom components, see [Manage data streams on the AWS IoT Greengrass Core](manage-data-streams.md)\.
+For more information about how to configure and use stream manager in custom components, see [Manage data streams on Greengrass core devices](manage-data-streams.md)\.
 
 **Topics**
 + [Versions](#stream-manager-component-versions)
@@ -58,6 +58,17 @@ This component must be able to perform outbound requests to the following endpoi
 ## Dependencies<a name="stream-manager-component-dependencies"></a>
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#stream-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+
+------
+#### [ 2\.0\.15 ]
+
+The following table lists the dependencies for version 2\.0\.15 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.0\.0 <2\.7\.0  | Soft | 
+| [Token exchange service](token-exchange-service-component.md) |  >=0\.0\.0  | Hard | 
 
 ------
 #### [ 2\.0\.13 and 2\.0\.14 ]
@@ -150,9 +161,9 @@ You can specify `0` to use a random available port\.
 Default: `8088`
 
 `STREAM_MANAGER_AUTHENTICATE_CLIENT`  
-\(Optional\) You can make it mandatory for clients to authenticate before they can interact with stream manager\. The AWS IoT Greengrass Core SDK controls interaction between clients and stream manager\. This parameter determines which clients can call the AWS IoT Greengrass Core SDK to work with streams\. For more information, see [stream manager client authentication](manage-data-streams.md#stream-manager-security-client-authentication)\.  
-If you specify `true`, the AWS IoT Greengrass Core SDK allows only Greengrass components as clients\.  
-If you specify `false`, the AWS IoT Greengrass Core SDK allows all processes on the core device to be clients\.  
+\(Optional\) You can make it mandatory for clients to authenticate before they can interact with stream manager\. The Stream Manager SDK controls interaction between clients and stream manager\. This parameter determines which clients can call the Stream Manager SDK to work with streams\. For more information, see [stream manager client authentication](manage-data-streams.md#stream-manager-security-client-authentication)\.  
+If you specify `true`, the Stream Manager SDK allows only Greengrass components as clients\.  
+If you specify `false`, the Stream Manager SDK allows all processes on the core device to be clients\.  
 Default: `true`
 
 `STREAM_MANAGER_EXPORTER_MAX_BANDWIDTH`  
@@ -169,6 +180,15 @@ Default: 5 threads
 \(Optional\) The minimum size \(in bytes\) of a part in a multipart upload to Amazon S3\. Stream manager uses this setting and the size of the input file to determine how to batch data in a multipart PUT request\.  
 Stream manager uses the streams `sizeThresholdForMultipartUploadBytes` property to determine whether to export to Amazon S3 as a single or multipart upload\. AWS IoT Greengrass components can set this threshold when they create a stream that exports to Amazon S3\.
 Default: `5242880` \(5 MB\)\. This is also the minimum value\.
+
+`LOG_LEVEL`  
+\(Optional\) The logging level for the component\. Choose from the following log levels, listed here in level order:  
++ `TRACE`
++ `DEBUG`
++ `INFO`
++ `WARN`
++ `ERROR`
+Default: `INFO`
 
 `JVM_ARGS`  
 \(Optional\) The custom Java Virtual Machine arguments to pass to stream manager at startup\. Separate multiple arguments by spaces\.  
@@ -229,6 +249,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.0\.15  |  Version updated for Greengrass nucleus version 2\.6\.0 release\.  | 
 |  2\.0\.14  |  This version contains bug fixes and improvements\.  | 
 |  2\.0\.13  |  Version updated for Greengrass nucleus version 2\.5\.0 release\.  | 
 | 2\.0\.12 |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/stream-manager-component.html)  | 

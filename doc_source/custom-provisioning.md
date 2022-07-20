@@ -119,7 +119,7 @@ This feature is available for v2\.5\.0 and later of the [Greengrass nucleus comp
 
 **To set up a Windows device for AWS IoT Greengrass V2**
 
-1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.\.
+1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.
 
 1. <a name="set-up-windows-device-environment-open-cmd"></a>Open the Windows Command Prompt \(`cmd.exe`\) as an administrator\.
 
@@ -260,7 +260,7 @@ For more information about the arguments that you can specify, see [Installer ar
      # thingName: ""
    services:
      aws.greengrass.Nucleus:
-       version: "2.5.5"
+       version: "2.6.0"
        configuration:
          # The following values are optional. Return them from the provisioning plugin or set them here.
          # awsRegion: ""
@@ -274,7 +274,7 @@ For more information about the arguments that you can specify, see [Installer ar
    ```
 
    Then, do the following:
-   + Replace *2\.5\.5* with the version of the AWS IoT Greengrass Core software\.
+   + Replace *2\.6\.0* with the version of the AWS IoT Greengrass Core software\.
    + Replace each instance of */greengrass/v2* with the Greengrass root folder\.
    + \(Optional\) Specify system and nucleus configuration values\. You must set these values if your provisioning plugin doesn't provide them\.
    + \(Optional\) Specify configuration parameters to provide to your provisioning plugin\.
@@ -292,7 +292,7 @@ In this configuration file, you can customize other configuration options, such 
      # thingName: ""
    services:
      aws.greengrass.Nucleus:
-       version: "2.5.5"
+       version: "2.6.0"
        configuration:
          mqtt:
            port: 443

@@ -31,13 +31,13 @@ Greengrass core devices and client devices download a root CA certificate used f
 
 Client devices also download a Greengrass core device CA certificate\. They use this certificate to validate the MQTT server certificate on the core device during mutual authentication\.
 
-### Certificate rotation on the local MQTT broker<a name="mqtt-expiration"></a>
+### Certificate rotation on the local MQTT broker<a name="mqtt-certificate-expiration"></a>
 
-Greengrass core devices generate a local MQTT server certificate that client devices use for mutual authentication\. This certificate is signed by the core device CA certificate, which the core device stores in the AWS IoT Greengrass cloud\. Client devices retrieve the core device CA certificate when they discover the core device\. They use the core device CA certificate to verify the core device's MQTT server certificate when they connect to the core device\. The core device CA certificate expires after 5 years\.
+When you [enable client device support](interact-with-local-iot-devices.md), Greengrass core devices generate a local MQTT server certificate that client devices use for mutual authentication\. This certificate is signed by the core device CA certificate, which the core device stores in the AWS IoT Greengrass cloud\. Client devices retrieve the core device CA certificate when they discover the core device\. They use the core device CA certificate to verify the core device's MQTT server certificate when they connect to the core device\. The core device CA certificate expires after 5 years\.
 
-The MQTT server certificate expires every 7 days\. This limited period is based on security best practices\. This rotation helps mitigate the threat of an attacker stealing the MQTT server certificate and private key to impersonate the Greengrass core device\.
+The MQTT server certificate expires every 7 days by default, and you can configure this duration to between 2 and 10 days\. This limited period is based on security best practices\. This rotation helps mitigate the threat of an attacker stealing the MQTT server certificate and private key to impersonate the Greengrass core device\.
 
-When the MQTT server certificate expires, the Greengrass core device generates a new certificate and restarts the local MQTT broker\. When this happens, all client devices connected to the Greengrass core device are disconnected\. Client devices can reconnect to the Greengrass core device after a short period of time\.
+The Greengrass core device rotates the MQTT server certificate 24 hours before it expires\. The Greengrass core device generates a new certificate and restarts the local MQTT broker\. When this happens, all client devices connected to the Greengrass core device are disconnected\. Client devices can reconnect to the Greengrass core device after a short period of time\.
 
 ## AWS IoT policies for data plane operations<a name="iot-policies"></a>
 
@@ -63,8 +63,8 @@ AWS IoT Core enables you to attach AWS IoT policies to thing groups to define pe
 AWS IoT Greengrass V2 defines the following policy actions that Greengrass core devices and client devices can use in AWS IoT policies\. To specify a resource for an policy action, you use the Amazon Resource Name \(ARN\) of the resource\.Core device actions
 
 `greengrass:GetComponentVersionArtifact`  <a name="greengrass-get-component-version-artifact-action"></a>
-Grants permission to get a presigned URL to download a public component artifact\.  
-This permission is evaluated when a core device receives a deployment that specifies a public component that has artifacts\. If the core device already has the artifact, it doesn't download the artifact again\.  
+Grants permission to get a presigned URL to download a public component artifact or a Lambda component artifact\.  
+This permission is evaluated when a core device receives a deployment that specifies a public component or a Lambda that has artifacts\. If the core device already has the artifact, it doesn't download the artifact again\.  
 Resource type: `componentVersion`  
 Resource ARN format: `arn:aws:greengrass:region:account-id:components:component-name:versions:component-version`
 
@@ -151,9 +151,11 @@ If you used the [AWS IoT Greengrass Core software installer to provision resourc
 **Note**  <a name="quick-installation-iot-policies-note"></a>
 If you used the [AWS IoT Greengrass Core software installer to provision resources](quick-installation.md), you have two AWS IoT policies\. We recommend that you choose the policy named **GreengrassV2IoTThingPolicy**, if it exists\. Core devices that you create with the quick installer use this policy name by default\. If you add permissions to this policy, you are also granting these permissions to other core devices that use this policy\.
 
-1. <a name="update-iot-policy-console-edit-policy"></a>In the policy overview, choose **Edit policy document**\.
+1. <a name="update-iot-policy-console-edit-policy"></a>In the policy overview, choose **Edit active version**\.
 
 1. Review the policy and add, remove, or edit permissions as needed\.
+
+1. <a name="update-iot-policy-console-set-as-active-version"></a>To set a new policy version as the active version, under **Policy version status**, select **Set the edited version as the active version for this policy**\.
 
 1. <a name="update-iot-policy-console-save-policy"></a>Choose **Save as new version**\.
 
@@ -273,7 +275,12 @@ Core devices that run Greengrass nucleus v2\.5\.0 and later use the `greengrass:
 Core devices that run Greengrass nucleus v2\.3\.0 and later use the `greengrass:GetDeploymentConfiguration` permission to support large deployment configuration documents\.
 
 The following example policy includes the minimum set of actions required to support basic Greengrass functionality for your core device\.
-+ The policy includes the `*` wildcard after the core device thing name \(For example, `core-device-thing-name*`\)\. The core device uses the same device certificate to make multiple connections to AWS IoT Core, but the client ID in a connection might not be an exact match of the core device thing name\. This wildcard allows the core device to connect when it uses a client ID with a suffix\.
++ The policy includes the `*` wildcard after the core device thing name \(for example, `core-device-thing-name*`\)\. The core device uses the same device certificate to make multiple concurrent subscriptions to AWS IoT Core, but the client ID in a connection might not be an exact match of the core device thing name\. After the first 50 subscriptions, the core device uses `core-device-thing-name#number` as the client ID, where `number` increments for each additional 50 subscriptions\. For example, when a core device named `MyCoreDevice` creates 150 concurrent subscriptions, it uses the following client IDs:
+  + Subscriptions 1 to 50: `MyCoreDevice`
+  + Subscriptions 51 to 100: `MyCoreDevice#2`
+  + Subscriptions 101 to 150: `MyCoreDevice#3`
+
+  The wildcard allows the core device to connect when it uses these client IDs that have a suffix\.
 + The policy lists the MQTT topics and topic filters that the core device can publish messages to, subscribe to, and receive messages on, including topics used for shadow state\. To support message exchange between AWS IoT Core, Greengrass components, and client devices, specify the topics and topic filters that you want to allow\. For more information, see [Publish/Subscribe policy examples](https://docs.aws.amazon.com/iot/latest/developerguide/pub-sub-policy.html) in the *AWS IoT Core Developer Guide*\.
 + The policy grants permission to publish to the following topic for telemetry data\.
 

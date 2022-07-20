@@ -609,8 +609,8 @@ def connect_to_stream_manager_with_custom_port():
     request.key_path = ["port"]
     operation = ipc_client.new_get_configuration()
     operation.activate(request)
-    futureResponse = operation.get_response()
-    response = futureResponse.result(TIMEOUT)
+    future_response = operation.get_response()
+    response = future_response.result(TIMEOUT)
     stream_manager_port = str(response.value["port"])
     
     # Use port to create a stream manager client.

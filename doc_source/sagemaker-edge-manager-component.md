@@ -46,7 +46,7 @@ This component can be installed on core devices that run the following operating
 ## Requirements<a name="sagemaker-edge-manager-component-requirements"></a>
 
 This component has the following requirements:<a name="sm-edge-manager-component-reqs"></a>
-+ <a name="sm-req-core-device"></a>A Greengrass core device running on Amazon Linux 2, a Debian\-based Linux platform \(x86\_64 or Armv8\), or Windows \(x86\_64\)\. If you don't have one, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
++ <a name="sm-req-core-device"></a>A Greengrass core device running on Amazon Linux 2, a Debian\-based Linux platform \(x86\_64 or Armv8\), or Windows \(x86\_64\)\. If you don't have one, see [Tutorial: Getting started with AWS IoT Greengrass V2](getting-started.md)\.
 + <a name="sm-req-python"></a>[Python](https://www.python.org/downloads/) 3\.6 or later, including `pip` for your version of Python, installed on your core device\.
 + The [Greengrass device role](device-service-role.md) configured with the following: 
   + <a name="sm-req-iam-trust-relationship"></a>A trust relationship that allows `credentials.iot.amazonaws.com` and `sagemaker.amazonaws.com` to assume the role, as shown in the following IAM policy example\.
@@ -110,7 +110,29 @@ This component must be able to perform outbound requests to the following endpoi
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#sagemaker-edge-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ >=1\.0\.3 ]
+#### [ 1\.1\.1 ]
+
+The following table lists the dependencies for version 1\.1\.1 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.7\.0 | Soft | 
+| [Token exchange service](token-exchange-service-component.md) | >=0\.0\.0 | Hard | 
+
+------
+#### [ 1\.1\.0 ]
+
+The following table lists the dependencies for version 1\.1\.0 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.6\.0 | Soft | 
+| [Token exchange service](token-exchange-service-component.md) | >=0\.0\.0 | Hard | 
+
+------
+#### [ 1\.0\.3 ]
 
 The following table lists the dependencies for version 1\.0\.3 of this component\.
 
@@ -272,6 +294,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  1\.1\.1  |  Version updated for Greengrass nucleus version 2\.6\.0 release\.  | 
 |  1\.1\.0  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/sagemaker-edge-manager-component.html)  | 
 |  1\.0\.3  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  1\.0\.2  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/sagemaker-edge-manager-component.html)  | 

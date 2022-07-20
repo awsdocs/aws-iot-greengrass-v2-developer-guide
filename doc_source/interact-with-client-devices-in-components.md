@@ -10,6 +10,8 @@ Greengrass components use the [local publish/subscribe interface](ipc-publish-su
 + Relay MQTT messages from client devices to local publish/subscribe\.
 + Relay MQTT messages from local publish/subscribe to client devices\.
 
+You can also interact with client device shadows in Greengrass components\. For more information, see [Interact with and sync client device shadows](work-with-client-device-shadows.md)\.
+
 **Topics**
 + [Configure and deploy the MQTT bridge component](#deploy-mqtt-bridge-pubsub)
 + [Receive MQTT messages from client devices](#receive-client-device-messages)
@@ -19,7 +21,7 @@ Greengrass components use the [local publish/subscribe interface](ipc-publish-su
 
 The MQTT bridge component consumes a list of topic mappings that each specify a message source and a message destination\. To communicate with client devices, deploy the MQTT bridge component, and specify each source and destination topic in the component configuration\.
 
-<a name="create-mqtt-bridge-deployment-info"></a>To deploy the MQTT bridge component to a core device or group of core devices, [create a deployment](create-deployments.md) that includes the `aws.greengrass.clientdevices.mqtt.Bridge` component\. Specify the topic mappings, `mqttTopicMapping` in the MQTT bridge component configuration in the deployment\.
+<a name="create-mqtt-bridge-deployment-info"></a>To deploy the MQTT bridge component to a core device or group of core devices, [create a deployment](create-deployments.md) that includes the `aws.greengrass.clientdevices.mqtt.Bridge` component\. Specify the topic mappings, `mqttTopicMapping`, in the MQTT bridge component configuration in the deployment\.
 
 The following example defines a deployment that configures the MQTT bridge component to relay the `clients/MyClientDevice1/hello/world` topic from client devices to local publish/subscribe broker\. The `merge` configuration update requires a serialized JSON object\. For more information, see [Update component configurations](update-component-configurations.md)\.
 
@@ -57,7 +59,7 @@ The following example defines a deployment that configures the MQTT bridge compo
 
 ------
 
-You can use MQTT topic wildcards to relay messages on topics that match a topic filter\. For more information, see [MQTT bridge component configuration](mqtt-bridge-component.md#mqtt-bridge-component-configuration)\.
+You can use MQTT topic wildcards to relay messages on topics that match a topic filter\. If you use MQTT bridge v2\.2\.0 or later, you can use MQTT topic wildcards in topic filters when the source broker is local publish/subscribe\. For more information, see [MQTT bridge component configuration](mqtt-bridge-component.md#mqtt-bridge-component-configuration)\.
 
 ## Receive MQTT messages from client devices<a name="receive-client-device-messages"></a>
 
@@ -69,7 +71,7 @@ You can subscribe to the local publish/subscribe topics that you configure for t
 
 1. Use the local publish/subscribe IPC interface to subscribe to the topic where the MQTT bridge relays messages\. For more information, see [Publish/subscribe local messages](ipc-publish-subscribe.md) and [SubscribeToTopic](ipc-publish-subscribe.md#ipc-operation-subscribetotopic)\.
 
-The [Connect and test client devices tutorial](client-devices-tutorial.md) includes a section where you develop a component that subscribes to messages from a client device\. For more information, see [Develop a component that interacts with client devices](client-devices-tutorial.md#develop-client-device-subscriber-component)\.
+The [Connect and test client devices tutorial](client-devices-tutorial.md) includes a section where you develop a component that subscribes to messages from a client device\. For more information, see [Step 4: Develop a component that communicates with client devices](client-devices-tutorial.md#develop-client-device-subscriber-component)\.
 
 ## Send MQTT messages to client devices<a name="send-client-device-messages"></a>
 

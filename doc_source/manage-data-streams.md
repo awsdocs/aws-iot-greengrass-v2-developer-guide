@@ -1,4 +1,4 @@
-# Manage data streams on the AWS IoT Greengrass Core<a name="manage-data-streams"></a>
+# Manage data streams on Greengrass core devices<a name="manage-data-streams"></a>
 
 AWS IoT Greengrass stream manager makes it more efficient and reliable to transfer high\-volume IoT data to the AWS Cloud\. Stream manager processes data streams on the AWS IoT Greengrass Core before it exports them to the AWS Cloud\. Stream manager integrates with common edge scenarios, such as machine learning \(ML\) inference, where the AWS IoT Greengrass Core device processes and analyzes data before it exports the data to the AWS Cloud or local storage destinations\.
 

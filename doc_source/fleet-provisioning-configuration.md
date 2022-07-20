@@ -49,7 +49,7 @@ Default: A random UUID\.
 Default: `8883`
 
 `proxyUrl`  
-\(Optional\) The URL of the proxy server in the format `scheme://userinfo@host:port`\.  <a name="nucleus-component-configuration-proxy-url-segments"></a>
+\(Optional\) The URL of the proxy server in the format `scheme://userinfo@host:port`\. To use an HTTPS proxy, you must use version 1\.1\.0 or later of the fleet provisioning plugin\.  <a name="nucleus-component-configuration-proxy-url-segments"></a>
 + `scheme` – The scheme, which must be `http` or `https`\.
 **Important**  
 <a name="https-proxy-greengrass-nucleus-requirement"></a>Greengrass core devices must run [Greengrass nucleus ](greengrass-nucleus-component.md) v2\.5\.0 or later to use HTTPS proxies\.  

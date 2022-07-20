@@ -1,10 +1,14 @@
-# Getting started with AWS IoT Greengrass V2<a name="getting-started"></a>
+# Tutorial: Getting started with AWS IoT Greengrass V2<a name="getting-started"></a>
 
 You can complete this getting started tutorial to learn about the basic features of AWS IoT Greengrass V2\. In this tutorial, you do the following:
-+ Install and configure the AWS IoT Greengrass Core software on a Linux device, such as a Raspberry Pi, or a Windows device\. This device is a Greengrass core device\.
-+ Develop a Hello World component on your Greengrass core device\. Components are software modules that run on Greengrass core devices\.
-+ Upload that component to AWS IoT Greengrass V2 in the AWS Cloud\.
-+ Deploy that component from the AWS Cloud to your Greengrass core device\.
+
+1. Install and configure the AWS IoT Greengrass Core software on a Linux device, such as a Raspberry Pi, or a Windows device\. This device is a Greengrass core device\.
+
+1. Develop a Hello World component on your Greengrass core device\. Components are software modules that run on Greengrass core devices\.
+
+1. Upload that component to AWS IoT Greengrass V2 in the AWS Cloud\.
+
+1. Deploy that component from the AWS Cloud to your Greengrass core device\.
 
 **Note**  
 This tutorial describes how to set up a development environment and explore the features of AWS IoT Greengrass\. For more information about how to set up and configure production devices, see the following:  
@@ -26,8 +30,8 @@ To complete this getting started tutorial, you need the following:
 
   If your development computer meets these requirements, you can set it up as your Greengrass core device in this tutorial\.
 + [Python](https://www.python.org/downloads/) 3\.5 or later installed for all users on the device and added to the `PATH` environment variable\. On Windows, you must also have the Python Launcher for Windows installed for all users\.
-**Important**  
-On Windows, Python doesn't install for all users by default\. When you install Python, you must customize the installation to configure it for the AWS IoT Greengrass Core software to run Python scripts\. For example, if you use the graphical Python installer, do the following:  
+**Important**  <a name="windows-core-device-python-installation"></a>
+In Windows, Python doesn't install for all users by default\. When you install Python, you must customize the installation to configure it for the AWS IoT Greengrass Core software to run Python scripts\. For example, if you use the graphical Python installer, do the following:  
 Select **Install launcher for all users \(recommended\)**\.
 Choose **Customize installation**\.
 Choose **Next**\.
@@ -240,7 +244,7 @@ If you updated the `/boot/cmdline.txt` file, reboot the Raspberry Pi to apply th
 
 **To set up a Windows device for AWS IoT Greengrass V2**
 
-1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.\.
+1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.
 
 1. <a name="set-up-windows-device-environment-open-cmd"></a>Open the Windows Command Prompt \(`cmd.exe`\) as an administrator\.
 
@@ -326,7 +330,7 @@ The installer doesn't save or store your credentials\.
 ------
       + \(Recommended\) Use temporary security credentials from an IAM role:
 
-        1. Provide the access key ID, secret access key, and session token from an IAM role that you assume\. For more information about how to retrieve these credentials, see [Using temporary security credentials with the AWS CLI](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_use-resources.html#using-temp-creds-sdk-cli) in the *IAM User Guide*\.
+        1. Provide the access key ID, secret access key, and session token from an IAM role that you assume\. For more information about how to retrieve these credentials, see [Requesting temporary security credentials](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html) in the *IAM User Guide*\.
 
         1. Run the following commands to provide the credentials to the AWS IoT Greengrass Core software\.
 
@@ -636,7 +640,7 @@ aws greengrassv2 create-deployment \
   --target-arn "arn:aws:iot:region:account-id:thing/MyGreengrassCore" \
   --components '{
     "aws.greengrass.Cli": {
-      "componentVersion": "2.5.5"
+      "componentVersion": "2.6.0"
     }
   }'
 ```
@@ -647,7 +651,7 @@ aws greengrassv2 create-deployment \
 ```
 aws greengrassv2 create-deployment ^
   --target-arn "arn:aws:iot:region:account-id:thing/MyGreengrassCore" ^
-  --components "{\"aws.greengrass.Cli\":{\"componentVersion\":\"2.5.5\"}}"
+  --components "{\"aws.greengrass.Cli\":{\"componentVersion\":\"2.6.0\"}}"
 ```
 
 ------
@@ -656,7 +660,7 @@ aws greengrassv2 create-deployment ^
 ```
 aws greengrassv2 create-deployment `
   --target-arn "arn:aws:iot:region:account-id:thing/MyGreengrassCore" `
-  --components '{\"aws.greengrass.Cli\":{\"componentVersion\":\"2.5.5\"}}'
+  --components '{\"aws.greengrass.Cli\":{\"componentVersion\":\"2.6.0\"}}'
 ```
 
 ------
@@ -908,6 +912,8 @@ You must use the following format for the artifact folder path\. Include the com
 
    <a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
 
+   <a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
+
 ------
 #### [ PowerShell ]
 
@@ -932,6 +938,7 @@ If the file doesn't exist, the local deployment may not be complete yet\. If the
    ```
    type C:\greengrass\v2\logs\greengrass.log
    ```
+<a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.  
 <a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
 
    ```
@@ -1038,6 +1045,8 @@ If the file doesn't exist, the local deployment may not be complete yet\. If the
 
    <a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
 
+   <a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
+
 ------
 #### [ PowerShell ]
 
@@ -1123,6 +1132,8 @@ If the file doesn't exist, the local deployment may not be complete yet\. If the
       ```
       type C:\greengrass\v2\logs\com.example.HelloWorld.log
       ```
+
+      <a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
 
       <a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
 
@@ -1226,15 +1237,15 @@ In this section, you complete these steps on your Greengrass core device to uplo
       s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.HelloWorld/1.0.0/hello_world.py
       ```
 
-1. Allow the core device to access component artifacts in the S3 bucket\.
+1. <a name="core-device-allow-s3-bucket-access-console"></a><a name="core-device-allow-s3-bucket-access-console-intro-1"></a>Allow the core device to access component artifacts in the S3 bucket\.
 
-   Each core device has a [core device IAM role](device-service-role.md) that allows it to interact with AWS IoT and send logs to the AWS Cloud\. This device role doesn't allow access to S3 buckets by default, so you must create and attach a policy that allows the core device to retrieve component artifacts from the S3 bucket\.
+   <a name="core-device-allow-s3-bucket-access-console-intro-2"></a>Each core device has a [core device IAM role](device-service-role.md) that allows it to interact with AWS IoT and send logs to the AWS Cloud\. This device role doesn't allow access to S3 buckets by default, so you must create and attach a policy that allows the core device to retrieve component artifacts from the S3 bucket\.
 
-   If your device's role already allows access to the S3 bucket, you can skip this step\. Otherwise, create an IAM policy that allows access and attach it to the role, as follows:
+   <a name="core-device-allow-s3-bucket-access-console-intro-3"></a>If your device's role already allows access to the S3 bucket, you can skip this step\. Otherwise, create an IAM policy that allows access and attach it to the role, as follows:
 
-   1. In the [IAM console](https://console.aws.amazon.com/iam) navigation menu, choose **Policies**, and then choose **Create policy**\.
+   1. <a name="core-device-allow-s3-bucket-access-console-step-1"></a>In the [IAM console](https://console.aws.amazon.com/iam) navigation menu, choose **Policies**, and then choose **Create policy**\.
 
-   1. On the **JSON** tab, replace the placeholder content with the following policy\. Replace *DOC\-EXAMPLE\-BUCKET* with the name of the bucket to use\.
+   1. <a name="core-device-allow-s3-bucket-access-console-step-2"></a>On the **JSON** tab, replace the placeholder content with the following policy\. Replace *DOC\-EXAMPLE\-BUCKET* with the name of the S3 bucket that contains component artifacts for the core device to download\.
 
       ```
       {
@@ -1251,17 +1262,17 @@ In this section, you complete these steps on your Greengrass core device to uplo
       }
       ```
 
-   1. Choose **Next: Tags**, and then choose **Next: Review**\.
+   1. <a name="core-device-allow-s3-bucket-access-console-step-3"></a>Choose **Next: Tags**, and then choose **Next: Review**\.
 
-   1. For **Name**, enter **MyGreengrassV2ComponentArtifactPolicy**\.
+   1. <a name="core-device-allow-s3-bucket-access-console-step-4"></a>For **Name**, enter **MyGreengrassV2ComponentArtifactPolicy**\.
 
-   1. Choose **Create policy**\.
+   1. <a name="core-device-allow-s3-bucket-access-console-step-5"></a>Choose **Create policy**\.
 
-   1. In the [IAM console](https://console.aws.amazon.com/iam) navigation menu, choose **Role**, and then choose the *GreengrassV2TokenExchangeRole* role that you specified when you ran the AWS IoT Greengrass Core software\.
+   1. <a name="core-device-allow-s3-bucket-access-console-step-6"></a>In the [IAM console](https://console.aws.amazon.com/iam) navigation menu, choose **Role**, and then choose the name of the role for the core device\. You specified this role name when you installed the AWS IoT Greengrass Core software\.
 
-   1. Under **Permissions**, choose **Add permissions**, then choose **Attach policies**\.
+   1. <a name="core-device-allow-s3-bucket-access-console-step-7"></a>Under **Permissions**, choose **Add permissions**, then choose **Attach policies**\.
 
-   1. On the **Add permissions** page, select the check box next to the `MyGreengrassV2ComponentArtifactPolicy` policy that you created, and then choose **Attach policies**\.
+   1. <a name="core-device-allow-s3-bucket-access-console-step-8"></a>On the **Add permissions** page, select the check box next to the `MyGreengrassV2ComponentArtifactPolicy` policy that you created, and then choose **Attach policies**\.
 
 1. Use the component recipe to create a component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\.
 
@@ -1274,7 +1285,7 @@ In this section, you complete these steps on your Greengrass core device to uplo
         "RecipeFormatVersion": "2020-01-25",
         "ComponentName": "com.example.HelloWorld",
         "ComponentVersion": "1.0.0",
-        "ComponentDescription": "My first Greengrass component.",
+        "ComponentDescription": "My first AWS IoT Greengrass component.",
         "ComponentPublisher": "Amazon",
         "ComponentConfiguration": {
           "DefaultConfiguration": {
@@ -1283,8 +1294,24 @@ In this section, you complete these steps on your Greengrass core device to uplo
         },
         "Manifests": [
           {
+            "Platform": {
+              "os": "linux"
+            },
             "Lifecycle": {
               "Run": "python3 -u {artifacts:path}/hello_world.py \"{configuration:/Message}\""
+            },
+            "Artifacts": [
+              {
+                "URI": "s3://DOC-EXAMPLE-BUCKET/artifacts/com.example.HelloWorld/1.0.0/hello_world.py"
+              }
+            ]
+          },
+          {
+            "Platform": {
+              "os": "windows"
+            },
+            "Lifecycle": {
+              "Run": "py -3 -u {artifacts:path}/hello_world.py \"{configuration:/Message}\""
             },
             "Artifacts": [
               {
@@ -1296,7 +1323,7 @@ In this section, you complete these steps on your Greengrass core device to uplo
       }
       ```
 
-   1. Replace the placeholder URI with S3 URI of your `hello_world.py` object\. 
+   1. Replace the placeholder URI in each `Artifacts` section with S3 URI of your `hello_world.py` object\. 
 
    1. Choose **Create component**\. 
 
@@ -1320,13 +1347,13 @@ In this section, you complete these steps on your Greengrass core device to uplo
    make_bucket: greengrass-component-artifacts-123456789012-region
    ```
 
-1. Allow the core device to access component artifacts in the S3 bucket\. 
+1. <a name="core-device-allow-s3-bucket-access-cli"></a>Allow the core device to access component artifacts in the S3 bucket\. 
 
    Each core device has a [core device IAM role](device-service-role.md) that allows it to interact with AWS IoT and send logs to the AWS Cloud\. This device role doesn't allow access to S3 buckets by default, so you must create and attach a policy that allows the core device to retrieve component artifacts from the S3 bucket\.
 
-   If your device's role already allows access to the S3 bucket, you can skip this step\. Otherwise, create an IAM policy that allows access and attach it to the role, as follows:
+   If the core device's role already allows access to the S3 bucket, you can skip this step\. Otherwise, create an IAM policy that allows access and attach it to the role, as follows:
 
-   1. Create a file called `component-artifact-policy.json` and copy the following JSON into the file\. This policy allows access to all files in the S3 bucket that you created in the previous step\. Replace *DOC\-EXAMPLE\-BUCKET* with the name of the bucket to use\.
+   1. Create a file called `component-artifact-policy.json` and copy the following JSON into the file\. This policy allows access to all files in an S3 bucket\. Replace *DOC\-EXAMPLE\-BUCKET* with the name of the S3 bucket\.
 
       ```
       {
@@ -1376,7 +1403,7 @@ In this section, you complete these steps on your Greengrass core device to uplo
 
       Copy the policy Amazon Resource Name \(ARN\) from the policy metadata in the output\. You use this ARN to attach this policy to the core device role in the next step\.
 
-   1. Run the following command to attach the policy to the core device role\. Replace *GreengrassV2TokenExchangeRole* with the name of the role that you specified when you ran the AWS IoT Greengrass Core software\. Replace the policy ARN with the ARN from the previous step\.
+   1. Run the following command to attach the policy to the core device role\. Replace *GreengrassV2TokenExchangeRole* with the name of the role for the core device\. You specified this role name when you installed the AWS IoT Greengrass Core software\. Replace the policy ARN with the ARN from the previous step\.
 
 ------
 #### [ Linux or Unix ]
@@ -1407,7 +1434,7 @@ In this section, you complete these steps on your Greengrass core device to uplo
 
 ------
 
-      If the command has no output, it succeeded\. Your core device can now access artifacts that you upload to this S3 bucket\.
+      If the command has no output, it succeeded\. The core device can now access artifacts that you upload to this S3 bucket\.
 
 1. Upload the Hello World Python script artifact to the S3 bucket\. 
 
@@ -1480,7 +1507,7 @@ In this section, you complete these steps on your Greengrass core device to uplo
      "RecipeFormatVersion": "2020-01-25",
      "ComponentName": "com.example.HelloWorld",
      "ComponentVersion": "1.0.0",
-     "ComponentDescription": "My first Greengrass component.",
+     "ComponentDescription": "My first AWS IoT Greengrass component.",
      "ComponentPublisher": "Amazon",
      "ComponentConfiguration": {
        "DefaultConfiguration": {
@@ -1681,7 +1708,56 @@ In this section, you deploy your Hello World component back to your Greengrass c
 
 1. On the **Configure advanced settings** page, keep the default configuration settings, and choose **Next**\.
 
-1. On the **Review** page, choose **Deploy**
+1. On the **Review** page, choose **Deploy**\.
+
+1. <a name="getting-started-verify-cloud-deployment-step"></a>Verify that the deployment completes successfully\. The deployment can take several minutes to complete\. Check the Hello World log to verify the change\. Run the following command on your Greengrass core device\.
+
+------
+#### [ Linux or Unix ]
+
+   ```
+   sudo tail -f /greengrass/v2/logs/com.example.HelloWorld.log
+   ```
+
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+   ```
+   type C:\greengrass\v2\logs\com.example.HelloWorld.log
+   ```
+
+   <a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
+
+------
+#### [ PowerShell ]
+
+   ```
+   gc C:\greengrass\v2\logs\com.example.HelloWorld.log -Tail 10 -Wait
+   ```
+
+------
+
+   You should see messages similar to the following example\.
+
+   ```
+   Hello, universe! Greetings from your first Greengrass component.
+   ```
+**Note**  
+If the log messages don't change, the deployment failed or didn't reach the core device\. This can occur if your core device isn't connected to the internet or doesn't have permissions to retrieve artifacts from your S3 bucket\. Run the following command on your core device to view the AWS IoT Greengrass Core software log file\. This file includes logs from the Greengrass core device's deployment service\.  
+
+   ```
+   sudo tail -f /greengrass/v2/logs/greengrass.log
+   ```
+
+   ```
+   type C:\greengrass\v2\logs\greengrass.log
+   ```
+<a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
+
+   ```
+   gc C:\greengrass\v2\logs\greengrass.log -Tail 10 -Wait
+   ```
+For more information, see [Troubleshooting AWS IoT Greengrass V2](troubleshooting.md)\.
 
 ### Deploy your component \(AWS CLI\)<a name="deploy-first-component-cli"></a>
 
@@ -1745,7 +1821,7 @@ In this section, you deploy your Hello World component back to your Greengrass c
    }
    ```
 
-1. Verify that the deployment completes successfully\. The deployment can take several minutes to complete\. Check the Hello World log to verify the change\. Run the following command on your Greengrass core device\.
+1. <a name="getting-started-verify-cloud-deployment-step"></a>Verify that the deployment completes successfully\. The deployment can take several minutes to complete\. Check the Hello World log to verify the change\. Run the following command on your Greengrass core device\.
 
 ------
 #### [ Linux or Unix ]

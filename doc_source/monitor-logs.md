@@ -61,6 +61,8 @@ The following considerations apply when you use file system logs:
 
   <a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
 
+  <a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
+
 ------
 #### [ PowerShell ]
 

@@ -19,7 +19,7 @@ This tutorial shows you how to deploy the sample components and the SageMaker Ed
 ## Prerequisites<a name="edge-manager-getting-started-prereqs"></a>
 
 To complete this tutorial, you must meet the following prerequisites:
-+ <a name="sm-req-core-device"></a>A Greengrass core device running on Amazon Linux 2, a Debian\-based Linux platform \(x86\_64 or Armv8\), or Windows \(x86\_64\)\. If you don't have one, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
++ <a name="sm-req-core-device"></a>A Greengrass core device running on Amazon Linux 2, a Debian\-based Linux platform \(x86\_64 or Armv8\), or Windows \(x86\_64\)\. If you don't have one, see [Tutorial: Getting started with AWS IoT Greengrass V2](getting-started.md)\.
 + <a name="sm-req-python"></a>[Python](https://www.python.org/downloads/) 3\.6 or later, including `pip` for your version of Python, installed on your core device\.
 + The OpenGL API GLX runtime \(`libgl1-mesa-glx`\) installed on your core device\.
 + An AWS Identity and Access Management \(IAM\) user with administrator permissions\.

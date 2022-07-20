@@ -883,7 +883,7 @@ Node\.js SDK reference: [deleteMessageStream](https://aws-greengrass.github.io/a
 ------
 
 ## See also<a name="work-with-streams-see-also"></a>
-+ [Manage data streams on the AWS IoT Greengrass Core](manage-data-streams.md)
++ [Manage data streams on Greengrass core devices](manage-data-streams.md)
 + [Configure AWS IoT Greengrass stream manager](configure-stream-manager.md)
 + [Export configurations for supported AWS Cloud destinations](stream-export-configurations.md)
 + `StreamManagerClient` in the Stream Manager SDK reference:

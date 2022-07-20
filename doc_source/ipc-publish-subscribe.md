@@ -3,7 +3,7 @@
 Publish/subscribe \(pubsub\) messaging enables you to send and receive messages to topics\. Components can publish messages to topics to send messages to other components\. Then, components that are subscribed to that topic can act on the messages that they receive\.
 
 **Note**  
-You can't use this publish/subscribe IPC service to publish or subscribe to AWS IoT Core MQTT\. For more information about how to exchange messages with AWS IoT Core MQTT, see the [Publish/subscribe AWS IoT Core MQTT messages](ipc-iot-core-mqtt.md)\.
+You can't use this publish/subscribe IPC service to publish or subscribe to AWS IoT Core MQTT\. For more information about how to exchange messages with AWS IoT Core MQTT, see [Publish/subscribe AWS IoT Core MQTT messages](ipc-iot-core-mqtt.md)\.
 
 **Topics**
 + [Minimum SDK versions](#ipc-publish-subscribe-sdk-versions)
@@ -25,7 +25,7 @@ The following table lists the minimum versions of the AWS IoT Device SDK that yo
 
 ## Authorization<a name="ipc-publish-subscribe-authorization"></a>
 
-To use local publish/subscribe messaging in a custom component, you must define authorization policies that allows your component to send and receive messages to topics\. For information about defining authorization policies, see [Authorize components to perform IPC operations](interprocess-communication.md#ipc-authorization-policies)\.
+To use local publish/subscribe messaging in a custom component, you must define authorization policies that allow your component to send and receive messages to topics\. For information about defining authorization policies, see [Authorize components to perform IPC operations](interprocess-communication.md#ipc-authorization-policies)\.
 
 Authorization policies for publish/subscribe messaging have the following properties\.
 
@@ -35,8 +35,12 @@ Authorization policies for publish/subscribe messaging have the following proper
 | Operation | Description | Resources | 
 | --- | --- | --- | 
 |  `aws.greengrass#PublishToTopic`  |  Allows a component to publish messages to the topics that you specify\.  |  A topic string, such as `test/topic`, or `*` to allow access to all topics\. This topic string doesn't support MQTT topic wildcards \(`#` and `+`\)\.  | 
-|  `aws.greengrass#SubscribeToTopic`  |  Allows a component to subscribe to messages for the topics that you specify\.  |  A topic string, such as `test/topic`, or `*` to allow access to all topics\. This topic string doesn't support MQTT topic wildcards \(`#` and `+`\)\.  | 
-|  `*`  |  Allows a component to publish and subscribe to messages for the topics that you specify\.  |  A topic string, such as `test/topic`, or `*` to allow access to all topics\. This topic string doesn't support MQTT topic wildcards \(`#` and `+`\)\.  | 
+|  `aws.greengrass#SubscribeToTopic`  |  Allows a component to subscribe to messages for the topics that you specify\.  |  A topic string, such as `test/topic`, or `*` to allow access to all topics\. <a name="ipc-local-publish-subscribe-authorization-mqtt-wildcards"></a>In [Greengrass nucleus](greengrass-nucleus-component.md) v2\.6\.0 and later, you can subscribe to topics that contain MQTT topic wildcards \(`#` and `+`\)\. This topic string supports MQTT topic wildcards as literal characters\. For example, if a component's authorization policy grants access to `test/topic/#`, the component can subscribe to `test/topic/#`, but it can't subscribe to `test/topic/filter`\.  | 
+|  `*`  |  Allows a component to publish and subscribe to messages for the topics that you specify\.  |  A topic string, such as `test/topic`, or `*` to allow access to all topics\. <a name="ipc-local-publish-subscribe-authorization-mqtt-wildcards"></a>In [Greengrass nucleus](greengrass-nucleus-component.md) v2\.6\.0 and later, you can subscribe to topics that contain MQTT topic wildcards \(`#` and `+`\)\. This topic string supports MQTT topic wildcards as literal characters\. For example, if a component's authorization policy grants access to `test/topic/#`, the component can subscribe to `test/topic/#`, but it can't subscribe to `test/topic/filter`\.  | 
+
+### Authorization policy examples<a name="ipc-publish-subscribe-authorization-policy-examples"></a>
+
+You can reference the following authorization policy example to help you configure authorization policies for your components\.
 
 **Example authorization policy**  
 The following example authorization policy allows a component to publish and subscribe to all topics\.  
@@ -77,12 +81,28 @@ The message to publish\. This object, `PublishMessage`, contains the following i
 \(Optional\) A JSON message\. This object, `JsonMessage`, contains the following information:    
 `message`  
 The JSON message as an object\.  
+`context`  <a name="ipc-publish-subscribe-message-context-variable"></a>
+The context of the message, such as the topic where the message was published\.  
+This feature is available for v2\.6\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. The following table lists the minimum versions of the AWS IoT Device SDK that you must use to access the message context\.      
+[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/ipc-publish-subscribe.html)
+The AWS IoT Greengrass Core software uses the same message objects in the `PublishToTopic` and `SubscribeToTopic` operations\. The AWS IoT Greengrass Core software sets this context object in messages when you subscribe, and ignores this context object in messages that you publish\.
+This object, `MessageContext`, contains the following information:    
+`topic`  
+The topic where the message was published\.  
 `binaryMessage` \(Python: `binary_message`\)  
 \(Optional\) A binary message\. This object, `BinaryMessage`, contains the following information:    
 `message`  
-The binary message as a blob\.
+The binary message as a blob\.  
+`context`  <a name="ipc-publish-subscribe-message-context-variable"></a>
+The context of the message, such as the topic where the message was published\.  
+This feature is available for v2\.6\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. The following table lists the minimum versions of the AWS IoT Device SDK that you must use to access the message context\.      
+[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/ipc-publish-subscribe.html)
+The AWS IoT Greengrass Core software uses the same message objects in the `PublishToTopic` and `SubscribeToTopic` operations\. The AWS IoT Greengrass Core software sets this context object in messages when you subscribe, and ignores this context object in messages that you publish\.
+This object, `MessageContext`, contains the following information:    
+`topic`  
+The topic where the message was published\.
 
-### <a name="ipc-operation-publishtotopic-response"></a>
+### Response<a name="ipc-operation-publishtotopic-response"></a>
 
 This operation doesn't provide any information in its response\.
 
@@ -190,8 +210,8 @@ publish_message.binary_message.message = bytes(message, "utf-8")
 request.publish_message = publish_message
 operation = ipc_client.new_publish_to_topic()
 operation.activate(request)
-future = operation.get_response()
-future.result(TIMEOUT)
+future_response = operation.get_response()
+future_response.result(TIMEOUT)
 ```
 
 ------
@@ -278,7 +298,7 @@ int main() {
 
 ## SubscribeToTopic<a name="ipc-operation-subscribetotopic"></a>
 
-Subscribe to messages at a topic\.
+Subscribe to messages on a topic\.
 
 <a name="ipc-subscribe-operation-note"></a>This operation is a subscription operation where you subscribe to a stream of event messages\. To use this operation, define a stream response handler with functions that handle event messages, errors, and stream closure\. For more information, see [Subscribe to IPC event streams](interprocess-communication.md#ipc-subscribe-operations)\.
 
@@ -290,14 +310,22 @@ This operation's request has the following parameters:
 
 `topic`  
 The topic to which to subscribe\.  
-This topic doesn't support MQTT topic wildcards \(`#` and `+`\)\.
+In [Greengrass nucleus](greengrass-nucleus-component.md) v2\.6\.0 and later, this topic supports MQTT topic wildcards \(`#` and `+`\)\.
+
+`receiveMode` \(Python: `receive_mode`\)  
+\(Optional\) The behavior that specifies whether the component receives messages from itself\. You can change this behavior to allow a component to act on its own messages\. The default behavior depends on whether the topic contains an MQTT wildcard\. Choose from the following options:  
++ `RECEIVE_ALL_MESSAGES` – Receive all messages that match the topic, including messages from the component that subscribes\.
+
+  This mode is the default option when you subscribe to a topic that doesn't contain an MQTT wildcard\.
++ `RECEIVE_MESSAGES_FROM_OTHERS` – Receive all messages that match the topic, except messages from the component that subscribes\.
+
+  This mode is the default option when you subscribe to a topic that contains an MQTT wildcard\.
+This feature is available for v2\.6\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. The following table lists the minimum versions of the AWS IoT Device SDK that you must use to set the receive mode\.      
+[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/ipc-publish-subscribe.html)
 
 ### Response<a name="ipc-operation-subscribetotopic-response"></a>
 
 This operation's response has the following information:
-
-`topicName` \(Python: `topic_name`\)  
-The topic to which the message was published\.
 
 `messages`  
 The stream of messages\. This object, `SubscriptionResponseMessage`, contains the following information\. Each message contains `jsonMessage` or `binaryMessage`\.  <a name="ipc-publish-subscribe-message-shape"></a>  
@@ -305,10 +333,30 @@ The stream of messages\. This object, `SubscriptionResponseMessage`, contains th
 \(Optional\) A JSON message\. This object, `JsonMessage`, contains the following information:    
 `message`  
 The JSON message as an object\.  
+`context`  <a name="ipc-publish-subscribe-message-context-variable"></a>
+The context of the message, such as the topic where the message was published\.  
+This feature is available for v2\.6\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. The following table lists the minimum versions of the AWS IoT Device SDK that you must use to access the message context\.      
+[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/ipc-publish-subscribe.html)
+The AWS IoT Greengrass Core software uses the same message objects in the `PublishToTopic` and `SubscribeToTopic` operations\. The AWS IoT Greengrass Core software sets this context object in messages when you subscribe, and ignores this context object in messages that you publish\.
+This object, `MessageContext`, contains the following information:    
+`topic`  
+The topic where the message was published\.  
 `binaryMessage` \(Python: `binary_message`\)  
 \(Optional\) A binary message\. This object, `BinaryMessage`, contains the following information:    
 `message`  
-The binary message as a blob\.
+The binary message as a blob\.  
+`context`  <a name="ipc-publish-subscribe-message-context-variable"></a>
+The context of the message, such as the topic where the message was published\.  
+This feature is available for v2\.6\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. The following table lists the minimum versions of the AWS IoT Device SDK that you must use to access the message context\.      
+[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/ipc-publish-subscribe.html)
+The AWS IoT Greengrass Core software uses the same message objects in the `PublishToTopic` and `SubscribeToTopic` operations\. The AWS IoT Greengrass Core software sets this context object in messages when you subscribe, and ignores this context object in messages that you publish\.
+This object, `MessageContext`, contains the following information:    
+`topic`  
+The topic where the message was published\.
+
+`topicName` \(Python: `topic_name`\)  
+The topic to which the message was published\.  
+This property isn't currently used\. In [Greengrass nucleus](greengrass-nucleus-component.md) v2\.6\.0 and later, you can get the `(jsonMessage|binaryMessage).context.topic` value from a `SubscriptionResponseMessage` to get the topic where the message was published\.
 
 ### Examples<a name="ipc-operation-subscribetotopic-examples"></a>
 
@@ -479,8 +527,9 @@ request = SubscribeToTopicRequest()
 request.topic = topic
 handler = StreamHandler()
 operation = ipc_client.new_subscribe_to_topic(handler) 
-future = operation.activate(request)
-future.result(TIMEOUT)
+operation.activate(request)
+future_response = operation.get_response()
+future_response.result(TIMEOUT)
 
 # Keep the main thread alive, or the process will exit.
 while True:
@@ -1025,10 +1074,10 @@ try:
         request.publish_message = publish_message
         operation = ipc_client.new_publish_to_topic()
         operation.activate(request)
-        futureResponse = operation.get_response()
+        future_response = operation.get_response()
 
         try:
-            futureResponse.result(TIMEOUT)
+            future_response.result(TIMEOUT)
             print('Successfully published to topic: ' + topic)
         except concurrent.futures.TimeoutError:
             print('Timeout occurred while publishing to topic: ' + topic, file=sys.stderr)
@@ -1183,10 +1232,11 @@ try:
     request.topic = topic
     handler = StreamHandler()
     operation = ipc_client.new_subscribe_to_topic(handler)
-    future = operation.activate(request)
+    operation.activate(request)
+    future_response = operation.get_response()
     
     try:
-        future.result(TIMEOUT)
+        future_response.result(TIMEOUT)
         print('Successfully subscribed to topic: ' + topic)
     except concurrent.futures.TimeoutError as e:
         print('Timeout occurred while subscribing to topic: ' + topic, file=sys.stderr)

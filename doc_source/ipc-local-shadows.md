@@ -2,7 +2,10 @@
 
 Use the shadow IPC service to interact with local shadows on a device\. The device you choose to interact with can be your core device or a connected client device\. 
 
-Include the [shadow manager component](shadow-manager-component.md) as a dependency in your custom component\. You can then use IPC operations in your custom components to interact with local shadows on your device through the shadow manager\. To enable custom components to react to changes in local shadow states, you can also use the publish/subscribe IPC service to subscribe to shadow events\. For more information about using the publish/subscribe service, see the [Publish/subscribe local messages](ipc-publish-subscribe.md)\.
+To use these IPC operations, include the [shadow manager component](shadow-manager-component.md) as a dependency in your custom component\. You can then use IPC operations in your custom components to interact with local shadows on your device through the shadow manager\. To enable custom components to react to changes in local shadow states, you can also use the publish/subscribe IPC service to subscribe to shadow events\. For more information about using the publish/subscribe service, see the [Publish/subscribe local messages](ipc-publish-subscribe.md)\.
+
+**Note**  <a name="note-requirement-enable-shadow-manager-client-devices"></a>
+To enable a core device to interact with client device shadows, you must also configure and deploy the MQTT bridge component\. For more information, see [Enable shadow manager to communicate with client devices](work-with-client-device-shadows.md)\.
 
 **Topics**
 + [Minimum SDK versions](#ipc-local-shadows-sdk-versions)
@@ -37,16 +40,157 @@ Authorization policies for shadow interaction have the following properties\.
 |  `aws.greengrass#GetThingShadow`  |  Allows a component to retrieve the shadow of a thing\.  |  One of the following strings:  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/ipc-local-shadows.html)  | 
 |  `aws.greengrass#UpdateThingShadow`  |  Allows a component to update the shadow of a thing\.  |  One of the following strings:  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/ipc-local-shadows.html)  | 
 |  `aws.greengrass#DeleteThingShadow`  |  Allows a component to delete the shadow of a thing\.  |  One of the following strings:  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/ipc-local-shadows.html)  | 
-|  `aws.greengrass#ListNamedShadowsForThing`  |  Allows a component to retrieve the list of named shadows for a thing\.  |  A thing name string that allows access to the thing to list its shadows\. Use `*` to allow access to things\.  | 
+|  `aws.greengrass#ListNamedShadowsForThing`  |  Allows a component to retrieve the list of named shadows for a thing\.  |  A thing name string that allows access to the thing to list its shadows\. Use `*` to allow access to all things\.  | 
 
 **IPC service identifier:** `aws.greengrass.ipc.pubsub`
 
 
 | Operation | Description | Resources | 
 | --- | --- | --- | 
-|  `aws.greengrass#SubscribeToTopic`  |  Allows a component to subscribe to messages for the topics that you specify\.  |  One of the following topic strings: [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/ipc-local-shadows.html) The value of the topic prefix `shadowTopicPrefix` depends on the type of shadow:  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/ipc-local-shadows.html) Use `*` to allow access to all topics\. This topic string doesn't support MQTT topic wildcards \(`#` and `+`\)\.  | 
+|  `aws.greengrass#SubscribeToTopic`  |  Allows a component to subscribe to messages for the topics that you specify\.  |  One of the following topic strings: [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/ipc-local-shadows.html) The value of the topic prefix `shadowTopicPrefix` depends on the type of shadow:  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/ipc-local-shadows.html) Use `*` to allow access to all topics\. <a name="ipc-local-publish-subscribe-authorization-mqtt-wildcards"></a>In [Greengrass nucleus](greengrass-nucleus-component.md) v2\.6\.0 and later, you can subscribe to topics that contain MQTT topic wildcards \(`#` and `+`\)\. This topic string supports MQTT topic wildcards as literal characters\. For example, if a component's authorization policy grants access to `test/topic/#`, the component can subscribe to `test/topic/#`, but it can't subscribe to `test/topic/filter`\.  | 
 
-**Example authorization policy**  
+### Recipe variables in local shadow authorization policies<a name="ipc-local-shadow-authorization-recipe-variables"></a>
+
+If you use v2\.6\.0 or later of the [Greengrass nucleus](greengrass-nucleus-component.md), you can use the `{iot:thingName}` [recipe variable](component-recipe-reference.md#recipe-variables) in authorization policies\. This feature enables you to configure a single authorization policy for a group of core devices, where each core device can access only its own shadow\. For example, you can allow a component access to the following resource for shadow IPC operations\.
+
+```
+$aws/things/{iot:thingName}/shadow/
+```
+
+### Authorization policy examples<a name="ipc-local-shadow-authorization-policy-examples"></a>
+
+You can reference the following authorization policy examples to help you configure authorization policies for your components\.
+
+**Example: Allow a group of core devices to interact with local shadows**  
+<a name="phrase-example-uses-recipe-variables-in-configuration"></a>This example uses a feature that is available for v2\.6\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. Greengrass nucleus v2\.6\.0 adds support for most [recipe variables](component-recipe-reference.md#recipe-variables), such as `{iot:thingName}`, in component configurations\. For an example that works for all versions of the Greengrass nucleus, see the [example authorization policy for a single core device](#ipc-local-shadows-authorization-example-single-device)\.
+The following example authorization policy allows the component `com.example.MyShadowInteractionComponent` to interact with the classic device shadow and the named shadow `myNamedShadow` for the core device that runs the component\. This policy also allows this component to receive messages on local topics for these shadows\.  
+
+```
+{
+  "accessControl": {
+    "aws.greengrass.ShadowManager": {
+      "com.example.MyShadowInteractionComponent:shadow:1": {
+        "policyDescription": "Allows access to shadows",
+        "operations": [
+          "aws.greengrass#GetThingShadow",
+          "aws.greengrass#UpdateThingShadow",
+          "aws.greengrass#DeleteThingShadow"
+        ],
+        "resources": [
+          "$aws/things/{iot:thingName}/shadow",
+          "$aws/things/{iot:thingName}/shadow/name/myNamedShadow"
+        ]
+      },
+      "com.example.MyShadowInteractionComponent:shadow:2": {
+        "policyDescription": "Allows access to things with shadows",
+        "operations": [
+          "aws.greengrass#ListNamedShadowsForThing"
+        ],
+        "resources": [
+          "{iot:thingName}"
+        ]
+      }    
+    },
+    "aws.greengrass.ipc.pubsub": {
+      "com.example.MyShadowInteractionComponent:pubsub:1": {
+        "policyDescription": "Allows access to shadow pubsub topics",
+        "operations": [
+          "aws.greengrass#SubscribeToTopic"
+        ],
+        "resources": [
+          "$aws/things/{iot:thingName}/shadow/get/accepted",
+          "$aws/things/{iot:thingName}/shadow/name/myNamedShadow/get/accepted"
+        ]
+      }
+    }
+  }
+}
+```
+
+```
+accessControl:
+  aws.greengrass.ShadowManager:
+    'com.example.MyShadowInteractionComponent:shadow:1':
+      policyDescription: 'Allows access to shadows'
+      operations:
+        - 'aws.greengrass#GetThingShadow'
+        - 'aws.greengrass#UpdateThingShadow'
+        - 'aws.greengrass#DeleteThingShadow'
+      resources:
+        - $aws/things/{iot:thingName}/shadow
+        - $aws/things/{iot:thingName}/shadow/name/myNamedShadow
+    'com.example.MyShadowInteractionComponent:shadow:2':
+      policyDescription: 'Allows access to things with shadows'
+      operations:
+        - 'aws.greengrass#ListNamedShadowsForThing'
+      resources:
+        - {iot:thingName}
+  aws.greengrass.ipc.pubsub:
+    'com.example.MyShadowInteractionComponent:pubsub:1':
+      policyDescription: 'Allows access to shadow pubsub topics'
+      operations:
+        - 'aws.greengrass#SubscribeToTopic'
+      resources:
+        - $aws/things/{iot:thingName}/shadow/get/accepted
+        - $aws/things/{iot:thingName}/shadow/name/myNamedShadow/get/accepted
+```
+
+**Example: Allow a group of core devices to interact with client device shadows**  
+This feature requires [Greengrass nucleus](greengrass-nucleus-component.md) v2\.6\.0 or later, [shadow manager](shadow-manager-component.md) v2\.2\.0 or later, and [MQTT bridge](mqtt-bridge-component.md) v2\.2\.0 or later\. You must configure MQTT bridge to [enable shadow manager to communicate with client devices](work-with-client-device-shadows.md#enable-shadow-manager-client-devices)\.
+The following example authorization policy allows the component `com.example.MyShadowInteractionComponent` to interact with all device shadows for client devices whose names start with `MyClientDevice`\.  
+To enable a core device to interact with client device shadows, you must also configure and deploy the MQTT bridge component\. For more information, see [Enable shadow manager to communicate with client devices](work-with-client-device-shadows.md)\.
+
+```
+{
+  "accessControl": {
+    "aws.greengrass.ShadowManager": {
+      "com.example.MyShadowInteractionComponent:shadow:1": {
+        "policyDescription": "Allows access to shadows",
+        "operations": [
+          "aws.greengrass#GetThingShadow",
+          "aws.greengrass#UpdateThingShadow",
+          "aws.greengrass#DeleteThingShadow"
+        ],
+        "resources": [
+          "$aws/things/MyClientDevice*/shadow",
+          "$aws/things/MyClientDevice*/shadow/name/*"
+        ]
+      },
+      "com.example.MyShadowInteractionComponent:shadow:2": {
+        "policyDescription": "Allows access to things with shadows",
+        "operations": [
+          "aws.greengrass#ListNamedShadowsForThing"
+        ],
+        "resources": [
+          "MyClientDevice*"
+        ]
+      }    
+    }
+  }
+}
+```
+
+```
+accessControl:
+  aws.greengrass.ShadowManager:
+    'com.example.MyShadowInteractionComponent:shadow:1':
+      policyDescription: 'Allows access to shadows'
+      operations:
+        - 'aws.greengrass#GetThingShadow'
+        - 'aws.greengrass#UpdateThingShadow'
+        - 'aws.greengrass#DeleteThingShadow'
+      resources:
+        - $aws/things/MyClientDevice*/shadow
+        - $aws/things/MyClientDevice*/shadow/name/*
+    'com.example.MyShadowInteractionComponent:shadow:2':
+      policyDescription: 'Allows access to things with shadows'
+      operations:
+        - 'aws.greengrass#ListNamedShadowsForThing'
+      resources:
+        - MyClientDevice*
+```<a name="ipc-local-shadows-authorization-example-single-device"></a>
+
+**Example: Allow a single core device to interact with local shadows**  
 The following example authorization policy allows the component `com.example.MyShadowInteractionComponent` to interact with the classic device shadow and the named shadow `myNamedShadow` for the device `MyThingName`\. This policy also allows this component to receive messages on local topics for these shadows\.   
 
 ```
@@ -117,6 +261,75 @@ accessControl:
       resources:
         - $aws/things/MyThingName/shadow/get/accepted
         - $aws/things/MyThingName/shadow/name/myNamedShadow/get/accepted
+```<a name="interact-with-shadows-react-example-authorization-policies"></a>
+
+**Example: Allow a group of core devices to react to local shadow state changes**  
+<a name="phrase-example-uses-recipe-variables-in-configuration"></a>This example uses a feature that is available for v2\.6\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. Greengrass nucleus v2\.6\.0 adds support for most [recipe variables](component-recipe-reference.md#recipe-variables), such as `{iot:thingName}`, in component configurations\. For an example that works for all versions of the Greengrass nucleus, see the [example authorization policy for a single core device](#interact-with-shadows-react-example-authorization-policy-single-device)\.
+The following example access control policy allows the custom `com.example.MyShadowReactiveComponent` to receive messages on the `/update/delta` topic for the classic device shadow and the named shadow `myNamedShadow` on each core device that runs the component\.  
+
+```
+{
+  "accessControl": {
+    "aws.greengrass.ipc.pubsub": {
+      "com.example.MyShadowReactiveComponent:pubsub:1": {
+        "policyDescription": "Allows access to shadow pubsub topics",
+        "operations": [
+          "aws.greengrass#SubscribeToTopic"
+        ],
+        "resources": [
+          "$aws/things/{iot:thingName}/shadow/update/delta",
+          "$aws/things/{iot:thingName}/shadow/name/myNamedShadow/update/delta"
+        ]
+      }
+    }
+  }
+}
+```
+
+```
+accessControl:
+  aws.greengrass.ipc.pubsub:
+    "com.example.MyShadowReactiveComponent:pubsub:1":
+      policyDescription: Allows access to shadow pubsub topics
+      operations:
+        - 'aws.greengrass#SubscribeToTopic'
+      resources:
+        - $aws/things/{iot:thingName}/shadow/update/delta
+        - $aws/things/{iot:thingName}/shadow/name/myNamedShadow/update/delta
+```<a name="interact-with-shadows-react-example-authorization-policy-single-device"></a>
+
+**Example: Allow a single core device to react to local shadow state changes**  
+The following example access control policy allows the custom `com.example.MyShadowReactiveComponent` to receive messages on the `/update/delta` topic for the classic device shadow and the named shadow `myNamedShadow` for the device `MyThingName`\.  
+
+```
+{
+  "accessControl": {
+    "aws.greengrass.ipc.pubsub": {
+      "com.example.MyShadowReactiveComponent:pubsub:1": {
+        "policyDescription": "Allows access to shadow pubsub topics",
+        "operations": [
+          "aws.greengrass#SubscribeToTopic"
+        ],
+        "resources": [
+          "$aws/things/MyThingName/shadow/update/delta",
+          "$aws/things/MyThingName/shadow/name/myNamedShadow/update/delta"
+        ]
+      }
+    }
+  }
+}
+```
+
+```
+accessControl:
+  aws.greengrass.ipc.pubsub:
+    "com.example.MyShadowReactiveComponent:pubsub:1":
+      policyDescription: Allows access to shadow pubsub topics
+      operations:
+        - 'aws.greengrass#SubscribeToTopic'
+      resources:
+        - $aws/things/MyThingName/shadow/update/delta
+        - $aws/things/MyThingName/shadow/name/myNamedShadow/update/delta
 ```
 
 ## GetThingShadow<a name="ipc-operation-getthingshadow"></a>

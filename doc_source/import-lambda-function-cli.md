@@ -243,10 +243,14 @@ To subscribe this function to messages from other Lambda functions or components
          ```
 
       1. Add each event source to the list\. Each event source has the following parameters:
-         + `topic` – The topic to subscribe for messages\. This topic supports MQTT topic wildcards \(`+` and `#`\) when you subscribe to AWS IoT Core MQTT topics\.
-         + `type` – The type of event source\. Choose from the following:
+         + `topic` – The topic to subscribe for messages\.
+         + `type` – The type of event source\. Choose from the following options:
            + `PUB_SUB` – Subscribe to local publish/subscribe messages\.
+
+             You can't use MQTT topic wildcards \(`+` and `#`\) in the `topic` when you specify this type\.
            + `IOT_CORE` – Subscribe to AWS IoT Core MQTT messages\.
+
+             You can use MQTT topic wildcards \(`+` and `#`\) in the `topic` when you specify this type\.
 
            The following example subscribes to AWS IoT Core MQTT on topics that match the `hello/world/+` topic filter\.
 

@@ -1,13 +1,13 @@
 # Interact with shadows in components<a name="interact-with-shadows-in-components"></a>
 
-You can develop custom components, including Lambda function components, that use the local shadow service to read and modify local shadow documents and perform local state management of connected devices\. 
+You can develop custom components, including Lambda function components, that use the local shadow service to read and modify local shadow documents and client device shadow documents\.
 
 Custom components interact with the local shadow service using the AWS IoT Greengrass Core IPC libraries in the AWS IoT Device SDK\. The [shadow manager](shadow-manager-component.md) component enables the local shadow service on your core device\.
 
 To deploy the shadow manager component to a Greengrass core device, [create a deployment](create-deployments.md) that includes the `aws.greengrass.ShadowManager` component\.
 
 **Note**  
-By default, deploying the shadow manager component enables local shadow operations only\. To enable AWS IoT Greengrass to sync shadow state information for core device shadows or any shadows for connected devices to the corresponding cloud shadow documents in AWS IoT Core, you must create a configuration update for the shadow manager component that includes the `synchronize` parameter\. For more information, see [Sync local device shadows with AWS IoT Core](sync-shadows-with-iot-core.md)\.
+By default, deploying the shadow manager component enables local shadow operations only\. To enable AWS IoT Greengrass to sync shadow state information for core device shadows or any shadows for client devices to the corresponding cloud shadow documents in AWS IoT Core, you must create a configuration update for the shadow manager component that includes the `synchronize` parameter\. For more information, see [Sync local device shadows with AWS IoT Core](sync-shadows-with-iot-core.md)\.
 
 **Topics**
 + [Retrieve and modify shadow states](#interact-shadow-states)
@@ -19,52 +19,14 @@ The shadow IPC operations retrieve and update state information in local shadow 
 
 **To modify local shadow states**
 
-1. Add access control policies to the recipe for your custom component to allow the component to receive messages on local shadow topics\. For example, the following example access control policy allows the component to create, update, and delete the classic device shadow and the named shadow `myNamedShadow` for the device `MyThingName`\.
+1. Add authorization policies to the recipe for your custom component to allow the component to receive messages on local shadow topics\.
 
-------
-#### [ JSON ]
-
-   ```
-   {
-     "accessControl": {
-       "aws.greengrass.ShadowManager": {
-         "com.example.MyShadowComponent:shadow:1": {
-           "policyDescription": "Allows access to shadows",
-           "operations": [
-             "aws.greengrass#GetThingShadow",
-             "aws.greengrass#UpdateThingShadow",
-             "aws.greengrass#DeleteThingShadow"
-           ],
-           "resources": [
-             "$aws/things/MyThingName/shadow",
-             "$aws/things/MyThingName/shadow/name/myNamedShadow"
-           ]
-         }    
-       }
-     }
-   }
-   ```
-
-------
-#### [ YAML ]
-
-   ```
-   accessControl:
-     aws.greengrass.ShadowManager:
-       "com.example.MyShadowComponent:shadow:1":
-         policyDescription: Allows access to shadows
-         operations:
-           - 'aws.greengrass#GetThingShadow'
-           - 'aws.greengrass#UpdateThingShadow'
-           - 'aws.greengrass#DeleteThingShadow'
-         resources:
-           - $aws/things/MyThingName/shadow
-           - $aws/things/MyThingName/shadow/name/myNamedShadow
-   ```
-
-------
+   For example authorization policies, see [Local shadow IPC authorization policy examples](ipc-local-shadows.md#ipc-local-shadow-authorization-policy-examples)\.
 
 1. Use the shadow IPC operations to retrieve and modify shadow state information\. For more information about using shadow IPC operations in component code, see [Interact with local shadows](ipc-local-shadows.md)\.
+
+**Note**  <a name="note-requirement-enable-shadow-manager-client-devices"></a>
+To enable a core device to interact with client device shadows, you must also configure and deploy the MQTT bridge component\. For more information, see [Enable shadow manager to communicate with client devices](work-with-client-device-shadows.md)\.
 
 ## React to shadow state changes<a name="react-shadow-events"></a>
 
@@ -74,47 +36,13 @@ Local shadow topics use the same format as the AWS IoT device shadow MQTT topics
 
 **To react to local shadow state changes**
 
-1. Add access control policies to the recipe for your custom component to allow the component to receive messages on local shadow topics\. For example, the following example access control policy allows the custom `com.example.MyShadowReactiveComponent` to receive messages on the `/update/delta` topic for the classic device shadow and the named shadow `myNamedShadow` for the device `MyThingName`\.
+1. Add access control policies to the recipe for your custom component to allow the component to receive messages on local shadow topics\.
 
-------
-#### [ JSON ]
-
-   ```
-   {
-     "accessControl": {
-       "aws.greengrass.ipc.pubsub": {
-         "com.example.MyShadowReactiveComponent:pubsub:1": {
-           "policyDescription": "Allows access to shadow pubsub topics",
-           "operations": [
-             "aws.greengrass#SubscribeToTopic"
-           ],
-           "resources": [
-             "$aws/things/MyThingName/shadow/update/delta",
-             "$aws/things/MyThingName/shadow/name/myNamedShadow/update/delta"
-           ]
-         }
-       }
-     }
-   }
-   ```
-
-------
-#### [ YAML ]
-
-   ```
-   accessControl:
-     aws.greengrass.ipc.pubsub:
-       "com.example.MyShadowReactiveComponent:pubsub:1":
-         policyDescription: Allows access to shadow pubsub topics
-         operations:
-           - 'aws.greengrass#SubscribeToTopic'
-         resources:
-           - $aws/things/MyThingName/shadow/update/delta
-           - $aws/things/MyThingName/shadow/name/myNamedShadow/update/delta
-   ```
-
-------
+   For example authorization policies, see [Local shadow IPC authorization policy examples](ipc-local-shadows.md#ipc-local-shadow-authorization-policy-examples)\.
 
 1. To initiate a custom action in a component, use `SubscribeToTopic` IPC operations to subscribe to the shadow topics on which you want to receive messages\. For more information about using local publish/subscribe IPC operations in component code, see [Publish/subscribe local messages](ipc-publish-subscribe.md)\.
 
 1. To invoke a Lambda function, use the event source configuration to provide the name of the shadow topic and specify that it's a local publish/subscribe topic\. For information about creating Lambda function components, see [Run AWS Lambda functions](run-lambda-functions.md)\.
+
+**Note**  <a name="note-requirement-enable-shadow-manager-client-devices"></a>
+To enable a core device to interact with client device shadows, you must also configure and deploy the MQTT bridge component\. For more information, see [Enable shadow manager to communicate with client devices](work-with-client-device-shadows.md)\.

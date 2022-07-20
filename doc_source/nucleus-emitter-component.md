@@ -47,6 +47,16 @@ This component can be installed on core devices that run the following operating
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#nucleus-emitter-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
+#### [ 1\.0\.2 ]
+
+The following table lists the dependencies for version 1\.0\.2 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.4\.0 <2\.7\.0  | Hard | 
+
+------
 #### [ 1\.0\.1 ]
 
 The following table lists the dependencies for version 1\.0\.1 of this component\.
@@ -304,5 +314,6 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  1\.0\.2  |  Version updated for Greengrass nucleus version 2\.6\.0 release\.  | 
 |  1\.0\.1  |  Version updated for Greengrass nucleus version 2\.5\.0 release\.  | 
 |  1\.0\.0  |  Initial version\.  | 

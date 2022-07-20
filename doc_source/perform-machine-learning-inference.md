@@ -52,7 +52,7 @@ By using the AWS\-provided machine learning components, you have the flexibility
 ## Requirements<a name="ml-requirements"></a>
 
 To create and use machine learning components, you must have the following:
-+ A Greengrass core device\. If you don't have one, see [Getting started with AWS IoT Greengrass V2](getting-started.md)\.
++ A Greengrass core device\. If you don't have one, see [Tutorial: Getting started with AWS IoT Greengrass V2](getting-started.md)\.
 + Minimum 500 MB local storage space to use AWS\-provided sample machine learning components\.
 
 ## Supported model sources<a name="ml-model-sources"></a>

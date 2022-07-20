@@ -30,7 +30,7 @@ greengrass-cli deployment create
 + `--artifactDir`, `-a`\. The full path to the folder that contains the artifact files you want to include in your deployment\. The artifacts folder must contain the following directory structure:
 
   ```
-  /path/to/artifact/folder/<artifact-name>/<version>/<artifacts>
+  /path/to/artifact/folder/<component-name>/<component-version>/<artifacts>
   ```
 + `--update-config`, `-c`\. The configuration arguments for the deployment, provided as a JSON string or a JSON file\. The JSON string should be in the following format: 
 
@@ -49,7 +49,7 @@ greengrass-cli deployment create
 + `--runWith`\. The `posixUser`, `posixGroup`, and `windowsUser` information for running a generic or Lambda component\. You must provide this information in the format `<component>:{posixUser|windowsUser}=<user>[:<=posixGroup>]`\. For example, you might specify **HelloWorld:posixUser=ggc\_user:ggc\_group** or **HelloWorld:windowsUser=ggc\_user**\. Use a separate argument for each additional option to specify\.
 
   For more information, see [Configure the user that runs components](configure-greengrass-core-v2.md#configure-component-user)\.
-+ `--systemLimits`\. The system resource limits to apply to generic and non\-containerized Lambda components' processes on the core device\. You can configure the maximum amount of CPU and RAM usage that each component's processes can use on the core device\. Specify a serialized JSON object or a file path to a JSON file\. The JSON object must have the following format\.
++ `--systemLimits`\. The system resource limits to apply to generic and non\-containerized Lambda components' processes on the core device\. You can configure the maximum amount of CPU and RAM usage that each component's processes can use\. Specify a serialized JSON object or a file path to a JSON file\. The JSON object must have the following format\.
 
   ```
   {  \

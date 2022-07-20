@@ -13,6 +13,8 @@ AWS IoT Greengrass release notes provide details about AWS IoT Greengrass releas
 This section contains all of the AWS IoT Greengrass V2 release notes, latest first, and includes major feature changes and significant bug fixes\. For information about additional minor fixes, see the [aws\-greengrass](https://github.com/aws-greengrass) organization on GitHub\.<a name="greengrass-release-notes"></a>
 
 **Topics**
++ [Release: AWS IoT Greengrass Core v2\.6\.0 software update on June 27, 2022](greengrass-release-2022-06-27.md)
++ [Release: AWS IoT Greengrass Core v2\.5\.6 software update on May 31, 2022](greengrass-release-2022-05-31.md)
 + [Release: AWS IoT Greengrass Core v2\.5\.5 software update on April 6, 2022](greengrass-release-2022-04-06.md)
 + [Release: AWS IoT Greengrass Core v2\.5\.4 software update on March 23, 2022](greengrass-release-2022-03-23.md)
 + [Release: AWS IoT Greengrass Core v2\.5\.3 software update on January 6, 2022](greengrass-release-2022-01-06.md)

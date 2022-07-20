@@ -11,7 +11,7 @@ The AWS IoT Greengrass Development Kit Command\-Line Interface \(GDK CLI\) reads
 When you define a GDK CLI configuration file for a component, you specify the following information in JSON format\.
 
 `gdk_version`  
-The minimum version of the GDK CLI that is compatible with this component\. Choose from the following options\.
+The minimum version of the GDK CLI that is compatible with this component\.
 
 `component`  
 The configuration for this component\.    

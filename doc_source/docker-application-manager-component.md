@@ -35,7 +35,7 @@ This component can be installed on core devices that run the following operating
 ## Requirements<a name="docker-application-manager-component-requirements"></a>
 
 This component has the following requirements:
-+ <a name="docker-engine-requirement"></a>[Docker Engine](https://docs.docker.com/engine/) 1\.9\.1 or later installed on your Greengrass core device\. Version 20\.10 is the latest version that is verified to work with the connector\. You must install Docker directly on the core device before you deploy custom components that run Docker containers\. 
++ <a name="docker-engine-requirement"></a>[Docker Engine](https://docs.docker.com/engine/) 1\.9\.1 or later installed on the Greengrass core device\. Version 20\.10 is the latest version that is verified to work with the AWS IoT Greengrass Core software\. You must install Docker directly on the core device before you deploy components that run Docker containers\.
 + <a name="docker-daemon-requirement"></a>The Docker daemon started and running on the core device before you deploy this component\. 
 + Docker images stored in one of the following supported image sources:
   + Public and private image repositories in Amazon Elastic Container Registry \(Amazon ECR\)
@@ -118,6 +118,16 @@ This component must be able to perform outbound requests to the following endpoi
 ## Dependencies<a name="docker-application-manager-component-dependencies"></a>
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#docker-application-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+
+------
+#### [ 2\.0\.5 ]
+
+The following table lists the dependencies for version 2\.0\.5 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.1\.0 <2\.7\.0 | Soft | 
 
 ------
 #### [ 2\.0\.4 ]
@@ -223,6 +233,7 @@ The following table describes the changes in each version of the component\.
 
 |   **Version**   |   **Changes**   | 
 | --- | --- | 
+|  2\.0\.5  |  Version updated for Greengrass nucleus version 2\.6\.0 release\.  | 
 |  2\.0\.4  |  Version updated for Greengrass nucleus version 2\.5\.0 release\.  | 
 |  2\.0\.3  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  2\.0\.2  |  Version updated for Greengrass nucleus version 2\.3\.0 release\.  | 
