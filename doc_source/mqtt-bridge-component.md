@@ -142,7 +142,7 @@ The following example configuration update specifies the following:
     },
     "ClientDeviceEvents": {
       "topic": "clients/+/detections",
-      "targetTopicPrefix": "events/input/"
+      "targetTopicPrefix": "events/input/",
       "source": "LocalMqtt",
       "target": "Pubsub"
     },
