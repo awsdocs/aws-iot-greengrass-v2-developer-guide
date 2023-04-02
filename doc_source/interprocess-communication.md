@@ -314,14 +314,26 @@ AWS IoT Greengrass doesn't currently support this feature on Windows core device
            exit(-1);
        }
        
+       String message("Hello, World!");
+       String topic("my/topic");
+       int timeout = 10;
+       
        // Use the IPC client to create an operation request.
+       PublishToTopicRequest request;
+       Vector<uint8_t> messageData({message.begin(), message.end()});
+       BinaryMessage binaryMessage;
+       binaryMessage.SetMessage(messageData);
+       PublishMessage publishMessage;
+       publishMessage.SetBinaryMessage(binaryMessage);
+       request.SetTopic(topic);
+       request.SetPublishMessage(publishMessage);
        
        // Activate the operation request.
-       auto activate = operation.Activate(request, nullptr);
+       auto activate = operation->Activate(request, nullptr);
        activate.wait();
    
        // Wait for Greengrass Core to respond to the request.
-       auto responseFuture = operation.GetResult();
+       auto responseFuture = operation->GetResult();
        if (responseFuture.wait_for(std::chrono::seconds(timeout)) == std::future_status::timeout) {
            std::cerr << "Operation timed out while waiting for response from Greengrass Core." << std::endl;
            exit(-1);
