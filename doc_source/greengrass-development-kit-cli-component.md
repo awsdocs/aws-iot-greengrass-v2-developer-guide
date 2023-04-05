@@ -141,7 +141,9 @@ $ gdk component build
 
 Publish this component to the AWS IoT Greengrass service\. This command uploads build artifacts to an S3 bucket, updates the artifact URI in the recipe, and creates a new version of component from the recipe\. The GDK CLI uses the S3 bucket and AWS Region that you specify in the [GDK CLI configuration file](gdk-cli-configuration-file.md), `gdk-config.json`\. You must run this command in the same folder where the `gdk-config.json` file exists\.
 
-<a name="gdk-cli-s3-bucket-name-formation"></a>If you use GDK CLI v1\.1\.0 or later, you can specify the `--bucket` argument to specify the S3 bucket where the GDK CLI uploads the component's artifacts\. <a name="gdk-cli-s3-bucket-name-formation-format"></a>If you don't specify this argument, the GDK CLI uploads to the S3 bucket whose name is `bucketPrefix-region-accountId`, where *bucketPrefix* and *region* are the values that you specify in `gdk-config.json`, and *accountId* is your AWS account ID\. The GDK CLI creates the bucket if it doesn't exist\.
+<a name="gdk-cli-s3-bucket-name-formation"></a>If you use GDK CLI v1\.1\.0 or later, you can specify the `--bucket` argument to specify the S3 bucket where the GDK CLI uploads the component's artifacts\. <a name="gdk-cli-s3-bucket-name-formation-format"></a>If you don't specify this argument, the GDK CLI uploads to the S3 bucket whose name is `bucket-region-accountId`, where *bucket* and *region* are the values that you specify in `gdk-config.json`, and *accountId* is your AWS account ID\. The GDK CLI creates the bucket if it doesn't exist\.
+
+If you use GDK CLI v1\.2\.0 or later, You can override the AWS Region specified in the GDK CLI configuration file using the `--region` parameter\. You can also specify additional options using the `--options` parameter\. For a list of available options, see [Greengrass Development Kit CLI configuration file](gdk-cli-configuration-file.md)\.
 
 When you run this command, the GDK CLI publishes the component with the version that you specify in the recipe\. If you specify `NEXT_PATCH`, the GDK CLI uses the next patch version that doesn't already exist\. Semantic versions use a *major*\.*minor*\.*patch* numbering system\. For more information, see the [semantic version specification](https://semver.org/)\.
 
@@ -152,17 +154,23 @@ If you use GDK CLI v1\.1\.0 or later, when you run this command, the GDK CLI che
 
 ```
 $ gdk component publish
-    [--bucket]
+    [--bucket] [--region] [--options]
 ```
 
 **Arguments**  
 + `-b`, `--bucket` – \(Optional\) Specify the name of the S3 bucket where the GDK CLI publishes component artifacts\.
 
-  <a name="gdk-cli-s3-bucket-name-formation-format"></a>If you don't specify this argument, the GDK CLI uploads to the S3 bucket whose name is `bucketPrefix-region-accountId`, where *bucketPrefix* and *region* are the values that you specify in `gdk-config.json`, and *accountId* is your AWS account ID\.
+  <a name="gdk-cli-s3-bucket-name-formation-format"></a>If you don't specify this argument, the GDK CLI uploads to the S3 bucket whose name is `bucket-region-accountId`, where *bucket* and *region* are the values that you specify in `gdk-config.json`, and *accountId* is your AWS account ID\.
 
   The GDK CLI creates the bucket if it doesn't exist\.
 
   This feature is available for GDK CLI v1\.1\.0 and later\.
++ `-r`, `--region` – \(Optional\) Specify the name of the AWS Region to when the component is created\. This argument overrides the Region name in the GDK CLI configuration\.
+
+  This feature is available for GDK CLI v1\.2\.0 and later\.
++ `-o`, `--options` \(Optional\) Specify a list of options for publishing a component\. The argument must be a valid JSON string or a file path to a JSON file containing the publishing options\. This argument overrides the options in the GDK CLI configuration\. 
+
+  This feature is available for GDK CLI v1\.2\.0 and later\.
 
 **Output**  
 The following example shows the output produced when you run this command\.  

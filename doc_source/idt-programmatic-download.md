@@ -16,20 +16,20 @@ By downloading the software, you agree to the [AWS IoT Device Tester License Agr
 This topic lists supported versions of IDT for AWS IoT Greengrass V2\. As a best practice, we recommend that you use the latest version of IDT for AWS IoT Greengrass V2 that supports your target version of AWS IoT Greengrass V2\. New releases of AWS IoT Greengrass might require you to download a new version of IDT for AWS IoT Greengrass V2\. You receive a notification when you start a test run if IDT for AWS IoT Greengrass V2 is not compatible with the version of AWS IoT Greengrass you are using\.
 
   <a name="idt-latest-version.options"></a>  
-**IDT v4\.5\.3 for AWS IoT Greengrass**    
+**IDT v4\.7\.0 for AWS IoT Greengrass**    
 Supported AWS IoT Greengrass versions:   
-+ [Greengrass nucleus](greengrass-nucleus-component.md) v2\.6\.0, v2\.5\.6, v2\.5\.5, v2\.5\.4, and v2\.5\.3  
++ [Greengrass nucleus](greengrass-nucleus-component.md) v2\.9\.4, v2\.9\.3, v2\.9\.2, v2\.9\.1, v2\.9\.0, v2\.8\.1, v2\.8\.0, v2\.7\.0, and v2\.6\.0  
 IDT software downloads:  
-+ IDT v4\.5\.3 with test suite GGV2Q\_2\.3\.1 for [Linux](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.5.3_testsuite_2.3.1_linux.zip)
-+ IDT v4\.5\.3 with test suite GGV2Q\_2\.3\.1 for [macOS](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.5.3_testsuite_2.3.1_mac.zip)
-+ IDT v4\.5\.3 with test suite GGV2Q\_2\.3\.1 for [Windows](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.5.3_testsuite_2.3.1_win.zip)  
++ IDT v4\.7\.0 with test suite GGV2Q\_2\.5\.0 for [Linux](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.7.0_testsuite_2.5.0_linux.zip)
++ IDT v4\.7\.0 with test suite GGV2Q\_2\.5\.0 for [macOS](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.7.0_testsuite_2.5.0_mac.zip)
++ IDT v4\.7\.0 with test suite GGV2Q\_2\.5\.0 for [Windows](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.7.0_testsuite_2.5.0_win.zip)  
 Release notes:  
-+ Enables you to validate and qualify devices running AWS IoT Greengrass Core software versions 2\.6\.0, 2\.5\.6, 2\.5\.5, 2\.5\.4, and 2\.5\.3\.
-+ Updates DockerApplicationManager test to use ECR\-based docker image\.
-+ Additional minor bug fixes\.  
++ Enables you to validate and qualify devices running AWS IoT Greengrass Core software versions 2\.9\.4, 2\.9\.3, 2\.9\.2, 2\.9\.1, 2\.9\.0, 2\.8\.1, 2\.8\.0, 2\.7\.0, and 2\.6\.0\. 
++ Adds support to store IDT userdata values in AWS Systems Manager Parameter Store and fetch them into configuration using placeholder syntax\.
++ Minor bug fixes\.  
 Test suite version:    
-`GGV2Q_2.3.1`  
-+ Released 2022\.04\.15
+`GGV2Q_2.5.0`  
++ Released 2022\.12\.13
 
 ## Download IDT programmatically<a name="idt-programmatic-download-process"></a>
 
@@ -76,12 +76,14 @@ You can reference the following examples to programmatically download IDT\. Thes
 
 **Example: Download using cURL version 7\.75\.0 or later \(Mac and Linux\)**  
 If you have cURL version 7\.75\.0 or later, you can use the `aws-sigv4` flag to sign the API request\. This example uses [jq](https://stedolan.github.io/jq/) to parse the download URL from the response\.  
+The `aws-sigv4` flag requires the query parameters of the curl GET request be in the order of HostOs/ProductVersion/TestSuiteType or HostOs/TestSuiteType\. Orders that do not conform, will result in an error of getting mismatched signatures for the Canonical String from the API Gateway\.  
+If the optional parameter ProductVersion is included, you must use a supported product version as documented in [Supported versions of AWS IoT Device Tester for AWS IoT Greengrass V2](dev-test-versions.md)\.
 + Replace *us\-west\-2* with your AWS Region\. For the list of Region codes, see [Regional endpoints](https://docs.aws.amazon.com/general/latest/gr/rande.html)\.
 + Replace *linux* with your host machine's operating system\.
 + Replace *2\.5\.3* with your version of AWS IoT Greengrass nucleus\.
 
 ```
-url=$(curl --request GET "https://download.devicetester.iotdevicesecosystem.amazonaws.com/latestidt?HostOs=linux&TestSuiteType=GGV2&ProductVersion=2.5.3" \
+url=$(curl --request GET "https://download.devicetester.iotdevicesecosystem.amazonaws.com/latestidt?HostOs=linux&ProductVersion=2.5.3&TestSuiteType=GGV2" \
 --user $AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY \
 --aws-sigv4 "aws:amz:us-west-2:iot-device-tester" \
 | jq -r '.LatestBk["DownloadURL"]')

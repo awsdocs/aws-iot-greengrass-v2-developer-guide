@@ -113,6 +113,11 @@ This object contains the following information:
 + `arm`
 + `aarch64`
 + `x86`  
+`architecture.detail`  
+\(Optional\) The processor architecture detail for the platform that this manifest supports\. Common architecture details include the following values:  
++ `arm61`
++ `arm71`
++ `arm81`  
 `key`  
 \(Optional\) A platform attribute that you define for this manifest\. Replace *key* with the name of the platform attribute\. The AWS IoT Greengrass Core software matches this platform attribute with the key\-value pairs that you specify in the Greengrass nucleus component configuration\. For more information, see the [platform overrides parameter](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-platform-overrides) of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.  
 Use inverse domain name format to avoid name collision within your company\. For example, if your company owns `example.com` and you work on a radio project, you can name a custom platform attribute `com.example.radio.RadioModule`\. This helps avoid platform attribute name collisions within your company\.
@@ -132,7 +137,7 @@ The script to run\.
 `RequiresPrivilege`  <a name="recipe-lifecycle-requiresprivilege"></a>
 \(Optional\) You can run the script with root privileges\. If you set this option to `true`, then the AWS IoT Greengrass Core software runs this lifecycle script as root instead of as the system user that you configure to run this component\. Defaults to `false`\.  
 `Skipif`  <a name="recipe-lifecycle-skipif"></a>
-\(Optional\) The check to determine whether or not to run the script\. You can define to check if an executable is on the path or if a file exists\. If the output is true, then the AWS IoT Greengrass Core software skips the step\. Choose from the following checks:  
+\(Optional\) The check to determine whether or not to run the script\. You can define to check if an executable is on the path or if a file exists\. If the output is true, then the AWS IoT Greengrass Core software skips the step\. Choose one of the following checks:  
 + `onpath runnable` – Check if a runnable is on the system path\. For example, use **onpath python3** to skip this lifecycle step if Python 3 is available\.
 + `exists file` – Check if a file exists\. For example, use **exists /tmp/my\-configuration\.db** to skip this lifecycle step if `/tmp/my-configuration.db` is present\.  
 `Timeout`  <a name="recipe-lifecycle-timeout"></a>
@@ -144,6 +149,7 @@ Default: 120 seconds
 \(Optional\) An object or string that defines the script to run when the component starts\.  
 The component enters the `RUNNING` state when this lifecycle step runs\. If the `Run` script exits with a success code, the component enters the `FINISHED` state\.  
 Components that depend on this component start when this lifecycle step runs\. To run a background process, such as a service that dependent components use, use the `Startup` lifecycle step instead\.  
+When you deploy components with a `Run` lifecycle, the core device can report the deployment as complete as soon as this lifecycle script runs\. As a result, the deployment can be complete and successful even if the `Run` lifecycle script fails soon after running\. If you want the deployment status to depend on the result of the component's start script, use the `Startup` lifecycle step instead\.  
 You can define only one `Startup` or `Run` lifecycle\.
 This object or string contains the following information:    
 `Script`  <a name="recipe-lifecycle-script"></a>
@@ -151,7 +157,7 @@ The script to run\.
 `RequiresPrivilege`  <a name="recipe-lifecycle-requiresprivilege"></a>
 \(Optional\) You can run the script with root privileges\. If you set this option to `true`, then the AWS IoT Greengrass Core software runs this lifecycle script as root instead of as the system user that you configure to run this component\. Defaults to `false`\.  
 `Skipif`  <a name="recipe-lifecycle-skipif"></a>
-\(Optional\) The check to determine whether or not to run the script\. You can define to check if an executable is on the path or if a file exists\. If the output is true, then the AWS IoT Greengrass Core software skips the step\. Choose from the following checks:  
+\(Optional\) The check to determine whether or not to run the script\. You can define to check if an executable is on the path or if a file exists\. If the output is true, then the AWS IoT Greengrass Core software skips the step\. Choose one of the following checks:  
 + `onpath runnable` – Check if a runnable is on the system path\. For example, use **onpath python3** to skip this lifecycle step if Python 3 is available\.
 + `exists file` – Check if a file exists\. For example, use **exists /tmp/my\-configuration\.db** to skip this lifecycle step if `/tmp/my-configuration.db` is present\.  
 `Timeout`  <a name="recipe-lifecycle-timeout"></a>
@@ -161,8 +167,9 @@ This lifecycle step doesn't timeout by default\. If you omit this timeout, the `
 \(Optional\) The dictionary of environment variables to provide to the script\. These environment variables override the variables that you provide in `Lifecycle.Setenv`\.  
   `Startup`   
 \(Optional\) An object or string that defines the background process to run when the component starts\.  
-Use `Startup` to run a command that must exit successfully before dependent components can start\. For example, you might define a `Startup` step that starts the MySQL process with `/etc/init.d/mysqld start`\.  
+Use `Startup` to run a command that must exit successfully or update the component's status to `RUNNING` before dependent components can start\. Use the [UpdateState](ipc-component-lifecycle.md#ipc-operation-updatestate) IPC operation to set the component's status to `RUNNING` or `ERRORED` when the component starts a script that doesn't exit\. For example, you might define a `Startup` step that starts the MySQL process with `/etc/init.d/mysqld start`\.  
 The component enters the `STARTING` state when this lifecycle step runs\. If the `Startup` script exits with a success code, the component enters the `RUNNING` state\. Then, dependent components can start\.  
+When you deploy components with a `Startup` lifecycle, the core device can report the deployment as complete after this lifecycle script exits or reports its state\. In other words, the deployment's status is `IN_PROGRESS` until all components' startup scripts exit or report a state\.  
 You can define only one `Startup` or `Run` lifecycle\.
 This object or string contains the following information:    
 `Script`  <a name="recipe-lifecycle-script"></a>
@@ -170,7 +177,7 @@ The script to run\.
 `RequiresPrivilege`  <a name="recipe-lifecycle-requiresprivilege"></a>
 \(Optional\) You can run the script with root privileges\. If you set this option to `true`, then the AWS IoT Greengrass Core software runs this lifecycle script as root instead of as the system user that you configure to run this component\. Defaults to `false`\.  
 `Skipif`  <a name="recipe-lifecycle-skipif"></a>
-\(Optional\) The check to determine whether or not to run the script\. You can define to check if an executable is on the path or if a file exists\. If the output is true, then the AWS IoT Greengrass Core software skips the step\. Choose from the following checks:  
+\(Optional\) The check to determine whether or not to run the script\. You can define to check if an executable is on the path or if a file exists\. If the output is true, then the AWS IoT Greengrass Core software skips the step\. Choose one of the following checks:  
 + `onpath runnable` – Check if a runnable is on the system path\. For example, use **onpath python3** to skip this lifecycle step if Python 3 is available\.
 + `exists file` – Check if a file exists\. For example, use **exists /tmp/my\-configuration\.db** to skip this lifecycle step if `/tmp/my-configuration.db` is present\.  
 `Timeout`  <a name="recipe-lifecycle-timeout"></a>
@@ -188,7 +195,7 @@ The script to run\.
 `RequiresPrivilege`  <a name="recipe-lifecycle-requiresprivilege"></a>
 \(Optional\) You can run the script with root privileges\. If you set this option to `true`, then the AWS IoT Greengrass Core software runs this lifecycle script as root instead of as the system user that you configure to run this component\. Defaults to `false`\.  
 `Skipif`  <a name="recipe-lifecycle-skipif"></a>
-\(Optional\) The check to determine whether or not to run the script\. You can define to check if an executable is on the path or if a file exists\. If the output is true, then the AWS IoT Greengrass Core software skips the step\. Choose from the following checks:  
+\(Optional\) The check to determine whether or not to run the script\. You can define to check if an executable is on the path or if a file exists\. If the output is true, then the AWS IoT Greengrass Core software skips the step\. Choose one of the following checks:  
 + `onpath runnable` – Check if a runnable is on the system path\. For example, use **onpath python3** to skip this lifecycle step if Python 3 is available\.
 + `exists file` – Check if a file exists\. For example, use **exists /tmp/my\-configuration\.db** to skip this lifecycle step if `/tmp/my-configuration.db` is present\.  
 `Timeout`  
@@ -205,7 +212,7 @@ The script to run\.
 `RequiresPrivilege`  <a name="recipe-lifecycle-requiresprivilege"></a>
 \(Optional\) You can run the script with root privileges\. If you set this option to `true`, then the AWS IoT Greengrass Core software runs this lifecycle script as root instead of as the system user that you configure to run this component\. Defaults to `false`\.  
 `Skipif`  <a name="recipe-lifecycle-skipif"></a>
-\(Optional\) The check to determine whether or not to run the script\. You can define to check if an executable is on the path or if a file exists\. If the output is true, then the AWS IoT Greengrass Core software skips the step\. Choose from the following checks:  
+\(Optional\) The check to determine whether or not to run the script\. You can define to check if an executable is on the path or if a file exists\. If the output is true, then the AWS IoT Greengrass Core software skips the step\. Choose one of the following checks:  
 + `onpath runnable` – Check if a runnable is on the system path\. For example, use **onpath python3** to skip this lifecycle step if Python 3 is available\.
 + `exists file` – Check if a file exists\. For example, use **exists /tmp/my\-configuration\.db** to skip this lifecycle step if `/tmp/my-configuration.db` is present\.  
 `Timeout`  
@@ -295,7 +302,7 @@ We recommend that you use only lowercase letters for each selection key to avoid
 Lifecycle:
   key1:
     Install:
-      Skipif: onpath executable | exists file
+      Skipif: either onpath executable or exists file
       Script: command1
   key2:
     Install:
@@ -322,7 +329,7 @@ Lifecycle:
 Lifecycle:
   key1:
     Install:
-      Skipif: onpath executable | exists file
+      Skipif: either onpath executable or exists file
       Script: command1
   key2:
     Install:
@@ -341,7 +348,7 @@ Recipe variables expose information from the current component and nucleus for y
 
 You can use recipe variables in the following sections of component recipes:
 + Lifecycle definitions\.
-+ Component configuration definitions, if you use [Greengrass nucleus](greengrass-nucleus-component.md) v2\.6\.0 or later\. You can also use recipes variables when you [deploy component configuration updates](update-component-configurations.md#merge-configuration-update-recipe-variables)\.
++ Component configuration definitions, if you use [Greengrass nucleus](greengrass-nucleus-component.md) v2\.6\.0 or later and set the [interpolateComponentConfiguration](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-interpolate-component-configuration) configuration option to `true`\. You can also use recipes variables when you [deploy component configuration updates](update-component-configurations.md#merge-configuration-update-recipe-variables)\.
 
 Recipe variables use `{recipe_variable}` syntax\. The curly braces indicate a recipe variable\.
 
@@ -569,7 +576,7 @@ The following component recipe uses several recipe fields\.
           "Unarchive": "ZIP"
         },
         {
-          "URI": "s3//DOC-EXAMPLE-BUCKET/hello_world_linux.py"
+          "URI": "s3://DOC-EXAMPLE-BUCKET/hello_world_linux.py"
         }
       ]
     },
@@ -620,7 +627,7 @@ Manifests:
     Artifacts:
       - URI: s3://DOC-EXAMPLE-BUCKET/hello_world.zip
         Unarchive: ZIP
-      - URI: s3//DOC-EXAMPLE-BUCKET/hello_world_linux.py
+      - URI: s3://DOC-EXAMPLE-BUCKET/hello_world_linux.py
   - Lifecycle:
       Install:
         Skipif: onpath git

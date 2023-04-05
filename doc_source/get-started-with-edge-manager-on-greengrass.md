@@ -1,4 +1,8 @@
-# Get started with SageMaker Edge Manager<a name="get-started-with-edge-manager-on-greengrass"></a>
+# Tutorial: Get started with SageMaker Edge Manager<a name="get-started-with-edge-manager-on-greengrass"></a>
+
+Amazon SageMaker Edge Manager is a software agent that runs on edge devices\. SageMaker Edge Manager provides model management for edge devices so that you can package and use Amazon SageMaker Neo\-compiled models directly on Greengrass core devices\. By using SageMaker Edge Manager, you can also sample model input and output data from your core devices, and send that data to the AWS Cloud for monitoring and analysis\. For more information about how SageMaker Edge Manager works on Greengrass core devices, see [Use Amazon SageMaker Edge Manager on Greengrass core devices](use-sagemaker-edge-manager.md)\.
+
+This tutorial shows you how to get started using SageMaker Edge Manager with AWS\-provided sample components on an existing core device\. These sample components use the SageMaker Edge Manager component as a dependency to deploy the Edge Manager agent, and perform inference using pre\-trained models that were compiled using SageMaker Neo\. For more information about the SageMaker Edge Manager agent, see [SageMaker Edge Manager](https://docs.aws.amazon.com/sagemaker/latest/dg/edge.html) in the *Amazon SageMaker Developer Guide*\.
 
 To set up and use the SageMaker Edge Manager agent on an existing Greengrass core device, AWS provides example code that you can use to create the following sample inference and model components\. 
 + **Image classification**

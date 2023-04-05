@@ -67,4 +67,36 @@ You can also list a deployment other than the latest deployment for the target\.
    aws iot describe-job-execution --job-id iotJobId --thing-name coreDeviceThingName
    ```
 
-   The response contains the status of the deployment job execution for the core device\.
+   The response contains the status of the core device's deployment job execution and details about the status\. The `detailsMap` contains the following information:
+   + `detailed-deployment-status` – The deployment result status, which can be one of the following values:
+     + `SUCCESSFUL` – The deployment succeeded\.
+     + `FAILED_NO_STATE_CHANGE` – The deployment failed while the core device prepared to apply the deployment\.
+     + `FAILED_ROLLBACK_NOT_REQUESTED` – The deployment failed, and the deployment didn't specify to roll back to a previous working configuration, so the core device might not be functioning correctly\.
+     + `FAILED_ROLLBACK_COMPLETE` – The deployment failed, and the core device successfully rolled back to a previous working configuration\.
+     + `FAILED_UNABLE_TO_ROLLBACK` – The deployment failed, and the core device failed to roll back to a previous working configuration, so the core device might not be functioning correctly\.
+
+     If the deployment failed, check the `deployment-failure-cause` value and the core device's log files to identify the issue\. For more information about how to access the core device's log files, see [Monitor AWS IoT Greengrass logs](monitor-logs.md)\.
+   + `deployment-failure-cause` – An error message that provides additional details about why the job execution failed\.
+
+   The response looks similar to the following example\.
+
+   ```
+   {
+     "execution": {
+       "jobId": "2cc2698a-5175-48bb-adf2-1dd345606ebd",
+       "status": "FAILED",
+       "statusDetails": {
+         "detailsMap": {
+           "deployment-failure-cause": "No local or cloud component version satisfies the requirements. Check whether the version constraints conflict and that the component exists in your AWS account with a version that matches the version constraints. If the version constraints conflict, revise deployments to resolve the conflict. Component com.example.HelloWorld version constraints: LOCAL_DEPLOYMENT requires =1.0.0, thinggroup/MyGreengrassCoreGroup requires =1.0.1.",
+           "detailed-deployment-status": "FAILED_NO_STATE_CHANGE"
+         }
+       },
+       "thingArn": "arn:aws:iot:us-west-2:123456789012:thing/MyGreengrassCore",
+       "queuedAt": "2022-02-15T14:45:53.098000-08:00",
+       "startedAt": "2022-02-15T14:46:05.670000-08:00",
+       "lastUpdatedAt": "2022-02-15T14:46:20.892000-08:00",
+       "executionNumber": 1,
+       "versionNumber": 3
+     }
+   }
+   ```

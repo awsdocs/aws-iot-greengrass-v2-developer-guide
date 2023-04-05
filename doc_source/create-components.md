@@ -135,14 +135,17 @@ If you use GDK CLI version 1\.0\.0 on a Windows device, the component folder and
       + `maven` – Runs the `mvn clean package` command to build the component's source into artifacts\. Choose this option for components that use [Maven](https://maven.apache.org/), such as Java components\.
 
         On Windows devices, this feature is available for GDK CLI v1\.1\.0 and later\.
-      + `gradle` – Runs the `gradle build` command to build the component's source into artifacts\. Choose this option for components that use [Gradle](https://gradle.org/)\.
+      + `gradle` – Runs the `gradle build` command to build the component's source into artifacts\. Choose this option for components that use [Gradle](https://gradle.org/)\. This feature is available for GDK CLI v1\.1\.0 and later\.
 
-        This feature is available for GDK CLI v1\.1\.0 and later\.
+        The `gradle` build system supports Kotlin DSL as the build file\. This feature is available for GDK CLI v1\.2\.0 and later\.
+      + `gradlew` – Runs the `gradlew` command to build the component's source into artifacts\. Choose this option for components that use the [Gradle Wrapper ](https://docs.gradle.org/current/userguide/gradle_wrapper.html)\.
+
+        This feature is available for GDK CLI v1\.2\.0 and later\.
       + `custom` – Runs a custom command to build the component's source into a recipe and artifacts\. Specify the custom command in the `custom_build_command` parameter\.
 
    1. If you specify `custom` for `build_system`, add the `custom_build_command` to the `build` object\. In `custom_build_command`, specify a single string or list of strings, where each string is a word in the command\. For example, to run a custom build command for a C\+\+ component, you might specify **\["cmake", "\-\-build", "build", "\-\-config", "Release"\]**\.
 
-   1. <a name="gdk-cli-s3-bucket-name-formation"></a>If you use GDK CLI v1\.1\.0 or later, you can specify the `--bucket` argument to specify the S3 bucket where the GDK CLI uploads the component's artifacts\. <a name="gdk-cli-s3-bucket-name-formation-format"></a>If you don't specify this argument, the GDK CLI uploads to the S3 bucket whose name is `bucketPrefix-region-accountId`, where *bucketPrefix* and *region* are the values that you specify in `gdk-config.json`, and *accountId* is your AWS account ID\. The GDK CLI creates the bucket if it doesn't exist\.
+   1. <a name="gdk-cli-s3-bucket-name-formation"></a>If you use GDK CLI v1\.1\.0 or later, you can specify the `--bucket` argument to specify the S3 bucket where the GDK CLI uploads the component's artifacts\. <a name="gdk-cli-s3-bucket-name-formation-format"></a>If you don't specify this argument, the GDK CLI uploads to the S3 bucket whose name is `bucket-region-accountId`, where *bucket* and *region* are the values that you specify in `gdk-config.json`, and *accountId* is your AWS account ID\. The GDK CLI creates the bucket if it doesn't exist\.
 
       Change the publish configuration for the component\. Do the following:
 

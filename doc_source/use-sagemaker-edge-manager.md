@@ -2,7 +2,7 @@
 
 Amazon SageMaker Edge Manager is a software agent that runs on edge devices\. SageMaker Edge Manager provides model management for edge devices so that you can package and use Amazon SageMaker Neo\-compiled models directly on Greengrass core devices\. By using SageMaker Edge Manager, you can also sample model input and output data from your core devices, and send that data to the AWS Cloud for monitoring and analysis\. Because SageMaker Edge Manager uses SageMaker Neo to optimize your models for your target hardware, you don't need to install the DLR runtime directly on your device\. On Greengrass devices, SageMaker Edge Manager doesn't load local AWS IoT certificates or call the AWS IoT credential provider endpoint directly\. Instead, SageMaker Edge Manager uses the [token exchange service](token-exchange-service-component.md) to fetch temporary credential from a TES endpoint\. 
 
-This section describes how SageMaker Edge Manager works on Greengrass devices\. It shows you how to get started using SageMaker Edge Manager with AWS\-provided sample components on an existing core device\. These sample components use the SageMaker Edge Manager component as a dependency to deploy the Edge Manager agent, and perform inference using pre\-trained models that were compiled using SageMaker Neo\. For more information about the SageMaker Edge Manager agent, see [SageMaker Edge Manager](https://docs.aws.amazon.com/sagemaker/latest/dg/edge.html) in the *Amazon SageMaker Developer Guide*\.
+This section describes how SageMaker Edge Manager works on Greengrass core devices\.
 
 
 
@@ -22,7 +22,7 @@ When you use SageMaker Edge Manager with AWS IoT Greengrass, your workflow inclu
 
 For more information about creating edge packaging jobs and inference components that work with SageMaker Edge Manager, see [Deploy Model Package and Edge Manager Agent with AWS IoT Greengrass](https://docs.aws.amazon.com/sagemaker/latest/dg/edge-greengrass.html) in the *Amazon SageMaker Developer Guide*\.
 
-The [Get started with SageMaker Edge Manager](get-started-with-edge-manager-on-greengrass.md) tutorial shows you how to set up and use the SageMaker Edge Manager agent on an existing Greengrass core device, using AWS\-provided example code that you can use to create sample inference and model components\. 
+The [Tutorial: Get started with SageMaker Edge Manager](get-started-with-edge-manager-on-greengrass.md) tutorial shows you how to set up and use the SageMaker Edge Manager agent on an existing Greengrass core device, using AWS\-provided example code that you can use to create sample inference and model components\. 
 
 When you use SageMaker Edge Manager on Greengrass core devices, you can also use the capture data feature to upload sample data to the AWS Cloud\. Capture data is a SageMaker feature that you use to upload inference input, inference results, and additional inference data to an S3 bucket or a local directory for future analysis\. For more information about using capture data with SageMaker Edge Manager, see [Manage Model](https://docs.aws.amazon.com/sagemaker/latest/dg/edge-manage-model.html#edge-manage-model-capturedata) in the *Amazon SageMaker Developer Guide*\.
 
@@ -77,3 +77,7 @@ You must meet the following requirements to use the SageMaker Edge Manager agent
 + <a name="sm-req-s3-bucket"></a>An Amazon S3 bucket created in the same AWS account and AWS Region as your Greengrass core device\. SageMaker Edge Manager requires an S3 bucket to create an edge device fleet, and to store sample data from running inference on your device\. For information about creating S3 buckets, see [Getting started with Amazon S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/GetStartedWithS3.html)\.
 + <a name="sm-req-edge-device-fleet"></a>A SageMaker edge device fleet that uses the same AWS IoT role alias as your Greengrass core device\. For more information, see [Create an edge device fleet](get-started-with-edge-manager-on-greengrass.md#create-edge-device-fleet-for-greengrass)\.
 + <a name="sm-req-edge-device"></a>Your Greengrass core device registered as an edge device in your SageMaker Edge device fleet\. The edge device name must match the AWS IoT thing name for your core device\. For more information, see [Register your Greengrass core device](get-started-with-edge-manager-on-greengrass.md#register-greengrass-core-device-in-sme)\.
+
+## Get started with SageMaker Edge Manager<a name="use-sm-edge-manager"></a>
+
+You can complete a tutorial to get started using SageMaker Edge Manager\. The tutorial shows you how to get started using SageMaker Edge Manager with AWS\-provided sample components on an existing core device\. These sample components use the SageMaker Edge Manager component as a dependency to deploy the Edge Manager agent, and perform inference using pre\-trained models that were compiled using SageMaker Neo\. For more information, see [Tutorial: Get started with SageMaker Edge Manager](get-started-with-edge-manager-on-greengrass.md)\.

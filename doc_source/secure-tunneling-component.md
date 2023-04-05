@@ -1,12 +1,10 @@
 # Secure tunneling<a name="secure-tunneling-component"></a>
 
-The secure tunneling component \(`aws.greengrass.SecureTunneling`\) enables you to use AWS IoT secure tunneling to establish secure bidirectional communication with a Greengrass core device that is behind restricted firewalls\. 
+With the `aws.greengrass.SecureTunneling` component, you can establish secure bidirectional communication with a Greengrass core device located behind restricted firewalls\.
 
-For example, a Greengrass core device is behind a firewall that prohibits all incoming connections, which blocks SSH connections to the device\. Secure tunneling uses MQTT over WebSockets to make these connections so that you can open an SSH connection to the device by using a tunnel that is managed by AWS IoT\. For more information about using AWS IoT secure tunneling to connect to remote devices, see [AWS IoT secure tunneling](https://docs.aws.amazon.com/iot/latest/developerguide/secure-tunneling.html) in the *AWS IoT Developer Guide*\.
+For example, imagine you have a Greengrass core device behind a firewall that prohibits all incoming connections\. Secure tunneling uses MQTT to transfer an access token to the device and then uses WebSockets to make an SSH connection to the device through the firewall\. With this AWS IoT managed tunnel, you can open the SSH connection needed for your device\. For more information about using AWS IoT secure tunneling to connect to remote devices, see [AWS IoT secure tunneling](https://docs.aws.amazon.com/iot/latest/developerguide/secure-tunneling.html) in the *AWS IoT Developer Guide*\.
 
 This component subscribes to the AWS IoT Core MQTT message broker on the `$aws/things/greengrass-core-device/tunnels/notify` topic to receive secure tunneling notifications\.
-
-
 
 **Topics**
 + [Versions](#secure-tunneling-component-versions)
@@ -40,8 +38,8 @@ This component can be installed on Linux core devices only\.
 This component has the following requirements:
 + [Python](https://www.python.org/) 3\.5 or later installed on the Greengrass core device and added to the PATH environment variable\.
 + `libcrypto.so.1.1` installed on the Greengrass core device and added to the PATH environment variable\.
-+ The Greengrass core device must allow outbound traffic on port 443\. 
-+ The Greengrass core device must have enabled the service that you want to use to communicate with the device\. For example, to open an SSH connection to the device, the device must have SSH enabled\. 
++ Open outbound traffic on port 443 on the Greengrass core device\.
++ Turn on support for the communication service that you want to use to communicate with the Greengrass core device\. For example, to open an SSH connection to the device, you must turn on SSH on that device\.
 
 ### Endpoints and ports<a name="secure-tunneling-component-endpoints"></a>
 
@@ -55,6 +53,36 @@ This component must be able to perform outbound requests to the following endpoi
 ## Dependencies<a name="secure-tunneling-component-dependencies"></a>
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#secure-tunneling-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+
+------
+#### [ 1\.0\.11 – 1\.0\.13 ]
+
+The following table lists the dependencies for versions 1\.0\.11 – 1\.0\.13 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.0\.0 <3\.0\.0  | Soft | 
+
+------
+#### [ 1\.0\.10 ]
+
+The following table lists the dependencies for version 1\.0\.10 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.0\.0 <2\.9\.0  | Soft | 
+
+------
+#### [ 1\.0\.9 ]
+
+The following table lists the dependencies for version 1\.0\.9 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.0\.0 <2\.8\.0  | Soft | 
 
 ------
 #### [ 1\.0\.8 ]
@@ -135,14 +163,13 @@ For more information about component dependencies, see the [component recipe ref
 This component provides the following configuration parameters that you can customize when you deploy the component\.
 
 `OS_DIST_INFO`  
-\(Optional\) The operating system of your core device\. By default, the component attempts to automatically identify the operating system running on your core device\. If the component fails to start with the default value, then use this value to specify the operating system\. For a list of supported operating systems for this component, see [Device requirements](setting-up.md#greengrass-v2-requirements)\.  
+\(Optional\) The operating system of your core device\. By default, the component attempts to identify automatically the operating system running on your core device\. If the component fails to start with the default value, use this value to specify the operating system\. For a list of supported operating systems for this component, see [Device requirements](setting-up.md#greengrass-v2-requirements)\.  
 This value can be one of the following: `auto`, `ubuntu`, `amzn2`, `raspberrypi`\.  
 Default: `auto`
 
 `accessControl`  
 \(Optional\) The object that contains the [authorization policy](interprocess-communication.md#ipc-authorization-policies) that allows the component to subscribe to the secure tunneling notifications topic\.   
-Do not modify this configuration parameter if your deployment targets a thing group\. If your deployment targets an individual core device, and you want to restrict this component's subscription to the topic for that device, then in the `resources` value in the authorization policy, replace the MQTT topic wildcard \(`+`\) with the thing name for that core device\. 
-Default:   
+Do not modify this configuration parameter if your deployment targets a thing group\. If your deployment targets an individual core device, and you want to restrict its subscription to the device's topic, specify the core device's thing name\. In the `resources` value in the device's authorization policy, replace the MQTT topic wildcard with the device's thing name\. 
 
 ```
 {
@@ -216,6 +243,11 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  1\.0\.13  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/secure-tunneling-component.html)  | 
+|  1\.0\.12  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/secure-tunneling-component.html)  | 
+|  1\.0\.11  | Version updated for Greengrass nucleus version 2\.9\.0 release\. | 
+|  1\.0\.10  | Version updated for Greengrass nucleus version 2\.8\.0 release\. | 
+|  1\.0\.9  |  Version updated for Greengrass nucleus version 2\.7\.0 release\.  | 
 |  1\.0\.8  |  Version updated for Greengrass nucleus version 2\.6\.0 release\.  | 
 |  1\.0\.7  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/secure-tunneling-component.html)  | 
 |  1\.0\.6  |  This version contains bug fixes\.  | 

@@ -20,6 +20,9 @@ When the version of the nucleus component changes, or when you change certain co
 ## Versions<a name="greengrass-nucleus-component-versions"></a>
 
 This component has the following versions:
++ 2\.9\.x
++ 2\.8\.x
++ 2\.7\.x
 + 2\.6\.x
 + 2\.5\.x
 + 2\.4\.x
@@ -59,6 +62,11 @@ This component provides the following configuration parameters that you can cust
 `iotRoleAlias`  
 <a name="nucleus-component-configuration-iot-role-alias"></a>The AWS IoT role alias that points to a token exchange IAM role\. The AWS IoT credentials provider assumes this role to allow the Greengrass core device to interact with AWS services\. For more information, see [Authorize core devices to interact with AWS services](device-service-role.md)\.  
 When you run the AWS IoT Greengrass Core software with the `--provision true` option, the software provisions a role alias and sets its value in the nucleus component\.
+
+  `interpolateComponentConfiguration`   
+\(Optional\) You can enable the Greengrass nucleus to interpolate [component recipe variables](component-recipe-reference.md#recipe-variables) in component configurations and [merge configuration updates](update-component-configurations.md#merge-configuration-update-recipe-variables)\. We recommend that you set this option to `true` so that the core device can run Greengrass components that use recipe variables in their configurations\.  
+This feature is available for v2\.6\.0 and later of this component\.  
+Default: `false`
 
 `networkProxy`  
 \(Optional\) The network proxy to use for all connections\. For more information, see [Connect on port 443 or through a network proxy](configure-greengrass-core-v2.md#configure-alpn-network-proxy)\.  
@@ -131,6 +139,10 @@ Default: `false`
 `iotCredEndpoint`  
 <a name="nucleus-component-configuration-iot-cred-endpoint"></a>The AWS IoT credentials endpoint for your AWS account\.  
 <a name="nucleus-component-set-iot-endpoints"></a>When you run the AWS IoT Greengrass Core software with the `--provision true` option, the software gets your data and credentials endpoints from AWS IoT and sets them in the nucleus component\.
+
+`greengrassDataPlaneEndpoint`  
+This feature is available in v2\.7\.0 and later of this component\.  
+For more information, see [Use a device certificate signed by a private CA](configure-greengrass-core-v2.md#configure-nucleus-private-ca)\.
 
 `greengrassDataPlanePort`  
 This feature is available in v2\.0\.4 and later of this component\.  
@@ -318,6 +330,15 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.9\.5  |  <a name="changelog-nucleus-2.9.5"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
+|  2\.9\.4  |  <a name="changelog-nucleus-2.9.4"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
+|  2\.9\.3  |  <a name="changelog-nucleus-2.9.3"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
+|  2\.9\.2  |  <a name="changelog-nucleus-2.9.2"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
+|  2\.9\.1  |  <a name="changelog-nucleus-2.9.1"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
+|  2\.9\.0  |  <a name="changelog-nucleus-2.9.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
+|  2\.8\.1  |  <a name="changelog-nucleus-2.8.1"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
+|  2\.8\.0  |  <a name="changelog-nucleus-2.8.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
+|  2\.7\.0  |  <a name="changelog-nucleus-2.7.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
 |  2\.6\.0  |  <a name="changelog-nucleus-2.6.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
 |  2\.5\.6  |  <a name="changelog-nucleus-2.5.6"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 
 |  2\.5\.5  |  <a name="changelog-nucleus-2.5.5"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-nucleus-component.html)  | 

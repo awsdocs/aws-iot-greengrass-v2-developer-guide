@@ -20,6 +20,7 @@ Client devices are local IoT devices that connect to a Greengrass core device to
 ## Versions<a name="mqtt-broker-moquette-component-versions"></a>
 
 This component has the following versions:
++ 2\.3\.x
 + 2\.2\.x
 + 2\.1\.x
 + 2\.0\.x
@@ -52,6 +53,16 @@ This component has the following requirements:
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#mqtt-broker-moquette-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
+#### [ 2\.3\.0 and 2\.3\.1 ]
+
+The following table lists the dependencies for versions 2\.3\.0 and 2\.3\.1 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Client device auth](client-device-auth-component.md) | >=2\.2\.0 <2\.4\.0 | Hard | 
+
+------
 #### [ 2\.2\.0 ]
 
 The following table lists the dependencies for version 2\.2\.0 of this component\.
@@ -59,7 +70,7 @@ The following table lists the dependencies for version 2\.2\.0 of this component
 
 | Dependency | Compatible versions | Dependency type | 
 | --- | --- | --- | 
-| [Client device auth](client-device-auth-component.md) | >=2\.0\.0 <2\.3\.0 | Hard | 
+| [Client device auth](client-device-auth-component.md) | >=2\.2\.0 <2\.3\.0 | Hard | 
 
 ------
 #### [ 2\.1\.0 ]
@@ -158,6 +169,8 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.3\.1  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/mqtt-broker-moquette-component.html)  | 
+|  2\.3\.0  |  Adds support for certificate chains\.  | 
 |  2\.2\.0  |  Version updated for [client device auth](client-device-auth-component.md) version 2\.2\.0 release\.  | 
 |  2\.1\.0  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/mqtt-broker-moquette-component.html)  | 
 |  2\.0\.2  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/mqtt-broker-moquette-component.html)  | 

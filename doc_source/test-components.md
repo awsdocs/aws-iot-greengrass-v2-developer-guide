@@ -78,4 +78,32 @@ If you develop the component on a different computer, such as a local developmen
 **Note**  
 You can also use the `greengrass-cli deployment create` command to set the value of your component's configuration parameters\. For more information, see [create](gg-cli-deployment.md#deployment-create)\.
 
+1. Use the `greengrass-cli deployment status` command to monitor the progress of your component's deployment\. 
+
+------
+#### [ Unix or Linux ]
+
+   ```
+   sudo /greengrass/v2/bin/greengrass-cli deployment status \
+     -i deployment-id
+   ```
+
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+   ```
+   C:\greengrass\v2\bin\greengrass-cli deployment status ^
+     -i deployment-id
+   ```
+
+------
+#### [ PowerShell ]
+
+   ```
+   C:\greengrass\v2\bin\greengrass-cli deployment status `
+     -i deployment-id
+   ```
+
+------
+
 1. Test your component as it runs on the Greengrass core device\. When you finish this version of your component, you can upload it to the AWS IoT Greengrass service\. Then, you can deploy the component to other core devices\. For more information, see [Publish components to deploy to your core devices](publish-components.md)\.

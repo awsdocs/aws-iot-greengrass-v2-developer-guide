@@ -20,6 +20,7 @@ With this component, AWS IoT SiteWise gateways can connect to multiple OPC\-UA s
 ## Versions<a name="iotsitewise-opcua-collector-component-versions"></a>
 
 This component has the following versions:
++ 2\.2\.x
 + 2\.1\.x
 + 2\.0\.x
 
@@ -31,19 +32,27 @@ This component has the following versions:
 
 ## Operating system<a name="iotsitewise-opcua-collector-component-os-support"></a>
 
-This component can be installed on Linux core devices only\.
+This component can be installed on core devices that run the following operating systems:
++ Linux
++ Windows
 
 ## Requirements<a name="iotsitewise-opcua-collector-component-requirements"></a>
 
 This component has the following requirements:
 + The Greengrass core device must run on one of the following platforms:
-  + OS: Ubuntu 20\.04 or 18\.04
+  + OS: Ubuntu 18\.04 or later
 
-    Architecture: x86\_64 \(AMD64\)
+    Architecture: x86\_64 \(AMD64\) or ARMv8 \(Aarch64\)
   + OS: Red Hat Enterprise Linux \(RHEL\) 8
 
-    Architecture: x86\_64 \(AMD64\)
+    Architecture: x86\_64 \(AMD64\) or ARMv8 \(Aarch64\)
   + OS: Amazon Linux 2
+
+    Architecture: x86\_64 \(AMD64\) or ARMv8 \(Aarch64\)
+  + OS: Debian 11
+
+    Architecture: x86\_64 \(AMD64\) or ARMv8 \(Aarch64\)
+  + OS: Windows Server 2019 or later
 
     Architecture: x86\_64 \(AMD64\)
 + The Greengrass core device must allow outbound network connectivity to OPC\-UA servers\.
@@ -77,16 +86,40 @@ This component writes `BatchPutAssetPropertyValue` messages to AWS IoT Greengras
 
 This component uses the following log file\.
 
+------
+#### [ Linux ]
+
 ```
 /greengrass/v2/logs/aws.iot.SiteWiseEdgeCollectorOpcua.log
 ```
 
+------
+#### [ Windows ]
+
+```
+C:\greengrass\v2\logs\aws.iot.SiteWiseEdgeCollectorOpcua.log
+```
+
+------
+
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
+
+------
+#### [ Linux ]
 
   ```
   sudo tail -f /greengrass/v2/logs/aws.iot.SiteWiseEdgeCollectorOpcua.log
   ```
+
+------
+#### [ Windows \(PowerShell\) ]
+
+  ```
+  Get-Content C:\greengrass\v2\logs\aws.iot.SiteWiseEdgeCollectorOpcua.log -Tail 10 -Wait
+  ```
+
+------
 
 ## Licenses<a name="iotsitewise-opcua-collector-component-licenses"></a>
 
@@ -99,7 +132,8 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
-|  2\.1\.3  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-opcua-collector-component.html)  | 
+|  2\.2\.0  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-opcua-collector-component.html) [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-opcua-collector-component.html)  | 
+|  2\.1\.3  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-opcua-collector-component.html) [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-opcua-collector-component.html)  | 
 |  2\.1\.1  |  Adds support for configuring the following subscription properties\.  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-opcua-collector-component.html)  This version supports ingestion of `BAD` quality data and filters data based on the following data qualities:  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-opcua-collector-component.html) Bug fixes and improvements\. [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-opcua-collector-component.html)  | 
 |  2\.0\.3  |  Bug fixes and improvements\.  | 
 |  2\.0\.2  |  Bug fixes and improvements to asset priority syncing with edge\.  | 

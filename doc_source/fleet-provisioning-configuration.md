@@ -65,3 +65,9 @@ If you configure an HTTPS proxy, you must add the proxy server CA certificate to
 
 `proxyPassword`  
 \(Optional\) The user name that authenticates the proxy server\.
+
+csrPath  
+\(Optional\) The path to the certificate signing request \(CSR\) file to use to create the device certificate from a CSR\. For more information, see [Provisioning by claim](https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#claim-based) in the * AWS IoT Core developer guide*\.
+
+csrPrivateKeyPath  
+\(Optional, required if `csrPath` is declared\) The path to the private key used to generate the CSR\. The private key must have been used to generate the CSR\. For more information, see [Provisioning by claim](https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#claim-based) in the *AWS IoT Core developer guide*\.

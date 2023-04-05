@@ -47,6 +47,36 @@ This component can be installed on core devices that run the following operating
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#nucleus-emitter-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
+#### [ 1\.0\.5 ]
+
+The following table lists the dependencies for version 1\.0\.5 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.4\.0 <3\.0\.0  | Hard | 
+
+------
+#### [ 1\.0\.4 ]
+
+The following table lists the dependencies for version 1\.0\.4 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.4\.0 <2\.9\.0  | Hard | 
+
+------
+#### [ 1\.0\.3 ]
+
+The following table lists the dependencies for version 1\.0\.3 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) |  >=2\.4\.0 <2\.8\.0  | Hard | 
+
+------
 #### [ 1\.0\.2 ]
 
 The following table lists the dependencies for version 1\.0\.2 of this component\.
@@ -247,20 +277,22 @@ The metric value\.
 The nucleus emitter publishes the following metrics:
 
 
-| Name | Description | Source | 
-| --- | --- | --- | 
-|  `SystemMemUsage`  |  The amount of memory currently in use by all applications on the Greengrass core device, including the operating system\.  |  System  | 
-|  `CpuUsage`  |  The amount of CPU currently in use by all applications on the Greengrass core device, including the operating system\.  |  System  | 
-|  `TotalNumberOfFDs`  |  The number of file descriptors stored by the operating system of the Greengrass core device\. One file descriptor uniquely identifies one open file\.  |  System  | 
-|  `NumberOfComponentsRunning`  |  The number of components that are running on the Greengrass core device\.  |  Greengrass nucleus  | 
-|  `NumberOfComponentsErrored`  |  The number of components that are in error state on the Greengrass core device\.  |  Greengrass nucleus  | 
-|  `NumberOfComponentsInstalled`  |  The number of components that are installed on the Greengrass core device\.  |  Greengrass nucleus  | 
-|  `NumberOfComponentsStarting`  |  The number of components that are starting on the Greengrass core device\.  |  Greengrass nucleus  | 
-|  `NumberOfComponentsNew`  |  The number of components that are new on the Greengrass core device\.  |  Greengrass nucleus  | 
-|  `NumberOfComponentsStopping`  |  The number of components that are stopping on the Greengrass core device\.  |  Greengrass nucleus  | 
-|  `NumberOfComponentsFinished`  |  The number of components that are finished on the Greengrass core device\.  |  Greengrass nucleus  | 
-|  `NumberOfComponentsBroken`  |  The number of components that are broken on the Greengrass core device\.  |  Greengrass nucleus  | 
-|  `NumberOfComponentsStateless`  |  The number of components that are stateless on the Greengrass core device\.  |  Greengrass nucleus  | 
+| Name | Description | 
+| --- | --- | 
+|  **System**  | 
+|  `SystemMemUsage`  |  The amount of memory currently in use by all applications on the Greengrass core device, including the operating system\.  | 
+|  `CpuUsage`  |  The amount of CPU currently in use by all applications on the Greengrass core device, including the operating system\.  | 
+|  `TotalNumberOfFDs`  |  The number of file descriptors stored by the operating system of the Greengrass core device\. One file descriptor uniquely identifies one open file\.  | 
+|  **Greengrass nucleus**  | 
+|  `NumberOfComponentsRunning`  |  The number of components that are running on the Greengrass core device\.  | 
+|  `NumberOfComponentsErrored`  |  The number of components that are in error state on the Greengrass core device\.  | 
+|  `NumberOfComponentsInstalled`  |  The number of components that are installed on the Greengrass core device\.  | 
+|  `NumberOfComponentsStarting`  |  The number of components that are starting on the Greengrass core device\.  | 
+|  `NumberOfComponentsNew`  |  The number of components that are new on the Greengrass core device\.  | 
+|  `NumberOfComponentsStopping`  |  The number of components that are stopping on the Greengrass core device\.  | 
+|  `NumberOfComponentsFinished`  |  The number of components that are finished on the Greengrass core device\.  | 
+|  `NumberOfComponentsBroken`  |  The number of components that are broken on the Greengrass core device\.  | 
+|  `NumberOfComponentsStateless`  |  The number of components that are stateless on the Greengrass core device\.  | 
 
 ## Usage<a name="nucleus-emitter-component-usage"></a>
 
@@ -314,6 +346,9 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  1\.0\.5  | Version updated for Greengrass nucleus version 2\.9\.0 release\. | 
+|  1\.0\.4  | Version updated for Greengrass nucleus version 2\.8\.0 release\. | 
+|  1\.0\.3  |  Version updated for Greengrass nucleus version 2\.7\.0 release\.  | 
 |  1\.0\.2  |  Version updated for Greengrass nucleus version 2\.6\.0 release\.  | 
 |  1\.0\.1  |  Version updated for Greengrass nucleus version 2\.5\.0 release\.  | 
 |  1\.0\.0  |  Initial version\.  | 

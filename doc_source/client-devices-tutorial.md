@@ -238,7 +238,9 @@ If you upgrade the Greengrass nucleus from an earlier minor version, and the cor
 
 ## Step 3: Connect client devices<a name="connect-client-devices-tutorial"></a>
 
-Client devices can use the AWS IoT Device SDK to discover, connect, and communicate with a core device\. In this section, you install the [AWS IoT Device SDK v2 for Python](https://github.com/aws/aws-iot-device-sdk-python-v2) and run the Greengrass discovery sample application from the AWS IoT Device SDK\.
+Client devices can use the AWS IoT Device SDK to discover, connect, and communicate with a core device\. The client device must be an AWS IoT thing\. For more information, see [Create a thing object](https://docs.aws.amazon.com/iot/latest/developerguide/create-iot-resources.html#create-aws-thing) in the *AWS IoT Core Developer Guide*\.
+
+In this section, you install the [AWS IoT Device SDK v2 for Python](https://github.com/aws/aws-iot-device-sdk-python-v2) and run the Greengrass discovery sample application from the AWS IoT Device SDK\.
 
 **Note**  
 The AWS IoT Device SDK is also available in other programming languages\. This tutorial uses the AWS IoT Device SDK v2 for Python, but you can explore the other SDKs for your use case\. For more information, see [AWS IoT Device SDKs](https://docs.aws.amazon.com/iot/latest/developerguide/iot-sdks.html) in the *AWS IoT Core Developer Guide*\.
@@ -691,7 +693,7 @@ In this section, you deploy the [shadow manager component](shadow-manager-compon
       + [Check deployment status](check-deployment-status.md)
       + [Monitor AWS IoT Greengrass logs](monitor-logs.md)
 
-1. Develop and deploy a Greengrass component that manage smart light client devices\. Do the following:
+1. Develop and deploy a Greengrass component that manages smart light client devices\. Do the following:
 
    1. Create a folder the component's artifacts on the core device\.
 
@@ -699,21 +701,21 @@ In this section, you deploy the [shadow manager component](shadow-manager-compon
 #### [ Linux or Unix ]
 
       ```
-      mkdir -p artifacts/com.example.clientdevices.MyHelloWorldSubscriber/1.0.0
+      mkdir -p artifacts/com.example.clientdevices.MySmartLightManager/1.0.0
       ```
 
 ------
 #### [ Windows Command Prompt \(CMD\) ]
 
       ```
-      mkdir artifacts\com.example.clientdevices.MyHelloWorldSubscriber\1.0.0
+      mkdir artifacts\com.example.clientdevices.MySmartLightManager\1.0.0
       ```
 
 ------
 #### [ PowerShell ]
 
       ```
-      mkdir artifacts\com.example.clientdevices.MyHelloWorldSubscriber\1.0.0
+      mkdir artifacts\com.example.clientdevices.MySmartLightManager\1.0.0
       ```
 
 ------

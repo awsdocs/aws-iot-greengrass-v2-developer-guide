@@ -14,7 +14,7 @@ devicetester_[linux | mac | win]_x86-64 run-suite  \
     --userdata userdata.json
 ```
 
-The `--userdata` option is the only required option for the `run-suite` command; all other options are optional\. For example, you can omit `pool-id` if you have only one device pool, which is a set of identical devices, defined in your `device.json` file\. Or, you can omit `suite-id` if you want to run the latest test suite version in the `tests` folder\.
+All options are optional\. For example, you can omit `pool-id` if you have only one device pool, which is a set of identical devices, defined in your `device.json` file\. Or, you can omit `suite-id` if you want to run the latest test suite version in the `tests` folder\.
 
 **Note**  
 IDT prompts you if a newer test suite version is available online\. For more information, see [Test suite versions](idt-greengrass-qualification.md#idt-test-suite-versions)\.

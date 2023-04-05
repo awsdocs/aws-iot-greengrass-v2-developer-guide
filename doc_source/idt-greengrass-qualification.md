@@ -43,7 +43,7 @@ Checks that the device meets the software requirements to run tests\.
   `chmod`, `cp`, `echo`, `grep`, `kill`, `ln`, `mkinfo`, `ps`, `rm`, `sh`, `uname` 
 + For Windows\-based devices, this test checks if the device has the following Microsoft software installed:
 
-  [Powershell](https://docs.microsoft.com/en-us/powershell/?view=powershell-7.1) v5\.1 or later, [\.NET](https://docs.microsoft.com/en-us/dotnet/fundamentals/powershell) v4\.6\.1 or later, [Visual C\+\+](https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170) 2017 or later, [PsExec utility](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec)  
+  [Powershell](https://learn.microsoft.com/en-us/powershell/?view=powershell-7.1) v5\.1 or later, [\.NET](https://learn.microsoft.com/en-us/dotnet/) v4\.6\.1 or later, [Visual C\+\+](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170) 2017 or later, [PsExec utility](https://learn.microsoft.com/en-us/sysinternals/downloads/psexec)  
 Version Checker  
 Checks that the version of AWS IoT Greengrass provided is compatible with the AWS IoT Device Tester version you are using\.  
 Component  

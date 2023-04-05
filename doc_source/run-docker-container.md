@@ -666,7 +666,7 @@ The following recipe defines an example Docker container component that creates 
 + A lifecycle install script that loads the Docker image from the TAR archive\.
 + A lifecycle run script that runs a Docker container from the image\. The [Docker run](https://docs.docker.com/engine/reference/run/) command has the following arguments:
   + The `--network=host` argument provides the container access to the host network, so the container can connect to the stream manager component\.
-  + The first `-e` argument sets the required `AWS_CONTAINER_CREDENTIALS_FULL_URI` environment variable in the Docker container\.
+  + The first `-e` argument sets the required `AWS_CONTAINER_AUTHORIZATION_TOKEN` environment variable in the Docker container\.
   + The additional `-e` arguments set environment variables used by this example\.
   + The `-v` argument mounts the component's [work folder](component-recipe-reference.md#component-recipe-work-path) in the container\. This example creates a file in the work folder to upload that file to Amazon S3 using stream manager\.
   + The `--rm` argument cleans up the container when it exits\.

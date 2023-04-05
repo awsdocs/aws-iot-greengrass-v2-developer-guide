@@ -2,6 +2,8 @@
 
 Use the `deployment` command to interact with local components on your core device\. 
 
+To monitor the progress of a local deployment, use the `status` subcommand\. You can't monitor the progress of a local deployment using the console\.
+
 **Subcommands**
 + [create](#deployment-create)
 + [list](#deployment-list)

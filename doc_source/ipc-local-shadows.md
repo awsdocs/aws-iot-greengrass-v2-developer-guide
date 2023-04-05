@@ -24,7 +24,7 @@ The following table lists the minimum versions of the AWS IoT Device SDK that yo
 | --- | --- | 
 |  [AWS IoT Device SDK for Java v2](https://github.com/aws/aws-iot-device-sdk-java-v2)  |  v1\.4\.0  | 
 |  [AWS IoT Device SDK for Python v2](https://github.com/aws/aws-iot-device-sdk-python-v2)  |  v1\.6\.0  | 
-|  [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2)  |  Linux: v1\.13\.0; Windows: v1\.14\.6  | 
+|  [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2)  |  v1\.17\.0  | 
 
 ## Authorization<a name="ipc-local-shadow-authorization"></a>
 
@@ -51,7 +51,7 @@ Authorization policies for shadow interaction have the following properties\.
 
 ### Recipe variables in local shadow authorization policies<a name="ipc-local-shadow-authorization-recipe-variables"></a>
 
-If you use v2\.6\.0 or later of the [Greengrass nucleus](greengrass-nucleus-component.md), you can use the `{iot:thingName}` [recipe variable](component-recipe-reference.md#recipe-variables) in authorization policies\. This feature enables you to configure a single authorization policy for a group of core devices, where each core device can access only its own shadow\. For example, you can allow a component access to the following resource for shadow IPC operations\.
+If you use v2\.6\.0 or later of the [Greengrass nucleus](greengrass-nucleus-component.md), and you set the Greengrass nucleus' [interpolateComponentConfiguration](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-interpolate-component-configuration) configuration option to `true`, you can use the `{iot:thingName}` [recipe variable](component-recipe-reference.md#recipe-variables) in authorization policies\. This feature enables you to configure a single authorization policy for a group of core devices, where each core device can access only its own shadow\. For example, you can allow a component access to the following resource for shadow IPC operations\.
 
 ```
 $aws/things/{iot:thingName}/shadow/
@@ -62,7 +62,7 @@ $aws/things/{iot:thingName}/shadow/
 You can reference the following authorization policy examples to help you configure authorization policies for your components\.
 
 **Example: Allow a group of core devices to interact with local shadows**  
-<a name="phrase-example-uses-recipe-variables-in-configuration"></a>This example uses a feature that is available for v2\.6\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. Greengrass nucleus v2\.6\.0 adds support for most [recipe variables](component-recipe-reference.md#recipe-variables), such as `{iot:thingName}`, in component configurations\. For an example that works for all versions of the Greengrass nucleus, see the [example authorization policy for a single core device](#ipc-local-shadows-authorization-example-single-device)\.
+<a name="phrase-example-uses-recipe-variables-in-configuration"></a>This example uses a feature that is available for v2\.6\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. Greengrass nucleus v2\.6\.0 adds support for most [recipe variables](component-recipe-reference.md#recipe-variables), such as `{iot:thingName}`, in component configurations\. To enable this feature, set the Greengrass nucleus' [interpolateComponentConfiguration](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-interpolate-component-configuration) configuration option to `true`\. For an example that works for all versions of the Greengrass nucleus, see the [example authorization policy for a single core device](#ipc-local-shadows-authorization-example-single-device)\.
 The following example authorization policy allows the component `com.example.MyShadowInteractionComponent` to interact with the classic device shadow and the named shadow `myNamedShadow` for the core device that runs the component\. This policy also allows this component to receive messages on local topics for these shadows\.  
 
 ```
@@ -264,7 +264,7 @@ accessControl:
 ```<a name="interact-with-shadows-react-example-authorization-policies"></a>
 
 **Example: Allow a group of core devices to react to local shadow state changes**  
-<a name="phrase-example-uses-recipe-variables-in-configuration"></a>This example uses a feature that is available for v2\.6\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. Greengrass nucleus v2\.6\.0 adds support for most [recipe variables](component-recipe-reference.md#recipe-variables), such as `{iot:thingName}`, in component configurations\. For an example that works for all versions of the Greengrass nucleus, see the [example authorization policy for a single core device](#interact-with-shadows-react-example-authorization-policy-single-device)\.
+<a name="phrase-example-uses-recipe-variables-in-configuration"></a>This example uses a feature that is available for v2\.6\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\. Greengrass nucleus v2\.6\.0 adds support for most [recipe variables](component-recipe-reference.md#recipe-variables), such as `{iot:thingName}`, in component configurations\. To enable this feature, set the Greengrass nucleus' [interpolateComponentConfiguration](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-interpolate-component-configuration) configuration option to `true`\. For an example that works for all versions of the Greengrass nucleus, see the [example authorization policy for a single core device](#interact-with-shadows-react-example-authorization-policy-single-device)\.
 The following example access control policy allows the custom `com.example.MyShadowReactiveComponent` to receive messages on the `/update/delta` topic for the classic device shadow and the named shadow `myNamedShadow` on each core device that runs the component\.  
 
 ```
@@ -402,7 +402,7 @@ The component's authorization policy doesn't include required permissions for th
 The following examples demonstrate how to call this operation in custom component code\.
 
 ------
-#### [ Java ]
+#### [ Java \(IPC client V1\) ]
 
 **Example: Get a thing shadow**  
 This example uses an `IPCUtils` class to create a connection to the AWS IoT Greengrass Core IPC service\. For more information, see [Connect to the AWS IoT Greengrass Core IPC service](interprocess-communication.md#ipc-service-connect)\.
@@ -481,7 +481,7 @@ public class GetThingShadow {
 ```
 
 ------
-#### [ Python ]
+#### [ Python \(IPC client V1\) ]
 
 **Example: Get a thing shadow**  
 
@@ -613,7 +613,7 @@ The component's authorization policy doesn't include required permissions for th
 The following examples demonstrate how to call this operation in custom component code\.
 
 ------
-#### [ Java ]
+#### [ Java \(IPC client V1\) ]
 
 **Example: Update a thing shadow**  
 This example uses an `IPCUtils` class to create a connection to the AWS IoT Greengrass Core IPC service\. For more information, see [Connect to the AWS IoT Greengrass Core IPC service](interprocess-communication.md#ipc-service-connect)\.
@@ -689,7 +689,7 @@ public class UpdateThingShadow {
 ```
 
 ------
-#### [ Python ]
+#### [ Python \(IPC client V1\) ]
 
 **Example: Update a thing shadow**  
 
@@ -774,7 +774,7 @@ The component's authorization policy doesn't include required permissions for th
 The following examples demonstrate how to call this operation in custom component code\.
 
 ------
-#### [ Java ]
+#### [ Java \(IPC client V1\) ]
 
 **Example: Delete a thing shadow**  
 This example uses an `IPCUtils` class to create a connection to the AWS IoT Greengrass Core IPC service\. For more information, see [Connect to the AWS IoT Greengrass Core IPC service](interprocess-communication.md#ipc-service-connect)\.
@@ -850,7 +850,7 @@ public class DeleteThingShadow {
 ```
 
 ------
-#### [ Python ]
+#### [ Python \(IPC client V1\) ]
 
 **Example: Delete a thing shadow**  
 
@@ -947,7 +947,7 @@ The component's authorization policy doesn't include required permissions for th
 The following examples demonstrate how to call this operation in custom component code\.
 
 ------
-#### [ Java ]
+#### [ Java \(IPC client V1\) ]
 
 **Example: List a thing's named shadows**  
 This example uses an `IPCUtils` class to create a connection to the AWS IoT Greengrass Core IPC service\. For more information, see [Connect to the AWS IoT Greengrass Core IPC service](interprocess-communication.md#ipc-service-connect)\.
@@ -1035,7 +1035,7 @@ public class ListNamedShadowsForThing {
 ```
 
 ------
-#### [ Python ]
+#### [ Python \(IPC client V1\) ]
 
 **Example: List a thing's named shadows**  
 

@@ -34,7 +34,7 @@ You can create a component that installs the programming language, and then spec
   + Java 11 – `java11`
   + Java 8 – `java8`
   + Node\.js 14 – `nodejs14.x`
-  + Node\.js 12 – `nodejs12.x`
+  + Node\.js 12 – `nodejs12.x` \*
   + Node\.js 10 – `nodejs10.x` \*
 
   \* You can run Lambda functions that use this runtime on AWS IoT Greengrass, but you can't create them in AWS Lambda\. For more information, see [Runtime support policy](https://docs.aws.amazon.com/lambda/latest/dg/runtime-support-policy.html) in the *AWS Lambda Developer Guide*\.

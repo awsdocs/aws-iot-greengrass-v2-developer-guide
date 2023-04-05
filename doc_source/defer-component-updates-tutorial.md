@@ -56,7 +56,7 @@ If you haven't installed the GDK CLI on your development computer, complete the 
 1. On your development computer, run the following command to install the latest version of the GDK CLI from its [GitHub repository](https://github.com/aws-greengrass/aws-greengrass-gdk-cli)\.
 
    ```
-   python3 -m pip install -U git+https://github.com/aws-greengrass/aws-greengrass-gdk-cli.git@v1.1.0
+   python3 -m pip install -U git+https://github.com/aws-greengrass/aws-greengrass-gdk-cli.git@v1.2.0
    ```
 
 1. <a name="gdk-cli-verify-installation"></a>Run the following command to verify that the GDK CLI installed successfully\.
@@ -308,7 +308,7 @@ The AWS IoT Greengrass Core software doesn't send update notifications for local
          },
          "Artifacts": [
            {
-             "URI": "s3://BUCKET_NAME/COMPONENT_NAME/COMPONENT_VERSION/com.example.BatteryAwareHelloWorld.zip",
+             "Uri": "s3://BUCKET_NAME/COMPONENT_NAME/COMPONENT_VERSION/com.example.BatteryAwareHelloWorld.zip",
              "Unarchive": "ZIP"
            }
          ]
@@ -323,7 +323,7 @@ The AWS IoT Greengrass Core software doesn't send update notifications for local
          },
          "Artifacts": [
            {
-             "URI": "s3://BUCKET_NAME/COMPONENT_NAME/COMPONENT_VERSION/com.example.BatteryAwareHelloWorld.zip",
+             "Uri": "s3://BUCKET_NAME/COMPONENT_NAME/COMPONENT_VERSION/com.example.BatteryAwareHelloWorld.zip",
              "Unarchive": "ZIP"
            }
          ]
@@ -362,7 +362,7 @@ The AWS IoT Greengrass Core software doesn't send update notifications for local
          Install: python3 -m pip install --user awsiotsdk --upgrade
          Run: python3 -u {artifacts:decompressedPath}/com.example.BatteryAwareHelloWorld/main.py "{configuration:/BatteryThreshold}" "{configuration:/LinuxBatteryFilePath}"
        Artifacts:
-         - URI: "s3://BUCKET_NAME/COMPONENT_NAME/COMPONENT_VERSION/com.example.BatteryAwareHelloWorld.zip"
+         - Uri: "s3://BUCKET_NAME/COMPONENT_NAME/COMPONENT_VERSION/com.example.BatteryAwareHelloWorld.zip"
            Unarchive: ZIP
      - Platform:
          os: windows
@@ -370,7 +370,7 @@ The AWS IoT Greengrass Core software doesn't send update notifications for local
          Install: py -3 -m pip install --user awsiotsdk --upgrade
          Run: py -3 -u {artifacts:decompressedPath}/com.example.BatteryAwareHelloWorld/main.py "{configuration:/BatteryThreshold}" "{configuration:/WindowsBatteryFilePath}"
        Artifacts:
-         - URI: "s3://BUCKET_NAME/COMPONENT_NAME/COMPONENT_VERSION/com.example.BatteryAwareHelloWorld.zip"
+         - Uri: "s3://BUCKET_NAME/COMPONENT_NAME/COMPONENT_VERSION/com.example.BatteryAwareHelloWorld.zip"
            Unarchive: ZIP
    ```
 
@@ -475,7 +475,7 @@ In this section, you publish the Hello World component to the AWS IoT Greengrass
 
    1. <a name="core-device-allow-s3-bucket-access-console-step-5"></a>Choose **Create policy**\.
 
-   1. <a name="core-device-allow-s3-bucket-access-console-step-6"></a>In the [IAM console](https://console.aws.amazon.com/iam) navigation menu, choose **Role**, and then choose the name of the role for the core device\. You specified this role name when you installed the AWS IoT Greengrass Core software\.
+   1. <a name="core-device-allow-s3-bucket-access-console-step-6"></a>In the [IAM console](https://console.aws.amazon.com/iam) navigation menu, choose **Role**, and then choose the name of the role for the core device\. You specified this role name when you installed the AWS IoT Greengrass Core software\. If you did not specify a name, the default is `GreengrassV2TokenExchangeRole`\.
 
    1. <a name="core-device-allow-s3-bucket-access-console-step-7"></a>Under **Permissions**, choose **Add permissions**, then choose **Attach policies**\.
 
@@ -579,7 +579,6 @@ If the file doesn't exist, the deployment may not be complete yet\. If the file 
    ```
    type C:\greengrass\v2\logs\greengrass.log
    ```
-<a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.  
 <a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
 
    ```

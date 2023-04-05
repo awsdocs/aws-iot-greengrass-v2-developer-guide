@@ -41,7 +41,7 @@ The Greengrass core device rotates the MQTT server certificate 24 hours before i
 
 ## AWS IoT policies for data plane operations<a name="iot-policies"></a>
 
-Use AWS IoT policies to authorize access to the AWS IoT Core and AWS IoT Greengrass data planes\. The AWS IoT Core data plane provides operations for devices, users, and applications\. These operations include the ability to connect to AWS IoT Core and subscribe to topics\. The AWS IoT Greengrass data plane provides operations for Greengrass devices\. These operations include the ability to resolve component dependencies and download public component artifacts\.
+Use AWS IoT policies to authorize access to the AWS IoT Core and AWS IoT Greengrass data planes\. The AWS IoT Core data plane provides operations for devices, users, and applications\. These operations include the ability to connect to AWS IoT Core and subscribe to topics\. The AWS IoT Greengrass data plane provides operations for Greengrass devices\. For more information, see [AWS IoT Greengrass V2 policy actions](#greengrass-policy-actions)\. These operations include the ability to resolve component dependencies and download public component artifacts\.
 
 An AWS IoT policy is a JSON document that's similar to an [IAM policy](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_grammar.html#policies-grammar-json)\. It contains one or more policy statements that specify the following properties:
 + `Effect`\. The access mode, which can be `Allow` or `Deny`\.

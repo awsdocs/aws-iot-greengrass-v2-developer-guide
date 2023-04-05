@@ -4,6 +4,9 @@ After you [install the AWS IoT Greengrass Core software](install-greengrass-core
 
 When you install the AWS IoT Greengrass Core software, you can specify whether to install it as a system service with [systemd](https://en.wikipedia.org/wiki/Systemd)\. If you choose this option, the installer runs the software for you and configures it to run when your device boots\.
 
+**Important**  <a name="windows-system-service-requirement-important-note"></a>
+On Windows core devices, you must set up the AWS IoT Greengrass Core software as a system service\.
+
 **Topics**
 + [Check if the AWS IoT Greengrass Core software runs as a system service](#check-system-service)
 + [Run the AWS IoT Greengrass Core software as a system service](#run-greengrass-core-system-service)

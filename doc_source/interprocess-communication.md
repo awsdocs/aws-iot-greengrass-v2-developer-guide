@@ -11,10 +11,12 @@ The IPC interface supports two types of operations:
   Components send a subscription request to the IPC service and expect a stream of event messages in response\. Components provide a subscription handler that handles event messages, errors, and stream closure\. The AWS IoT Device SDK includes a handler interface with the correct response and event types for each IPC operation\. For more information, see [Subscribe to IPC event streams](#ipc-subscribe-operations)\.
 
 **Topics**
++ [IPC client versions](#ipc-client-versions)
 + [Supported SDKs for interprocess communication](#ipc-requirements)
 + [Connect to the AWS IoT Greengrass Core IPC service](#ipc-service-connect)
 + [Authorize components to perform IPC operations](#ipc-authorization-policies)
 + [Subscribe to IPC event streams](#ipc-subscribe-operations)
++ [IPC best practices](#ipc-best-practices)
 + [Publish/subscribe local messages](ipc-publish-subscribe.md)
 + [Publish/subscribe AWS IoT Core MQTT messages](ipc-iot-core-mqtt.md)
 + [Interact with component lifecycle](ipc-component-lifecycle.md)
@@ -24,30 +26,89 @@ The IPC interface supports two types of operations:
 + [Manage local deployments and components](ipc-local-deployments-components.md)
 + [Authenticate and authorize client devices](ipc-client-device-auth.md)
 
+## IPC client versions<a name="ipc-client-versions"></a>
+
+In later versions of the Java and Python SDKs, AWS IoT Greengrass provides an improved version of the IPC client, called IPC client V2\. IPC client V2:
++ Reduces the amount of code that you need to write to use IPC operations and helps avoid common errors that can occur with IPC client V1\.
++ Calls subscription handler callbacks in a separate thread, so you can now run blocking code, including additional IPC function calls, in subscription handler callbacks\. IPC client V1 uses the same thread to communicate with the IPC server and call subscription handler callbacks\.
++ Lets you call subscription operations using Lambda expressions \(Java\) or functions \(Python\)\. IPC client V1 requires you to define subscription handler classes\.
++ Provides synchronous and asynchronous versions of each IPC operation\. IPC client V1 provides only asynchronous versions of each operation\.
+
+We recommend that you use IPC client V2 to take advantage of these improvements\. However, many examples in this documentation and in some online content demonstrate only how to use IPC client V1\. You can use the following examples and tutorials to see sample components that use IPC client V2:
++ [PublishToTopic examples](ipc-publish-subscribe.md#ipc-operation-publishtotopic-examples)
++ [SubscribeToTopic examples](ipc-publish-subscribe.md#ipc-operation-subscribetotopic-examples)
++ [Tutorial: Develop a Greengrass component that defers component updates](defer-component-updates-tutorial.md)
++ [Tutorial: Interact with local IoT devices over MQTT](client-devices-tutorial.md)
+
+Currently, the AWS IoT Device SDK for C\+\+ v2 supports only IPC client V1\.
+
 ## Supported SDKs for interprocess communication<a name="ipc-requirements"></a>
 
 The AWS IoT Greengrass Core IPC libraries are included in the following AWS IoT Device SDK versions\.
-+ [AWS IoT Device SDK for Java v2](https://github.com/aws/aws-iot-device-sdk-java-v2) \(v1\.2\.10 or later\)
 
-  For more information about using the AWS IoT Device SDK for Java v2 to connect to the AWS IoT Greengrass Core IPC service, see [Use AWS IoT Device SDK for Java v2](#ipc-java)\.
-+ [AWS IoT Device SDK for Python v2](https://github.com/aws/aws-iot-device-sdk-python-v2) \(v1\.5\.3 or later\)
 
-  For more information about using the AWS IoT Device SDK for Python v2 to connect to the AWS IoT Greengrass Core IPC service, see [Use AWS IoT Device SDK for Python v2](#ipc-python)\.
-+ [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2) \(Linux: v1\.13\.0 or later; Windows: v1\.14\.6 or later\)
-
-  For more information about using the AWS IoT Device SDK for C\+\+ v2 to connect to the AWS IoT Greengrass Core IPC service, see [Use AWS IoT Device SDK for C\+\+ v2](#ipc-cpp)\.
+| SDK | IPC client | Minimum version | Usage | 
+| --- | --- | --- | --- | 
+|  [AWS IoT Device SDK for Java v2](https://github.com/aws/aws-iot-device-sdk-java-v2)  |  V2  |  v1\.6\.0  |  See [Use AWS IoT Device SDK for Java v2 \(IPC client V2\)](#ipc-java-v2)  | 
+|  [AWS IoT Device SDK for Python v2](https://github.com/aws/aws-iot-device-sdk-python-v2)  |  V2  |  v1\.9\.0  |  See [Use AWS IoT Device SDK for Python v2 \(IPC client V2\)](#ipc-python-v2)  | 
+|  [AWS IoT Device SDK for Java v2](https://github.com/aws/aws-iot-device-sdk-java-v2)  |  V1  |  v1\.2\.10  |  See [Use AWS IoT Device SDK for Java v2 \(IPC client V1\)](#ipc-java)  | 
+|  [AWS IoT Device SDK for Python v2](https://github.com/aws/aws-iot-device-sdk-python-v2)  |  V1  |  v1\.5\.3  |  See [Use AWS IoT Device SDK for Python v2 \(IPC client V1\)](#ipc-python)  | 
+|  [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2)  |  V1  |  v1\.17\.0  |  See [Use AWS IoT Device SDK for C\+\+ v2](#ipc-cpp)  | 
 
 ## Connect to the AWS IoT Greengrass Core IPC service<a name="ipc-service-connect"></a>
 
 To use interprocess communication in your custom component, you must create a connection to an IPC server socket that the AWS IoT Greengrass Core software runs\. Complete the following tasks to download and use the AWS IoT Device SDK in the language of your choice\. 
 
-### Use AWS IoT Device SDK for Java v2<a name="ipc-java"></a>
+### Use AWS IoT Device SDK for Java v2 \(IPC client V2\)<a name="ipc-java-v2"></a>
 
-**To use the AWS IoT Device SDK for Java v2**
+**To use the AWS IoT Device SDK for Java v2 \(IPC client V2\)**
+
+1. Download the [AWS IoT Device SDK for Java v2](https://github.com/aws/aws-iot-device-sdk-java-v2) \(v1\.6\.0 or later\)\.
+
+1. <a name="use-ipc-java-component-install-step"></a>Do one of the following to run your custom code in your component:
+   + Build your component as a JAR file that includes the AWS IoT Device SDK, and run this JAR file in your component recipe\.
+   + Define the AWS IoT Device SDK JAR as a component artifact, and add that artifact to the classpath when you run your application in your component recipe\.
+
+1. Use the following code to create the IPC client\.
+
+   ```
+   try (GreengrassCoreIPCClientV2 ipcClient = GreengrassCoreIPCClientV2.builder().build()) {
+       // Use client.
+   } catch (Exception e) {
+       LOGGER.log(Level.SEVERE, "Exception occurred when using IPC.", e);
+       System.exit(1);
+   }
+   ```
+
+### Use AWS IoT Device SDK for Python v2 \(IPC client V2\)<a name="ipc-python-v2"></a>
+
+**To use the AWS IoT Device SDK for Python v2 \(IPC client V2\)**
+
+1. Download the [AWS IoT Device SDK for Python](https://github.com/aws/aws-iot-device-sdk-python-v2) \(v1\.9\.0 or later\)\.
+
+1. <a name="use-ipc-python-component-install-step"></a>Add the SDK's [installation steps](https://github.com/aws/aws-iot-device-sdk-python-v2#installation) to the install lifecycle in your component's recipe\.
+
+1. Create a connection to the AWS IoT Greengrass Core IPC service\. Use the following code to create the IPC client\.
+
+   ```
+   from awsiot.greengrasscoreipc.clientv2 import GreengrassCoreIPCClientV2
+   
+   try:
+       ipc_client = GreengrassCoreIPCClientV2()
+       # Use IPC client.
+   except Exception:
+       print('Exception occurred when using IPC.', file=sys.stderr)
+       traceback.print_exc()
+       exit(1)
+   ```
+
+### Use AWS IoT Device SDK for Java v2 \(IPC client V1\)<a name="ipc-java"></a>
+
+**To use the AWS IoT Device SDK for Java v2 \(IPC client V1\)**
 
 1. Download the [AWS IoT Device SDK for Java v2](https://github.com/aws/aws-iot-device-sdk-java-v2) \(v1\.2\.10 or later\)\.
 
-1. Do one of the following to run your custom code in your component:
+1. <a name="use-ipc-java-component-install-step"></a>Do one of the following to run your custom code in your component:
    + Build your component as a JAR file that includes the AWS IoT Device SDK, and run this JAR file in your component recipe\.
    + Define the AWS IoT Device SDK JAR as a component artifact, and add that artifact to the classpath when you run your application in your component recipe\.
 
@@ -149,19 +210,20 @@ To use interprocess communication in your custom component, you must create a co
    ```
    try (EventStreamRPCConnection eventStreamRPCConnection = IPCUtils.getEventStreamRpcConnection()) {
        GreengrassCoreIPCClient ipcClient = new GreengrassCoreIPCClient(eventStreamRPCConnection);
+       // Use client.
    } catch (Exception e) {
        LOGGER.log(Level.SEVERE, "Exception occurred when using IPC.", e);
        System.exit(1);
    }
    ```
 
-### Use AWS IoT Device SDK for Python v2<a name="ipc-python"></a>
+### Use AWS IoT Device SDK for Python v2 \(IPC client V1\)<a name="ipc-python"></a>
 
-**To use the AWS IoT Device SDK for Python v2**
+**To use the AWS IoT Device SDK for Python v2 \(IPC client V1\)**
 
 1. Download the [AWS IoT Device SDK for Python](https://github.com/aws/aws-iot-device-sdk-python-v2) \(v1\.5\.3 or later\)\.
 
-1. Add the SDK's [installation steps](https://github.com/aws/aws-iot-device-sdk-python-v2#installation) to the install lifecycle in your component's recipe\.
+1. <a name="use-ipc-python-component-install-step"></a>Add the SDK's [installation steps](https://github.com/aws/aws-iot-device-sdk-python-v2#installation) to the install lifecycle in your component's recipe\.
 
 1. Create a connection to the AWS IoT Greengrass Core IPC service\. Complete the following steps to create the IPC client and establish a connection\.
 
@@ -173,7 +235,13 @@ To use interprocess communication in your custom component, you must create a co
    ```
    import awsiot.greengrasscoreipc
    
-   ipc_client = awsiot.greengrasscoreipc.connect()
+   try:
+       ipc_client = awsiot.greengrasscoreipc.connect()
+       # Use client.
+   except Exception:
+       print('Exception occurred when using IPC.', file=sys.stderr)
+       traceback.print_exc()
+       exit(1)
    ```
 
 ------
@@ -226,17 +294,20 @@ To use interprocess communication in your custom component, you must create a co
       ```
       import awsiot.greengrasscoreipc.client as client
       
-      ipc_utils = IPCUtils()
-      connection = ipc_utils.connect()
-      ipc_client = client.GreengrassCoreIPCClient(connection)
+      try:
+          ipc_utils = IPCUtils()
+          connection = ipc_utils.connect()
+          ipc_client = client.GreengrassCoreIPCClient(connection)
+          # Use client.
+      except Exception:
+          print('Exception occurred when using IPC.', file=sys.stderr)
+          traceback.print_exc()
+          exit(1)
       ```
 
 ------
 
 ### Use AWS IoT Device SDK for C\+\+ v2<a name="ipc-cpp"></a>
-
-**Note**  
-AWS IoT Greengrass doesn't currently support this feature on Windows core devices\. 
 
 <a name="iot-device-sdk-cpp-v2-build-requirements-intro"></a>To build the AWS IoT Device SDK v2 for C\+\+, a device must have the following tools:<a name="iot-device-sdk-cpp-v2-build-requirements"></a>
 + C\+\+ 11 or later
@@ -248,7 +319,7 @@ AWS IoT Greengrass doesn't currently support this feature on Windows core device
 
 **To use the AWS IoT Device SDK for C\+\+ v2**
 
-1. Download the [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2) \(Linux: v1\.13\.0 or later; Windows: v1\.14\.6 or later\)\.
+1. Download the [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2) \(v1\.17\.0 or later\)\.
 
 1. Follow the [installation instructions in the README](https://github.com/aws/aws-iot-device-sdk-cpp-v2#Installation) to build the AWS IoT Device SDK for C\+\+ v2 from source\.
 
@@ -453,7 +524,7 @@ When you define authorization policies for the AWS IoT Core MQTT IPC service, yo
 
 ### Recipe variables in authorization policies<a name="ipc-authorization-policy-recipe-variables"></a>
 
-If you use [Greengrass nucleus](greengrass-nucleus-component.md) v2\.6\.0 or later, you can use the `{iot:thingName}` [recipe variable](component-recipe-reference.md#recipe-variables) in authorization policies\. When you need an authorization policy that includes the core device's name, such as for MQTT topics or device shadows, you can use this recipe variable to configure a single authorization policy for a group of core devices\. For example, you can allow a component access to the following resource for shadow IPC operations\.
+If you use [Greengrass nucleus](greengrass-nucleus-component.md) v2\.6\.0 or later, and you set the Greengrass nucleus' [interpolateComponentConfiguration](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-interpolate-component-configuration) configuration option to `true`, you can use the `{iot:thingName}` [recipe variable](component-recipe-reference.md#recipe-variables) in authorization policies\. When you need an authorization policy that includes the core device's name, such as for MQTT topics or device shadows, you can use this recipe variable to configure a single authorization policy for a group of core devices\. For example, you can allow a component access to the following resource for shadow IPC operations\.
 
 ```
 $aws/things/{iot:thingName}/shadow/
@@ -624,17 +695,18 @@ The AWS IoT Greengrass Core IPC service supports the following subscribe operati
 
 **Topics**
 + [Define subscription handlers](#ipc-define-subscription-handlers)
-+ [Best practices for subscription handlers](#ipc-subscription-handler-best-practices)
 + [Example subscription handlers](#ipc-subscription-handler-examples)
 
 ### Define subscription handlers<a name="ipc-define-subscription-handlers"></a>
 
-To define a subscription handler, create a class with callback functions that handle event messages, errors, and stream closure\.
+To define a subscription handler, define callback functions that handle event messages, errors, and stream closure\. If you use IPC client V1, you must define these functions in a class\. If you use IPC client V2, which is available in later versions of the Java and Python SDKs, you can define these functions without creating a subscription handler class\.
 
 ------
 #### [ Java ]
 
-Implement the generic `software.amazon.awssdk.eventstreamrpc.StreamResponseHandler<StreamEventType>` interface\. *StreamEventType* is the type of event message for the subscription operation\. Define the following functions to handle event messages, errors, and stream closure\.
+If you use IPC client V1, you must implement the generic `software.amazon.awssdk.eventstreamrpc.StreamResponseHandler<StreamEventType>` interface\. *StreamEventType* is the type of event message for the subscription operation\. Define the following functions to handle event messages, errors, and stream closure\.
+
+If you use IPC client V2, you can define these functions outside of a subscription handler class or use [lambda expressions](https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html)\.
 
 `void onStreamEvent(StreamEventType event)`  
 The callback that the IPC client calls when it receives an event message, such as an MQTT message or a component update notification\.
@@ -649,7 +721,9 @@ The callback that the IPC client calls when the stream closes\.
 ------
 #### [ Python ]
 
-Extend the stream response handler class that corresponds to the subscription operation\. The AWS IoT Device SDK includes a subscription handler class for each subscription operation\. *StreamEventType* is the type of event message for the subscription operation\. Define the following functions to handle event messages, errors, and stream closure\.
+If you use IPC client V1, you must extend the stream response handler class that corresponds to the subscription operation\. The AWS IoT Device SDK includes a subscription handler class for each subscription operation\. *StreamEventType* is the type of event message for the subscription operation\. Define the following functions to handle event messages, errors, and stream closure\.
+
+If you use IPC client V2, you can define these functions outside of a subscription handler class or use [lambda expressions](https://docs.python.org/3/tutorial/controlflow.html#lambda-expressions)\.
 
 `def on_stream_event(self, event: StreamEventType) -> None`  
 The callback that the IPC client calls when it receives an event message, such as an MQTT message or a component update notification\.
@@ -678,25 +752,159 @@ The callback that the IPC client calls when the stream closes\.
 
 ------
 
-### Best practices for subscription handlers<a name="ipc-subscription-handler-best-practices"></a>
-
-The IPC client uses a single thread that communicates with the IPC server and calls your subscription handler\. You must consider this synchronous behavior when you write subscription handler functions\. Follow these guidelines when you write subscription handler functions\.
-+ **Run blocking code asynchronously**
-
-  The IPC client can't send new requests or process new event messages while the thread is blocked\. You can run blocking code in a separate thread that you run from the handler function\. Blocking code includes `sleep` calls, loops that continuously run, and synchronous I/O requests that take time to complete\.
-+ **Send new IPC requests asynchronously**
-
-  The IPC client can't send a new request from within subscription handler functions, because the request blocks the handler function if you wait for a response\. You can send IPC requests in a separate thread that you run from the handler function\.
-+ **Handle exceptions**
-
-  The IPC client doesn't handle uncaught exceptions in subscription handler functions\. If your handler function throws an exception, the subscription closes, and the exception doesn't appear in your component logs\. You can catch exceptions in your handler functions to keep the subscription open and log errors that occur in your code\.
-
 ### Example subscription handlers<a name="ipc-subscription-handler-examples"></a>
 
 The following example demonstrates how to use the [SubscribeToTopic](ipc-publish-subscribe.md#ipc-operation-subscribetotopic) operation and a subscription handler to subscribe to local publish/subscribe messages\.
 
 ------
-#### [ Java ]
+#### [ Java \(IPC client V2\) ]
+
+**Example: Subscribe to local publish/subscribe messages**  <a name="ipc-operation-subscribetotopic-example-java-v2"></a>
+
+```
+package com.aws.greengrass.docs.samples.ipc;
+
+import software.amazon.awssdk.aws.greengrass.GreengrassCoreIPCClientV2;
+import software.amazon.awssdk.aws.greengrass.SubscribeToTopicResponseHandler;
+import software.amazon.awssdk.aws.greengrass.model.*;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
+
+public class SubscribeToTopicV2 {
+
+    public static void main(String[] args) {
+        String topic = args[0];
+        try (GreengrassCoreIPCClientV2 ipcClient = GreengrassCoreIPCClientV2.builder().build()) {
+            SubscribeToTopicRequest request = new SubscribeToTopicRequest().withTopic(topic);
+            GreengrassCoreIPCClientV2.StreamingResponse<SubscribeToTopicResponse,
+                    SubscribeToTopicResponseHandler> response =
+                    ipcClient.subscribeToTopic(request, SubscribeToTopicV2::onStreamEvent,
+                            Optional.of(SubscribeToTopicV2::onStreamError),
+                            Optional.of(SubscribeToTopicV2::onStreamClosed));
+            SubscribeToTopicResponseHandler responseHandler = response.getHandler();
+            System.out.println("Successfully subscribed to topic: " + topic);
+
+            // Keep the main thread alive, or the process will exit.
+            try {
+                while (true) {
+                    Thread.sleep(10000);
+                }
+            } catch (InterruptedException e) {
+                System.out.println("Subscribe interrupted.");
+            }
+
+            // To stop subscribing, close the stream.
+            responseHandler.closeStream();
+        } catch (Exception e) {
+            if (e.getCause() instanceof UnauthorizedError) {
+                System.err.println("Unauthorized error while publishing to topic: " + topic);
+            } else {
+                System.err.println("Exception occurred when using IPC.");
+            }
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    public static void onStreamEvent(SubscriptionResponseMessage subscriptionResponseMessage) {
+        try {
+            BinaryMessage binaryMessage = subscriptionResponseMessage.getBinaryMessage();
+            String message = new String(binaryMessage.getMessage(), StandardCharsets.UTF_8);
+            String topic = binaryMessage.getContext().getTopic();
+            System.out.printf("Received new message on topic %s: %s%n", topic, message);
+        } catch (Exception e) {
+            System.err.println("Exception occurred while processing subscription response " +
+                    "message.");
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean onStreamError(Throwable error) {
+        System.err.println("Received a stream error.");
+        error.printStackTrace();
+        return false; // Return true to close stream, false to keep stream open.
+    }
+
+    public static void onStreamClosed() {
+        System.out.println("Subscribe to topic stream closed.");
+    }
+}
+```
+
+------
+#### [ Python \(IPC client V2\) ]
+
+**Example: Subscribe to local publish/subscribe messages**  <a name="ipc-operation-subscribetotopic-example-python-v2"></a>
+
+```
+import sys
+import time
+import traceback
+
+from awsiot.greengrasscoreipc.clientv2 import GreengrassCoreIPCClientV2
+from awsiot.greengrasscoreipc.model import (
+    SubscriptionResponseMessage,
+    UnauthorizedError
+)
+
+
+def main():
+    args = sys.argv[1:]
+    topic = args[0]
+
+    try:
+        ipc_client = GreengrassCoreIPCClientV2()
+        # Subscription operations return a tuple with the response and the operation.
+        _, operation = ipc_client.subscribe_to_topic(topic=topic, on_stream_event=on_stream_event,
+                                                     on_stream_error=on_stream_error, on_stream_closed=on_stream_closed)
+        print('Successfully subscribed to topic: ' + topic)
+
+        # Keep the main thread alive, or the process will exit.
+        try:
+            while True:
+                time.sleep(10)
+        except InterruptedError:
+            print('Subscribe interrupted.')
+
+        # To stop subscribing, close the stream.
+        operation.close()
+    except UnauthorizedError:
+        print('Unauthorized error while subscribing to topic: ' +
+              topic, file=sys.stderr)
+        traceback.print_exc()
+        exit(1)
+    except Exception:
+        print('Exception occurred', file=sys.stderr)
+        traceback.print_exc()
+        exit(1)
+
+
+def on_stream_event(event: SubscriptionResponseMessage) -> None:
+    try:
+        message = str(event.binary_message.message, 'utf-8')
+        topic = event.binary_message.context.topic
+        print('Received new message on topic %s: %s' % (topic, message))
+    except:
+        traceback.print_exc()
+
+
+def on_stream_error(error: Exception) -> bool:
+    print('Received a stream error.', file=sys.stderr)
+    traceback.print_exc()
+    return False  # Return True to close stream, False to keep stream open.
+
+
+def on_stream_closed() -> None:
+    print('Subscribe to topic stream closed.')
+
+
+if __name__ == '__main__':
+    main()
+```
+
+------
+#### [ Java \(IPC client V1\) ]
 
 **Example: Subscribe to local publish/subscribe messages**  <a name="ipc-operation-subscribetotopic-example-java"></a>
 This example uses an `IPCUtils` class to create a connection to the AWS IoT Greengrass Core IPC service\. For more information, see [Connect to the AWS IoT Greengrass Core IPC service](#ipc-service-connect)\.
@@ -814,10 +1022,10 @@ public class SubscribeToTopic {
 ```
 
 ------
-#### [ Python ]
+#### [ Python \(IPC client V1\) ]
 
 **Example: Subscribe to local publish/subscribe messages**  <a name="ipc-operation-subscribetotopic-example-python"></a>
-This example assumes that you are using version 1\.5\.4 or later of the AWS IoT Device SDK for Python v2\. If you are using version 1\.5\.3 of the SDK, see [Use AWS IoT Device SDK for Python v2](#ipc-python) for information about connecting to the AWS IoT Greengrass Core IPC service\. 
+This example assumes that you are using version 1\.5\.4 or later of the AWS IoT Device SDK for Python v2\. If you are using version 1\.5\.3 of the SDK, see [Use AWS IoT Device SDK for Python v2 \(IPC client V1\)](#ipc-python) for information about connecting to the AWS IoT Greengrass Core IPC service\. 
 
 ```
 import time
@@ -880,36 +1088,40 @@ operation.close()
 ```
 #include <iostream>
 
-#include <aws/crt/Api.h>
+#include </crt/Api.h>
 #include <aws/greengrass/GreengrassCoreIpcClient.h>
 
 using namespace Aws::Crt;
 using namespace Aws::Greengrass;
 
 class SubscribeResponseHandler : public SubscribeToTopicStreamHandler {
-    void OnStreamEvent(SubscriptionResponseMessage *response) override {
-        auto jsonMessage = response->GetJsonMessage();
-        if (jsonMessage.has_value() && jsonMessage.value().GetMessage().has_value()) {
-            auto messageString = jsonMessage.value().GetMessage().value().View().WriteReadable();
-            // Handle JSON message.
-        } else {
-            auto binaryMessage = response->GetBinaryMessage();
-            if (binaryMessage.has_value() && binaryMessage.value().GetMessage().has_value()) {
-                auto messageBytes = binaryMessage.value().GetMessage().value();
-                std::string messageString(messageBytes.begin(), messageBytes.end());
-                // Handle binary message.
-            }
-        } 
-    }
+    public:
+        virtual ~SubscribeResponseHandler() {}
 
-    bool OnStreamError(OperationError *error) override {
-        // Handle error.
-        return false; // Return true to close stream, false to keep stream open.
-    }
-    
-    void OnStreamClosed() override {
-        // Handle close.
-    }
+    private:
+        void OnStreamEvent(SubscriptionResponseMessage *response) override {
+            auto jsonMessage = response->GetJsonMessage();
+            if (jsonMessage.has_value() && jsonMessage.value().GetMessage().has_value()) {
+                auto messageString = jsonMessage.value().GetMessage().value().View().WriteReadable();
+                // Handle JSON message.
+            } else {
+                auto binaryMessage = response->GetBinaryMessage();
+                if (binaryMessage.has_value() && binaryMessage.value().GetMessage().has_value()) {
+                    auto messageBytes = binaryMessage.value().GetMessage().value();
+                    std::string messageString(messageBytes.begin(), messageBytes.end());
+                    // Handle binary message.
+                }
+            }
+        }
+
+        bool OnStreamError(OperationError *error) override {
+            // Handle error.
+            return false; // Return true to close stream, false to keep stream open.
+        }
+
+        void OnStreamClosed() override {
+            // Handle close.
+        }
 };
 
 class IpcClientLifecycleHandler : public ConnectionLifecycleHandler {
@@ -939,30 +1151,32 @@ int main() {
         std::cerr << "Failed to establish IPC connection: " << connectionStatus.StatusToString() << std::endl;
         exit(-1);
     }
-    
+
     String topic("my/topic");
     int timeout = 10;
 
     SubscribeToTopicRequest request;
     request.SetTopic(topic);
-    
-    SubscribeResponseHandler streamHandler;
-    SubscribeToTopicOperation operation = ipcClient.NewSubscribeToTopic(streamHandler);
-    auto activate = operation.Activate(request, nullptr);
+
+    //SubscribeResponseHandler streamHandler;
+    auto streamHandler = MakeShared<SubscribeResponseHandler>(DefaultAllocator());
+    auto operation = ipcClient.NewSubscribeToTopic(streamHandler);
+    auto activate = operation->Activate(request, nullptr);
     activate.wait();
 
-    auto responseFuture = operation.GetResult();
+    auto responseFuture = operation->GetResult();
     if (responseFuture.wait_for(std::chrono::seconds(timeout)) == std::future_status::timeout) {
         std::cerr << "Operation timed out while waiting for response from Greengrass Core." << std::endl;
         exit(-1);
     }
-    
+
     auto response = responseFuture.get();
     if (!response) {
         // Handle error.
         auto errorType = response.GetResultType();
         if (errorType == OPERATION_ERROR) {
             auto *error = response.GetOperationError();
+            (void)error;
             // Handle operation error.
         } else {
             // Handle RPC error.
@@ -974,10 +1188,44 @@ int main() {
     while (true) {
         std::this_thread::sleep_for(std::chrono::seconds(10));
     }
-    
-    operation.Close();
+
+    operation->Close();
     return 0;
 }
 ```
+
+------
+
+## IPC best practices<a name="ipc-best-practices"></a>
+
+The best practices for using IPC in custom components differ between IPC client V1 and IPC client V2\. Follow the best practices for the IPC client version that you use\.
+
+------
+#### [ IPC client V2 ]
+
+The IPC client V2 runs callback functions in a separate thread, so compared to IPC client V1, there are fewer guidelines for you to follow when you use IPC and write subscription handler functions\.
++ <a name="ipc-best-practice-reuse-one-client"></a>**Reuse one IPC client**
+
+  After you create an IPC client, keep it open and reuse it for all IPC operations\. Creating multiple clients uses extra resources and can result in resource leaks\.
++ **Handle exceptions**
+
+  The IPC client V2 logs uncaught exceptions in subscription handler functions\. You should catch exceptions in your handler functions to handle errors that occur in your code\.
+
+------
+#### [ IPC client V1 ]
+
+The IPC client V1 uses a single thread that communicates with the IPC server and calls subscription handlers\. You must consider this synchronous behavior when you write subscription handler functions\.
++ <a name="ipc-best-practice-reuse-one-client"></a>**Reuse one IPC client**
+
+  After you create an IPC client, keep it open and reuse it for all IPC operations\. Creating multiple clients uses extra resources and can result in resource leaks\.
++ **Run blocking code asynchronously**
+
+  The IPC client V1 can't send new requests or process new event messages while the thread is blocked\. You should run blocking code in a separate thread that you run from the handler function\. Blocking code includes `sleep` calls, loops that continuously run, and synchronous I/O requests that take time to complete\.
++ **Send new IPC requests asynchronously**
+
+  The IPC client V1 can't send a new request from within subscription handler functions, because the request blocks the handler function if you wait for a response\. You should send IPC requests in a separate thread that you run from the handler function\.
++ **Handle exceptions**
+
+  The IPC client V1 doesn't handle uncaught exceptions in subscription handler functions\. If your handler function throws an exception, the subscription closes, and the exception doesn't appear in your component logs\. You should catch exceptions in your handler functions to keep the subscription open and log errors that occur in your code\.
 
 ------

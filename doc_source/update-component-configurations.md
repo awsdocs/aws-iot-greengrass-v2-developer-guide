@@ -44,7 +44,7 @@ You can't use merge updates for the purpose of inserting or appending an element
 
 This feature is available for v2\.6\.0 and later of the [Greengrass nucleus component](greengrass-nucleus-component.md)\.
 
-You can use recipe variables, other than the `component_dependency_name:configuration:json_pointer` recipe variable, in merge updates\. For example, you can use the `{iot:thingName}` recipe variable in a merge update to include the core device's AWS IoT thing name in a component configuration value, such as an [interprocess communication \(IPC\) authorization policy](interprocess-communication.md#ipc-authorization-policies)\.
+If you set the Greengrass nucleus' [interpolateComponentConfiguration](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-interpolate-component-configuration) configuration option to `true`, you can use recipe variables, other than the `component_dependency_name:configuration:json_pointer` recipe variable, in merge updates\. For example, you can use the `{iot:thingName}` recipe variable in a merge update to include the core device's AWS IoT thing name in a component configuration value, such as an [interprocess communication \(IPC\) authorization policy](interprocess-communication.md#ipc-authorization-policies)\.
 
 ## Examples<a name="configuration-update-example"></a>
 
@@ -65,7 +65,7 @@ The following example demonstrates configuration updates for a dashboard compone
 }
 ```
 
-### Industrial dashboard component recipe<a name="w999aac19c23c15c17b7b1"></a>
+### Industrial dashboard component recipe<a name="w192aac13c11c25c15c17b7b1"></a>
 
 ------
 #### [ JSON ]
@@ -279,7 +279,11 @@ The `dashboard-deployment2.json` file contains the following JSON document\.
   "components": {
     "com.example.IndustrialDashboard": {
       "componentVersion": "1.0.0",
-      "configurationUpdate": {
+      "configurationUpdate": {,
+        "reset": [
+          "/network/useHttps",
+          "/tags"
+        ],
         "merge": "{\"tags\":[\"/boiler/3/temperature\",\"/boiler/3/pressure\",\"/boiler/4/temperature\",\"/boiler/4/pressure\"]}"
       }
     }

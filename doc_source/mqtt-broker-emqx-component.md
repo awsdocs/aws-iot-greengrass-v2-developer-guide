@@ -4,7 +4,7 @@ The EMQX MQTT broker component \(`aws.greengrass.clientdevices.mqtt.EMQX`\) hand
 
 This broker implements the MQTT 5\.0 protocol\. It includes support for session and message expiration intervals, user properties, shared subscriptions, topic aliases, and more\. MQTT 5 is backwards compatible with MQTT 3\.1\.1, so if you run the [Moquette MQTT 3\.1\.1 broker](mqtt-broker-moquette-component.md), you can replace it with the EMQX MQTT 5 broker, and client devices can continue to connect and operate as usual\.
 
-<a name="note-local-mqtt-broker-mqtt-5-features"></a>MQTT 5 features are limited to communication between core devices and client devices, because the AWS IoT Core MQTT broker implements the MQTT 3\.1\.1 protocol\. As a result, when you use the [MQTT bridge component](mqtt-bridge-component.md) to relay MQTT messages between AWS IoT Core and this MQTT 5 broker, messages use MQTT 3\.1\.1 instead of MQTT 5\.
+<a name="note-local-mqtt-broker-mqtt-5-features"></a>MQTT 5 features are limited to communication between core devices and client devices, because Greengrass uses MQTT 3\.1\.1 to connect to the AWS IoT Core MQTT broker\. As a result, when you use the [MQTT bridge component](mqtt-bridge-component.md) to relay MQTT messages between AWS IoT Core and this MQTT 5 broker, messages use MQTT 3\.1\.1 instead of MQTT 5\.
 
 **Note**  <a name="client-device-component-context"></a>
 Client devices are local IoT devices that connect to a Greengrass core device to send MQTT messages and data to process\. For more information, see [Interact with local IoT devices](interact-with-local-iot-devices.md)\.
@@ -23,6 +23,8 @@ Client devices are local IoT devices that connect to a Greengrass core device to
 ## Versions<a name="mqtt-broker-emqx-component-versions"></a>
 
 This component has the following versions:
++ 1\.2\.x
++ 1\.1\.x
 + 1\.0\.x
 
 ## Type<a name="mqtt-broker-emqx-component-type"></a>
@@ -54,12 +56,27 @@ This component has the following requirements:
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#mqtt-broker-emqx-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
-The following table lists the dependencies for version 2\.0\.0 of this component\.
+------
+#### [ 1\.2\.0 and 1\.2\.1 ]
+
+The following table lists the dependencies for versions 1\.2\.0 and 1\.2\.1 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Client device auth](client-device-auth-component.md) | >=2\.2\.0 <2\.4\.0 | Hard | 
+
+------
+#### [ 1\.0\.0 and 1\.1\.0 ]
+
+The following table lists the dependencies for versions 1\.0\.0 and 1\.1\.0 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
 | --- | --- | --- | 
 | [Client device auth](client-device-auth-component.md) | >=2\.2\.0 <2\.3\.0 | Hard | 
+
+------
 
 For more information about component dependencies, see the [component recipe reference](component-recipe-reference.md#recipe-reference-component-dependencies)\.
 
@@ -120,13 +137,46 @@ Defaults to the EMQX MQTT broker log level \(`log.level` in `emqx`\)\.
 `restartIdentifier`  
 \(Optional\) Configure this option to restart the EMQX MQTT broker\. When this configuration value changes, this component restarts the MQTT broker\. You can use this option to force client devices to disconnect\.
 
+`dockerOptions`  
+\(Optional\) Configure this option only on Linux operating systems to add parameters to the Docker command line\. For example, to map additional ports, use the `-p` Docker parameter:  
+
+```
+"-p 1883:1883"
+```
+
+`mergeConfigurationFiles`  
+\(Optional\) Configure this option to add to or override the defaults in the specified EMQX configuration files\. For information about the configuration files and their formats, see [Configuration](https://www.emqx.io/docs/en/v4.4/configuration/configuration.html) in the *EMQX 4\.0 Documentation*\. The values that you specify are appended to the configuration file\.   
+The following example updates the `etc/emqx.conf` file\.  
+
+```
+"mergeConfigurationFiles": {
+    "etc/emqx.conf": "broker.sys_interval=30s\nbroker.sys_heartbeat=10s"
+},
+```
+In addition to the configuration files supported by EMQX, Greengrass supports a file that configures the Greengrass auth plugin for EMQX called `etc/plugins/aws_greengrass_emqx_auth.conf`\. There are two supported options, `auth_mode` and `use_greengrass_managed_certificates`\. To use another auth provider, set the `auth_mode` option to one of the following:  
++ `enabled` – \(Default\) Use the Greengrass authentication and authorization provider\.
++ `bypass_on_failure` – Use the Greengrass authentication provider, then use any remaining authentication providers in the EMQX provider chain if Greengrass denies either authentication or authorization\.
++ `bypass` – The Greengrass provider is disabled\. Authentication and authorization is then handled by the EMQX provider chain\.
+If the `use_greengrass_managed_certificates` is `true`, this option indicates that Greengrass manages the broker TLS certificates\. If `false`, it indicates that you provide the certificates through another source\.  
+The following example updates the defaults in the `etc/plugins/aws_greengrass_emqx_auth.conf` configuration file\.  
+
+```
+"mergeConfigurationFiles": {
+    "etc/plugins/aws_greengrass_emqx_auth.conf": "auth_mode=enabled\n use_greengrass_managed_certificates=true\n"
+  },
+```
+`aws.greengrass.clientdevices.mqtt.EMQX` allows you to configure security\-sensitive options\. These include TLS settings, authentication, and authorization providers\. The recommended configuration is the default configuration that uses mutual TLS authentication and the Greengrass Client Device Auth provider\.
+
+`replaceConfigurationFiles`  
+\(Optional\) Configure this option to replace the specified EMQX configuration files\. The values that you specify replace the entire existing configuration file\. You can't specify the `etc/emqx.conf` file in this section\. You must use `mergeConfigurationFile` to modify `etc/emqx.conf`\.
+
 **Example: Configuration merge update**  
 The following example configuration specifies to operate the MQTT broker on port 443\.  
 
 ```
 {
   "emqx": {
-    "listener.ssl.external": "8883",
+    "listener.ssl.external": "443",
     "listener.ssl.external.max_connections": "1024000",
     "listener.ssl.external.max_conn_rate": "500",
     "listener.ssl.external.rate_limit": "50KB,5s",
@@ -191,4 +241,8 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  1\.2\.1  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/mqtt-broker-emqx-component.html)  | 
+|  1\.2\.0  |  Adds support for certificate chains\.  | 
+|  1\.1\.0  | <a name="changelog-emqx-1.1.0"></a>[\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/mqtt-broker-emqx-component.html) | 
+|  1\.0\.1  |  Fixes an issue during the TLS handshake which results in some MQTT clients failing to connect\.  | 
 |  1\.0\.0  |  Initial version\.  | 

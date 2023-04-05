@@ -28,8 +28,10 @@ If you are still having issues, see the following debugging process\.
 + [Could not start test error](#could-not-start-test)
 + [Docker qualification image exists errors](#docker-qualification-image-exists)
 + [Failed to read credential](#failed-to-read-credential-windows)
++ [Guice errors with PreInstalled Greengrass](#guice-errors)
 + [Invalid signature exception](#invalid-signature-exception-lambda)
 + [Machine learning qualification errors](#machine-learning-qualification-failure)
++ [Open Test Framework \(OTF\) failed deployments](#otf-deployment-failure)
 + [Parsing errors](#parse-error)
 + [Permission denied errors](#permission-denied-pwd-sudo)
 + [Qualification report generation error](#qualification-report-policy-error)
@@ -82,7 +84,13 @@ If you previously downloaded this image and ran the `amazon/amazon-ec2-metadata-
 
 When testing Windows devices, you might encounter the `Failed to read credential` error in the `greengrass.log` file if the user that you use to connect to the device under test is not set up in the credential manager on that device\. 
 
-To resolve this error, configure the user and password for the IDT user in the credential manager on the device under test\. This is the same user and password that you specify in the [`device.json` file](set-config.md#device-config)\.
+To resolve this error, configure the user and password for the IDT user in the credential manager on the device under test\.
+
+For more information, see [Configure user credentials for Windows devices](device-config-setup.md#configure-windows-user-for-idt)\.
+
+### Guice errors with PreInstalled Greengrass<a name="guice-errors"></a>
+
+While running IDT with PreInstalled Greengrass, if you encounter an error of `Guice` or `ErrorInCustomProvider`, check if the file `userdata.json` has the `InstalledDirRootOnDevice` set to the Greengrass installation folder\. IDT checks for the file `effectiveConfig.yaml` under `<InstallationDirRootOnDevice>/config/effectiveConfig.yaml`\.
 
 For more information, see [Configure user credentials for Windows devices](device-config-setup.md#configure-windows-user-for-idt)\.
 
@@ -95,6 +103,14 @@ When you run Lambda qualification tests, you might encounter the `invalidsignatu
 When you run machine learning \(ML\) qualification tests, you might encounter qualification failures if your device doesn't meet the [requirements](dlr-component.md#dlr-component-requirements) to deploy the AWS\-provided ML components\. To troubleshoot ML qualification errors, do the following: 
 + Look for error details in the component logs for the components that were deployed during the test run\. Component logs are located in the `<device-tester-extract-location>/results/<execution-id>/logs/<test-group-id>` directory\.
 + Add the `-Dgg.persist=installed.software` argument to the `test.json` file for the failing test case\. The `test.json` file is located in the `<device-tester-extract-location>/tests/GGV2Q_version directory. `
+
+### Open Test Framework \(OTF\) failed deployments<a name="otf-deployment-failure"></a>
+
+If OTF tests fail to complete the deployment, a likely cause may be the permissions set for the parent folder of `TempResourcesDirOnDevice` and `InstallationDirRootOnDevice`\. To set this folder's permissions correctly, run the following command\. Replace `folder-name` with the name of the parent folder\.
+
+```
+sudo chmod 755 folder-name
+```
 
 ### Parsing errors<a name="parse-error"></a>
 
@@ -129,17 +145,17 @@ When IDT adds new features, it might introduce changes to the configuration file
 
 ### Security exception on macOS<a name="security-exception-macos"></a>
 
-When you run IDT on a host computer that uses macOS 10\.15, the notarization ticket for IDT isn't detected, which blocks IDT from being run\. To run IDT, grant a security exception to the `devicetester_mac_x86-64` executable\. Do one of the following:
+When you run IDT on a macOS host computer, it blocks IDT from running\. To run IDT, grant a security exception to the executables that is part of IDT runtime functionality\. When you see the warning message display on your host computer, do the following for each of the applicable executables:
 
 **To grant a security exception to IDT executables**
 
-1. Launch **System Preferences** from the Apple menu\.
+1. On the macOS computer, on the Apple menu, open **System Preferences**\.
 
 1. Choose **Security & Privacy**, then on the **General** tab, choose the lock icon to make changes to security settings\.
 
-1. Look for the message `"devicetester_mac_x86-64" was blocked from use because it is not from an identified developer.` and choose **Allow Anyway**\.
+1. In case of blocked `devicetester_mac_x86-64`, look for the message `"devicetester_mac_x86-64" was blocked from use because it is not from an identified developer.` and choose **Allow Anyway**\.
 
-1. Accept the security warning\.
+1. Resume IDT testing, until you get through all executables involved\.
 
 ### SSH connection errors<a name="ssh-connect-errors"></a>
 
@@ -186,6 +202,9 @@ Some timeout errors occur when IDT test cases can’t be completed because of co
 + If the Greengrass logs indicate that the Greengrass CLI deployment isn't complete, do the following:
   + Verify that `bash` is installed on the device under test\. 
   + If your `userdata.json` file includes the `GreengrassCliVersion` configuration parameter, remove it\. This parameter is deprecated in IDT v4\.1\.0 and later versions\. For more information, see [Configure userdata\.json](set-config.md#userdata-config)\.
++ If the Lambda deployment test failed with an error message of "Validating Lambda publish: time out" and you receive an error in the test log file \(`idt-gg2-lambda-function-idt-<resource-id>.log`\) that says `Error: Could not find or load main class com.amazonaws.greengrass.runtime.LambdaRuntime.`, do the following:
+  + Verify what folder was used for `InstallationDirRootOnDevice` in the `userdata.json` file\.
+  + Make sure the correct user permissions are set up on your device\. For more details, see [Configure user permissions on your device](https://docs.aws.amazon.com/greengrass/v2/developerguide/device-config-setup.html#root-access)\.
 
 ### Version check errors<a name="version-compatibility-check-failure"></a>
 

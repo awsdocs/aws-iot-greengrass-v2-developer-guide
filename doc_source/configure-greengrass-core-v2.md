@@ -9,6 +9,7 @@ The AWS IoT Greengrass Core software provides options that you can use to config
 + [Configure the user that runs components](#configure-component-user)
 + [Configure system resource limits for components](#configure-component-system-resource-limits)
 + [Connect on port 443 or through a network proxy](#configure-alpn-network-proxy)
++ [Use a device certificate signed by a private CA](#configure-nucleus-private-ca)
 + [Configure MQTT timeouts and cache settings](#configure-mqtt)
 
 ## Deploy the Greengrass nucleus component<a name="configure-nucleus-component"></a>
@@ -22,6 +23,9 @@ You must configure the AWS IoT Greengrass Core software as a system service in y
 + Install and run plugin components\. Several AWS\-provided components are plugin components, which enables them to interface directly with the Greengrass nucleus\. For more information about component types, see [Component types](develop-greengrass-components.md#component-types)\.
 + Apply over\-the\-air \(OTA\) updates to the core device's AWS IoT Greengrass Core software\. For more information, see [Update the AWS IoT Greengrass Core software \(OTA\)](update-greengrass-core-v2.md)\.
 + Enable components to restart the AWS IoT Greengrass Core software or the core device when a deployment updates the component to a new version or updates certain configuration parameters\. For more information, see the [bootstrap lifecycle step](component-recipe-reference.md#bootstrap-lifecycle-definition)\.
+
+**Important**  <a name="windows-system-service-requirement-important-note"></a>
+On Windows core devices, you must set up the AWS IoT Greengrass Core software as a system service\.
 
 **Topics**
 + [Configure the nucleus as a system service \(Linux\)](#configure-system-service-linux)
@@ -48,8 +52,6 @@ ExecStart=/bin/sh /greengrass/v2/alts/current/distro/bin/loader
 [Install]
 WantedBy=multi-user.target
 ```
-
-For information about how to create and enable a service file for systemd on a Raspberry Pi, see [systemd Daemon](https://www.raspberrypi.com/documentation/computers/using_linux.html#the-systemd-daemon) in the Raspberry Pi documentation\. 
 
 After you configure the system service, you can run the following commands to configure starting the device on boot and to start or stop the AWS IoT Greengrass Core software\.
 + To check the status of the service \(systemd\)
@@ -94,7 +96,7 @@ After you configure the service, you can run the following commands to configure
 + To enable the nucleus to start when the device boots\.
 
   ```
-  sc config "greengrass" start=enabled
+  sc config "greengrass" start=auto
   ```
 + To stop the nucleus from starting when the device boots\.
 
@@ -124,7 +126,7 @@ On Windows devices, the AWS IoT Greengrass Core software ignores this shutdown s
 + To enable the nucleus to start when the device boots\.
 
   ```
-  Set-Service -Name "greengrass" -Status stopped -StartupType enabled
+  Set-Service -Name "greengrass" -Status stopped -StartupType automatic
   ```
 + To stop the nucleus from starting when the device boots\.
 
@@ -289,7 +291,7 @@ The following example defines a deployment for a Linux\-based device that config
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.6.0",
+      "version": "2.9.4",
       "configurationUpdate": {
         "merge": "{\"runWithDefault\":{\"posixUser\":\"ggc_user:ggc_group\"}}"
       }
@@ -348,7 +350,7 @@ The following example defines a deployment that configures the CPU time limit to
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.6.0",
+      "version": "2.9.4",
       "configurationUpdate": {
         "merge": "{\"runWithDefault\":{\"systemResourceLimits\":\"cpu\":2,\"memory\":102400}}}"
       }
@@ -409,7 +411,7 @@ The following example defines a deployment that configures MQTT over port 443\. 
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.6.0",
+      "version": "2.9.4",
       "configurationUpdate": {
         "merge": "{\"mqtt\":{\"port\":443}}"
       }
@@ -450,7 +452,7 @@ The following example defines a deployment that configures HTTPS over port 443\.
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.6.0",
+      "version": "2.9.4",
       "configurationUpdate": {
         "merge": "{\"greengrassDataPlanePort\":443}"
       }
@@ -507,7 +509,7 @@ The following example defines a deployment that configures a network proxy\. The
 {
   "components": {
     "aws.greengrass.Nucleus": {
-      "version": "2.6.0",
+      "version": "2.9.4",
       "configurationUpdate": {
         "merge": "{\"networkProxy\":{\"noProxyAddresses\":\"http://192.168.0.1,www.example.com\",\"proxy\":{\"url\":\"https://my-proxy-server:1100\",\"username\":\"Mary_Major\",\"password\":\"pass@word1357\"}}}"
       }
@@ -580,6 +582,12 @@ If you configure an HTTPS proxy, you must add the proxy server CA certificate to
 \(Optional\) The user name that authenticates the proxy server\.  
 `password`  
 \(Optional\) The password that authenticates the proxy server\.
+
+## Use a device certificate signed by a private CA<a name="configure-nucleus-private-ca"></a>
+
+If you are using a custom private certificate authority \(CA\), you must set the Greengrass nucleus' **greengrassDataPlaneEndpoint** to **iotdata**\. You can set this option during deployment or installation using the **\-\-init\-config** [installer argument](configure-installer.md)\.
+
+You can customize the Greengrass data plane endpoint where the device connects\. You can set this configuration option to **iotdata** to set the Greengrass data plane endpoint to the same endpoint as the IoT data endpoint, which you can specify with the **iotDataEndpoint**\.
 
 ## Configure MQTT timeouts and cache settings<a name="configure-mqtt"></a>
 

@@ -45,9 +45,12 @@ If you use GDK CLI version 1\.0\.0 on a Windows device, the component folder and
 + `maven` – Runs the `mvn clean package` command to build the component's source into artifacts\. Choose this option for components that use [Maven](https://maven.apache.org/), such as Java components\.
 
   On Windows devices, this feature is available for GDK CLI v1\.1\.0 and later\.
-+ `gradle` – Runs the `gradle build` command to build the component's source into artifacts\. Choose this option for components that use [Gradle](https://gradle.org/)\.
++ `gradle` – Runs the `gradle build` command to build the component's source into artifacts\. Choose this option for components that use [Gradle](https://gradle.org/)\. This feature is available for GDK CLI v1\.1\.0 and later\.
 
-  This feature is available for GDK CLI v1\.1\.0 and later\.
+  The `gradle` build system supports Kotlin DSL as the build file\. This feature is available for GDK CLI v1\.2\.0 and later\.
++ `gradlew` – Runs the `gradlew` command to build the component's source into artifacts\. Choose this option for components that use the [Gradle Wrapper ](https://docs.gradle.org/current/userguide/gradle_wrapper.html)\.
+
+  This feature is available for GDK CLI v1\.2\.0 and later\.
 + `custom` – Runs a custom command to build the component's source into a recipe and artifacts\. Specify the custom command in the `custom_build_command` parameter\.  
 `custom_build_command`  
 \(Optional\) The custom build command to run for a custom build system\. You must specify this parameter if you specify `custom` for `build_system`\.  
@@ -58,14 +61,28 @@ This command must create a recipe and artifacts in the following folders within 
   Replace *componentName* with the component name, and replace *componentVersion* with the component version or `NEXT_PATCH`\.
 You can specify a single string or a list of strings, where each string is a word in the command\. For example, to run a custom build command for a C\+\+ component, you might specify **cmake \-\-build build \-\-config Release** or **\["cmake", "\-\-build", "build", "\-\-config", "Release"\]**\.  
 To view an example of a custom build system, see the [aws\.greengrass\.labs\.LocalWebServer community component on GitHub](https://github.com/awslabs/aws-greengrass-labs-local-web-server)\.  
+`options`  
+\(Optional\) Additional configuration options used during component build process\.  
+This feature is available for GDK CLI v1\.2\.0 and later\.    
+`excludes`  
+A list of file patterns that define the files that should be excluded from the zip file\. Only valid when the `build_system` is `zip`\.  
+The following files are always excluded from the zip file:  
++ The `gdk-config.json` file
++ The recipe file \(`recipe.json` or `recipe.yamal`\)
++ Build folders such as `greengrass-build`  
 `publish`  
 The configuration to use to publish this component to the AWS IoT Greengrass service\.  
-<a name="gdk-cli-s3-bucket-name-formation"></a>If you use GDK CLI v1\.1\.0 or later, you can specify the `--bucket` argument to specify the S3 bucket where the GDK CLI uploads the component's artifacts\. <a name="gdk-cli-s3-bucket-name-formation-format"></a>If you don't specify this argument, the GDK CLI uploads to the S3 bucket whose name is `bucketPrefix-region-accountId`, where *bucketPrefix* and *region* are the values that you specify in `gdk-config.json`, and *accountId* is your AWS account ID\. The GDK CLI creates the bucket if it doesn't exist\.  
+<a name="gdk-cli-s3-bucket-name-formation"></a>If you use GDK CLI v1\.1\.0 or later, you can specify the `--bucket` argument to specify the S3 bucket where the GDK CLI uploads the component's artifacts\. <a name="gdk-cli-s3-bucket-name-formation-format"></a>If you don't specify this argument, the GDK CLI uploads to the S3 bucket whose name is `bucket-region-accountId`, where *bucket* and *region* are the values that you specify in `gdk-config.json`, and *accountId* is your AWS account ID\. The GDK CLI creates the bucket if it doesn't exist\.  
 This object contains the following information:    
 `bucket`  
 The S3 bucket name to use to host component artifacts\.  
 `region`  
-The AWS Region where the GDK CLI publishes this component\.
+The AWS Region where the GDK CLI publishes this component\.  
+`options`  
+\(Optional\) Additional configuration options used during component version creation\.  
+This feature is available for GDK CLI v1\.2\.0 and later\.    
+`file_upload_args`  
+A JSON structure containing arguments sent to Amazon S3 while uploading files to a bucket, such as metadata and encryption mechanisms\. For a list of the allowed arguments, see the [https://boto3.amazonaws.com/v1/documentation/api/latest/reference/customizations/s3.html#boto3.s3.transfer.S3Transfer.ALLOWED_UPLOAD_ARGS](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/customizations/s3.html#boto3.s3.transfer.S3Transfer.ALLOWED_UPLOAD_ARGS) class in the *Boto3 documentation\.*\.
 
 ## GDK CLI configuration file examples<a name="gdk-config-examples"></a>
 
@@ -82,15 +99,25 @@ The following GDK CLI configuration file supports a Hello World component that r
       "author": "Amazon",
       "version": "NEXT_PATCH",
       "build": {
-        "build_system" : "zip"
+        "build_system" : "zip",
+        "options": {
+           "excludes": [".*"]
+        }
       },
       "publish": {
         "bucket": "greengrass-component-artifacts",
-        "region": "us-west-2"
+        "region": "us-west-2",
+        "options": {
+           "file_upload_args": {
+              "Metadata": 
+                 "some-key" : "some-value"
+              }
+           }
+        }
       }
     }
   },
-  "gdk_version": "1.0.0"
+  "gdk_version": "1.2.0"
 }
 ```
 
@@ -109,11 +136,18 @@ The following GDK CLI configuration file supports a Hello World component that r
       },
       "publish": {
         "bucket": "greengrass-component-artifacts",
-        "region": "us-west-2"
+        "region": "us-west-2",
+        "options": {
+           "file_upload_args": {
+              "Metadata": 
+                 "some-key" : "some-value"
+              }
+           }
+        }
       }
     }
   },
-  "gdk_version": "1.0.0"
+  "gdk_version": "1.2.0"
 }
 ```
 

@@ -22,8 +22,10 @@ After you configure cloud discovery, you can test communications between a clien
 + [Configure cloud discovery \(console\)](#configure-cloud-discovery-console)
 + [Configure cloud discovery \(AWS CLI\)](#configure-cloud-discovery-cli)
 + [Associate client devices](associate-client-devices.md)
++ [Authenticating clients while offline](offline-authentication.md)
 + [Manage core device endpoints](manage-core-device-endpoints.md)
 + [Choose an MQTT broker](choose-local-mqtt-broker.md)
++ [Connecting client devices to an AWS IoT Greengrass Core device with an MQTT broker](connecting-to-mqtt.md)
 + [Test client device communications](test-client-device-communications.md)
 + [Greengrass discovery RESTful API](greengrass-discover-api.md)
 

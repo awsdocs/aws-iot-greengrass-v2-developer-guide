@@ -14,7 +14,7 @@ You can also specify whether the shadow manager component syncs shadows in real 
 
 ## Prerequisites<a name="shadow-sync-prereqs"></a>
 
-To sync local shadows to the AWS IoT Core, you must configure the Greengrass core device's AWS IoT policy to allow the following AWS IoT Core shadow policy actions\.
+To sync local shadows with AWS IoT Core, you must configure the Greengrass core device's AWS IoT policy to allow the following AWS IoT Core shadow policy actions\.
 + `iot:GetThingShadow`
 + `iot:UpdateThingShadow`
 + `iot:DeleteThingShadow`

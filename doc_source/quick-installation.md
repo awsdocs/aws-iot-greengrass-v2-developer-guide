@@ -38,7 +38,7 @@ Follow the steps in this section to set up a Linux or Windows device to use as y
      sudo amazon-linux-extras install java-openjdk11
      ```
 
-   When the installation completes, run the following command to verify that Java runs on your Raspberry Pi\.
+   When the installation completes, run the following command to verify that Java runs on your Linux device\.
 
    ```
    java -version
@@ -113,6 +113,26 @@ This feature is available for v2\.5\.0 and later of the [Greengrass nucleus comp
 
 1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.
 
+1. Check whether Java is available on the [PATH](https://en.wikipedia.org/wiki/PATH_(variable)) system variable, and add it if not\. The LocalSystem account runs the AWS IoT Greengrass Core software, so you must add Java to the PATH system variable instead of the PATH user variable for your user\. Do the following:
+
+   1. Press the Windows key to open the start menu\.
+
+   1. Type **environment variables** to search for the system options from the start menu\.
+
+   1. In the start menu search results, choose **Edit the system environment variables** to open the **System properties** window\.
+
+   1. Choose **Environment variables\.\.\.** to open the **Environment Variables** window\.
+
+   1. Under **System variables**, select **Path**, and then choose **Edit**\. In the **Edit environment variable** window, you can view each path on a separate line\.
+
+   1. Check if the path to the Java installation's `bin` folder is present\. The path might look similar to the following example\.
+
+      ```
+      C:\Program Files\Amazon Corretto\jdk11.0.13_8\bin
+      ```
+
+   1. If the Java installation's `bin` folder is missing from **Path**, choose **New** to add it, and then choose **OK**\.
+
 1. <a name="set-up-windows-device-environment-open-cmd"></a>Open the Windows Command Prompt \(`cmd.exe`\) as an administrator\.
 
 1. <a name="set-up-windows-device-environment-create"></a>Create the default user in the LocalSystem account on the Windows device\. Replace *password* with a secure password\.
@@ -120,6 +140,18 @@ This feature is available for v2\.5\.0 and later of the [Greengrass nucleus comp
    ```
    net user /add ggc_user password
    ```
+**Tip**  <a name="windows-password-expiration-tip"></a>
+Depending on your Windows configuration, the user's password might be set to expire at a date in the future\. To ensure your Greengrass applications continue to operate, track when the password expires, and update it before it expires\. You can also set the user's password to never expire\.  
+To check when a user and its password expire, run the following command\.  
+
+     ```
+     net user ggc_user | findstr /C:expires
+     ```
+To set a user's password to never expire, run the following command\.  
+
+     ```
+     wmic UserAccount where "Name='ggc_user'" set PasswordExpires=False
+     ```
 
 1. <a name="set-up-windows-device-psexec"></a>Download and install the [PsExec utility](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec) from Microsoft on the device\. 
 
@@ -286,12 +318,63 @@ https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-version.zip
 If you install a version of the Greengrass nucleus earlier than v2\.4\.0, don't remove this folder after you install the AWS IoT Greengrass Core software\. The AWS IoT Greengrass Core software uses the files in this folder to run\.  
 If you downloaded the latest version of the software, you install v2\.4\.0 or later, and you can remove this folder after you install the AWS IoT Greengrass Core software\.
 
+**\(Optional\) To verify the Greengrass nucleus software signature**
+**Note**  
+This feature is available with Greengrass nucleus version 2\.9\.5 and later\.
+
+1. Use the following command to verify your Greengrass nucleus artifact's signature:
+
+------
+#### [ Linux or Unix ]
+
+   ```
+   jarsigner -verify -certs -verbose greengrass-nucleus-latest.zip
+   ```
+
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+   The file name might look different depending on the JDK version you install\. Replace *`jdk17.0.6_10`* with the JDK version you installed\.
+
+   ```
+   "C:\Program Files\Amazon Corretto\jdk17.0.6_10\bin\jarsigner.exe" -verify -certs -verbose greengrass-nucleus-latest.zip
+   ```
+
+------
+#### [ PowerShell ]
+
+   The file name might look different depending on the JDK version you install\. Replace *`jdk17.0.6_10`* with the JDK version you installed\.
+
+   ```
+   'C:\Program Files\Amazon Corretto\jdk17.0.6_10\bin\jarsigner.exe' -verify -certs -verbose greengrass-nucleus-latest.zip
+   ```
+
+------
+
+1. The `jarsigner` invocation yields output that indicates the results of the verification\.
+
+   1. If the Greengrass nucleus zip file is signed, the output contains the following statement:
+
+      ```
+      jar verified.
+      ```
+
+   1. If the Greengrass nucleus zip file isn't signed, the output contains the following statement:
+
+      ```
+      jar is unsigned.
+      ```
+
+1. If you provided the Jarsigner `-certs` option along with `-verify` and `-verbose` options, the output also includes detailed signer certificate information\.
+
 ## Install the AWS IoT Greengrass Core software<a name="run-greengrass-core-v2-installer"></a>
 
 Run the installer with arguments that specify to do the following:
 + <a name="install-argument-aws-resources"></a>Create the AWS resources that the core device requires to operate\.
 + <a name="install-argument-component-default-user"></a>Specify to use the `ggc_user` system user to run software components on the core device\. On Linux devices, this command also specifies to use the `ggc_group` system group, and the installer creates the system user and group for you\.
-+ <a name="install-argument-system-service"></a>Set up the AWS IoT Greengrass Core software as a system service that runs as boot\. On Linux devices, this requires the [Systemd](https://en.wikipedia.org/wiki/Systemd) init system\.
++ <a name="install-argument-system-service"></a>Set up the AWS IoT Greengrass Core software as a system service that runs at boot\. On Linux devices, this requires the [Systemd](https://en.wikipedia.org/wiki/Systemd) init system\.
+**Important**  <a name="windows-system-service-requirement-important-note"></a>
+On Windows core devices, you must set up the AWS IoT Greengrass Core software as a system service\.
 
 To set up a development device with local development tools, specify the `--deploy-dev-tools true` argument\. The local development tools can take up to a minute to deploy after the installation completes\. 
 
@@ -376,6 +459,8 @@ The thing group name can't contain colon \(`:`\) characters\.
    ```
 
 ------
+**Important**  <a name="windows-system-service-installer-argument-important-note"></a>
+On Windows core devices, you must specify `--setup-system-service true` to set up the AWS IoT Greengrass Core software as a system service\.
 
    The installer prints the following messages if it succeeds:
    + If you specify `--provision`, the installer prints `Successfully configured Nucleus with provisioned resource details` if it configured the resources successfully\.

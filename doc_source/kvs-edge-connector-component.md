@@ -14,6 +14,7 @@ AWS IoT TwinMaker provides a script that you can run to create these AWS IoT Sit
 The edge connector for Kinesis Video Streams component is available only in the following AWS Regions:  
 US East \(N\. Virginia\)
 US West \(Oregon\)
+Europe \(Frankfurt\)
 Europe \(Ireland\)
 Asia Pacific \(Singapore\)
 

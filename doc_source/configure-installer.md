@@ -53,6 +53,7 @@ Default: `GreengrassV2TokenExchangeRoleAlias`
 `-ss`, `--setup-system-service`  
 \(Optional\) You can set up the AWS IoT Greengrass Core software as a system service that runs when this device boots\. The system service name is `greengrass`\. For more information, see [Configure the Greengrass nucleus as a system service](configure-greengrass-core-v2.md#configure-system-service)\.  
 On Linux operating systems, this argument requires that the systemd init system is available on the device\.  
+On Windows core devices, you must set up the AWS IoT Greengrass Core software as a system service\.
 Default: `false`
 
 `-u`, `--component-default-user`  

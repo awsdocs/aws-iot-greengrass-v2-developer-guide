@@ -6,7 +6,9 @@ This tutorial shows you how to use the [TensorFlow Lite image classification](te
 
 When you deploy this component, it downloads a pre\-trained MobileNet v1 model and installs the [TensorFlow Lite](https://www.tensorflow.org/lite/guide/python) runtime and its dependencies\. This component publishes inference results on the `ml/tflite/image-classification` topic\. To view these inference results, use the AWS IoT MQTT client in the AWS IoT console to subscribe to this topic\. 
 
-In this tutorial you deploy the sample inference component to perform image classification on the sample image that is provided by AWS IoT Greengrass\. After you complete this tutorial, you can complete [Perform sample image classification inference on images from a camera using TensorFlow Lite](ml-tutorial-image-classification-camera.md), which shows you how to modify the sample inference component to perform image classification on images from a camera locally on a Greengrass core device\.
+In this tutorial you deploy the sample inference component to perform image classification on the sample image that is provided by AWS IoT Greengrass\. After you complete this tutorial, you can complete [Tutorial: Perform sample image classification inference on images from a camera using TensorFlow Lite](ml-tutorial-image-classification-camera.md), which shows you how to modify the sample inference component to perform image classification on images from a camera locally on a Greengrass core device\.
+
+For more information about machine learning on Greengrass devices, see [Perform machine learning inference](perform-machine-learning-inference.md)\.
 
 **Topics**
 + [Prerequisites](#ml-tutorial-prereqs)
@@ -18,17 +20,34 @@ In this tutorial you deploy the sample inference component to perform image clas
 ## Prerequisites<a name="ml-tutorial-prereqs"></a>
 
 To complete this tutorial, you need the following:
-+ A Linux Greengrass core device\. If you don't have one, see [Tutorial: Getting started with AWS IoT Greengrass V2](getting-started.md)\.
-+ If you are using an Armv7l device such as Raspberry Pi, dependencies for OpenCV Python installed on the device\. Run the following command to install the dependencies: 
++ A Linux Greengrass core device\. If you don't have one, see [Tutorial: Getting started with AWS IoT Greengrass V2](getting-started.md)\. The core device must meet the following requirements:<a name="ml-component-requirements"></a>
+  + On Greengrass core devices running Amazon Linux 2 or Ubuntu 18\.04, [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.27 or later installed on the device\.
+  + On Armv7l devices, such as Raspberry Pi, dependencies for OpenCV\-Python installed on the device\. Run the following command to install the dependencies\.
 
-  ```
-  sudo apt-get install libopenjp2-7 libilmbase23 libopenexr-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libgtk-3-0 libwebp-dev
-  ```
-+ <a name="ml-req-rpi-bullseye-numpy"></a>If you are using a Raspberry Pi that runs Raspberry Pi OS Bullseye, NumPy 1\.22\.4 or later installed on the device\. Raspberry Pi OS Bullseye includes an earlier version of NumPy, so you can run the following command to upgrade NumPy on the device\.
+    ```
+    sudo apt-get install libopenjp2-7 libilmbase23 libopenexr-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libgtk-3-0 libwebp-dev
+    ```
+  + Raspberry Pi devices that run Raspberry Pi OS Bullseye must meet the following requirements:
+    + NumPy 1\.22\.4 or later installed on the device\. Raspberry Pi OS Bullseye includes an earlier version of NumPy, so you can run the following command to upgrade NumPy on the device\.
 
-  ```
-  pip3 install --upgrade numpy
-  ```
+      ```
+      pip3 install --upgrade numpy
+      ```
+    + The legacy camera stack enabled on the device\. Raspberry Pi OS Bullseye includes a new camera stack that is enabled by default and isn't compatible, so you must enable the legacy camera stack\.<a name="raspberry-pi-bullseye-enable-legacy-camera-stack"></a>
+
+**To enable the legacy camera stack**
+
+      1. Run the following command to open the Raspberry Pi configuration tool\.
+
+         ```
+         sudo raspi-config
+         ```
+
+      1. Select **Interface Options**\.
+
+      1. Select **Legacy camera** to enable the legacy camera stack\.
+
+      1. Reboot the Raspberry Pi\.
 
 ## Step 1: Subscribe to the default notifications topic<a name="ml-image-classification-subscribe"></a>
 
@@ -170,7 +189,7 @@ For more information, see [Troubleshooting machine learning inference](ml-troubl
 
 ## Next steps<a name="ml-image-classification-next-steps"></a>
 
-If you have a Greengrass core device with a supported camera interface, you can complete [Perform sample image classification inference on images from a camera using TensorFlow Lite](ml-tutorial-image-classification-camera.md), which shows you how to modify the sample inference component to perform image classification on images from a camera\.
+If you have a Greengrass core device with a supported camera interface, you can complete [Tutorial: Perform sample image classification inference on images from a camera using TensorFlow Lite](ml-tutorial-image-classification-camera.md), which shows you how to modify the sample inference component to perform image classification on images from a camera\.
 
 To further explore the configuration of the sample [TensorFlow Lite image classification](tensorflow-lite-image-classification-component.md) inference component, try the following:
 + Modify the `InferenceInterval` configuration parameter to change how often the inference code runs\.

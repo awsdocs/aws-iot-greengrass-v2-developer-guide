@@ -1,6 +1,6 @@
 # Tutorial: Getting started with AWS IoT Greengrass V2<a name="getting-started"></a>
 
-You can complete this getting started tutorial to learn about the basic features of AWS IoT Greengrass V2\. In this tutorial, you do the following:
+You can complete this getting started tutorial to learn the basic features of AWS IoT Greengrass V2\. In this tutorial, you do the following:
 
 1. Install and configure the AWS IoT Greengrass Core software on a Linux device, such as a Raspberry Pi, or a Windows device\. This device is a Greengrass core device\.
 
@@ -21,7 +21,7 @@ You can expect to spend 20 to 30 minutes on this tutorial\.
 
 To complete this getting started tutorial, you need the following:
 + An AWS account\. If you don't have one, see [Step 1: Set up an AWS account](#getting-started-set-up-aws-account)\.
-+ <a name="requirement-supported-region"></a>The use of an [AWS Region](https://en.wikipedia.org/wiki/Amazon_Web_Services#Availability_and_topology) that supports AWS IoT Greengrass V2\. For the list of supported Regions, see [AWS IoT Greengrass V2 endpoints and quotas](https://docs.aws.amazon.com/general/latest/gr/greengrassv2.html) in the *AWS General Reference*
++ <a name="requirement-supported-region"></a>The use of an [AWS Region](https://en.wikipedia.org/wiki/Amazon_Web_Services#Availability_and_topology) that supports AWS IoT Greengrass V2\. For the list of supported Regions, see [AWS IoT Greengrass V2 endpoints and quotas](https://docs.aws.amazon.com/general/latest/gr/greengrassv2.html) in the *AWS General Reference*\.
 + An AWS Identity and Access Management \(IAM\) user with administrator permissions\.
 + A Windows, macOS, or Unix\-like development computer with an internet connection\.
 + A device to set up as a Greengrass core device, such as a Raspberry Pi with [Raspberry Pi OS](https://www.raspberrypi.org/downloads/) \(previously called Raspbian\), or a Windows 10 device\. You must have administrator permissions on this device, or the ability to acquire administrator privileges, such as through `sudo`\. This device must have an internet connection\.
@@ -55,6 +55,8 @@ If you use a 32\-bit ARM device, such as a Raspberry Pi with a 32\-bit operating
 
 ## Step 1: Set up an AWS account<a name="getting-started-set-up-aws-account"></a>
 
+### Sign up for an AWS account<a name="sign-up-for-aws"></a>
+
 If you do not have an AWS account, complete the following steps to create one\.
 
 **To sign up for an AWS account**
@@ -65,43 +67,33 @@ If you do not have an AWS account, complete the following steps to create one\.
 
    Part of the sign\-up procedure involves receiving a phone call and entering a verification code on the phone keypad\.
 
-**To create an administrator user for yourself and add the user to an administrators group \(console\)**
+   When you sign up for an AWS account, an *AWS account root user* is created\. The root user has access to all AWS services and resources in the account\. As a security best practice, [assign administrative access to an administrative user](https://docs.aws.amazon.com/singlesignon/latest/userguide/getting-started.html), and use only the root user to perform [tasks that require root user access](https://docs.aws.amazon.com/accounts/latest/reference/root-user-tasks.html)\.
 
-1. Sign in to the [IAM console](https://console.aws.amazon.com/iam/) as the account owner by choosing **Root user** and entering your AWS account email address\. On the next page, enter your password\.
-**Note**  
-We strongly recommend that you adhere to the best practice of using the **Administrator** IAM user that follows and securely lock away the root user credentials\. Sign in as the root user only to perform a few [account and service management tasks](https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.html)\.
+AWS sends you a confirmation email after the sign\-up process is complete\. At any time, you can view your current account activity and manage your account by going to [https://aws\.amazon\.com/](https://aws.amazon.com/) and choosing **My Account**\.
 
-1. In the navigation pane, choose **Users** and then choose **Add users**\.
+### Create an administrative user<a name="create-an-admin"></a>
 
-1. For **User name**, enter **Administrator**\.
+After you sign up for an AWS account, create an administrative user so that you don't use the root user for everyday tasks\.
 
-1. Select the check box next to **AWS Management Console access**\. Then select **Custom password**, and then enter your new password in the text box\.
+**Secure your AWS account root user**
 
-1. \(Optional\) By default, AWS requires the new user to create a new password when first signing in\. You can clear the check box next to **User must create a new password at next sign\-in** to allow the new user to reset their password after they sign in\.
+1.  Sign in to the [AWS Management Console](https://console.aws.amazon.com/) as the account owner by choosing **Root user** and entering your AWS account email address\. On the next page, enter your password\.
 
-1. Choose **Next: Permissions**\.
+   For help signing in by using root user, see [Signing in as the root user](https://docs.aws.amazon.com/signin/latest/userguide/console-sign-in-tutorials.html#introduction-to-root-user-sign-in-tutorial) in the *AWS Sign\-In User Guide*\.
 
-1. Under **Set permissions**, choose **Add user to group**\.
+1. Turn on multi\-factor authentication \(MFA\) for your root user\.
 
-1. Choose **Create group**\.
+   For instructions, see [Enable a virtual MFA device for your AWS account root user \(console\)](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_enable_virtual.html#enable-virt-mfa-for-root) in the *IAM User Guide*\.
 
-1. In the **Create group** dialog box, for **Group name** enter **Administrators**\.
+**Create an administrative user**
++ For your daily administrative tasks, grant administrative access to an administrative user in AWS IAM Identity Center \(successor to AWS Single Sign\-On\)\.
 
-1. Choose **Filter policies**, and then select **AWS managed \- job function** to filter the table contents\.
+  For instructions, see [Getting started](https://docs.aws.amazon.com/singlesignon/latest/userguide/getting-started.html) in the *AWS IAM Identity Center \(successor to AWS Single Sign\-On\) User Guide*\.
 
-1. In the policy list, select the check box for **AdministratorAccess**\. Then choose **Create group**\.
-**Note**  
-You must activate IAM user and role access to Billing before you can use the `AdministratorAccess` permissions to access the AWS Billing and Cost Management console\. To do this, follow the instructions in [step 1 of the tutorial about delegating access to the billing console](https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_billing.html)\.
+**Sign in as the administrative user**
++ To sign in with your IAM Identity Center user, use the sign\-in URL that was sent to your email address when you created the IAM Identity Center user\.
 
-1. Back in the list of groups, select the check box for your new group\. Choose **Refresh** if necessary to see the group in the list\.
-
-1. Choose **Next: Tags**\.
-
-1. \(Optional\) Add metadata to the user by attaching tags as key\-value pairs\. For more information about using tags in IAM, see [Tagging IAM entities](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_tags.html) in the *IAM User Guide*\.
-
-1. Choose **Next: Review** to see the list of group memberships to be added to the new user\. When you are ready to proceed, choose **Create user**\.
-
-You can use this same process to create more groups and users and to give your users access to your AWS account resources\. To learn about using policies that restrict user permissions to specific AWS resources, see [Access management](https://docs.aws.amazon.com/IAM/latest/UserGuide/access.html) and [Example policies](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_examples.html)\.
+  For help signing in using an IAM Identity Center user, see [Signing in to the AWS access portal](https://docs.aws.amazon.com/signin/latest/userguide/iam-id-center-sign-in-tutorial.html) in the *AWS Sign\-In User Guide*\.
 
 ## Step 2: Set up your environment<a name="getting-started-set-up-environment"></a>
 
@@ -174,7 +166,7 @@ If your development computer uses an earlier version of Windows, you might not h
      sudo amazon-linux-extras install java-openjdk11
      ```
 
-   When the installation completes, run the following command to verify that Java runs on your Raspberry Pi\.
+   When the installation completes, run the following command to verify that Java runs on your Linux device\.
 
    ```
    java -version
@@ -246,6 +238,26 @@ If you updated the `/boot/cmdline.txt` file, reboot the Raspberry Pi to apply th
 
 1. Install the Java runtime, which AWS IoT Greengrass Core software requires to run\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.
 
+1. Check whether Java is available on the [PATH](https://en.wikipedia.org/wiki/PATH_(variable)) system variable, and add it if not\. The LocalSystem account runs the AWS IoT Greengrass Core software, so you must add Java to the PATH system variable instead of the PATH user variable for your user\. Do the following:
+
+   1. Press the Windows key to open the start menu\.
+
+   1. Type **environment variables** to search for the system options from the start menu\.
+
+   1. In the start menu search results, choose **Edit the system environment variables** to open the **System properties** window\.
+
+   1. Choose **Environment variables\.\.\.** to open the **Environment Variables** window\.
+
+   1. Under **System variables**, select **Path**, and then choose **Edit**\. In the **Edit environment variable** window, you can view each path on a separate line\.
+
+   1. Check if the path to the Java installation's `bin` folder is present\. The path might look similar to the following example\.
+
+      ```
+      C:\Program Files\Amazon Corretto\jdk11.0.13_8\bin
+      ```
+
+   1. If the Java installation's `bin` folder is missing from **Path**, choose **New** to add it, and then choose **OK**\.
+
 1. <a name="set-up-windows-device-environment-open-cmd"></a>Open the Windows Command Prompt \(`cmd.exe`\) as an administrator\.
 
 1. <a name="set-up-windows-device-environment-create"></a>Create the default user in the LocalSystem account on the Windows device\. Replace *password* with a secure password\.
@@ -253,6 +265,18 @@ If you updated the `/boot/cmdline.txt` file, reboot the Raspberry Pi to apply th
    ```
    net user /add ggc_user password
    ```
+**Tip**  <a name="windows-password-expiration-tip"></a>
+Depending on your Windows configuration, the user's password might be set to expire at a date in the future\. To ensure your Greengrass applications continue to operate, track when the password expires, and update it before it expires\. You can also set the user's password to never expire\.  
+To check when a user and its password expire, run the following command\.  
+
+     ```
+     net user ggc_user | findstr /C:expires
+     ```
+To set a user's password to never expire, run the following command\.  
+
+     ```
+     wmic UserAccount where "Name='ggc_user'" set PasswordExpires=False
+     ```
 
 1. <a name="set-up-windows-device-psexec"></a>Download and install the [PsExec utility](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec) from Microsoft on the device\. 
 
@@ -370,7 +394,9 @@ The installer doesn't save or store your credentials\.
       1. Under **Run the installer**, choose **Copy**, and run the copied command on your core device\. This command uses the AWS IoT thing and thing group names that you specified earlier to run the AWS IoT Greengrass Core software installer and set up AWS resources for your core device\.
 
          This command also does the following:
-         + <a name="install-argument-system-service"></a>Set up the AWS IoT Greengrass Core software as a system service that runs as boot\. On Linux devices, this requires the [Systemd](https://en.wikipedia.org/wiki/Systemd) init system\.
+         + <a name="install-argument-system-service"></a>Set up the AWS IoT Greengrass Core software as a system service that runs at boot\. On Linux devices, this requires the [Systemd](https://en.wikipedia.org/wiki/Systemd) init system\.
+**Important**  <a name="windows-system-service-requirement-important-note"></a>
+On Windows core devices, you must set up the AWS IoT Greengrass Core software as a system service\.
          + <a name="install-argument-dev-tools"></a>Deploy the [AWS IoT Greengrass CLI component](gg-cli.md), which is a command\-line tool that enables you to develop custom Greengrass components on the core device\.
          + <a name="install-argument-component-default-user"></a>Specify to use the `ggc_user` system user to run software components on the core device\. On Linux devices, this command also specifies to use the `ggc_group` system group, and the installer creates the system user and group for you\.
 
@@ -468,7 +494,9 @@ If you have a Linux device and it doesn't have [systemd](https://en.wikipedia.or
 
 1. Run the following command to launch the AWS IoT Greengrass Core software installer\. This command does the following:
    + <a name="install-argument-aws-resources"></a>Create the AWS resources that the core device requires to operate\.
-   + <a name="install-argument-system-service"></a>Set up the AWS IoT Greengrass Core software as a system service that runs as boot\. On Linux devices, this requires the [Systemd](https://en.wikipedia.org/wiki/Systemd) init system\.
+   + <a name="install-argument-system-service"></a>Set up the AWS IoT Greengrass Core software as a system service that runs at boot\. On Linux devices, this requires the [Systemd](https://en.wikipedia.org/wiki/Systemd) init system\.
+**Important**  <a name="windows-system-service-requirement-important-note"></a>
+On Windows core devices, you must set up the AWS IoT Greengrass Core software as a system service\.
    + <a name="install-argument-dev-tools"></a>Deploy the [AWS IoT Greengrass CLI component](gg-cli.md), which is a command\-line tool that enables you to develop custom Greengrass components on the core device\.
    + <a name="install-argument-component-default-user"></a>Specify to use the `ggc_user` system user to run software components on the core device\. On Linux devices, this command also specifies to use the `ggc_group` system group, and the installer creates the system user and group for you\.
 
@@ -640,7 +668,7 @@ aws greengrassv2 create-deployment \
   --target-arn "arn:aws:iot:region:account-id:thing/MyGreengrassCore" \
   --components '{
     "aws.greengrass.Cli": {
-      "componentVersion": "2.6.0"
+      "componentVersion": "2.9.4"
     }
   }'
 ```
@@ -651,7 +679,7 @@ aws greengrassv2 create-deployment \
 ```
 aws greengrassv2 create-deployment ^
   --target-arn "arn:aws:iot:region:account-id:thing/MyGreengrassCore" ^
-  --components "{\"aws.greengrass.Cli\":{\"componentVersion\":\"2.6.0\"}}"
+  --components "{\"aws.greengrass.Cli\":{\"componentVersion\":\"2.9.4\"}}"
 ```
 
 ------
@@ -660,7 +688,7 @@ aws greengrassv2 create-deployment ^
 ```
 aws greengrassv2 create-deployment `
   --target-arn "arn:aws:iot:region:account-id:thing/MyGreengrassCore" `
-  --components '{\"aws.greengrass.Cli\":{\"componentVersion\":\"2.6.0\"}}'
+  --components '{\"aws.greengrass.Cli\":{\"componentVersion\":\"2.9.4\"}}'
 ```
 
 ------
@@ -912,8 +940,6 @@ You must use the following format for the artifact folder path\. Include the com
 
    <a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
 
-   <a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
-
 ------
 #### [ PowerShell ]
 
@@ -938,7 +964,6 @@ If the file doesn't exist, the local deployment may not be complete yet\. If the
    ```
    type C:\greengrass\v2\logs\greengrass.log
    ```
-<a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.  
 <a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
 
    ```
@@ -1045,8 +1070,6 @@ If the file doesn't exist, the local deployment may not be complete yet\. If the
 
    <a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
 
-   <a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
-
 ------
 #### [ PowerShell ]
 
@@ -1132,8 +1155,6 @@ If the file doesn't exist, the local deployment may not be complete yet\. If the
       ```
       type C:\greengrass\v2\logs\com.example.HelloWorld.log
       ```
-
-      <a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
 
       <a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
 
@@ -1223,7 +1244,7 @@ In this section, you complete these steps on your Greengrass core device to uplo
 
    1. In the [Amazon S3 console](https://console.aws.amazon.com/s3), under **Buckets**, choose **Create bucket**\.
 
-   1. For **Bucket name**, enter a unique bucket name\. For example, you can use **greengrass\-component\-artifacts\-*123456789012*\-*region***\. Replace *123456789012* with your AWS account ID and *region* with the AWS Region that you use for this tutorial\.
+   1. For **Bucket name**, enter a unique bucket name\. For example, you can use **greengrass\-component\-artifacts\-*region*\-*123456789012***\. Replace *123456789012* with your AWS account ID and *region* with the AWS Region that you use for this tutorial\.
 
    1. For **AWS region**, select the AWS Region that you use for this tutorial\.
 
@@ -1268,7 +1289,7 @@ In this section, you complete these steps on your Greengrass core device to uplo
 
    1. <a name="core-device-allow-s3-bucket-access-console-step-5"></a>Choose **Create policy**\.
 
-   1. <a name="core-device-allow-s3-bucket-access-console-step-6"></a>In the [IAM console](https://console.aws.amazon.com/iam) navigation menu, choose **Role**, and then choose the name of the role for the core device\. You specified this role name when you installed the AWS IoT Greengrass Core software\.
+   1. <a name="core-device-allow-s3-bucket-access-console-step-6"></a>In the [IAM console](https://console.aws.amazon.com/iam) navigation menu, choose **Role**, and then choose the name of the role for the core device\. You specified this role name when you installed the AWS IoT Greengrass Core software\. If you did not specify a name, the default is `GreengrassV2TokenExchangeRole`\.
 
    1. <a name="core-device-allow-s3-bucket-access-console-step-7"></a>Under **Permissions**, choose **Add permissions**, then choose **Attach policies**\.
 
@@ -1726,8 +1747,6 @@ In this section, you deploy your Hello World component back to your Greengrass c
    type C:\greengrass\v2\logs\com.example.HelloWorld.log
    ```
 
-   <a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
-
 ------
 #### [ PowerShell ]
 
@@ -1836,8 +1855,6 @@ For more information, see [Troubleshooting AWS IoT Greengrass V2](troubleshootin
    ```
    type C:\greengrass\v2\logs\com.example.HelloWorld.log
    ```
-
-   <a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
 
 ------
 #### [ PowerShell ]

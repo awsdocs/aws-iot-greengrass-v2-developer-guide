@@ -78,7 +78,7 @@ If you want to upgrade sequentially, uninstall the AWS IoT Greengrass Core softw
 You can then use the [installation instructions for AWS IoT Greengrass V2](install-greengrass-core-v2.md) to install the software on your device\.
 
 **Tip**  <a name="tip-migrate-reuse-core-device-identity"></a>
-To reuse a core device's identity when you migrate it from V1 to V2, follow instructions to [install the AWS IoT Greengrass Core software with manual provisioning](manual-installation.md)\. Reuse the V1 core device's AWS IoT thing and certificate, and update the certificate's AWS IoT policies to grant permissions that the v2\.x software requires\.
+To reuse a core device's identity when you migrate it from V1 to V2, follow instructions to [install the AWS IoT Greengrass Core software with manual provisioning](manual-installation.md)\. First remove the V1 core software from the device, and then reuse the V1 core device's AWS IoT thing and certificate, and update the certificate's AWS IoT policies to grant permissions that the v2\.x software requires\.
 
 ### Install AWS IoT Greengrass Core software v2\.x on a device already running v1\.x<a name="install-v2-side-by-side"></a>
 
@@ -129,7 +129,7 @@ If you install the AWS IoT Greengrass Core v2\.x software on a device that is al
 You can then use the [installation instructions for AWS IoT Greengrass V2](install-greengrass-core-v2.md) to install the software on your device\.
 
 **Tip**  <a name="tip-migrate-reuse-core-device-identity"></a>
-To reuse a core device's identity when you migrate it from V1 to V2, follow instructions to [install the AWS IoT Greengrass Core software with manual provisioning](manual-installation.md)\. Reuse the V1 core device's AWS IoT thing and certificate, and update the certificate's AWS IoT policies to grant permissions that the v2\.x software requires\.
+To reuse a core device's identity when you migrate it from V1 to V2, follow instructions to [install the AWS IoT Greengrass Core software with manual provisioning](manual-installation.md)\. First remove the V1 core software from the device, and then reuse the V1 core device's AWS IoT thing and certificate, and update the certificate's AWS IoT policies to grant permissions that the v2\.x software requires\.
 
 ## Step 2: Deploy AWS IoT Greengrass V2 components to the core devices<a name="deploy-v2-resources"></a>
 

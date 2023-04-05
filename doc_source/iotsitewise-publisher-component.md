@@ -20,6 +20,8 @@ For more information about AWS IoT SiteWise gateways, see [Using AWS IoT SiteWis
 ## Versions<a name="iotsitewise-publisher-component-versions"></a>
 
 This component has the following versions:
++ 2\.3\.x
++ 2\.2\.x
 + 2\.1\.x
 + 2\.0\.x
 
@@ -31,19 +33,27 @@ This component has the following versions:
 
 ## Operating system<a name="iotsitewise-publisher-component-os-support"></a>
 
-This component can be installed on Linux core devices only\.
+This component can be installed on core devices that run the following operating systems:
++ Linux
++ Windows
 
 ## Requirements<a name="iotsitewise-publisher-component-requirements"></a>
 
 This component has the following requirements:
 + The Greengrass core device must run on one of the following platforms:
-  + OS: Ubuntu 20\.04 or 18\.04
+  + OS: Ubuntu 18\.04 or later
 
-    Architecture: x86\_64 \(AMD64\)
+    Architecture: x86\_64 \(AMD64\) or ARMv8 \(Aarch64\)
   + OS: Red Hat Enterprise Linux \(RHEL\) 8
 
-    Architecture: x86\_64 \(AMD64\)
+    Architecture: x86\_64 \(AMD64\) or ARMv8 \(Aarch64\)
   + OS: Amazon Linux 2
+
+    Architecture: x86\_64 \(AMD64\) or ARMv8 \(Aarch64\)
+  + OS: Debian 11
+
+    Architecture: x86\_64 \(AMD64\) or ARMv8 \(Aarch64\)
+  + OS: Windows Server 2019 or later
 
     Architecture: x86\_64 \(AMD64\)
 + The Greengrass core device must connect to the Internet\.
@@ -76,7 +86,7 @@ This component must be able to perform outbound requests to the following endpoi
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#iotsitewise-publisher-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
-The following table lists the dependencies for versions 2\.0\.x to 2\.1\.x of this component\.
+The following table lists the dependencies for versions 2\.0\.x to 2\.2\.x of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
@@ -102,16 +112,40 @@ This component reads `BatchPutAssetPropertyValue` messages from AWS IoT Greengra
 
 This component uses the following log file\.
 
+------
+#### [ Linux ]
+
 ```
 /greengrass/v2/logs/aws.iot.SiteWiseEdgePublisher.log
 ```
 
+------
+#### [ Windows ]
+
+```
+C:\greengrass\v2\logs\aws.iot.SiteWiseEdgePublisher.log
+```
+
+------
+
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
+
+------
+#### [ Linux ]
 
   ```
   sudo tail -f /greengrass/v2/logs/aws.iot.SiteWiseEdgePublisher.log
   ```
+
+------
+#### [ Windows \(PowerShell\) ]
+
+  ```
+  Get-Content C:\greengrass\v2\logs\aws.iot.SiteWiseEdgePublisher.log -Tail 10 -Wait
+  ```
+
+------
 
 ## Licenses<a name="iotsitewise-publisher-component-licenses"></a>
 
@@ -124,6 +158,11 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.3\.1  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-publisher-component.html)  | 
+|  2\.2\.3  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-publisher-component.html)  | 
+|  2\.2\.2  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-publisher-component.html)  | 
+|  2\.2\.1  |   This version doesn't support HTTP proxy configuration\. Version 2\.2\.2 and higher reintroduces support for this feature\.  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-publisher-component.html)  | 
+|  2\.2\.0  |   This version doesn't support HTTP proxy configuration\. Version 2\.2\.2 and higher reintroduces support for this feature\.  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-publisher-component.html)  | 
 |  2\.1\.4  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-publisher-component.html)  | 
 |  2\.1\.3  |   This version is no longer available, except in the US East \(Ohio\), Canada \(Central\), and AWS GovCloud \(US\-East\) Regions\. This component version requires Java version 11 or greater to run\. The improvements in this version are available in later versions of this component\.  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-publisher-component.html)  | 
 |  2\.1\.2  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/iotsitewise-publisher-component.html)  | 

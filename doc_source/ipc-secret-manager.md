@@ -17,7 +17,7 @@ The following table lists the minimum versions of the AWS IoT Device SDK that yo
 | --- | --- | 
 |  [AWS IoT Device SDK for Java v2](https://github.com/aws/aws-iot-device-sdk-java-v2)  |  v1\.2\.10  | 
 |  [AWS IoT Device SDK for Python v2](https://github.com/aws/aws-iot-device-sdk-python-v2)  |  v1\.5\.3  | 
-|  [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2)  |  Linux: v1\.13\.0; Windows: v1\.14\.6  | 
+|  [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2)  |  v1\.17\.0  | 
 
 ## Authorization<a name="ipc-secret-manager-authorization"></a>
 
@@ -107,7 +107,7 @@ This property isn't used if you created the secret in the Secrets Manager consol
 The following examples demonstrate how to call this operation in custom component code\.
 
 ------
-#### [ Java ]
+#### [ Java \(IPC client V1\) ]
 
 **Example: Get a secret value**  
 This example uses an `IPCUtils` class to create a connection to the AWS IoT Greengrass Core IPC service\. For more information, see [Connect to the AWS IoT Greengrass Core IPC service](interprocess-communication.md#ipc-service-connect)\.
@@ -177,10 +177,10 @@ public class GetSecretValue {
 ```
 
 ------
-#### [ Python ]
+#### [ Python \(IPC client V1\) ]
 
 **Example: Get a secret value**  
-This example assumes that you are using version 1\.5\.4 or later of the AWS IoT Device SDK for Python v2\. If you are using version 1\.5\.3 of the SDK, see [Use AWS IoT Device SDK for Python v2](interprocess-communication.md#ipc-python) for information about connecting to the AWS IoT Greengrass Core IPC service\. 
+This example assumes that you are using version 1\.5\.4 or later of the AWS IoT Device SDK for Python v2\. If you are using version 1\.5\.3 of the SDK, see [Use AWS IoT Device SDK for Python v2 \(IPC client V1\)](interprocess-communication.md#ipc-python) for information about connecting to the AWS IoT Greengrass Core IPC service\. 
 
 ```
 import json
@@ -214,7 +214,7 @@ secret_json = json.loads(response.secret_value.secret_string)
 
 Use the following examples to learn how to use the secret manager IPC service in your components\.
 
-### Example: Print secret \(Python\)<a name="ipc-secret-manager-example-print-secret-python"></a>
+### Example: Print secret \(Python, IPC client V1\)<a name="ipc-secret-manager-example-print-secret-python"></a>
 
 This example component prints the value of a secret that you deploy to the core device\.
 

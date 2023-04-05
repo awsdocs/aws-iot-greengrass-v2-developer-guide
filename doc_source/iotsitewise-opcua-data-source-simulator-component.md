@@ -26,7 +26,9 @@ This component has the following versions:
 
 ## Operating system<a name="iotsitewise-opcua-data-source-simulator-component-os-support"></a>
 
-This component can be installed on Linux core devices only\.
+This component can be installed on core devices that run the following operating systems:
++ Linux
++ Windows
 
 ## Requirements<a name="iotsitewise-opcua-data-source-simulator-component-requirements"></a>
 
@@ -54,16 +56,40 @@ This component doesn't have any configuration parameters\.
 
 This component uses the following log file\.
 
+------
+#### [ Linux ]
+
 ```
 /greengrass/v2/logs/aws.iot.SiteWiseEdgeOpcuaDataSourceSimulator.log
 ```
 
+------
+#### [ Windows ]
+
+```
+C:\greengrass\v2\logs\aws.iot.SiteWiseEdgeOpcuaDataSourceSimulator.log
+```
+
+------
+
 **To view this component's logs**
-+ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* with the path to the AWS IoT Greengrass root folder\.
++ Run the following command on the core device to view this component's log file in real time\. Replace */greengrass/v2* or *C:\\greengrass\\v2* with the path to the AWS IoT Greengrass root folder\.
+
+------
+#### [ Linux ]
 
   ```
   sudo tail -f /greengrass/v2/logs/aws.iot.SiteWiseEdgeOpcuaDataSourceSimulator.log
   ```
+
+------
+#### [ Windows \(PowerShell\) ]
+
+  ```
+  Get-Content C:\greengrass\v2\logs\aws.iot.SiteWiseEdgeOpcuaDataSourceSimulator.log -Tail 10 -Wait
+  ```
+
+------
 
 ## Changelog<a name="iotsitewise-opcua-data-source-simulator-component-changelog"></a>
 
@@ -72,7 +98,7 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
-|  1\.0\.0  |  Initial version\.  | 
+|  1\.0\.0  |  Initial version\. Adds support for Windows Server 2016 or higher\.  | 
 
 ## See also<a name="iotsitewise-opcua-data-source-simulator-component-see-also"></a>
 + [What is AWS IoT SiteWise?](https://docs.aws.amazon.com/iot-sitewise/latest/userguide/what-is-sitewise.html) in the *AWS IoT SiteWise User Guide*\.

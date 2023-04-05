@@ -28,20 +28,28 @@ This section describes how to configure and use the telemetry agent\. For inform
 The following table describes the metrics that are published by the telemetry agent\.
 
 
-| Name | Description | Source | 
-| --- | --- | --- | 
-|  `SystemMemUsage`  |  The amount of memory currently in use by all applications on the Greengrass core device, including the operating system\.  |  System  | 
-|  `CpuUsage`  |  The amount of CPU currently in use by all applications on the Greengrass core device, including the operating system\.  |  System  | 
-|  `TotalNumberOfFDs`  |  The number of file descriptors stored by the operating system of the Greengrass core device\. One file descriptor uniquely identifies one open file\.  |  System  | 
-|  `NumberOfComponentsRunning`  |  The number of components that are running on the Greengrass core device\.  |  Greengrass nucleus  | 
-|  `NumberOfComponentsErrored`  |  The number of components that are in error state on the Greengrass core device\.  |  Greengrass nucleus  | 
-|  `NumberOfComponentsInstalled`  |  The number of components that are installed on the Greengrass core device\.  |  Greengrass nucleus  | 
-|  `NumberOfComponentsStarting`  |  The number of components that are starting on the Greengrass core device\.  |  Greengrass nucleus  | 
-|  `NumberOfComponentsNew`  |  The number of components that are new on the Greengrass core device\.  |  Greengrass nucleus  | 
-|  `NumberOfComponentsStopping`  |  The number of components that are stopping on the Greengrass core device\.  |  Greengrass nucleus  | 
-|  `NumberOfComponentsFinished`  |  The number of components that are finished on the Greengrass core device\.  |  Greengrass nucleus  | 
-|  `NumberOfComponentsBroken`  |  The number of components that are broken on the Greengrass core device\.  |  Greengrass nucleus  | 
-|  `NumberOfComponentsStateless`  |  The number of components that are stateless on the Greengrass core device\.  |  Greengrass nucleus  | 
+| Name | Description | 
+| --- | --- | 
+|  **System**  | 
+|  `SystemMemUsage`  |  The amount of memory currently in use by all applications on the Greengrass core device, including the operating system\.  | 
+|  `CpuUsage`  |  The amount of CPU currently in use by all applications on the Greengrass core device, including the operating system\.  | 
+|  `TotalNumberOfFDs`  |  The number of file descriptors stored by the operating system of the Greengrass core device\. One file descriptor uniquely identifies one open file\.  | 
+|  **Greengrass nucleus**  | 
+|  `NumberOfComponentsRunning`  |  The number of components that are running on the Greengrass core device\.  | 
+|  `NumberOfComponentsErrored`  |  The number of components that are in error state on the Greengrass core device\.  | 
+|  `NumberOfComponentsInstalled`  |  The number of components that are installed on the Greengrass core device\.  | 
+|  `NumberOfComponentsStarting`  |  The number of components that are starting on the Greengrass core device\.  | 
+|  `NumberOfComponentsNew`  |  The number of components that are new on the Greengrass core device\.  | 
+|  `NumberOfComponentsStopping`  |  The number of components that are stopping on the Greengrass core device\.  | 
+|  `NumberOfComponentsFinished`  |  The number of components that are finished on the Greengrass core device\.  | 
+|  `NumberOfComponentsBroken`  |  The number of components that are broken on the Greengrass core device\.  | 
+|  `NumberOfComponentsStateless`  |  The number of components that are stateless on the Greengrass core device\.  | 
+|  **Stream manager** – This feature requires v2\.7\.0 or later of the Greengrass nucleus component\.  | 
+|  `BytesAppended`  |  The number of bytes of data appended to stream manager\.  | 
+|  `BytesUploadedToIoTAnalytics`  |  The number of bytes of data that stream manager exports to channels in AWS IoT Analytics\.  | 
+|  `BytesUploadedToKinesis`  |  The number of bytes of data that stream manager exports to streams in Amazon Kinesis Data Streams\.  | 
+|  `BytesUploadedToIoTSiteWise`  |  The number of bytes of data that stream manager exports to asset properties in AWS IoT SiteWise\.  | 
+|  `BytesUploadedToS3`  |  The number of bytes of data that stream manager exports to objects in Amazon S3  | 
 
 ## Configure telemetry agent settings<a name="configure-telemetry-agent-settings"></a>
 
@@ -146,6 +154,37 @@ Telemetry events use the following format\.
             "N": "NumberOfComponentsStateless",
             "Sum": 0.0,
             "U": "Count"
+          }
+        ]
+      },
+      {
+        "TS": 1602186483234,
+        "NS": "aws.greengrass.StreamManager",
+        "M": [
+          {
+            "N": "BytesAppended",
+            "Sum": 157745524.0,
+            "U": "Bytes"
+          },
+          {
+            "N": "BytesUploadedToIoTAnalytics",
+            "Sum": 149012.0,
+            "U": "Bytes"
+          },
+          {
+            "N": "BytesUploadedToKinesis",
+            "Sum": 12192.0,
+            "U": "Bytes"
+          },
+          {
+            "N": "BytesUploadedToIoTSiteWise",
+            "Sum": 13321.0,
+            "U": "Bytes"
+          },
+          {
+            "N": "BytesUploadedToS3",
+            "Sum": 12213.0,
+            "U": "Bytes"
           }
         ]
       }

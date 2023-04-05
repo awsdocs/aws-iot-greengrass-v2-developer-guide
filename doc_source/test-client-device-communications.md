@@ -160,7 +160,7 @@ In this section, you use Greengrass discovery sample in the [AWS IoT Device SDK 
 
       ```
       cmake -DCMAKE_PREFIX_PATH="~/iot-device-sdk-cpp" -DCMAKE_BUILD_TYPE="Release" ..
-      cmake --build . --config "Release
+      cmake --build . --config "Release"
       ```
 
 1. <a name="test-client-device-communications-application-scanner-intro"></a>Run the sample Greengrass discovery application\. This application expects arguments that specify the client device thing name, the MQTT topic to use, and the certificates that authenticate and secure the connection\. The following example subscribes to the `clients/MyClientDevice1/hello/world` topic and publishes a message that you enter on the command line to the same topic\.<a name="test-client-device-communications-application-command-replace"></a>

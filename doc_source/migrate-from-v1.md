@@ -11,7 +11,6 @@ Follow instructions in this guide to migrate from AWS IoT Greengrass V1 to AWS I
 
 Most V1 applications can run on V2 core devices without needing to change the application code\. If your V1 applications use any of the following features, you won't be able to run them on V2 yet\.
 + The C and C\+\+ Lambda function runtimes
-+ Stream manager telemetry metrics
 + On\-disk storage cache for outbound MQTT messages
 
 If your V1 applications use either of the following features, you must modify your application code to use the AWS IoT Device SDK V2 to run the applications on AWS IoT Greengrass V2\.

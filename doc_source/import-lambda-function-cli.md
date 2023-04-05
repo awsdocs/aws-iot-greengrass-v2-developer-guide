@@ -247,7 +247,7 @@ To subscribe this function to messages from other Lambda functions or components
          + `type` – The type of event source\. Choose from the following options:
            + `PUB_SUB` – Subscribe to local publish/subscribe messages\.
 
-             You can't use MQTT topic wildcards \(`+` and `#`\) in the `topic` when you specify this type\.
+             If you use [Greengrass nucleus](greengrass-nucleus-component.md) v2\.6\.0 or later and [Lambda manager](lambda-manager-component.md) v2\.2\.5 or later, you can use MQTT topic wildcards \(`+` and `#`\) in the `topic` when you specify this type\.
            + `IOT_CORE` – Subscribe to AWS IoT Core MQTT messages\.
 
              You can use MQTT topic wildcards \(`+` and `#`\) in the `topic` when you specify this type\.

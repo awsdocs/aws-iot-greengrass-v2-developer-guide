@@ -13,6 +13,7 @@ When the AWS IoT Greengrass Core software starts
 When the core device receives a deployment from the AWS Cloud
 When the status of any component on the core device becomes `BROKEN`
 At a [regular interval that you can configure](greengrass-nucleus-component.md#greengrass-nucleus-component-configuration-fss), which defaults to 24 hours
+For AWS IoT Greengrass Core v2\.7\.0, the core device sends status updates when local deployment and cloud deployment occurs
 
 **Topics**
 + [Check health of a core device](#check-core-device-health-status)
@@ -56,6 +57,6 @@ You can check the status, such as lifecycle state, of the software components on
   aws greengrassv2 list-installed-components --core-device-thing-name coreDeviceName
   ```
 
-  The response contains the list of components that run on the core device\. Each entry in the list contains the lifecycle state of the component\.
+  The response contains the list of components that run on the core device\. Each entry in the list contains the lifecycle state of the component, including how current the status of the data is and when the Greengrass core device last sent a message containing a certain component to the cloud\. The response will also include the most recent deployment source that brought the component to the Greengrass core device\.
 **Note**  
-This list doesn't include components that are deployed as dependencies of other components\.
+This command retrieves a paginated list of the components that a Greengrass core device runs\. By default, this list doesn't include components that are deployed as dependencies of other components\. You can include dependencies in the response by setting the `topologyFilter` parameter to `ALL`\.

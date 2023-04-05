@@ -1,6 +1,8 @@
 # Run AWS IoT Greengrass in a Docker container with automatic resource provisioning<a name="run-greengrass-docker-automatic-provisioning"></a>
 
-This tutorial shows you how to install and run AWS IoT Greengrass Core software in Docker container with automatically provisioned AWS resources and local development tools\. You can use this development environment to explore AWS IoT Greengrass features in a Docker container\.
+This tutorial shows you how to install and run AWS IoT Greengrass Core software in Docker container with automatically provisioned AWS resources and local development tools\. You can use this development environment to explore AWS IoT Greengrass features in a Docker container\. The software requires AWS credentials to provision these resources and deploy the local development tools\.
+
+If you can't provide AWS credentials to the container, you can provision the AWS resources that the core device requires to operate\. You can also deploy the development tools to a core device to use as a development device\. This enables you to provide fewer permissions to the device when you run the container\. For more information, see [Run AWS IoT Greengrass in a Docker container with manual resource provisioning](run-greengrass-docker-manual-provisioning.md)\.
 
 
 
@@ -48,7 +50,7 @@ In this step, you create a credential file on the host computer that contains yo
 
    Include `aws_session_token` for temporary credentials only\.
 
-**Note**  
+**Important**  
 Remove the credential file from the host computer after you start the AWS IoT Greengrass container\. If you don't remove the credential file, then your AWS credentials will remain mounted inside the container\. For more information, see [Run the AWS IoT Greengrass Core software in a container](#run-greengrass-image-automatic-provisioning)\.
 
 ## Create an environment file<a name="create-env-file-automatic-provisioning"></a>
@@ -122,7 +124,13 @@ The `--init` argument is required to shut down AWS IoT Greengrass Core software 
 **Note**  <a name="docker-run-cap-drop"></a>
 To run your Docker container with increased security, you can use the `--cap-drop` and `--cap-add` arguments to selectively enable Linux capabilities for your container\. For more information, see [Runtime privilege and Linux capabilities](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities) in the Docker documentation\.
 
-1. Remove the credential file from `path/to/greengrass-v2-credentials`\.
+1. <a name="docker-automatic-provisioning-remove-credentials-file"></a>Remove the credentials from `./greengrass-v2-credentials` on the host device\.
+
+   ```
+   rm -rf ./greengrass-v2-credentials
+   ```
+**Important**  
+You're removing these credentials, because they provide broad permissions that the core device needs only during setup\. If you don't remove these credentials, Greengrass components and other processes running in the container can access them\. If you need to provide AWS credentials to a Greengrass component, use the token exchange service\. For more information, see [Interact with AWS services](interact-with-aws-services.md)\.
 
 ------
 #### [ Docker Compose ]
@@ -160,13 +168,19 @@ You can also download and use the latest version of the AWS\-provided Compose fi
 **Note**  <a name="docker-compose-cap-drop"></a>
 To run your Docker container with increased security, you can use `cap_drop` and `cap_add` in your Compose file to selectively enable Linux capabilities for your container\. For more information, see [Runtime privilege and Linux capabilities](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities) in the Docker documentation\.
 
-1. Run the following command start the Docker container\.
+1. Run the following command to start the Docker container\.
 
    ```
    docker-compose -f docker-compose.yml up
    ```
 
-1. Remove the credential file from `./greengrass-v2-credentials`\.
+1. <a name="docker-automatic-provisioning-remove-credentials-file"></a>Remove the credentials from `./greengrass-v2-credentials` on the host device\.
+
+   ```
+   rm -rf ./greengrass-v2-credentials
+   ```
+**Important**  
+You're removing these credentials, because they provide broad permissions that the core device needs only during setup\. If you don't remove these credentials, Greengrass components and other processes running in the container can access them\. If you need to provide AWS credentials to a Greengrass component, use the token exchange service\. For more information, see [Interact with AWS services](interact-with-aws-services.md)\.
 
 ------
 

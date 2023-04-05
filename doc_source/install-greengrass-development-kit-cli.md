@@ -10,7 +10,7 @@ You can also install the GDK CLI in a Python virtual environments such as [venv]
 1. Run the following command to install the latest version of the GDK CLI from its [GitHub repository](https://github.com/aws-greengrass/aws-greengrass-gdk-cli)\.
 
    ```
-   python3 -m pip install -U git+https://github.com/aws-greengrass/aws-greengrass-gdk-cli.git@v1.1.0
+   python3 -m pip install -U git+https://github.com/aws-greengrass/aws-greengrass-gdk-cli.git@v1.2.0
    ```
 **Note**  
 To install a specific version of the GDK CLI, replace *versionTag* with the version tag to install\. You can view version tags for the GDK CLI in its [GitHub repository](https://github.com/aws-greengrass/aws-greengrass-gdk-cli/tags)\.  

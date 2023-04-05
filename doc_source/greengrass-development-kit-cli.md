@@ -34,5 +34,7 @@ The following table describes the changes in each version of the GDK CLI\. For m
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+| 1\.2\.1 |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-development-kit-cli.html)  | 
+| 1\.2\.0 |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-development-kit-cli.html) [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-development-kit-cli.html)  | 
 |  1\.1\.0  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-development-kit-cli.html)  | 
 |  1\.0\.0  |  Initial version\.  | 

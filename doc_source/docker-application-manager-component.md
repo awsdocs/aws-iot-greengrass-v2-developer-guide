@@ -1,6 +1,6 @@
 # Docker application manager<a name="docker-application-manager-component"></a>
 
-The Docker application manager component \(`aws.greengrass.DockerApplicationManager`\) enables AWS IoT Greengrass to download Docker images from public image registries\. It also enables AWS IoT Greengrass to manage credentials to download images from private repositories in Amazon Elastic Container Registry \(Amazon ECR\)\. 
+The Docker application manager component \(`aws.greengrass.DockerApplicationManager`\) enables AWS IoT Greengrass to download Docker images from public image registries and private registries hosted on Amazon Elastic Container Registry \(Amazon ECR\)\. It also enables AWS IoT Greengrass to manage credentials automatically to securely download images from private repositories in Amazon ECR\.
 
 When you develop a custom component that runs a Docker container, include the Docker application manager as a dependency to download the Docker images that are specified as artifacts in your component\. For more information, see [Run a Docker container](run-docker-container.md)\.
 
@@ -120,6 +120,36 @@ This component must be able to perform outbound requests to the following endpoi
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#docker-application-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
+#### [ 2\.0\.8 ]
+
+The following table lists the dependencies for version 2\.0\.8 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.1\.0 <3\.0\.0 | Soft | 
+
+------
+#### [ 2\.0\.7 ]
+
+The following table lists the dependencies for version 2\.0\.7 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.1\.0 <2\.9\.0 | Soft | 
+
+------
+#### [ 2\.0\.6 ]
+
+The following table lists the dependencies for version 2\.0\.6 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.1\.0 <2\.8\.0 | Soft | 
+
+------
 #### [ 2\.0\.5 ]
 
 The following table lists the dependencies for version 2\.0\.5 of this component\.
@@ -189,20 +219,20 @@ This component doesn't have any configuration parameters\.
 
 ## Local log file<a name="docker-application-manager-component-log-file"></a>
 
-This component uses the following log file\.
+This component uses the same log file as the [Greengrass nucleus](greengrass-nucleus-component.md) component\.
 
 ------
 #### [ Linux ]
 
 ```
-/greengrass/v2/logs/aws.greengrass.DockerApplicationManager.log
+/greengrass/v2/logs/greengrass.log
 ```
 
 ------
 #### [ Windows ]
 
 ```
-C:\greengrass\v2\logs\aws.greengrass.DockerApplicationManager.log
+C:\greengrass\v2\logs\greengrass.log
 ```
 
 ------
@@ -214,14 +244,14 @@ C:\greengrass\v2\logs\aws.greengrass.DockerApplicationManager.log
 #### [ Linux ]
 
   ```
-  sudo tail -f /greengrass/v2/logs/aws.greengrass.DockerApplicationManager.log
+  sudo tail -f /greengrass/v2/logs/greengrass.log
   ```
 
 ------
 #### [ Windows \(PowerShell\) ]
 
   ```
-  Get-Content C:\greengrass\v2\logs\aws.greengrass.DockerApplicationManager.log -Tail 10 -Wait
+  Get-Content C:\greengrass\v2\logs\greengrass.log -Tail 10 -Wait
   ```
 
 ------
@@ -233,6 +263,9 @@ The following table describes the changes in each version of the component\.
 
 |   **Version**   |   **Changes**   | 
 | --- | --- | 
+|  2\.0\.8  | Version updated for Greengrass nucleus version 2\.9\.0 release\. | 
+|  2\.0\.7  | Version updated for Greengrass nucleus version 2\.8\.0 release\. | 
+|  2\.0\.6  |  Version updated for Greengrass nucleus version 2\.7\.0 release\.  | 
 |  2\.0\.5  |  Version updated for Greengrass nucleus version 2\.6\.0 release\.  | 
 |  2\.0\.4  |  Version updated for Greengrass nucleus version 2\.5\.0 release\.  | 
 |  2\.0\.3  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 

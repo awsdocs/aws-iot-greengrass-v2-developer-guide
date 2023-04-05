@@ -34,4 +34,4 @@ For more information, see the [ Keep your device's clock in sync](https://docs.a
 
 ## See also<a name="security-best-practices-see-also"></a>
 + [Security best practices in AWS IoT Core](https://docs.aws.amazon.com/iot/latest/developerguide/security-best-practices.html) in the *AWS IoT Developer Guide*
-+ [ Ten security golden rules for IoT solutions](https://aws.amazon.com/blogs/iot/ten-security-golden-rules-for-iot-solutions/) on the *Internet of Things on AWS Official Blog*
++ [ Ten security golden rules for Industrial IoT solutions](https://aws.amazon.com/blogs/iot/ten-security-golden-rules-for-industrial-iot-solutions/) on the *Internet of Things on AWS Official Blog*

@@ -6,6 +6,8 @@ Each core device runs the combination of the software from the deployments that 
 
 When a core device receives a deployment, it checks whether the deployment's components are compatible with the core device\. The core device checks whether it meets each component's platform requirements\. The deployment fails if a component doesn't support the core device's platform\. The core device also checks whether each component's dependencies are compatible with version constraints from other deployments to different targets that include this core device\. For example, you deploy component `A` to a thing group `X`, and component `A` depends on component `com.example.PythonRuntime` versions `3.5 - 3.10`\. You then deploy component `B` to a thing group `Y`, and component `B` depends on component `com.example.PythonRuntime` versions `3.7 - 3.10`\. As a result, core devices in these thing groups determine that they can deploy versions `3.7 - 3.10` of the `com.example.PythonRuntime` component, because these versions are where the deployments' version constraints overlap\. Then, you deploy component `C` to a thing group `Z`, and component `C` depends on component `com.example.PythonRuntime` versions `2.6 - 2.7`\. This deployment fails, because there's no component version that meets the version constraints `2.6 - 2.7` and `3.7 - 3.10`\. AWS IoT Greengrass uses [NPM semantic version constraints](https://semver.npmjs.com/)\.
 
+Before a core device applies a deployment, it notifies each component on the core device by default\. Greengrass components can respond to these notifications to defer the deployment\. You might want to defer a deployment when the device has a low battery level or is running a process that can't be interrupted, for example\. For more information, see [Tutorial: Develop a Greengrass component that defers component updates](defer-component-updates-tutorial.md)\. When you create a deployment, you can configure it to apply the deployment without notifying components\.
+
 **Note**  <a name="thing-group-removal-behavior"></a>
 When you remove a core device from a thing group, the component deployment behavior depends on the version of the [Greengrass nucleus](greengrass-nucleus-component.md) that the core device runs\.  
 The thing group removal behavior depends on whether the core device's AWS IoT policy grants the `greengrass:ListThingGroupsForCoreDevice` permission\. For more information about this permission and AWS IoT policies for core devices, see [Device authentication and authorization for AWS IoT Greengrass](device-auth.md)\.  
@@ -52,6 +54,7 @@ Custom components can define artifacts in S3 buckets\. When the AWS IoT Greengra
 
 **Topics**
 + [Create deployments](create-deployments.md)
++ [Create subdeployments](create-subdeployments.md)
 + [Revise deployments](revise-deployments.md)
 + [Cancel deployments](cancel-deployments.md)
 + [Check deployment status](check-deployment-status.md)

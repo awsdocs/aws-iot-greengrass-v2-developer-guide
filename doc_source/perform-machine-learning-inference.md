@@ -11,8 +11,6 @@ AWS IoT Greengrass makes the steps required to perform inference more efficient\
 + [Supported model sources](#ml-model-sources)
 + [Supported machine learning runtimes](#ml-runtime-libraries)
 + [AWS\-provided machine learning components](#ml-components)
-+ [Tutorial: Perform sample image classification inference using TensorFlow Lite](ml-tutorial-image-classification.md)
-+ [Perform sample image classification inference on images from a camera using TensorFlow Lite](ml-tutorial-image-classification-camera.md)
 + [Use Amazon SageMaker Edge Manager on Greengrass core devices](use-sagemaker-edge-manager.md)
 + [Use Amazon Lookout for Vision on Greengrass core devices](use-lookout-for-vision.md)
 + [Customize your machine learning components](ml-customization.md)

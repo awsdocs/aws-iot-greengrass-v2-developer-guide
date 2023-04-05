@@ -24,7 +24,7 @@ The following table lists the minimum versions of the AWS IoT Device SDK that yo
 | --- | --- | 
 |  [AWS IoT Device SDK for Java v2](https://github.com/aws/aws-iot-device-sdk-java-v2)  |  v1\.2\.10  | 
 |  [AWS IoT Device SDK for Python v2](https://github.com/aws/aws-iot-device-sdk-python-v2)  |  v1\.5\.3  | 
-|  [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2)  |  Linux: v1\.13\.0; Windows: v1\.14\.6  | 
+|  [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2)  |  v1\.17\.0  | 
 
 ## Authorization<a name="ipc-component-lifecycle-authorization"></a>
 
@@ -120,7 +120,7 @@ Whether or not the nucleus needs to restart to apply the update\.
 \(Optional\) An event that indicates that the nucleus updated a component\. This object, `PostComponentUpdateEvent`, contains the following information:    
 `deploymentId` \(Python: `deployment_id`\)  
 The ID of the AWS IoT Greengrass deployment that updated the component\.  
-This property isn't currently used\.
+This feature requires v2\.7\.0 or later of the Greengrass nucleus component\.
 
 ## DeferComponentUpdate<a name="ipc-operation-defercomponentupdate"></a>
 

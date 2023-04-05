@@ -1,7 +1,5 @@
 # Develop AWS IoT Greengrass components<a name="develop-greengrass-components"></a>
 
-AWS IoT Greengrass *components* are software modules that you deploy to Greengrass core devices\. Components can represent applications, runtime installers, libraries, or any code that you would run on a device\. You can define components that depend on other components\. For example, you might define a component that installs Python, and then define that component as a dependency of your components that run Python applications\. When you deploy your components to your fleets of devices, Greengrass deploys only the software modules that your devices require\.
-
 You can develop and test components on your Greengrass core device\. As a result, you can create and iterate your AWS IoT Greengrass software without interacting with the AWS Cloud\. When you finish a version of your component, you can upload it to AWS IoT Greengrass in the cloud, so you and your team can deploy the component to other devices in your fleet\. For more information about how to deploy components, see [Deploy AWS IoT Greengrass components to devices](manage-deployments.md)\.
 
 Every component is composed of a *recipe* and *artifacts*\.

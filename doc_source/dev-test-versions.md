@@ -11,24 +11,69 @@ By downloading the software, you agree to the [AWS IoT Device Tester License Agr
 
 You can use this version of IDT for AWS IoT Greengrass V2 with the AWS IoT Greengrass version listed here\. <a name="idt-latest-version.options"></a>
 
+**IDT v4\.7\.0 for AWS IoT Greengrass**    
+Supported AWS IoT Greengrass versions:   
++ [Greengrass nucleus](greengrass-nucleus-component.md) v2\.9\.4, v2\.9\.3, v2\.9\.2, v2\.9\.1, v2\.9\.0, v2\.8\.1, v2\.8\.0, v2\.7\.0, and v2\.6\.0  
+IDT software downloads:  
++ IDT v4\.7\.0 with test suite GGV2Q\_2\.5\.0 for [Linux](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.7.0_testsuite_2.5.0_linux.zip)
++ IDT v4\.7\.0 with test suite GGV2Q\_2\.5\.0 for [macOS](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.7.0_testsuite_2.5.0_mac.zip)
++ IDT v4\.7\.0 with test suite GGV2Q\_2\.5\.0 for [Windows](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.7.0_testsuite_2.5.0_win.zip)  
+Release notes:  
++ Enables you to validate and qualify devices running AWS IoT Greengrass Core software versions 2\.9\.4, 2\.9\.3, 2\.9\.2, 2\.9\.1, 2\.9\.0, 2\.8\.1, 2\.8\.0, 2\.7\.0, and 2\.6\.0\. 
++ Adds support to store IDT userdata values in AWS Systems Manager Parameter Store and fetch them into configuration using placeholder syntax\.
++ Minor bug fixes\.  
+Test suite version:    
+`GGV2Q_2.5.0`  
++ Released 2022\.12\.13
+
+## Earlier IDT versions for AWS IoT Greengrass<a name="idt-earlier-versions"></a>
+
+The following earlier versions of IDT for AWS IoT Greengrass V2 are also supported\. <a name="idt-earlier-version.options"></a>
+
+**IDT v4\.5\.11 for AWS IoT Greengrass**    
+Supported AWS IoT Greengrass versions:   
++ [Greengrass nucleus](greengrass-nucleus-component.md) v2\.9\.1, v2\.9\.0, v2\.8\.1, v2\.8\.0, v2\.7\.0, v2\.6\.0, and v2\.5\.6  
+IDT software downloads:  
++ IDT v4\.5\.11 with test suite GGV2Q\_2\.4\.1 for [Linux](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.5.11_testsuite_2.4.1_linux.zip)
++ IDT v4\.5\.11 with test suite GGV2Q\_2\.4\.1 for [macOS](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.5.11_testsuite_2.4.1_mac.zip)
++ IDT v4\.5\.11 with test suite GGV2Q\_2\.4\.1 for [Windows](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.5.11_testsuite_2.4.1_win.zip)  
+Release notes:  
++ Enables you to validate and qualify devices running AWS IoT Greengrass Core software versions 2\.9\.1, 2\.9\.0, 2\.8\.1, 2\.8\.0, 2\.7\.0, and 2\.6\.0\.
++ Adds support to test PreInstalled Greengrass on a core device\.
++ Minor bug fixes\.  
+Test suite version:    
+`GGV2Q_2.4.1`  
++ Released 2022\.10\.13
+
+**IDT v4\.5\.8 for AWS IoT Greengrass**    
+Supported AWS IoT Greengrass versions:   
++ [Greengrass nucleus](greengrass-nucleus-component.md) v2\.7\.0, v2\.6\.0, and v2\.5\.6  
+IDT software downloads:  
++ IDT v4\.5\.8 with test suite GGV2Q\_2\.4\.0 for [Linux](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.5.8_testsuite_2.4.0_linux.zip)
++ IDT v4\.5\.8 with test suite GGV2Q\_2\.4\.0 for [macOS](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.5.8_testsuite_2.4.0_mac.zip)
++ IDT v4\.5\.8 with test suite GGV2Q\_2\.4\.0 for [Windows](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.5.8_testsuite_2.4.0_win.zip)  
+Release notes:  
++ Enables you to validate and qualify devices running AWS IoT Greengrass Core software versions 2\.7\.0, 2\.6\.0, and 2\.5\.6\.
++ Enables you to test with PreInstalled Greengrass on a core device\.
++ Minor bug fixes\.  
+Test suite version:    
+`GGV2Q_2.4.0`  
++ Released 2022\.08\.12
+
 **IDT v4\.5\.3 for AWS IoT Greengrass**    
 Supported AWS IoT Greengrass versions:   
-+ [Greengrass nucleus](greengrass-nucleus-component.md) v2\.6\.0, v2\.5\.6, v2\.5\.5, v2\.5\.4, and v2\.5\.3  
++ [Greengrass nucleus](greengrass-nucleus-component.md) v2\.7\.0, v2\.6\.0, v2\.5\.6, v2\.5\.5, v2\.5\.4, and v2\.5\.3  
 IDT software downloads:  
 + IDT v4\.5\.3 with test suite GGV2Q\_2\.3\.1 for [Linux](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.5.3_testsuite_2.3.1_linux.zip)
 + IDT v4\.5\.3 with test suite GGV2Q\_2\.3\.1 for [macOS](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.5.3_testsuite_2.3.1_mac.zip)
 + IDT v4\.5\.3 with test suite GGV2Q\_2\.3\.1 for [Windows](https://docs.aws.amazon.com/greengrass/v2/developerguide/devicetester_greengrass_v2_4.5.3_testsuite_2.3.1_win.zip)  
 Release notes:  
-+ Enables you to validate and qualify devices running AWS IoT Greengrass Core software versions 2\.6\.0, 2\.5\.6, 2\.5\.5, 2\.5\.4, and 2\.5\.3\.
-+ Updates DockerApplicationManager test to use ECR\-based docker image\.
-+ Additional minor bug fixes\.  
++ Enables you to validate and qualify devices running AWS IoT Greengrass Core software versions 2\.7\.0, 2\.6\.0, 2\.5\.6, 2\.5\.5, 2\.5\.4, and 2\.5\.3\.
++ Updates DockerApplicationManager test to use an ECR\-based docker image\.
++ Minor bug fixes\.  
 Test suite version:    
 `GGV2Q_2.3.1`  
 + Released 2022\.04\.15
-
-## Earlier IDT versions for AWS IoT Greengrass<a name="idt-earlier-versions"></a>
-
-The following earlier versions of IDT for AWS IoT Greengrass V2 are also supported\. <a name="idt-earlier-version.options"></a>
 
 **IDT v4\.5\.1 for AWS IoT Greengrass**    
 Supported AWS IoT Greengrass versions:   

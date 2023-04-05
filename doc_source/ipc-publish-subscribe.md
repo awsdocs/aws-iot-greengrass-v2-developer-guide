@@ -21,7 +21,7 @@ The following table lists the minimum versions of the AWS IoT Device SDK that yo
 | --- | --- | 
 |  [AWS IoT Device SDK for Java v2](https://github.com/aws/aws-iot-device-sdk-java-v2)  |  v1\.2\.10  | 
 |  [AWS IoT Device SDK for Python v2](https://github.com/aws/aws-iot-device-sdk-python-v2)  |  v1\.5\.3  | 
-|  [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2)  |  Linux: v1\.13\.0; Windows: v1\.14\.6  | 
+|  [AWS IoT Device SDK for C\+\+ v2](https://github.com/aws/aws-iot-device-sdk-cpp-v2)  |  v1\.17\.0  | 
 
 ## Authorization<a name="ipc-publish-subscribe-authorization"></a>
 
@@ -34,9 +34,9 @@ Authorization policies for publish/subscribe messaging have the following proper
 
 | Operation | Description | Resources | 
 | --- | --- | --- | 
-|  `aws.greengrass#PublishToTopic`  |  Allows a component to publish messages to the topics that you specify\.  |  A topic string, such as `test/topic`, or `*` to allow access to all topics\. This topic string doesn't support MQTT topic wildcards \(`#` and `+`\)\.  | 
-|  `aws.greengrass#SubscribeToTopic`  |  Allows a component to subscribe to messages for the topics that you specify\.  |  A topic string, such as `test/topic`, or `*` to allow access to all topics\. <a name="ipc-local-publish-subscribe-authorization-mqtt-wildcards"></a>In [Greengrass nucleus](greengrass-nucleus-component.md) v2\.6\.0 and later, you can subscribe to topics that contain MQTT topic wildcards \(`#` and `+`\)\. This topic string supports MQTT topic wildcards as literal characters\. For example, if a component's authorization policy grants access to `test/topic/#`, the component can subscribe to `test/topic/#`, but it can't subscribe to `test/topic/filter`\.  | 
-|  `*`  |  Allows a component to publish and subscribe to messages for the topics that you specify\.  |  A topic string, such as `test/topic`, or `*` to allow access to all topics\. <a name="ipc-local-publish-subscribe-authorization-mqtt-wildcards"></a>In [Greengrass nucleus](greengrass-nucleus-component.md) v2\.6\.0 and later, you can subscribe to topics that contain MQTT topic wildcards \(`#` and `+`\)\. This topic string supports MQTT topic wildcards as literal characters\. For example, if a component's authorization policy grants access to `test/topic/#`, the component can subscribe to `test/topic/#`, but it can't subscribe to `test/topic/filter`\.  | 
+|  `aws.greengrass#PublishToTopic`  |  Allows a component to publish messages to the topics that you specify\.  |  A topic string, such as `test/topic`\. Use an `*` to match any combination of characters in a topic\. This topic string doesn't support MQTT topic wildcards \(`#` and `+`\)\.  | 
+|  `aws.greengrass#SubscribeToTopic`  |  Allows a component to subscribe to messages for the topics that you specify\.  |  A topic string, such as `test/topic`\. Use an `*` to match any combination of characters in a topic\. <a name="ipc-local-publish-subscribe-authorization-mqtt-wildcards"></a>In [Greengrass nucleus](greengrass-nucleus-component.md) v2\.6\.0 and later, you can subscribe to topics that contain MQTT topic wildcards \(`#` and `+`\)\. This topic string supports MQTT topic wildcards as literal characters\. For example, if a component's authorization policy grants access to `test/topic/#`, the component can subscribe to `test/topic/#`, but it can't subscribe to `test/topic/filter`\.  | 
+|  `*`  |  Allows a component to publish and subscribe to messages for the topics that you specify\.  |  A topic string, such as `test/topic`\. Use an `*` to match any combination of characters in a topic\. <a name="ipc-local-publish-subscribe-authorization-mqtt-wildcards"></a>In [Greengrass nucleus](greengrass-nucleus-component.md) v2\.6\.0 and later, you can subscribe to topics that contain MQTT topic wildcards \(`#` and `+`\)\. This topic string supports MQTT topic wildcards as literal characters\. For example, if a component's authorization policy grants access to `test/topic/#`, the component can subscribe to `test/topic/#`, but it can't subscribe to `test/topic/filter`\.  | 
 
 ### Authorization policy examples<a name="ipc-publish-subscribe-authorization-policy-examples"></a>
 
@@ -111,7 +111,96 @@ This operation doesn't provide any information in its response\.
 The following examples demonstrate how to call this operation in custom component code\.
 
 ------
-#### [ Java ]
+#### [ Java \(IPC client V2\) ]
+
+**Example: Publish a binary message**  
+
+```
+package com.aws.greengrass.docs.samples.ipc;
+
+import software.amazon.awssdk.aws.greengrass.GreengrassCoreIPCClientV2;
+import software.amazon.awssdk.aws.greengrass.model.BinaryMessage;
+import software.amazon.awssdk.aws.greengrass.model.PublishMessage;
+import software.amazon.awssdk.aws.greengrass.model.PublishToTopicRequest;
+import software.amazon.awssdk.aws.greengrass.model.PublishToTopicResponse;
+import software.amazon.awssdk.aws.greengrass.model.UnauthorizedError;
+
+import java.nio.charset.StandardCharsets;
+
+public class PublishToTopicV2 {
+
+    public static void main(String[] args) {
+        String topic = args[0];
+        String message = args[1];
+        try (GreengrassCoreIPCClientV2 ipcClient = GreengrassCoreIPCClientV2.builder().build()) {
+            PublishToTopicV2.publishBinaryMessageToTopic(ipcClient, topic, message);
+            System.out.println("Successfully published to topic: " + topic);
+        } catch (Exception e) {
+            if (e.getCause() instanceof UnauthorizedError) {
+                System.err.println("Unauthorized error while publishing to topic: " + topic);
+            } else {
+                System.err.println("Exception occurred when using IPC.");
+            }
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    public static PublishToTopicResponse publishBinaryMessageToTopic(
+            GreengrassCoreIPCClientV2 ipcClient, String topic, String message) throws InterruptedException {
+        BinaryMessage binaryMessage =
+                new BinaryMessage().withMessage(message.getBytes(StandardCharsets.UTF_8));
+        PublishMessage publishMessage = new PublishMessage().withBinaryMessage(binaryMessage);
+        PublishToTopicRequest publishToTopicRequest =
+                new PublishToTopicRequest().withTopic(topic).withPublishMessage(publishMessage);
+        return ipcClient.publishToTopic(publishToTopicRequest);
+    }
+}
+```
+
+------
+#### [ Python \(IPC client V2\) ]
+
+**Example: Publish a binary message**  
+
+```
+import sys
+import traceback
+
+from awsiot.greengrasscoreipc.clientv2 import GreengrassCoreIPCClientV2
+from awsiot.greengrasscoreipc.model import (
+    PublishMessage,
+    BinaryMessage
+)
+
+
+def main():
+    args = sys.argv[1:]
+    topic = args[0]
+    message = args[1]
+
+    try:
+        ipc_client = GreengrassCoreIPCClientV2()
+        publish_binary_message_to_topic(ipc_client, topic, message)
+        print('Successfully published to topic: ' + topic)
+    except Exception:
+        print('Exception occurred', file=sys.stderr)
+        traceback.print_exc()
+        exit(1)
+
+
+def publish_binary_message_to_topic(ipc_client, topic, message):
+    binary_message = BinaryMessage(message=bytes(message, 'utf-8'))
+    publish_message = PublishMessage(binary_message=binary_message)
+    return ipc_client.publish_to_topic(topic=topic, publish_message=publish_message)
+
+
+if __name__ == '__main__':
+    main()
+```
+
+------
+#### [ Java \(IPC client V1\) ]
 
 **Example: Publish a binary message**  
 This example uses an `IPCUtils` class to create a connection to the AWS IoT Greengrass Core IPC service\. For more information, see [Connect to the AWS IoT Greengrass Core IPC service](interprocess-communication.md#ipc-service-connect)\.
@@ -182,10 +271,10 @@ public class PublishToTopic {
 ```
 
 ------
-#### [ Python ]
+#### [ Python \(IPC client V1\) ]
 
 **Example: Publish a binary message**  
-This example assumes that you are using version 1\.5\.4 or later of the AWS IoT Device SDK for Python v2\. If you are using version 1\.5\.3 of the SDK, see [Use AWS IoT Device SDK for Python v2](interprocess-communication.md#ipc-python) for information about connecting to the AWS IoT Greengrass Core IPC service\. 
+This example assumes that you are using version 1\.5\.4 or later of the AWS IoT Device SDK for Python v2\. If you are using version 1\.5\.3 of the SDK, see [Use AWS IoT Device SDK for Python v2 \(IPC client V1\)](interprocess-communication.md#ipc-python) for information about connecting to the AWS IoT Greengrass Core IPC service\. 
 
 ```
 import awsiot.greengrasscoreipc
@@ -255,11 +344,11 @@ int main() {
         std::cerr << "Failed to establish IPC connection: " << connectionStatus.StatusToString() << std::endl;
         exit(-1);
     }
-    
+
     String topic("my/topic");
     String message("Hello, World!");
     int timeout = 10;
-    
+
     PublishToTopicRequest request;
     Vector<uint8_t> messageData({message.begin(), message.end()});
     BinaryMessage binaryMessage;
@@ -269,22 +358,23 @@ int main() {
     request.SetTopic(topic);
     request.SetPublishMessage(publishMessage);
 
-    PublishToTopicOperation operation = ipcClient.NewPublishToTopic();
-    auto activate = operation.Activate(request, nullptr);
+    auto operation = ipcClient.NewPublishToTopic();
+    auto activate = operation->Activate(request, nullptr);
     activate.wait();
 
-    auto responseFuture = operation.GetResult();
+    auto responseFuture = operation->GetResult();
     if (responseFuture.wait_for(std::chrono::seconds(timeout)) == std::future_status::timeout) {
         std::cerr << "Operation timed out while waiting for response from Greengrass Core." << std::endl;
         exit(-1);
     }
-    
+
     auto response = responseFuture.get();
     if (!response) {
         // Handle error.
         auto errorType = response.GetResultType();
         if (errorType == OPERATION_ERROR) {
             auto *error = response.GetOperationError();
+            (void)error;
             // Handle operation error.
         } else {
             // Handle RPC error.
@@ -363,7 +453,154 @@ This property isn't currently used\. In [Greengrass nucleus](greengrass-nucleus-
 The following examples demonstrate how to call this operation in custom component code\.
 
 ------
-#### [ Java ]
+#### [ Java \(IPC client V2\) ]
+
+**Example: Subscribe to local publish/subscribe messages**  <a name="ipc-operation-subscribetotopic-example-java-v2"></a>
+
+```
+package com.aws.greengrass.docs.samples.ipc;
+
+import software.amazon.awssdk.aws.greengrass.GreengrassCoreIPCClientV2;
+import software.amazon.awssdk.aws.greengrass.SubscribeToTopicResponseHandler;
+import software.amazon.awssdk.aws.greengrass.model.*;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
+
+public class SubscribeToTopicV2 {
+
+    public static void main(String[] args) {
+        String topic = args[0];
+        try (GreengrassCoreIPCClientV2 ipcClient = GreengrassCoreIPCClientV2.builder().build()) {
+            SubscribeToTopicRequest request = new SubscribeToTopicRequest().withTopic(topic);
+            GreengrassCoreIPCClientV2.StreamingResponse<SubscribeToTopicResponse,
+                    SubscribeToTopicResponseHandler> response =
+                    ipcClient.subscribeToTopic(request, SubscribeToTopicV2::onStreamEvent,
+                            Optional.of(SubscribeToTopicV2::onStreamError),
+                            Optional.of(SubscribeToTopicV2::onStreamClosed));
+            SubscribeToTopicResponseHandler responseHandler = response.getHandler();
+            System.out.println("Successfully subscribed to topic: " + topic);
+
+            // Keep the main thread alive, or the process will exit.
+            try {
+                while (true) {
+                    Thread.sleep(10000);
+                }
+            } catch (InterruptedException e) {
+                System.out.println("Subscribe interrupted.");
+            }
+
+            // To stop subscribing, close the stream.
+            responseHandler.closeStream();
+        } catch (Exception e) {
+            if (e.getCause() instanceof UnauthorizedError) {
+                System.err.println("Unauthorized error while publishing to topic: " + topic);
+            } else {
+                System.err.println("Exception occurred when using IPC.");
+            }
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    public static void onStreamEvent(SubscriptionResponseMessage subscriptionResponseMessage) {
+        try {
+            BinaryMessage binaryMessage = subscriptionResponseMessage.getBinaryMessage();
+            String message = new String(binaryMessage.getMessage(), StandardCharsets.UTF_8);
+            String topic = binaryMessage.getContext().getTopic();
+            System.out.printf("Received new message on topic %s: %s%n", topic, message);
+        } catch (Exception e) {
+            System.err.println("Exception occurred while processing subscription response " +
+                    "message.");
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean onStreamError(Throwable error) {
+        System.err.println("Received a stream error.");
+        error.printStackTrace();
+        return false; // Return true to close stream, false to keep stream open.
+    }
+
+    public static void onStreamClosed() {
+        System.out.println("Subscribe to topic stream closed.");
+    }
+}
+```
+
+------
+#### [ Python \(IPC client V2\) ]
+
+**Example: Subscribe to local publish/subscribe messages**  <a name="ipc-operation-subscribetotopic-example-python-v2"></a>
+
+```
+import sys
+import time
+import traceback
+
+from awsiot.greengrasscoreipc.clientv2 import GreengrassCoreIPCClientV2
+from awsiot.greengrasscoreipc.model import (
+    SubscriptionResponseMessage,
+    UnauthorizedError
+)
+
+
+def main():
+    args = sys.argv[1:]
+    topic = args[0]
+
+    try:
+        ipc_client = GreengrassCoreIPCClientV2()
+        # Subscription operations return a tuple with the response and the operation.
+        _, operation = ipc_client.subscribe_to_topic(topic=topic, on_stream_event=on_stream_event,
+                                                     on_stream_error=on_stream_error, on_stream_closed=on_stream_closed)
+        print('Successfully subscribed to topic: ' + topic)
+
+        # Keep the main thread alive, or the process will exit.
+        try:
+            while True:
+                time.sleep(10)
+        except InterruptedError:
+            print('Subscribe interrupted.')
+
+        # To stop subscribing, close the stream.
+        operation.close()
+    except UnauthorizedError:
+        print('Unauthorized error while subscribing to topic: ' +
+              topic, file=sys.stderr)
+        traceback.print_exc()
+        exit(1)
+    except Exception:
+        print('Exception occurred', file=sys.stderr)
+        traceback.print_exc()
+        exit(1)
+
+
+def on_stream_event(event: SubscriptionResponseMessage) -> None:
+    try:
+        message = str(event.binary_message.message, 'utf-8')
+        topic = event.binary_message.context.topic
+        print('Received new message on topic %s: %s' % (topic, message))
+    except:
+        traceback.print_exc()
+
+
+def on_stream_error(error: Exception) -> bool:
+    print('Received a stream error.', file=sys.stderr)
+    traceback.print_exc()
+    return False  # Return True to close stream, False to keep stream open.
+
+
+def on_stream_closed() -> None:
+    print('Subscribe to topic stream closed.')
+
+
+if __name__ == '__main__':
+    main()
+```
+
+------
+#### [ Java \(IPC client V1\) ]
 
 **Example: Subscribe to local publish/subscribe messages**  <a name="ipc-operation-subscribetotopic-example-java"></a>
 This example uses an `IPCUtils` class to create a connection to the AWS IoT Greengrass Core IPC service\. For more information, see [Connect to the AWS IoT Greengrass Core IPC service](interprocess-communication.md#ipc-service-connect)\.
@@ -481,10 +718,10 @@ public class SubscribeToTopic {
 ```
 
 ------
-#### [ Python ]
+#### [ Python \(IPC client V1\) ]
 
 **Example: Subscribe to local publish/subscribe messages**  <a name="ipc-operation-subscribetotopic-example-python"></a>
-This example assumes that you are using version 1\.5\.4 or later of the AWS IoT Device SDK for Python v2\. If you are using version 1\.5\.3 of the SDK, see [Use AWS IoT Device SDK for Python v2](interprocess-communication.md#ipc-python) for information about connecting to the AWS IoT Greengrass Core IPC service\. 
+This example assumes that you are using version 1\.5\.4 or later of the AWS IoT Device SDK for Python v2\. If you are using version 1\.5\.3 of the SDK, see [Use AWS IoT Device SDK for Python v2 \(IPC client V1\)](interprocess-communication.md#ipc-python) for information about connecting to the AWS IoT Greengrass Core IPC service\. 
 
 ```
 import time
@@ -547,36 +784,40 @@ operation.close()
 ```
 #include <iostream>
 
-#include <aws/crt/Api.h>
+#include </crt/Api.h>
 #include <aws/greengrass/GreengrassCoreIpcClient.h>
 
 using namespace Aws::Crt;
 using namespace Aws::Greengrass;
 
 class SubscribeResponseHandler : public SubscribeToTopicStreamHandler {
-    void OnStreamEvent(SubscriptionResponseMessage *response) override {
-        auto jsonMessage = response->GetJsonMessage();
-        if (jsonMessage.has_value() && jsonMessage.value().GetMessage().has_value()) {
-            auto messageString = jsonMessage.value().GetMessage().value().View().WriteReadable();
-            // Handle JSON message.
-        } else {
-            auto binaryMessage = response->GetBinaryMessage();
-            if (binaryMessage.has_value() && binaryMessage.value().GetMessage().has_value()) {
-                auto messageBytes = binaryMessage.value().GetMessage().value();
-                std::string messageString(messageBytes.begin(), messageBytes.end());
-                // Handle binary message.
-            }
-        } 
-    }
+    public:
+        virtual ~SubscribeResponseHandler() {}
 
-    bool OnStreamError(OperationError *error) override {
-        // Handle error.
-        return false; // Return true to close stream, false to keep stream open.
-    }
-    
-    void OnStreamClosed() override {
-        // Handle close.
-    }
+    private:
+        void OnStreamEvent(SubscriptionResponseMessage *response) override {
+            auto jsonMessage = response->GetJsonMessage();
+            if (jsonMessage.has_value() && jsonMessage.value().GetMessage().has_value()) {
+                auto messageString = jsonMessage.value().GetMessage().value().View().WriteReadable();
+                // Handle JSON message.
+            } else {
+                auto binaryMessage = response->GetBinaryMessage();
+                if (binaryMessage.has_value() && binaryMessage.value().GetMessage().has_value()) {
+                    auto messageBytes = binaryMessage.value().GetMessage().value();
+                    std::string messageString(messageBytes.begin(), messageBytes.end());
+                    // Handle binary message.
+                }
+            }
+        }
+
+        bool OnStreamError(OperationError *error) override {
+            // Handle error.
+            return false; // Return true to close stream, false to keep stream open.
+        }
+
+        void OnStreamClosed() override {
+            // Handle close.
+        }
 };
 
 class IpcClientLifecycleHandler : public ConnectionLifecycleHandler {
@@ -606,30 +847,32 @@ int main() {
         std::cerr << "Failed to establish IPC connection: " << connectionStatus.StatusToString() << std::endl;
         exit(-1);
     }
-    
+
     String topic("my/topic");
     int timeout = 10;
 
     SubscribeToTopicRequest request;
     request.SetTopic(topic);
-    
-    SubscribeResponseHandler streamHandler;
-    SubscribeToTopicOperation operation = ipcClient.NewSubscribeToTopic(streamHandler);
-    auto activate = operation.Activate(request, nullptr);
+
+    //SubscribeResponseHandler streamHandler;
+    auto streamHandler = MakeShared<SubscribeResponseHandler>(DefaultAllocator());
+    auto operation = ipcClient.NewSubscribeToTopic(streamHandler);
+    auto activate = operation->Activate(request, nullptr);
     activate.wait();
 
-    auto responseFuture = operation.GetResult();
+    auto responseFuture = operation->GetResult();
     if (responseFuture.wait_for(std::chrono::seconds(timeout)) == std::future_status::timeout) {
         std::cerr << "Operation timed out while waiting for response from Greengrass Core." << std::endl;
         exit(-1);
     }
-    
+
     auto response = responseFuture.get();
     if (!response) {
         // Handle error.
         auto errorType = response.GetResultType();
         if (errorType == OPERATION_ERROR) {
             auto *error = response.GetOperationError();
+            (void)error;
             // Handle operation error.
         } else {
             // Handle RPC error.
@@ -641,8 +884,8 @@ int main() {
     while (true) {
         std::this_thread::sleep_for(std::chrono::seconds(10));
     }
-    
-    operation.Close();
+
+    operation->Close();
     return 0;
 }
 ```
@@ -653,7 +896,7 @@ int main() {
 
 Use the following examples to learn how to use the publish/subscribe IPC service in your components\.
 
-### Example publish/subscribe publisher \(Java\)<a name="ipc-publish-subscribe-example-publisher-java"></a>
+### Example publish/subscribe publisher \(Java, IPC client V1\)<a name="ipc-publish-subscribe-example-publisher-java"></a>
 
 The following example recipe allows the component to publish to all topics\.
 
@@ -787,7 +1030,7 @@ public class PubSubPublisher {
 }
 ```
 
-### Example publish/subscribe subscriber \(Java\)<a name="ipc-publish-subscribe-example-subscriber-java"></a>
+### Example publish/subscribe subscriber \(Java, IPC client V1\)<a name="ipc-publish-subscribe-example-subscriber-java"></a>
 
 The following example recipe allows the component to subscribe to all topics\.
 
@@ -952,7 +1195,7 @@ public class PubSubSubscriber {
 }
 ```
 
-### Example publish/subscribe publisher \(Python\)<a name="ipc-publish-subscribe-example-publisher-python"></a>
+### Example publish/subscribe publisher \(Python, IPC client V1\)<a name="ipc-publish-subscribe-example-publisher-python"></a>
 
 The following example recipe allows the component to publish to all topics\.
 
@@ -1096,7 +1339,7 @@ except Exception:
     exit(1)
 ```
 
-### Example publish/subscribe subscriber \(Python\)<a name="ipc-publish-subscribe-example-subscriber-python"></a>
+### Example publish/subscribe subscriber \(Python, IPC client V1\)<a name="ipc-publish-subscribe-example-subscriber-python"></a>
 
 The following example recipe allows the component to subscribe to all topics\.
 
@@ -1371,7 +1614,7 @@ int main() {
     String message("Hello from the pub/sub publisher (C++).");
     String topic("test/topic/cpp");
     int timeout = 10;
-    
+
     ApiHandle apiHandle(g_allocator);
     Io::EventLoopGroup eventLoopGroup(1);
     Io::DefaultHostResolver socketResolver(eventLoopGroup, 64, 30);
@@ -1394,11 +1637,11 @@ int main() {
         request.SetTopic(topic);
         request.SetPublishMessage(publishMessage);
 
-        PublishToTopicOperation operation = ipcClient.NewPublishToTopic();
-        auto activate = operation.Activate(request, nullptr);
+        auto operation = ipcClient.NewPublishToTopic();
+        auto activate = operation->Activate(request, nullptr);
         activate.wait();
 
-        auto responseFuture = operation.GetResult();
+        auto responseFuture = operation->GetResult();
         if (responseFuture.wait_for(std::chrono::seconds(timeout)) == std::future_status::timeout) {
             std::cerr << "Operation timed out while waiting for response from Greengrass Core." << std::endl;
             exit(-1);
@@ -1519,33 +1762,37 @@ using namespace Aws::Crt;
 using namespace Aws::Greengrass;
 
 class SubscribeResponseHandler : public SubscribeToTopicStreamHandler {
-    void OnStreamEvent(SubscriptionResponseMessage *response) override {
-        auto jsonMessage = response->GetJsonMessage();
-        if (jsonMessage.has_value() && jsonMessage.value().GetMessage().has_value()) {
-            auto messageString = jsonMessage.value().GetMessage().value().View().WriteReadable();
-            std::cout << "Received new message: " << messageString << std::endl;
-        } else {
-            auto binaryMessage = response->GetBinaryMessage();
-            if (binaryMessage.has_value() && binaryMessage.value().GetMessage().has_value()) {
-                auto messageBytes = binaryMessage.value().GetMessage().value();
-                std::string messageString(messageBytes.begin(), messageBytes.end());
-                std::cout << "Received new message: " << messageString << std::endl;
-            }
-        } 
-    }
+    public:
+        virtual ~SubscribeResponseHandler() {}
 
-    bool OnStreamError(OperationError *error) override {
-        std::cout << "Received an operation error: ";
-        if (error->GetMessage().has_value()) {
-            std::cout << error->GetMessage().value();
+    private:
+        void OnStreamEvent(SubscriptionResponseMessage *response) override {
+            auto jsonMessage = response->GetJsonMessage();
+            if (jsonMessage.has_value() && jsonMessage.value().GetMessage().has_value()) {
+                auto messageString = jsonMessage.value().GetMessage().value().View().WriteReadable();
+                std::cout << "Received new message: " << messageString << std::endl;
+            } else {
+                auto binaryMessage = response->GetBinaryMessage();
+                if (binaryMessage.has_value() && binaryMessage.value().GetMessage().has_value()) {
+                    auto messageBytes = binaryMessage.value().GetMessage().value();
+                    std::string messageString(messageBytes.begin(), messageBytes.end());
+                    std::cout << "Received new message: " << messageString << std::endl;
+                }
+            }
         }
-        std::cout << std::endl;
-        return false; // Return true to close stream, false to keep stream open.
-    }
-    
-    void OnStreamClosed() override {
-        std::cout << "Subscribe to topic stream closed." << std::endl;
-    }
+
+        bool OnStreamError(OperationError *error) override {
+            std::cout << "Received an operation error: ";
+            if (error->GetMessage().has_value()) {
+                std::cout << error->GetMessage().value();
+            }
+            std::cout << std::endl;
+            return false; // Return true to close stream, false to keep stream open.
+        }
+
+        void OnStreamClosed() override {
+            std::cout << "Subscribe to topic stream closed." << std::endl;
+        }
 };
 
 class IpcClientLifecycleHandler : public ConnectionLifecycleHandler {
@@ -1567,7 +1814,7 @@ class IpcClientLifecycleHandler : public ConnectionLifecycleHandler {
 int main() {
     String topic("test/topic/cpp");
     int timeout = 10;
-    
+
     ApiHandle apiHandle(g_allocator);
     Io::EventLoopGroup eventLoopGroup(1);
     Io::DefaultHostResolver socketResolver(eventLoopGroup, 64, 30);
@@ -1582,12 +1829,12 @@ int main() {
 
     SubscribeToTopicRequest request;
     request.SetTopic(topic);
-    SubscribeResponseHandler streamHandler;
-    SubscribeToTopicOperation operation = ipcClient.NewSubscribeToTopic(streamHandler);
-    auto activate = operation.Activate(request, nullptr);
+    auto streamHandler = MakeShared<SubscribeResponseHandler>(DefaultAllocator());
+    auto operation = ipcClient.NewSubscribeToTopic(streamHandler);
+    auto activate = operation->Activate(request, nullptr);
     activate.wait();
 
-    auto responseFuture = operation.GetResult();
+    auto responseFuture = operation->GetResult();
     if (responseFuture.wait_for(std::chrono::seconds(timeout)) == std::future_status::timeout) {
         std::cerr << "Operation timed out while waiting for response from Greengrass Core." << std::endl;
         exit(-1);
@@ -1614,7 +1861,7 @@ int main() {
         std::this_thread::sleep_for(std::chrono::seconds(10));
     }
 
-    operation.Close();
+    operation->Close();
     return 0;
 }
 ```

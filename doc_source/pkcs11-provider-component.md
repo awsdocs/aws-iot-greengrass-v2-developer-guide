@@ -76,10 +76,59 @@ To use a hardware security module and [secret manager](secret-manager-component.
 + <a name="hardware-security-module-requirements-secret-manager-permissions"></a>\(Optional\) To use the [secret manager component](secret-manager-component.md), you must use version 2\.1\.0 or later, and the private key must have the following permissions:
   + `unwrap`
   + `wrap`
++ <a name="hardware-security-module-requirements-environment-variable"></a>\(Optional\) If you are using the TPM2 library and running the Greengrass core as a service, you must provide an environment variable with the location of the PKCS\#11 store\. The following example is a systemd service file with the required environment variable:
+
+  ```
+  [Unit]
+  Description=Greengrass Core
+  After=network.target
+  
+  [Service]
+  Type=simple
+  PIDFile=/var/run/greengrass.pid
+  Environment=TPM2_PKCS11_STORE=/path/to/store/directory
+  RemainAfterExit=no
+  Restart=on-failure
+  RestartSec=10
+  ExecStart=/bin/sh /greengrass/v2/alts/current/distro/bin/loader
+  
+  [Install]
+  WantedBy=multi-user.target
+  ```
 
 ## Dependencies<a name="pkcs11-provider-component-dependencies"></a>
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#pkcs11-provider-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+
+------
+#### [ 2\.0\.4 ]
+
+The following table lists the dependencies for version 2\.0\.4 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.5\.3 <3\.0\.0  | Soft | 
+
+------
+#### [ 2\.0\.3 ]
+
+The following table lists the dependencies for version 2\.0\.3 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.5\.3 <2\.9\.0  | Soft | 
+
+------
+#### [ 2\.0\.2 ]
+
+The following table lists the dependencies for version 2\.0\.2 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.5\.3 <2\.8\.0  | Soft | 
 
 ------
 #### [ 2\.0\.1 ]
@@ -178,5 +227,8 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  2\.0\.4  | Version updated for Greengrass nucleus version 2\.9\.0 release\. | 
+|  2\.0\.3  | Version updated for Greengrass nucleus version 2\.8\.0 release\. | 
+|  2\.0\.2  |  Version updated for Greengrass nucleus version 2\.7\.0 release\.  | 
 |  2\.0\.1  |  Version updated for Greengrass nucleus version 2\.6\.0 release\.  | 
 |  2\.0\.0  |  Initial version\.  | 

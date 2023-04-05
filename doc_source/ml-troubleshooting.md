@@ -27,6 +27,7 @@ If a component is installed correctly, then the component log contains the locat
 + [No CUDA\-capable device is detected](#troubleshooting-cuda-error)
 + [No such file or directory](#troubleshooting-venv-errors-no-such-file)
 + [RuntimeError: module compiled against API version 0xf but this version of NumPy is <version>](#troubleshooting-rpi-numpy-version-error)
++ [picamera\.exc\.PiCameraError: Camera is not enabled](#troubleshooting-rpi-camera-stack-error)
 + [Memory errors](#troubleshooting-memory-errors)
 + [Disk space errors](#troubleshooting-disk-space-errors)
 + [Timeout errors](#troubleshooting-timeout-errors)
@@ -150,6 +151,30 @@ This error occurs because Raspberry Pi OS Bullseye includes an earlier version o
 ```
 pip3 install --upgrade numpy
 ```
+
+## picamera\.exc\.PiCameraError: Camera is not enabled<a name="troubleshooting-rpi-camera-stack-error"></a>
+
+You might see the following error when you run machine learning inference on a Raspberry Pi running Raspberry Pi OS Bullseye\.
+
+```
+picamera.exc.PiCameraError: Camera is not enabled. Try running 'sudo raspi-config' and ensure that the camera has been enabled.
+```
+
+This error occurs because Raspberry Pi OS Bullseye includes a new camera stack that isn't compatible with the ML components\. To fix this issue, enable the legacy camera stack\.<a name="raspberry-pi-bullseye-enable-legacy-camera-stack"></a>
+
+**To enable the legacy camera stack**
+
+1. Run the following command to open the Raspberry Pi configuration tool\.
+
+   ```
+   sudo raspi-config
+   ```
+
+1. Select **Interface Options**\.
+
+1. Select **Legacy camera** to enable the legacy camera stack\.
+
+1. Reboot the Raspberry Pi\.
 
 ## Memory errors<a name="troubleshooting-memory-errors"></a>
 

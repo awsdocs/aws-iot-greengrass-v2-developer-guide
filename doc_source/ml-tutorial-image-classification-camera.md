@@ -1,11 +1,13 @@
-# Perform sample image classification inference on images from a camera using TensorFlow Lite<a name="ml-tutorial-image-classification-camera"></a>
+# Tutorial: Perform sample image classification inference on images from a camera using TensorFlow Lite<a name="ml-tutorial-image-classification-camera"></a>
 
 This tutorial shows you how to use the [TensorFlow Lite image classification](tensorflow-lite-image-classification-component.md) inference component to perform sample image classification inference on images from a camera locally on a Greengrass core device\. This component includes the following component dependencies: 
 + TensorFlow Lite image classification model store component
 + TensorFlow Lite runtime component
 
 **Note**  
-This tutorial accesses the camera module for [Raspberry Pi](https://www.raspberrypi.org/), [NVIDIA Jetson Nano](https://developer.nvidia.com/embedded/jetson-nano), or [AWS DeepLens](https://aws.amazon.com/deeplens/) devices, but AWS IoT Greengrass supports other devices on Armv7l, Armv8, or x86\_64 platforms\. To set up a camera for a different device, consult the relevant documentation for your device\.
+This tutorial accesses the camera module for [Raspberry Pi](https://www.raspberrypi.org/) or [NVIDIA Jetson Nano](https://developer.nvidia.com/embedded/jetson-nano) devices, but AWS IoT Greengrass supports other devices on Armv7l, Armv8, or x86\_64 platforms\. To set up a camera for a different device, consult the relevant documentation for your device\.
+
+For more information about machine learning on Greengrass devices, see [Perform machine learning inference](perform-machine-learning-inference.md)\.
 
 **Topics**
 + [Prerequisites](#ml-tutorial-camera-prereqs)
@@ -23,22 +25,38 @@ You also need the following:
 + A Linux Greengrass core device with a camera interface\. This tutorial accesses the camera module on one the following supported devices:
   + [Raspberry Pi](https://www.raspberrypi.org/) running [Raspberry Pi OS](https://www.raspberrypi.org/downloads/) \(previously called Raspbian\)
   + [NVIDIA Jetson Nano](https://developer.nvidia.com/embedded/jetson-nano)
-  + [AWS DeepLens](https://aws.amazon.com/deeplens/)
 
   For information about setting up a Greengrass core device, see [Tutorial: Getting started with AWS IoT Greengrass V2](getting-started.md)\.
+
+  The core device must meet the following requirements:<a name="ml-component-requirements"></a>
+  + On Greengrass core devices running Amazon Linux 2 or Ubuntu 18\.04, [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.27 or later installed on the device\.
+  + On Armv7l devices, such as Raspberry Pi, dependencies for OpenCV\-Python installed on the device\. Run the following command to install the dependencies\.
+
+    ```
+    sudo apt-get install libopenjp2-7 libilmbase23 libopenexr-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libgtk-3-0 libwebp-dev
+    ```
+  + Raspberry Pi devices that run Raspberry Pi OS Bullseye must meet the following requirements:
+    + NumPy 1\.22\.4 or later installed on the device\. Raspberry Pi OS Bullseye includes an earlier version of NumPy, so you can run the following command to upgrade NumPy on the device\.
+
+      ```
+      pip3 install --upgrade numpy
+      ```
+    + The legacy camera stack enabled on the device\. Raspberry Pi OS Bullseye includes a new camera stack that is enabled by default and isn't compatible, so you must enable the legacy camera stack\.<a name="raspberry-pi-bullseye-enable-legacy-camera-stack"></a>
+
+**To enable the legacy camera stack**
+
+      1. Run the following command to open the Raspberry Pi configuration tool\.
+
+         ```
+         sudo raspi-config
+         ```
+
+      1. Select **Interface Options**\.
+
+      1. Select **Legacy camera** to enable the legacy camera stack\.
+
+      1. Reboot the Raspberry Pi\.
 + For Raspberry Pi or NVIDIA Jetson Nano devices, [Raspberry Pi Camera Module V2 \- 8 megapixel, 1080p](https://www.amazon.com/Raspberry-Pi-Camera-Module-Megapixel/dp/B01ER2SKFS)\. To learn how to set up the camera, see [Connecting the camera](https://www.raspberrypi.org/documentation/usage/camera/) in the Raspberry Pi documentation\. 
-+ Dependencies for OpenCV Python installed on the device\. This requirement is applicable only for Armv7l devices such as the Raspberry Pi that is used in this tutorial\. You don't need to meet this requirement for other devices\. 
-
-  Run the following command to install the dependencies: 
-
-  ```
-  sudo apt-get install libopenjp2-7 libilmbase23 libopenexr-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libgtk-3-0 libwebp-dev
-  ```
-+ <a name="ml-req-rpi-bullseye-numpy"></a>If you are using a Raspberry Pi that runs Raspberry Pi OS Bullseye, NumPy 1\.22\.4 or later installed on the device\. Raspberry Pi OS Bullseye includes an earlier version of NumPy, so you can run the following command to upgrade NumPy on the device\.
-
-  ```
-  pip3 install --upgrade numpy
-  ```
 
 ## Step 1: Configure the camera module on your device<a name="ml-tutorial-image-classification-camera-install"></a>
 
@@ -112,35 +130,6 @@ If the Python executable file that is installed on your device is `python3.7`, u
 
 **Note**  
 For Armv8 \(AArch64\) devices, such as a Jetson Nano, you don't need to create a symlink to enable the inference component to access the camera from the virtual environment that is created by the runtime component\. 
-
-------
-#### [ AWS DeepLens \(x86\_64\) ]
-
-1. <a name="install-awscam-step"></a>Update the `awscam` APT package\. Run the following command on the device\.
-
-   ```
-   sudo apt-get update && sudo apt-get install awscam
-   ```
-
-1. Reboot the device\.
-
-   ```
-   sudo reboot
-   ```
-
-1. Run each of the following commands to create a symlink to enable the inference component to access your camera from the virtual environment that is created by the runtime component\.
-
-   ```
-   sudo ln -s /usr/lib/python3/dist-packages/awscam "MLRootPath/greengrass_ml_tflite_conda/envs/greengrass_ml_tflite_conda/lib/python3.7/site-packages/"
-   ```
-
-   ```
-   sudo ln -s /usr/lib/python3/dist-packages/awscamdldt.so "MLRootPath/greengrass_ml_tflite_conda/envs/greengrass_ml_tflite_conda/lib/python3.7/site-packages/"
-   ```
-
-   The default value for MLRootPath for this tutorial is `/greengrass/v2/work/variant.TensorFlowLite/greengrass_ml`\. The `greengrass_ml_tflite_conda` folder in this location is created when you deploy the inference component for the first time in [Tutorial: Perform sample image classification inference using TensorFlow Lite](ml-tutorial-image-classification.md)\.
-
-For more information about using AWS DeepLens, see [AWS DeepLens Developer Guide](https://docs.aws.amazon.com/deeplens/latest/dg/)\.
 
 ------
 

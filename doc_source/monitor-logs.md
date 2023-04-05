@@ -61,8 +61,6 @@ The following considerations apply when you use file system logs:
 
   <a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
 
-  <a name="windows-cmd-type-observe-logs"></a>The `type` command writes the file's contents to the terminal\. Run this command multiple times to observe changes in the file\.
-
 ------
 #### [ PowerShell ]
 
@@ -123,12 +121,18 @@ If a thing name contains a colon \(`:`\), the log manager replaces the colon wit
 
 <a name="log-manager-considerations-intro"></a>The following considerations apply when you use the log manager component to write to CloudWatch Logs:<a name="log-manager-considerations"></a>
 + **Log delays**
+**Note**  
+We recommend that you upgrade to log manager version 2\.3\.0 which reduces log delays for rotated and active log files\. When you upgrade to log manager 2\.3\.0, we recommend you also upgrade to Greengrass nucleus 2\.9\.1\.
 
-  The log manager component writes logs from only rotated log files\. By default, the AWS IoT Greengrass Core software rotates log files every hour or after they are 1,024 KB\. As a result, the log manager component uploads logs only after the AWS IoT Greengrass Core software or a Greengrass component writes over 1,024 KB worth of logs\. You can configure a lower log file size limit to cause log files to rotate more often\. This causes the log manager component to upload logs to CloudWatch Logs more frequently\.
+  The log manager component version 2\.2\.8 \(and earlier\) processes and uploads logs from only rotated log files\. By default, the AWS IoT Greengrass Core software rotates log files every hour or after they are 1,024 KB\. As a result, the log manager component uploads logs only after the AWS IoT Greengrass Core software or a Greengrass component writes over 1,024 KB worth of logs\. You can configure a lower log file size limit to cause log files to rotate more often\. This causes the log manager component to upload logs to CloudWatch Logs more frequently\.
 
-  The log manager component also uploads new logs periodically\. By default, the log manager component uploads new logs every 5 minutes\. You can configure a lower upload interval, so the log manager component uploads logs to CloudWatch Logs more frequently\.
+  The log manager component version 2\.3\.0 \(and later\) processes and uploads all logs\. When you write a new log, log manager version 2\.3\.0 \(and later\) processes and directly uploads that active log file instead of waiting for it to be rotated\. This means that you can view the new log in 5 minutes or less\.
 
-  If you need to observe logs in real time, consider using [file system logs](#access-local-logs)\.
+  The log manager component uploads new logs periodically\. By default, the log manager component uploads new logs every 5 minutes\. You can configure a lower upload interval, so the log manager component uploads logs to CloudWatch Logs more frequently by configuring the `periodicUploadIntervalSec`\. For more information about how to configure this periodic interval, see [Configuration](https://docs.aws.amazon.com/greengrass/v2/developerguide/log-manager-component.html#log-manager-component-configuration)\.
+
+  Logs can be uploaded in near real\-time from the same Greengrass file system\. If you need to observe logs in real time, consider using [file system logs](#access-local-logs)\.
+**Note**  
+If you're using different file systems to write logs to, log manager reverts back to the behavior in log manager component versions 2\.2\.8 and earlier\. For information about accessing file system logs, see [Access file system logs](https://docs.aws.amazon.com/greengrass/v2/developerguide/monitor-logs.html#access-local-logs)\.
 + **Clock skew**
 
   The log manager component uses the standard Signature Version 4 signing process to create API requests to CloudWatch Logs\. If the system time on a core device is out of sync by more than 15 minutes, then CloudWatch Logs rejects the requests\. For more information, see [Signature Version 4 signing process](https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html) in the *AWS General Reference*\.
@@ -138,28 +142,47 @@ If a thing name contains a colon \(`:`\), the log manager replaces the colon wit
 If you [configure the AWS IoT Greengrass Core software as a system service](configure-greengrass-core-v2.md#configure-system-service), you can view system service logs to troubleshoot issues, such as the software failing to start\.
 
 **To view system service logs \(CLI\)**
-+ Run the following command to view AWS IoT Greengrass Core software system service logs\.
+
+1. Run the following command to view AWS IoT Greengrass Core software system service logs\.
 
 ------
 #### [ Linux or Unix \(systemd\) ]
 
-  ```
-  sudo journalctl -u greengrass.service
-  ```
+   ```
+   sudo journalctl -u greengrass.service
+   ```
 
 ------
 #### [ Windows Command Prompt \(CMD\) ]
 
-  ```
-  type C:\greengrass\v2\logs\greengrass.wrapper.log
-  ```
+   ```
+   type C:\greengrass\v2\logs\greengrass.wrapper.log
+   ```
 
 ------
 #### [ PowerShell ]
 
-  ```
-  gc C:\greengrass\v2\logs\greengrass.wrapper.log
-  ```
+   ```
+   gc C:\greengrass\v2\logs\greengrass.wrapper.log
+   ```
+
+------
+
+1. On Windows devices, the AWS IoT Greengrass Core software creates a separate log file for system service errors\. Run the following command to view the system service error logs\.
+
+------
+#### [ Windows Command Prompt \(CMD\) ]
+
+   ```
+   type C:\greengrass\v2\logs\greengrass.err.log
+   ```
+
+------
+#### [ PowerShell ]
+
+   ```
+   gc C:\greengrass\v2\logs\greengrass.err.log
+   ```
 
 ------
 

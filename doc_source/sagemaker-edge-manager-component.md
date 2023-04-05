@@ -4,7 +4,7 @@ The Amazon SageMaker Edge Manager component \(`aws.greengrass.SageMakerEdgeManag
 
 SageMaker Edge Manager provides model management for edge devices so you can optimize, secure, monitor, and maintain machine learning models on fleets of edge devices\. The SageMaker Edge Manager component installs and manages the lifecycle of the SageMaker Edge Manager agent on your core device\. You can also use SageMaker Edge Manager to package and use SageMaker Neo\-compiled models as model components on Greengrass core devices\. For more information about using SageMaker Edge Manager agent on your core device, see [Use Amazon SageMaker Edge Manager on Greengrass core devices](use-sagemaker-edge-manager.md)\.
 
-SageMaker Edge Manager component v1\.1\.x installs Edge Manager agent binary v1\.20210820\.e20fa3a\. For more information about Edge Manager agent binary versions, see [Edge Manager Agent](https://docs.aws.amazon.com/sagemaker/latest/dg/edge-device-fleet-about)\.
+SageMaker Edge Manager component v1\.3\.x installs Edge Manager agent binary v1\.20220822\.836f3023\. For more information about Edge Manager agent binary versions, see [Edge Manager Agent](https://docs.aws.amazon.com/sagemaker/latest/dg/edge-device-fleet-about)\.
 
 **Note**  
 The SageMaker Edge Manager component is available only in the following AWS Regions:  
@@ -28,6 +28,8 @@ Asia Pacific \(Tokyo\)
 ## Versions<a name="sagemaker-edge-manager-component-versions"></a>
 
 This component has the following versions:
++ 1\.3\.x
++ 1\.2\.x
 + 1\.1\.x
 + 1\.0\.x
 
@@ -110,14 +112,36 @@ This component must be able to perform outbound requests to the following endpoi
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#sagemaker-edge-manager-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
 
 ------
-#### [ 1\.1\.1 ]
+#### [ 1\.3\.2 ]
 
-The following table lists the dependencies for version 1\.1\.1 of this component\.
+The following table lists the dependencies for version 1\.3\.2 of this component\.
 
 
 | Dependency | Compatible versions | Dependency type | 
 | --- | --- | --- | 
-| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.7\.0 | Soft | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <3\.0\.0 | Soft | 
+| [Token exchange service](token-exchange-service-component.md) | >=0\.0\.0 | Hard | 
+
+------
+#### [ 1\.3\.1 ]
+
+The following table lists the dependencies for version 1\.3\.1 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.9\.0 | Soft | 
+| [Token exchange service](token-exchange-service-component.md) | >=0\.0\.0 | Hard | 
+
+------
+#### [ 1\.1\.1 \- 1\.3\.0 ]
+
+The following table lists the dependencies for versions 1\.1\.1 \- 1\.3\.0 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.8\.0 | Soft | 
 | [Token exchange service](token-exchange-service-component.md) | >=0\.0\.0 | Hard | 
 
 ------
@@ -227,6 +251,40 @@ This feature is available in v1\.1\.0 and later versions of the SageMaker Edge M
 \(Optional\) The path to the folder to which the agent creates the captured data folder\. If you set `CaptureDataDestination` to `Disk`, the agent creates the captured data folder in this directory\. If you don't specify this value, the agent creates the captured data folder in the component's work directory\. Use the `FolderPrefix` parameter to specify the name of the captured data folder\.  
 Default: `/greengrass/v2/work/aws.greengrass.SageMakerEdgeManager/capture`
 
+`LocalDataRootPath`  
+This feature is available in v1\.2\.0 and later versions of the SageMaker Edge Manager component\.  
+\(Optional\) The path where this component stores the following data on the core device:  
++ The local database for runtime data when you set `DbEnable` to `true`\.
++ SageMaker Neo\-compiled models that this component automatically downloads when you set `DeploymentEnable` to `true`\.
+Default: `/greengrass/v2/work/aws.greengrass.SageMakerEdgeManager`
+
+`DbEnable`  
+\(Optional\) You can enable this component to store runtime data in a local database to preserve the data, in case the component fails or the device loses power\.  
+This database requires 5 MB of storage on the core device's file system\.  
+Default: `false`
+
+`DeploymentEnable`  
+This feature is available in v1\.2\.0 and later versions of the SageMaker Edge Manager component\.  
+\(Optional\) You can enable this component to automatically retrieve SageMaker Neo\-compiled models from that you upload to Amazon S3\. After you upload a new model to Amazon S3, use SageMaker Studio or the SageMaker API to deploy the new model to this core device\. When you enable this feature, you can deploy new models to core devices without needing to create a AWS IoT Greengrass deployment\.  
+To use this feature, you must set `DbEnable` to `true`\. This feature uses the local database to track models that it retrieves from the AWS Cloud\.
+Default: `false`
+
+`DeploymentPollInterval`  
+This feature is available in v1\.2\.0 and later versions of the SageMaker Edge Manager component\.  
+\(Optional\) The amount of time \(in minutes\) between which this component checks for new models to download\. This option applies when you set `DeploymentEnable` to `true`\.  
+Default: `1440` \(1 day\)
+
+`DLRBackendOptions`  
+This feature is available in v1\.2\.0 and later versions of the SageMaker Edge Manager component\.  
+\(Optional\) The DLR runtime flags to set in the DLR runtime that this component uses\. You can set the following flag:  
++ `TVM_TENSORRT_CACHE_DIR` – Enable TensorRT model caching\. Specify an absolute path to an existing folder that has read/write permissions\.
++ `TVM_TENSORRT_CACHE_DISK_SIZE_MB` – Assigns the upper limit of the TensorRT model cache folder\. When the directory size grows beyond this limit the cached engines that are used the least are deleted\. The default value is 512 MB\.
+For example, you can set this parameter to the following value to enable TensorRT model caching and limit the cache size to 800 MB\.  
+
+```
+TVM_TENSORRT_CACHE_DIR=/data/secured_folder/trt/cache; TVM_TENSORRT_CACHE_DISK_SIZE_MB=800
+```
+
 `SagemakerEdgeLogVerbose`  
 \(Optional\) String value that specifies whether to enable debug logging\. Supported values are `true` and `false`\.  
 Default: `false`
@@ -294,7 +352,10 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
-|  1\.1\.1  |  Version updated for Greengrass nucleus version 2\.6\.0 release\.  | 
+|  1\.3\.1  | Version updated for Greengrass nucleus version 2\.8\.0 release\. | 
+|  1\.3\.0  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/sagemaker-edge-manager-component.html)  | 
+|  1\.2\.0  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/sagemaker-edge-manager-component.html)  | 
+|  1\.1\.1  |  Version updated for Greengrass nucleus version 2\.7\.0 release\.  | 
 |  1\.1\.0  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/sagemaker-edge-manager-component.html)  | 
 |  1\.0\.3  |  Version updated for Greengrass nucleus version 2\.4\.0 release\.  | 
 |  1\.0\.2  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/sagemaker-edge-manager-component.html)  | 

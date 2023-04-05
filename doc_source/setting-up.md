@@ -39,7 +39,9 @@ Architectures:
 
 Versions:
 + Windows 10
++ Windows 11
 + Windows Server 2019
++ Windows Server 2022
 
 **Note**  
 Some AWS IoT Greengrass features aren't currently supported on Windows devices\. For more information, see [Greengrass feature compatibility by operating system](operating-system-feature-support-matrix.md) and [Feature considerations for Windows devices](#greengrass-v2-windows-feature-considerations)\.
@@ -59,9 +61,10 @@ You can use AWS IoT Device Tester for AWS IoT Greengrass to verify that your dev
 
 ------
 #### [ Linux ]
++ <a name="requirement-supported-region"></a>The use of an [AWS Region](https://en.wikipedia.org/wiki/Amazon_Web_Services#Availability_and_topology) that supports AWS IoT Greengrass V2\. For the list of supported Regions, see [AWS IoT Greengrass V2 endpoints and quotas](https://docs.aws.amazon.com/general/latest/gr/greengrassv2.html) in the *AWS General Reference*\.
 + Minimum 256 MB disk space available for the AWS IoT Greengrass Core software\. This requirement doesn't include components deployed to the core device\.
 + Minimum 96 MB RAM allocated to the AWS IoT Greengrass Core software\. This requirement doesn't include components that run on the core device\. For more information, see [Control memory allocation with JVM options](configure-greengrass-core-v2.md#jvm-tuning)\.
-+ Java Runtime Environment \(JRE\) version 8 or greater\. To use Java to develop custom components, you must install a Java Development Kit \(JDK\)\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.
++ Java Runtime Environment \(JRE\) version 8 or greater\. Java must be available on the [PATH](https://en.wikipedia.org/wiki/PATH_(variable)) environment variable on the device\. To use Java to develop custom components, you must install a Java Development Kit \(JDK\)\. We recommend that you use [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\.
 + [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.25 or greater\.
 + You must run the AWS IoT Greengrass Core software as a root user\. Use `sudo`, for example\.
 + The root user that runs the AWS IoT Greengrass Core software, such as `root`, must have permission to run `sudo` with any user and any group\. The `/etc/sudoers` file must give this user permission to run `sudo` as other groups\. The permission for the user in `/etc/sudoers` should look like the following example\.
@@ -86,20 +89,22 @@ You can use AWS IoT Device Tester for AWS IoT Greengrass to verify that your dev
   + `uname`
   + `grep`
 + Your device may also require the following optional shell commands:
-  + \(Optional\) `systemctl` \(to set up the AWS IoT Greengrass Core software as a system service\)
-  + \(Optional\) `useradd`, `groupadd`, and `usermod` \(to set up the `ggc_user` system user and `ggc_group` system group\)
-  + \(Optional\) `mkfifo` \(to run Lambda functions as components\)
+  + \(Optional\) `systemctl`\. This command is used to set up the AWS IoT Greengrass Core software as a system service\.
+  + \(Optional\) `useradd`, `groupadd`, and `usermod`\. These command are used to set up the `ggc_user` system user and `ggc_group` system group\.
+  + \(Optional\) `mkfifo`\. This command is used to run Lambda functions as components\.
 + To configure system resource limits for component processes, your device must run Linux kernel version 2\.6\.24 or later\.
 + To run Lambda functions, your device must meet additional requirements\. For more information, see [Lambda function requirements](#greengrass-v2-lambda-requirements)\.
 
 ------
 #### [ Windows ]
++ <a name="requirement-supported-region"></a>The use of an [AWS Region](https://en.wikipedia.org/wiki/Amazon_Web_Services#Availability_and_topology) that supports AWS IoT Greengrass V2\. For the list of supported Regions, see [AWS IoT Greengrass V2 endpoints and quotas](https://docs.aws.amazon.com/general/latest/gr/greengrassv2.html) in the *AWS General Reference*\.
 + Minimum 256 MB disk space available for the AWS IoT Greengrass Core software\. This requirement doesn't include components deployed to the core device\.
 + Minimum 160 MB RAM allocated to the AWS IoT Greengrass Core software\. This requirement doesn't include components that run on the core device\. For more information, see [Control memory allocation with JVM options](configure-greengrass-core-v2.md#jvm-tuning)\.
-+ Java Runtime Environment \(JRE\) version 8 or greater\. To use Java to develop custom components, you must install a Java Development Kit \(JDK\)\. We recommend [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\. 
++ Java Runtime Environment \(JRE\) version 8 or greater\. Java must be available on the [PATH](https://en.wikipedia.org/wiki/PATH_(variable)) system variable on the device\. To use Java to develop custom components, you must install a Java Development Kit \(JDK\)\. We recommend [Amazon Corretto 11](http://aws.amazon.com/corretto/) or [OpenJDK 11](https://openjdk.java.net/)\. 
 **Note**  
 To use version 2\.5\.0 of the [Greengrass nucleus](greengrass-nucleus-component.md), you must use a 64\-bit version of the Java Runtime Environment \(JRE\)\. Greengrass nucleus version 2\.5\.1 supports 32\-bit and 64\-bit JREs\.
 + The user who installs the AWS IoT Greengrass Core software must be an administrator\.
++ You must install the AWS IoT Greengrass Core software as a system service\. Specify `--setup-system-service true` when you install the software\.
 + Each user that runs component processes must exist in the LocalSystem account, and the user's name and password must be in the Credential Manager instance for the LocalSystem account\. You can set up this user when you follow instructions to [install the AWS IoT Greengrass Core software](install-greengrass-core-v2.md)\.
 + The core device must be able to perform outbound requests to a set of endpoints and ports\. For more information, see [Allow device traffic through a proxy or firewall](allow-device-traffic.md)\.
 
@@ -155,25 +160,12 @@ On a Raspberry Pi, edit the `/boot/cmdline.txt` file to set the device's kernel 
       + `CONFIG_KEYS`
       + `CONFIG_SECCOMP`
       + `CONFIG_SHMEM`
+**Tip**  
+Check the documentation for your Linux distribution to learn how to verify and set Linux kernel parameters\. You can also use AWS IoT Device Tester for AWS IoT Greengrass to verify that your device meets these requirements\. For more information, see [Using AWS IoT Device Tester for AWS IoT Greengrass V2](device-tester-for-greengrass-ug.md)\.
 
 ## Feature considerations for Windows devices<a name="greengrass-v2-windows-feature-considerations"></a>
 
-Some AWS IoT Greengrass features aren't currently supported on Windows devices\. Review the following considerations to confirm if a Windows device satisfies your feature requirements\. For more information, see [Greengrass feature compatibility by operating system](operating-system-feature-support-matrix.md)\.
-+ You can't run Lambda functions\.
-+ You can't configure system resource limits to customize the maximum amount of CPU and RAM usage that each component's processes can use on a core device\.
-+ You can't pause and resume component processes using the [PauseComponent](ipc-component-lifecycle.md#ipc-operation-pausecomponent) and [ResumeComponent](ipc-component-lifecycle.md#ipc-operation-resumecomponent) interprocess communication operations\.
-+ The following [AWS\-provided components](public-components.md) are not currently supported: 
-  + Kinesis Data Firehose
-  + Lambda launcher
-  + Lambda manager
-  + Lambda runtimes
-  + Legacy subscription router
-  + Modbus\-RTU protocol adapter
-  + Secure tunneling
-  + Amazon SNS
-  + AWS IoT SiteWise OPC\-UA collector
-  + AWS IoT SiteWise publisher
-  + AWS IoT SiteWise processor
+Some AWS IoT Greengrass features aren't currently supported on Windows devices\. Review the feature differences to confirm if a Windows device satisfies your requirements\. For more information, see [Greengrass feature compatibility by operating system](operating-system-feature-support-matrix.md)\.
 
 ## Set up an AWS account<a name="set-up-aws-account"></a>
 
@@ -187,40 +179,14 @@ If you do not have an AWS account, complete the following steps to create one\.
 
    Part of the sign\-up procedure involves receiving a phone call and entering a verification code on the phone keypad\.
 
-**To create an administrator user for yourself and add the user to an administrators group \(console\)**
+   When you sign up for an AWS account, an *AWS account root user* is created\. The root user has access to all AWS services and resources in the account\. As a security best practice, [assign administrative access to an administrative user](https://docs.aws.amazon.com/singlesignon/latest/userguide/getting-started.html), and use only the root user to perform [tasks that require root user access](https://docs.aws.amazon.com/accounts/latest/reference/root-user-tasks.html)\.
 
-1. Sign in to the [IAM console](https://console.aws.amazon.com/iam/) as the account owner by choosing **Root user** and entering your AWS account email address\. On the next page, enter your password\.
-**Note**  
-We strongly recommend that you adhere to the best practice of using the **Administrator** IAM user that follows and securely lock away the root user credentials\. Sign in as the root user only to perform a few [account and service management tasks](https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.html)\.
+To create an administrator user, choose one of the following options\.
 
-1. In the navigation pane, choose **Users** and then choose **Add users**\.
 
-1. For **User name**, enter **Administrator**\.
+****  
 
-1. Select the check box next to **AWS Management Console access**\. Then select **Custom password**, and then enter your new password in the text box\.
-
-1. \(Optional\) By default, AWS requires the new user to create a new password when first signing in\. You can clear the check box next to **User must create a new password at next sign\-in** to allow the new user to reset their password after they sign in\.
-
-1. Choose **Next: Permissions**\.
-
-1. Under **Set permissions**, choose **Add user to group**\.
-
-1. Choose **Create group**\.
-
-1. In the **Create group** dialog box, for **Group name** enter **Administrators**\.
-
-1. Choose **Filter policies**, and then select **AWS managed \- job function** to filter the table contents\.
-
-1. In the policy list, select the check box for **AdministratorAccess**\. Then choose **Create group**\.
-**Note**  
-You must activate IAM user and role access to Billing before you can use the `AdministratorAccess` permissions to access the AWS Billing and Cost Management console\. To do this, follow the instructions in [step 1 of the tutorial about delegating access to the billing console](https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_billing.html)\.
-
-1. Back in the list of groups, select the check box for your new group\. Choose **Refresh** if necessary to see the group in the list\.
-
-1. Choose **Next: Tags**\.
-
-1. \(Optional\) Add metadata to the user by attaching tags as key\-value pairs\. For more information about using tags in IAM, see [Tagging IAM entities](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_tags.html) in the *IAM User Guide*\.
-
-1. Choose **Next: Review** to see the list of group memberships to be added to the new user\. When you are ready to proceed, choose **Create user**\.
-
-You can use this same process to create more groups and users and to give your users access to your AWS account resources\. To learn about using policies that restrict user permissions to specific AWS resources, see [Access management](https://docs.aws.amazon.com/IAM/latest/UserGuide/access.html) and [Example policies](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_examples.html)\.
+| Choose one way to manage your administrator | To | By | You can also | 
+| --- | --- | --- | --- | 
+| In IAM Identity Center \(Recommended\) | Use short\-term credentials to access AWS\.This aligns with the security best practices\. For information about best practices, see [Security best practices in IAM](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#bp-users-federation-idp) in the *IAM User Guide*\. | Following the instructions in [Getting started](https://docs.aws.amazon.com/singlesignon/latest/userguide/getting-started.html) in the AWS IAM Identity Center \(successor to AWS Single Sign\-On\) User Guide\. | Configure programmatic access by [Configuring the AWS CLI to use AWS IAM Identity Center \(successor to AWS Single Sign\-On\)](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.html) in the AWS Command Line Interface User Guide\. | 
+| In IAM \(Not recommended\) | Use long\-term credentials to access AWS\. | Following the instructions in [Creating your first IAM admin user and user group](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html) in the IAM User Guide\. | Configure programmatic access by [Managing access keys for IAM users](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html) in the IAM User Guide\. | 

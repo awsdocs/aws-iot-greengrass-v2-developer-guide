@@ -37,7 +37,7 @@ Several AWS\-provided components depend on specific minor versions of the Greeng
 | [Stream manager](stream-manager-component.md) | Streams high\-volume data from local sources to the AWS Cloud\. | Yes | Generic | Linux, Windows | No | 
 | [Systems Manager Agent](systems-manager-agent-component.md) | Manage the core device with AWS Systems Manager, which enables you to patch devices, run commands, and more\. | No | Generic | Linux | No | 
 | [Token exchange service](token-exchange-service-component.md) | Provides AWS credentials that you can use to interact with AWS services\. | No | Generic | Linux, Windows | No | 
-| [IoT SiteWise OPC\-UA collector](iotsitewise-opcua-collector-component.md) | Collects data from OPC\-UA servers\. | Yes | Generic | Linux | No | 
-| [IoT SiteWise OPC\-UA data source simulator](iotsitewise-opcua-data-source-simulator-component.md) | Runs a local OPC\-UA server that generates sample data\. | Yes | Generic | Linux | No | 
-| [IoT SiteWise publisher](iotsitewise-publisher-component.md) | Publishes data to the AWS Cloud\. | Yes | Generic | Linux | No | 
-| [IoT SiteWise processor](iotsitewise-processor-component.md) | Processes data on the Greengrass core devices\. | Yes | Generic | Linux | No | 
+| [IoT SiteWise OPC\-UA collector](iotsitewise-opcua-collector-component.md) | Collects data from OPC\-UA servers\. | Yes | Generic | Linux, Windows | No | 
+| [IoT SiteWise OPC\-UA data source simulator](iotsitewise-opcua-data-source-simulator-component.md) | Runs a local OPC\-UA server that generates sample data\. | Yes | Generic | Linux, Windows | No | 
+| [IoT SiteWise publisher](iotsitewise-publisher-component.md) | Publishes data to the AWS Cloud\. | Yes | Generic | Linux, Windows | No | 
+| [IoT SiteWise processor](iotsitewise-processor-component.md) | Processes data on the Greengrass core devices\. | Yes | Generic | Linux, Windows | No | 

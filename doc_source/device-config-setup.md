@@ -283,22 +283,33 @@ To run Docker qualification tests, your devices under test must meet the followi
 IDT for AWS IoT Greengrass V2 provides ML qualification tests to validate that your devices can use the AWS\-provided [machine learning components](machine-learning-components.md) to perform ML inference locally using the [Deep Learning Runtime](https://github.com/neo-ai/neo-ai-dlr) or [TensorFlow Lite](https://www.tensorflow.org/lite/guide/python) ML frameworks\. For more information about running ML inference on Greengrass devices, see [Perform machine learning inference](perform-machine-learning-inference.md)\.
 
 To run ML qualification tests, your devices under test must meet the following requirements to deploy the machine learning components\.<a name="ml-component-requirements"></a>
-+ <a name="ml-req-glibc"></a>On Greengrass core devices running Amazon Linux 2 or Ubuntu 18\.04, [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.27 or later installed on the device\.
++ On Greengrass core devices running Amazon Linux 2 or Ubuntu 18\.04, [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.27 or later installed on the device\.
 + On Armv7l devices, such as Raspberry Pi, dependencies for OpenCV\-Python installed on the device\. Run the following command to install the dependencies\.
 
   ```
   sudo apt-get install libopenjp2-7 libilmbase23 libopenexr-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libgtk-3-0 libwebp-dev
   ```
-+ On Raspberry Pi devices, OpenCV\-Python installed on the device\. Run the following command to install OpenCV\-Python\.
++ Raspberry Pi devices that run Raspberry Pi OS Bullseye must meet the following requirements:
+  + NumPy 1\.22\.4 or later installed on the device\. Raspberry Pi OS Bullseye includes an earlier version of NumPy, so you can run the following command to upgrade NumPy on the device\.
 
-  ```
-  pip3 install opencv-python
-  ```
-+ On Raspberry Pi devices that run Raspberry Pi OS Bullseye, NumPy 1\.22\.4 or later installed on the device\. Raspberry Pi OS Bullseye includes an earlier version of NumPy, so you can run the following command to upgrade NumPy on the device\.
+    ```
+    pip3 install --upgrade numpy
+    ```
+  + The legacy camera stack enabled on the device\. Raspberry Pi OS Bullseye includes a new camera stack that is enabled by default and isn't compatible, so you must enable the legacy camera stack\.<a name="raspberry-pi-bullseye-enable-legacy-camera-stack"></a>
 
-  ```
-  pip3 install --upgrade numpy
-  ```
+**To enable the legacy camera stack**
+
+    1. Run the following command to open the Raspberry Pi configuration tool\.
+
+       ```
+       sudo raspi-config
+       ```
+
+    1. Select **Interface Options**\.
+
+    1. Select **Legacy camera** to enable the legacy camera stack\.
+
+    1. Reboot the Raspberry Pi\.
 
 ### HSM qualification requirements<a name="idt-config-hsm-components"></a>
 

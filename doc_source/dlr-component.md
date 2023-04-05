@@ -36,22 +36,33 @@ This component can be installed on core devices that run the following operating
 ## Requirements<a name="dlr-component-requirements"></a>
 
 This component has the following requirements:<a name="ml-component-requirements"></a>
-+ <a name="ml-req-glibc"></a>On Greengrass core devices running Amazon Linux 2 or Ubuntu 18\.04, [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.27 or later installed on the device\.
++ On Greengrass core devices running Amazon Linux 2 or Ubuntu 18\.04, [GNU C Library](https://www.gnu.org/software/libc/) \(glibc\) version 2\.27 or later installed on the device\.
 + On Armv7l devices, such as Raspberry Pi, dependencies for OpenCV\-Python installed on the device\. Run the following command to install the dependencies\.
 
   ```
   sudo apt-get install libopenjp2-7 libilmbase23 libopenexr-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libgtk-3-0 libwebp-dev
   ```
-+ On Raspberry Pi devices, OpenCV\-Python installed on the device\. Run the following command to install OpenCV\-Python\.
++ Raspberry Pi devices that run Raspberry Pi OS Bullseye must meet the following requirements:
+  + NumPy 1\.22\.4 or later installed on the device\. Raspberry Pi OS Bullseye includes an earlier version of NumPy, so you can run the following command to upgrade NumPy on the device\.
 
-  ```
-  pip3 install opencv-python
-  ```
-+ On Raspberry Pi devices that run Raspberry Pi OS Bullseye, NumPy 1\.22\.4 or later installed on the device\. Raspberry Pi OS Bullseye includes an earlier version of NumPy, so you can run the following command to upgrade NumPy on the device\.
+    ```
+    pip3 install --upgrade numpy
+    ```
+  + The legacy camera stack enabled on the device\. Raspberry Pi OS Bullseye includes a new camera stack that is enabled by default and isn't compatible, so you must enable the legacy camera stack\.<a name="raspberry-pi-bullseye-enable-legacy-camera-stack"></a>
 
-  ```
-  pip3 install --upgrade numpy
-  ```
+**To enable the legacy camera stack**
+
+    1. Run the following command to open the Raspberry Pi configuration tool\.
+
+       ```
+       sudo raspi-config
+       ```
+
+    1. Select **Interface Options**\.
+
+    1. Select **Legacy camera** to enable the legacy camera stack\.
+
+    1. Reboot the Raspberry Pi\.
 
 ### Endpoints and ports<a name="dlr-component-endpoints"></a>
 
@@ -69,6 +80,36 @@ For more information about endpoints and ports required for basic operation, see
 ## Dependencies<a name="dlr-component-dependencies"></a>
 
 When you deploy a component, AWS IoT Greengrass also deploys compatible versions of its dependencies\. This means that you must meet the requirements for the component and all of its dependencies to successfully deploy the component\. This section lists the dependencies for the [released versions](#dlr-component-changelog) of this component and the semantic version constraints that define the component versions for each dependency\. You can also view the dependencies for each version of the component in the [AWS IoT Greengrass console](https://console.aws.amazon.com/greengrass)\. On the component details page, look for the **Dependencies** list\.
+
+------
+#### [ 1\.6\.11 and 1\.6\.12 ]
+
+The following table lists the dependencies for versions 1\.6\.11 and 1\.6\.12 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <3\.0\.0 | Soft | 
+
+------
+#### [ 1\.6\.10 ]
+
+The following table lists the dependencies for version 1\.6\.10 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.9\.0 | Soft | 
+
+------
+#### [ 1\.6\.9 ]
+
+The following table lists the dependencies for version 1\.6\.9 of this component\.
+
+
+| Dependency | Compatible versions | Dependency type | 
+| --- | --- | --- | 
+| [Greengrass nucleus](greengrass-nucleus-component.md) | >=2\.0\.0 <2\.8\.0 | Soft | 
 
 ------
 #### [ 1\.6\.8 ]
@@ -234,6 +275,10 @@ The following table describes the changes in each version of the component\.
 
 |  **Version**  |  **Changes**  | 
 | --- | --- | 
+|  1\.6\.12  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/dlr-component.html)  | 
+|  1\.6\.11  | Version updated for Greengrass nucleus version 2\.9\.0 release\. | 
+|  1\.6\.10  | Version updated for Greengrass nucleus version 2\.8\.0 release\. | 
+|  1\.6\.9  |  Version updated for Greengrass nucleus version 2\.7\.0 release\.  | 
 |  1\.6\.8  |  Version updated for Greengrass nucleus version 2\.6\.0 release\.  | 
 |  1\.6\.7  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/dlr-component.html)  | 
 |  1\.6\.6  |  [\[See the AWS documentation website for more details\]](http://docs.aws.amazon.com/greengrass/v2/developerguide/dlr-component.html)  | 
