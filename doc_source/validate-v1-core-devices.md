@@ -1,7 +1,0 @@
-# Validate V1 core devices can run V2 software<a name="validate-v1-core-devices"></a>
-
-The AWS IoT Greengrass Core software v2\.x has different requirements than the AWS IoT Greengrass Core software v1\.x\. Before you upgrade V1 core devices to V2, review the [device requirements for AWS IoT Greengrass V2](setting-up.md#installation-requirements)\. AWS IoT Greengrass V2 doesn't currently support migration for custom Linux\-based systems using the [Yocto Project](https://www.yoctoproject.org/)\.
-
-You can use [AWS IoT Device Tester \(IDT\) for AWS IoT Greengrass V2](http://aws.amazon.com/greengrass/device-tester/) to validate that devices meet the requirements to run the AWS IoT Greengrass Core software v2\.x\. IDT is a downloadable testing framework that runs on your host computer and connects to devices to be validated\. [Follow instructions](idt-greengrass-qualification.md) to use IDT to run the AWS IoT Greengrass qualification suite\. When you configure IDT, you can choose to validate whether devices support optional features, such as Docker, machine learning \(ML\), data stream management, and hardware security integration\.
-
-If IDT reports V2 test failures or errors for a V1 core device, you can't upgrade that device from V1 to V2\.
